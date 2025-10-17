@@ -8,3 +8,6 @@
 # Ignore assets, but keep the example image
 /assets/*
 !/assets/SparkAreaExample.PNG
+
+# Ignore Pycache
+/src/__pycache__
