@@ -1,0 +1,46 @@
+{
+  "OCR_READER_CONFIG": {
+    "languages": ["en"],
+    "gpu": true
+  },
+  "ROI_MOBILE": {
+    "name": [506, 574, 580, 970],
+    "score": [653, 681, 140, 285],
+    "speed": [776, 810, 116, 215],
+    "stamina": [776, 810, 316, 415],
+    "power": [776, 810, 516, 615],
+    "guts": [776, 810, 716, 815],
+    "wit": [776, 810, 916, 1015],
+    "rankings": [835, 1030, 255, 1015],
+    "skills": [1120, 1920, 116, 970]
+  },
+  "SAVE_DEBUG_IMAGES": false,
+  "MIN_OCR_WIDTH": 30,
+  "STAT_KEYS": ["speed", "stamina", "power", "guts", "wit"],
+  "COLOR_TO_GRADE": {
+    "A": [[9, 78, 170], [16, 237, 255]],
+    "B": [[169, 48, 165], [173, 188, 255]],
+    "C": [[49, 54, 126], [54, 193, 246]],
+    "D": [[99, 53, 168], [103, 197, 255]],
+    "E": [[139, 46, 161], [145, 171, 255]],
+    "F": [[121, 51, 149], [126, 130, 244]],
+    "S": [[17, 53, 162], [25, 242, 255]]
+  },
+  "SPARK_BOX_HEIGHT": 88,
+  "YELLOW_STAR_HSV_LOWER": [19, 100, 100],
+  "YELLOW_STAR_HSV_UPPER": [33, 255, 255],
+  "STAR_AREA_MIN": 100,
+  "STAR_AREA_MAX": 500,
+  "MOBILE_SCREENSHOT_HEIGHT_THRESHOLD": 2340,
+  "MOBILE_ROI_SHIFT": 18,
+  "DEFAULT_NUM_PROCESSES_OFFSET": 1,
+  "LOG_LEVEL": "INFO",
+  "LOG_FORMAT": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+  "DEFAULT_COLUMN_ORDER": [
+    "entry_id", "name", "score", "entry_hash", "last_updated",
+    "speed", "stamina", "power", "guts", "wit",
+    "rank_turf", "rank_dirt", "rank_sprint", "rank_mile", "rank_medium", "rank_long",
+    "rank_front", "rank_pace", "rank_late", "rank_end",
+    "skills", "sparks"
+  ]
+}

@@ -1,0 +1,10 @@
+# Ignore user-generated data
+/data/input_images/
+/data/processed_images/
+
+# Ignore legacy scripts
+/data/legacy/
+
+# Ignore assets, but keep the example image
+/assets/*
+!/assets/SparkAreaExample.PNG

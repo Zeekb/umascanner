@@ -1,0 +1,42 @@
+[
+    {
+        "keywords": ["front runner", "straightaway"],
+        "color": "white",
+        "spark_name": "Front Runner Straightaways ○"
+    },
+    {
+        "keywords": ["front runner", "corner"],
+        "color": "white",
+        "spark_name": "Front Runner Corners ○"
+    },
+    {
+        "keywords": ["pace chaser", "straightaway"],
+        "color": "white",
+        "spark_name": "Pace Chaser Straightaways ○"
+    },
+    {
+        "keywords": ["pace chaser", "corner"],
+        "color": "white",
+        "spark_name": "Pace Chaser Corners ○"
+    },
+    {
+        "keywords": ["late surger", "straightaway"],
+        "color": "white",
+        "spark_name": "Late Surger Straightaways ○"
+    },
+    {
+        "keywords": ["late surger", "corner"],
+        "color": "white",
+        "spark_name": "Late Surger Corners ○"
+    },
+    {
+        "keywords": ["end closer", "straightaway"],
+        "color": "white",
+        "spark_name": "End Closer Straightaways ○"
+    },
+    {
+        "keywords": ["end closer", "corner"],
+        "color": "white",
+        "spark_name": "End Closer Corners ○"
+    }
+]

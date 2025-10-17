@@ -1,0 +1,21 @@
+entry_id,name,category,subcategory,grade
+0,Agnes Tachyon,track,turf,A
+0,Agnes Tachyon,track,dirt,G
+0,Agnes Tachyon,distance,sprint,G
+0,Agnes Tachyon,distance,mile,D
+0,Agnes Tachyon,distance,medium,A
+0,Agnes Tachyon,distance,long,A
+0,Agnes Tachyon,style,front,D
+0,Agnes Tachyon,style,pace,A
+0,Agnes Tachyon,style,late,B
+0,Agnes Tachyon,style,end,F
+1,Air Groove,track,turf,A
+1,Air Groove,track,dirt,G
+1,Air Groove,distance,sprint,C
+1,Air Groove,distance,mile,A
+1,Air Groove,distance,medium,A
+1,Air Groove,distance,long,E
+1,Air Groove,style,front,B
+1,Air Groove,style,pace,A
+1,Air Groove,style,late,A
+1,Air Groove,style,end,G
