@@ -207,11 +207,13 @@ marimo/_lsp/
 __marimo__/
 
 # Ignore user-generated data
-/data/input_images/
-/data/processed_images/
-
-# Ignore legacy scripts
-/data/legacy/
+# Ignore contents of data directories, but keep the directories themselves
+/data/input_images/*
+!/data/input_images/.gitkeep
+/data/processed_images/*
+!/data/processed_images/.gitkeep
+/data/legacy/*
+!/data/legacy/.gitkeep
 
 # Ignore assets, but keep the example image
 /assets/*
