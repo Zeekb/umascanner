@@ -92,7 +92,7 @@ def detect_spark_zones(image, reader):
         for next_spark in blue_spark_detections[i+1:]:
             if next_spark['screenshot_index'] == screenshot_index:
                 # The bottom of the current zone is the top of the next zone's title
-                zone_y2 = next_spark['y1_text'] - 75
+                zone_y2 = next_spark['y1_text'] - 77
                 break
         
         potential_zones.append((zone_x1, zone_y1, zone_x2, zone_y2))
