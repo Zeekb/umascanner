@@ -52,9 +52,10 @@ def combine_images_horizontally(image_paths):
 class ROISelector:
     HANDLE_SIZE = 8
 
-    def __init__(self, master, entries_dict):
+    def __init__(self, master, entries_dict, processing_q):
         self.master = master
         self.master.configure(bg=UMA_LIGHT_BG)
+        self.processing_queue = processing_q
 
         self.reader = easyocr.Reader(['en'])
 
@@ -72,6 +73,9 @@ class ROISelector:
         self.move_axis = None
         self.undo_stack = []
         self.redo_stack = []
+
+        self.preloaded_data = {}
+        self.preloader_thread = None
 
         main_frame = Frame(master, bg=UMA_LIGHT_BG)
         main_frame.pack(fill=BOTH, expand=True)
@@ -143,12 +147,12 @@ class ROISelector:
         progress_text = f"{self.entry_index + 1}/{len(self.entries)}"
         self.show_loading(True, entry_name=entry_name, progress_text=progress_text)
 
-        thread = threading.Thread(target=self._load_image_worker)
+        thread = threading.Thread(target=self._load_image_worker, args=(self.entry_index,))
         thread.daemon = True
         thread.start()
 
-    def _load_image_worker(self):
-        entry_name, image_paths = self.entries[self.entry_index]
+    def _load_image_worker(self, index):
+        entry_name, image_paths = self.entries[index]
         try:
             img_original = combine_images_horizontally(image_paths)
             img_cv = cv2.cvtColor(np.array(img_original), cv2.COLOR_RGB2BGR)
@@ -158,6 +162,28 @@ class ROISelector:
         except Exception as e:
             print(f"Error processing {entry_name}: {e}")
             self.master.after(0, self.on_load_error)
+
+    def _start_preloading_next_entry(self):
+        next_index = self.entry_index + 1
+        if next_index >= len(self.entries):
+            return
+        if next_index in self.preloaded_data or (self.preloader_thread and self.preloader_thread.is_alive()):
+            return
+
+        self.preloader_thread = threading.Thread(target=self._preloader_worker, args=(next_index,))
+        self.preloader_thread.daemon = True
+        self.preloader_thread.start()
+
+    def _preloader_worker(self, target_index):
+        entry_name, image_paths = self.entries[target_index]
+        try:
+            img_original = combine_images_horizontally(image_paths)
+            img_cv = cv2.cvtColor(np.array(img_original), cv2.COLOR_RGB2BGR)
+            detected_rois = detect_spark_zones(img_cv, self.reader)
+            rois = [(entry_name, roi, image_paths) for roi in detected_rois]
+            self.preloaded_data[target_index] = (entry_name, img_original, rois)
+        except Exception as e:
+            print(f"Error pre-loading {entry_name}: {e}")
 
     def on_load_error(self):
         self.show_loading(False)
@@ -187,6 +213,28 @@ class ROISelector:
 
         self.refresh_display()
         self.master.title(f"ROI Selector - Entry {self.entry_index + 1}/{len(self.entries)}: {self.entry_name}")
+        self._start_preloading_next_entry()
+
+    def next_entry(self):
+        if hasattr(self, 'entry_name'):
+            # Add a copy of the completed entry to the processing queue
+            self.processing_queue.put((self.entry_name, self.rois.copy()))
+
+        self.rois.clear()
+        self.undo_stack.clear()
+        self.redo_stack.clear()
+        
+        self.entry_index += 1
+
+        if self.entry_index >= len(self.entries):
+            self.master.quit()
+            return
+
+        if self.entry_index in self.preloaded_data:
+            entry_name, img_original, rois = self.preloaded_data.pop(self.entry_index)
+            self.on_load_complete(entry_name, img_original, rois)
+        else:
+            self.load_next_image_threaded()
 
     def refresh_display(self):
         if not hasattr(self, "img_original") or self.img_original is None:
@@ -306,12 +354,3 @@ class ROISelector:
         self.pan_y += event.y - self.pan_start_y
         self.pan_start_x, self.pan_start_y = event.x, event.y
         self.refresh_display()
-
-    def next_entry(self):
-        if hasattr(self, 'entry_name'):
-            self.all_rois[self.entry_name] = list(self.rois)
-        self.rois.clear()
-        self.undo_stack.clear()
-        self.redo_stack.clear()
-        self.entry_index += 1
-        self.load_next_image_threaded()

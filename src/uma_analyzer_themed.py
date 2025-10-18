@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
     QTabWidget, QTableWidget, QTableWidgetItem, QDockWidget, QLabel, 
     QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton, 
-    QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout
+    QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QRadioButton
 )
 from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath
 from PyQt5.QtCore import Qt, QRect
@@ -244,6 +244,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         except ValueError:
             pass
 
+
     def show_runner_details(self, row, column):
         table = self.tables["Stats Summary"]
 
@@ -318,6 +319,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         reset_button = QPushButton("Reset Filters")
         reset_button.clicked.connect(self.reset_filters)
         self.controls_layout.addWidget(reset_button)
+
 
         sort_by_options = ['Name', 'Score', 'Speed', 'Stamina', 'Power', 'Guts', 'Wit', 'White Spark Count']
         blue_spark_options = [''] + self.spark_info['blue']
@@ -886,6 +888,7 @@ class UmaDetailDialog(QDialog):
         close_button = QPushButton("Close")
         close_button.clicked.connect(self.accept)
         main_layout.addWidget(close_button)
+
 
 def calculateRank(score):
     if score < 0:
