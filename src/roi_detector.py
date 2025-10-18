@@ -83,7 +83,7 @@ def detect_spark_zones(image, reader):
         zone_x1 = screenshot_index * single_screenshot_width + offset_from_screenshot_left_edge
         zone_x2 = zone_x1 + fixed_spark_area_width
         
-        zone_y1 = y1_text - 20 # Adjusted to not include area above blue spark term
+        zone_y1 = y1_text - 26 # Adjusted to not include area above blue spark term
 
         # Determine zone_y2 dynamically
         zone_y2 = h - 420 # Adjusted to extend further down

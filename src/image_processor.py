@@ -255,7 +255,7 @@ def _group_loose_images():
             # Extract stats
             stats = {}
             for i, k in enumerate(stat_keys):
-                val = re.sub(r"\\D", "", stacked_text[i+2]) if len(stacked_text) > i+2 else "0"
+                val = re.sub(r"\D", "", stacked_text[i+2]) if len(stacked_text) > i+2 else "0"
                 stats[k] = int(val) if val else 0
 
             # Compute stats hash

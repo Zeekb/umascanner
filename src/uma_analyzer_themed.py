@@ -711,7 +711,7 @@ class UmaDetailDialog(QDialog):
 
         score_label = QLabel(f"<b>{self.runner_data['score']:,}</b>")
         score_label.setAlignment(Qt.AlignCenter)
-        score_label.setStyleSheet("font-size: 12pt;")
+        score_label.setStyleSheet("font-size: 16pt;")
         left_header_layout.addWidget(score_label)
         
         header_layout.addLayout(left_header_layout)
@@ -779,7 +779,7 @@ class UmaDetailDialog(QDialog):
             grade_label = QLabel(stat_grade)
             grade_label.setMinimumWidth(40)
             grade_label.setAlignment(Qt.AlignCenter)
-            grade_label.setStyleSheet(f"background-color: {self.get_color_for_grade(stat_grade)}; color: #FFFFFF; padding: 3px; border-radius: 8px; font-weight: bold; font-size: 12pt;")
+            grade_label.setStyleSheet(f"background-color: {self.get_color_for_grade(stat_grade)}; color: #000000; padding: 3px; border-radius: 8px; font-weight: bold; font-size: 12pt;")
             value_grade_layout.addWidget(grade_label)
 
             value_label = QLabel(str(stat_value))
@@ -815,7 +815,7 @@ class UmaDetailDialog(QDialog):
                 apt_value = self.runner_data.get(apt_key, 'N/A').upper()
 
                 apt_button = QWidget()
-                apt_button.setStyleSheet("background-color: #FFFFFF; border: 1px solid #D0D0D0; border-radius: 8px;")
+                apt_button.setStyleSheet("font-weight: bold; font-size: 12pt; background-color: #FFFFFF; border: 1px solid #D0D0D0; border-radius: 8px;")
                 
                 apt_button_layout = QHBoxLayout(apt_button)
                 apt_button_layout.setContentsMargins(8, 3, 8, 3)
@@ -826,7 +826,7 @@ class UmaDetailDialog(QDialog):
 
                 grade_label = QLabel(apt_value)
                 grade_color = self.get_aptitude_grade_color(apt_value)
-                grade_label.setStyleSheet(f"color: {grade_color}; font-weight: bold; font-size: 12pt;")
+                grade_label.setStyleSheet(f"color: {grade_color}; font-weight: bold; font-size: 15pt;")
                 apt_button_layout.setAlignment(Qt.AlignLeft | Qt.AlignRight)
                 apt_button_layout.addWidget(grade_label)
 
