@@ -1,11 +1,241 @@
 entry_id,name,stat_name,value
-0,Agnes Tachyon,speed,755
-0,Agnes Tachyon,stamina,631
-0,Agnes Tachyon,power,690
-0,Agnes Tachyon,guts,404
-0,Agnes Tachyon,wit,739
+47,Agnes Tachyon,speed,1159
+47,Agnes Tachyon,stamina,491
+47,Agnes Tachyon,power,1033
+47,Agnes Tachyon,guts,348
+47,Agnes Tachyon,wit,489
+48,Agnes Tachyon,speed,755
+48,Agnes Tachyon,stamina,631
+48,Agnes Tachyon,power,690
+48,Agnes Tachyon,guts,404
+48,Agnes Tachyon,wit,739
 1,Air Groove,speed,786
 1,Air Groove,stamina,607
 1,Air Groove,power,1200
 1,Air Groove,guts,304
 1,Air Groove,wit,450
+2,Air Groove,speed,1084
+2,Air Groove,stamina,494
+2,Air Groove,power,1200
+2,Air Groove,guts,241
+2,Air Groove,wit,406
+3,Air Groove,speed,1019
+3,Air Groove,stamina,591
+3,Air Groove,power,1200
+3,Air Groove,guts,299
+3,Air Groove,wit,333
+4,Air Groove,speed,1180
+4,Air Groove,stamina,421
+4,Air Groove,power,743
+4,Air Groove,guts,308
+4,Air Groove,wit,1122
+5,Fuji Kiseki,speed,1186
+5,Fuji Kiseki,stamina,497
+5,Fuji Kiseki,power,977
+5,Fuji Kiseki,guts,302
+5,Fuji Kiseki,wit,370
+6,Gold Ship,speed,701
+6,Gold Ship,stamina,1200
+6,Gold Ship,power,661
+6,Gold Ship,guts,396
+6,Gold Ship,wit,352
+7,Gold Ship,speed,651
+7,Gold Ship,stamina,1200
+7,Gold Ship,power,671
+7,Gold Ship,guts,473
+7,Gold Ship,wit,410
+8,Gold Ship,speed,682
+8,Gold Ship,stamina,798
+8,Gold Ship,power,683
+8,Gold Ship,guts,361
+8,Gold Ship,wit,343
+9,Grass Wonder,speed,1078
+9,Grass Wonder,stamina,634
+9,Grass Wonder,power,1020
+9,Grass Wonder,guts,274
+9,Grass Wonder,wit,390
+10,Grass Wonder,speed,1123
+10,Grass Wonder,stamina,525
+10,Grass Wonder,power,1200
+10,Grass Wonder,guts,304
+10,Grass Wonder,wit,439
+11,Grass Wonder,speed,1114
+11,Grass Wonder,stamina,513
+11,Grass Wonder,power,752
+11,Grass Wonder,guts,328
+11,Grass Wonder,wit,1180
+12,King Halo,speed,1041
+12,King Halo,stamina,475
+12,King Halo,power,988
+12,King Halo,guts,363
+12,King Halo,wit,632
+13,Maruzensky,speed,1035
+13,Maruzensky,stamina,517
+13,Maruzensky,power,1109
+13,Maruzensky,guts,327
+13,Maruzensky,wit,436
+14,Maruzensky,speed,1192
+14,Maruzensky,stamina,527
+14,Maruzensky,power,634
+14,Maruzensky,guts,323
+14,Maruzensky,wit,1099
+15,Mejiro McQueen,speed,799
+15,Mejiro McQueen,stamina,1047
+15,Mejiro McQueen,power,665
+15,Mejiro McQueen,guts,380
+15,Mejiro McQueen,wit,441
+16,Mejiro McQueen,speed,725
+16,Mejiro McQueen,stamina,1200
+16,Mejiro McQueen,power,535
+16,Mejiro McQueen,guts,431
+16,Mejiro McQueen,wit,416
+17,Mejiro McQueen,speed,870
+17,Mejiro McQueen,stamina,1200
+17,Mejiro McQueen,power,618
+17,Mejiro McQueen,guts,499
+17,Mejiro McQueen,wit,420
+18,Nice Nature,speed,666
+18,Nice Nature,stamina,598
+18,Nice Nature,power,503
+18,Nice Nature,guts,387
+18,Nice Nature,wit,1187
+19,Sakura Bakushin O,speed,1128
+19,Sakura Bakushin O,stamina,348
+19,Sakura Bakushin O,power,760
+19,Sakura Bakushin O,guts,317
+19,Sakura Bakushin O,wit,811
+20,Sakura Bakushin O,speed,1136
+20,Sakura Bakushin O,stamina,481
+20,Sakura Bakushin O,power,806
+20,Sakura Bakushin O,guts,302
+20,Sakura Bakushin O,wit,772
+21,Sakura Bakushin O,speed,1136
+21,Sakura Bakushin O,stamina,490
+21,Sakura Bakushin O,power,962
+21,Sakura Bakushin O,guts,305
+21,Sakura Bakushin O,wit,377
+22,Sakura Bakushin O,speed,1135
+22,Sakura Bakushin O,stamina,463
+22,Sakura Bakushin O,power,1002
+22,Sakura Bakushin O,guts,315
+22,Sakura Bakushin O,wit,704
+23,Sakura Bakushin O,speed,1200
+23,Sakura Bakushin O,stamina,458
+23,Sakura Bakushin O,power,678
+23,Sakura Bakushin O,guts,319
+23,Sakura Bakushin O,wit,880
+24,Sakura Bakushin O,speed,866
+24,Sakura Bakushin O,stamina,322
+24,Sakura Bakushin O,power,454
+24,Sakura Bakushin O,guts,293
+24,Sakura Bakushin O,wit,309
+25,Seiun Sky,speed,738
+25,Seiun Sky,stamina,1200
+25,Seiun Sky,power,539
+25,Seiun Sky,guts,469
+25,Seiun Sky,wit,427
+26,Seiun Sky,speed,722
+26,Seiun Sky,stamina,1124
+26,Seiun Sky,power,604
+26,Seiun Sky,guts,453
+26,Seiun Sky,wit,449
+27,Tokai Teio,speed,648
+27,Tokai Teio,stamina,705
+27,Tokai Teio,power,1176
+27,Tokai Teio,guts,350
+27,Tokai Teio,wit,456
+28,Tokai Teio,speed,682
+28,Tokai Teio,stamina,560
+28,Tokai Teio,power,1200
+28,Tokai Teio,guts,314
+28,Tokai Teio,wit,513
+29,Tokai Teio,speed,572
+29,Tokai Teio,stamina,665
+29,Tokai Teio,power,1200
+29,Tokai Teio,guts,299
+29,Tokai Teio,wit,397
+30,Tokai Teio,speed,649
+30,Tokai Teio,stamina,642
+30,Tokai Teio,power,1200
+30,Tokai Teio,guts,285
+30,Tokai Teio,wit,510
+31,Tokai Teio,speed,705
+31,Tokai Teio,stamina,670
+31,Tokai Teio,power,1152
+31,Tokai Teio,guts,329
+31,Tokai Teio,wit,337
+32,Tokai Teio,speed,669
+32,Tokai Teio,stamina,689
+32,Tokai Teio,power,1200
+32,Tokai Teio,guts,295
+32,Tokai Teio,wit,454
+33,Tokai Teio,speed,594
+33,Tokai Teio,stamina,581
+33,Tokai Teio,power,1200
+33,Tokai Teio,guts,310
+33,Tokai Teio,wit,408
+34,Tokai Teio,speed,635
+34,Tokai Teio,stamina,806
+34,Tokai Teio,power,1200
+34,Tokai Teio,guts,295
+34,Tokai Teio,wit,443
+35,Tokai Teio,speed,567
+35,Tokai Teio,stamina,662
+35,Tokai Teio,power,1200
+35,Tokai Teio,guts,343
+35,Tokai Teio,wit,565
+36,Tokai Teio,speed,622
+36,Tokai Teio,stamina,695
+36,Tokai Teio,power,1200
+36,Tokai Teio,guts,324
+36,Tokai Teio,wit,435
+37,Tokai Teio,speed,714
+37,Tokai Teio,stamina,747
+37,Tokai Teio,power,1144
+37,Tokai Teio,guts,307
+37,Tokai Teio,wit,369
+38,Tokai Teio,speed,582
+38,Tokai Teio,stamina,680
+38,Tokai Teio,power,1200
+38,Tokai Teio,guts,305
+38,Tokai Teio,wit,450
+39,Tokai Teio,speed,627
+39,Tokai Teio,stamina,672
+39,Tokai Teio,power,1200
+39,Tokai Teio,guts,295
+39,Tokai Teio,wit,532
+40,Tokai Teio,speed,772
+40,Tokai Teio,stamina,659
+40,Tokai Teio,power,1200
+40,Tokai Teio,guts,315
+40,Tokai Teio,wit,387
+41,Tokai Teio,speed,694
+41,Tokai Teio,stamina,713
+41,Tokai Teio,power,1181
+41,Tokai Teio,guts,345
+41,Tokai Teio,wit,341
+42,Tokai Teio,speed,879
+42,Tokai Teio,stamina,685
+42,Tokai Teio,power,1200
+42,Tokai Teio,guts,378
+42,Tokai Teio,wit,385
+43,Vodka,speed,817
+43,Vodka,stamina,526
+43,Vodka,power,1200
+43,Vodka,guts,351
+43,Vodka,wit,415
+44,Vodka,speed,1116
+44,Vodka,stamina,421
+44,Vodka,power,1011
+44,Vodka,guts,262
+44,Vodka,wit,388
+45,Vodka,speed,965
+45,Vodka,stamina,514
+45,Vodka,power,1089
+45,Vodka,guts,292
+45,Vodka,wit,545
+46,Vodka,speed,964
+46,Vodka,stamina,633
+46,Vodka,power,1164
+46,Vodka,guts,270
+46,Vodka,wit,429

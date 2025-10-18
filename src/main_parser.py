@@ -4,14 +4,29 @@ import cv2
 import time
 import glob
 import easyocr
+import json
 from schema import init_schema, CharacterData, Stats, Rankings, Sparks # New imports
 from ocr_utils import normalize_name, normalize_skills
 from rankings import parse_rankings_by_color
 from tabs import detect_active_tab
-from config import ROI_MOBILE, SAVE_DEBUG_IMAGES, MIN_OCR_WIDTH, STAT_KEYS, LOG_LEVEL, LOG_FORMAT, LOG_FILE # New imports
 from image_utils import select_layout, crop_rois, load_image # New import
 import logging # New import
 from typing import Optional # New import
+
+# --- Path Configuration ---
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LOG_FILE = os.path.join(BASE_DIR, "app.log")
+
+# --- Load Configuration ---
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
+    config = json.load(f)
+
+ROI_MOBILE = config["ROI_MOBILE"]
+SAVE_DEBUG_IMAGES = config["SAVE_DEBUG_IMAGES"]
+MIN_OCR_WIDTH = config["MIN_OCR_WIDTH"]
+STAT_KEYS = config["STAT_KEYS"]
+LOG_LEVEL = config["LOG_LEVEL"]
+LOG_FORMAT = config["LOG_FORMAT"]
 
 logger = logging.getLogger(__name__)
 

@@ -1,17 +1,28 @@
 entry_id,name,skill_name
-0,Agnes Tachyon,U=ma2
-0,Agnes Tachyon,Wet Conditions ◎
-0,Agnes Tachyon,Frenzied End Closers
-0,Agnes Tachyon,Hesitant Front Runners
-0,Agnes Tachyon,Hesitant End Closers
-0,Agnes Tachyon,Dominator
-0,Agnes Tachyon,Sharp Gaze
-0,Agnes Tachyon,Standard Distance ◎
-0,Agnes Tachyon,Nimble Navigator
-0,Agnes Tachyon,Flustered Front Runners
-0,Agnes Tachyon,Hesitant Pace Chasers
-0,Agnes Tachyon,Opening Gambit
-0,Agnes Tachyon,Murmur
+47,Agnes Tachyon,U=ma2
+47,Agnes Tachyon,Standard Distance ◎
+47,Agnes Tachyon,Corner Recovery ○
+47,Agnes Tachyon,Go with the Flow
+47,Agnes Tachyon,Medium Corners ◎
+47,Agnes Tachyon,Straight Descent
+47,Agnes Tachyon,Triumphant Pulse
+47,Agnes Tachyon,Professor of Curvature
+47,Agnes Tachyon,Nimble Navigator
+47,Agnes Tachyon,Preferred Position
+47,Agnes Tachyon,Murmur
+48,Agnes Tachyon,U=ma2
+48,Agnes Tachyon,Wet Conditions ◎
+48,Agnes Tachyon,Frenzied End Closers
+48,Agnes Tachyon,Hesitant Front Runners
+48,Agnes Tachyon,Hesitant End Closers
+48,Agnes Tachyon,Dominator
+48,Agnes Tachyon,Sharp Gaze
+48,Agnes Tachyon,Standard Distance ◎
+48,Agnes Tachyon,Nimble Navigator
+48,Agnes Tachyon,Flustered Front Runners
+48,Agnes Tachyon,Hesitant Pace Chasers
+48,Agnes Tachyon,Opening Gambit
+48,Agnes Tachyon,Murmur
 1,Air Groove,Blazing Pride
 1,Air Groove,Tokyo Racecourse ◎
 1,Air Groove,Beeline Burst
@@ -24,3 +35,487 @@ entry_id,name,skill_name
 1,Air Groove,Slick Surge
 1,Air Groove,Mile Straightaways ◎
 1,Air Groove,Late Surger Corners ○
+2,Air Groove,Blazing Pride
+2,Air Groove,Cloudy Days ◎
+2,Air Groove,Straightaway Acceleration
+2,Air Groove,Lay Low
+2,Air Groove,Opening Gambit
+2,Air Groove,Triumphant Pulse
+2,Air Groove,Professor of Curvature
+2,Air Groove,Breath of Fresh Air
+2,Air Groove,Mile Corners ◎
+2,Air Groove,Late Surger Straightaways ◎
+3,Air Groove,Blazing Pride
+3,Air Groove,Standard Distance ◎
+3,Air Groove,Sunny Days ◎
+3,Air Groove,Straightaway Acceleration
+3,Air Groove,Ramp Up
+3,Air Groove,Updrafters
+3,Air Groove,Late Surger Corners ○
+3,Air Groove,Triumphant Pulse
+3,Air Groove,Wet Conditions ◎
+3,Air Groove,Corner Adept ○
+3,Air Groove,Breath of Fresh Air
+3,Air Groove,Slick Surge
+3,Air Groove,Late Surger Straightaways ◎
+4,Air Groove,Blazing Pride
+4,Air Groove,Standard Distance ◎
+4,Air Groove,Straightaway Acceleration
+4,Air Groove,Go with the Flow
+4,Air Groove,Trick (Rear)
+4,Air Groove,The Bigger Picture
+4,Air Groove,Sky-High Teio Step
+4,Air Groove,Professor of Curvature
+4,Air Groove,Breath of Fresh Air
+4,Air Groove,Homestretch Haste
+4,Air Groove,A Small Breather
+5,Fuji Kiseki,Lights of Vaudeville
+5,Fuji Kiseki,Summer Runner ◎
+5,Fuji Kiseki,Professor of Curvature
+5,Fuji Kiseki,Focus
+5,Fuji Kiseki,Big-Sisterly
+5,Fuji Kiseki,Right-Handed ◎
+5,Fuji Kiseki,Outer Post Proficiency ◎
+5,Fuji Kiseki,Breath of Fresh Air
+5,Fuji Kiseki,Shifting Gears
+5,Fuji Kiseki,Straight Descent
+6,Gold Ship,Anchors Aweigh!
+6,Gold Ship,Masterful Gambit
+6,Gold Ship,Long Corners ◎
+6,Gold Ship,The Coast Is Clear!
+6,Gold Ship,Lone Wolf
+6,Gold Ship,Swinging Maestro
+6,Gold Ship,Straightaway Spurt
+6,Gold Ship,Pressure
+6,Gold Ship,Intense Gaze
+7,Gold Ship,Anchors Aweigh!
+7,Gold Ship,Firm Conditions ◎
+7,Gold Ship,Swinging Maestro
+7,Gold Ship,Ramp Up
+7,Gold Ship,I Can See Right Through You
+7,Gold Ship,Triumphant Pulse
+7,Gold Ship,Corner Adept ○
+7,Gold Ship,Beeline Burst
+7,Gold Ship,Pressure
+8,Gold Ship,Anchors Aweigh!
+8,Gold Ship,∴win Q.E.D.
+8,Gold Ship,Focus
+8,Gold Ship,Hesitant Pace Chasers
+8,Gold Ship,Uma Stan
+8,Gold Ship,Sky-High Teio Step
+8,Gold Ship,Swinging Maestro
+8,Gold Ship,Nimble Navigator
+8,Gold Ship,Pressure
+9,Grass Wonder,"Where There's a Will, There's a Way"
+9,Grass Wonder,Corner Recovery ○
+9,Grass Wonder,Slick Surge
+9,Grass Wonder,Frenzied Pace Chasers
+9,Grass Wonder,Late Surger Straightaways ◎
+9,Grass Wonder,Fighter
+9,Grass Wonder,Firm Conditions ◎
+9,Grass Wonder,Homestretch Haste
+9,Grass Wonder,Trick (Rear)
+9,Grass Wonder,Flustered Pace Chasers
+9,Grass Wonder,Later Surger Corners ◎
+10,Grass Wonder,"Where There's a Will, There's a Way"
+10,Grass Wonder,Wet Conditions ◎
+10,Grass Wonder,Outer Post Proficiency ◎
+10,Grass Wonder,Focus
+10,Grass Wonder,Frenzied Pace Chasers
+10,Grass Wonder,Late Surger Straightaways ◎
+10,Grass Wonder,Cut and Drive!
+10,Grass Wonder,Summer Runner ◎
+10,Grass Wonder,Straightaway Recovery
+10,Grass Wonder,Slick Surge
+10,Grass Wonder,Flustered Pace Chasers
+10,Grass Wonder,Slipstream
+11,Grass Wonder,"Where There's a Will, There's a Way"
+11,Grass Wonder,Corner Acceleration ○
+11,Grass Wonder,Straightaway Acceleration
+11,Grass Wonder,Slick Surge
+11,Grass Wonder,Later Surger Corners ◎
+11,Grass Wonder,Professor of Curvature
+11,Grass Wonder,Corner Recovery ○
+11,Grass Wonder,Straightaway Recovery
+11,Grass Wonder,Updrafters
+11,Grass Wonder,The Bigger Picture
+12,King Halo,Prideful King
+12,King Halo,Professor of Curvature
+12,King Halo,Corner Recovery ○
+12,King Halo,Sprinting Gear
+12,King Halo,Studious
+12,King Halo,Standard Distance ◎
+12,King Halo,Corner Acceleration ○
+12,King Halo,Homestretch Haste
+12,King Halo,Blinding Flash
+13,Maruzensky,Red Shift/LP1211-M
+13,Maruzensky,Professor of Curvature
+13,Maruzensky,Fast-Paced
+13,Maruzensky,Front Runner Straightaways ◎
+13,Maruzensky,Angling and Scheming
+13,Maruzensky,Early Lead
+13,Maruzensky,Unrestrained
+13,Maruzensky,Front Runner Corners ◎
+14,Maruzensky,Red Shift/LP1211-M
+14,Maruzensky,Standard Distance ◎
+14,Maruzensky,Professor of Curvature
+14,Maruzensky,Straightaway Recovery
+14,Maruzensky,Productive Plan
+14,Maruzensky,Angling and Scheming
+14,Maruzensky,Firm Conditions ◎
+14,Maruzensky,Beeline Burst
+14,Maruzensky,Early Lead
+14,Maruzensky,Changing Gears
+15,Mejiro McQueen,The Duty of Dignity Calls
+15,Mejiro McQueen,Firm Conditions ◎
+15,Mejiro McQueen,Swinging Maestro
+15,Mejiro McQueen,Ramp Up
+15,Mejiro McQueen,Calm and Collected
+15,Mejiro McQueen,Straight Descent
+15,Mejiro McQueen,Standard Distance ◎
+15,Mejiro McQueen,Spring Runner ◎
+15,Mejiro McQueen,Focus
+15,Mejiro McQueen,Nimble Navigator
+15,Mejiro McQueen,Long Corners ◎
+15,Mejiro McQueen,Hydrate
+16,Mejiro McQueen,The Duty of Dignity Calls
+16,Mejiro McQueen,Non-Standard Distance ◎
+16,Mejiro McQueen,Spring Runner ◎
+16,Mejiro McQueen,Swinging Maestro
+16,Mejiro McQueen,Homestretch Haste
+16,Mejiro McQueen,Vanguard Spirit
+16,Mejiro McQueen,Triumphant Pulse
+16,Mejiro McQueen,Firm Conditions ◎
+16,Mejiro McQueen,Outer Post Proficiency ◎
+16,Mejiro McQueen,Focus
+16,Mejiro McQueen,Long Corners ◎
+17,Mejiro McQueen,The Duty of Dignity Calls
+17,Mejiro McQueen,Swinging Maestro
+17,Mejiro McQueen,Early Lead
+17,Mejiro McQueen,Long Corners ◎
+17,Mejiro McQueen,Stamina Eater
+17,Mejiro McQueen,Firm Conditions ◎
+17,Mejiro McQueen,Prudent Positioning
+17,Mejiro McQueen,Trick (Front)
+17,Mejiro McQueen,Vanguard Spirit
+18,Nice Nature,"I Can Win Sometimes, Right?"
+18,Nice Nature,Standard Distance ◎
+18,Nice Nature,Subdued Pace Chasers
+18,Nice Nature,Hesitant Late Surgers
+18,Nice Nature,All-Seeing Eyes
+18,Nice Nature,Triumphant Pulse
+18,Nice Nature,Breath of Fresh Air
+18,Nice Nature,Hesitant Pace Chasers
+18,Nice Nature,Flustered End Closers
+18,Nice Nature,Triple 7s
+19,Sakura Bakushin O,Genius x Bakushin = Victory
+19,Sakura Bakushin O,Flashy☆Landing
+19,Sakura Bakushin O,Standard Distance ◎
+19,Sakura Bakushin O,Competitive Spirit ◎
+19,Sakura Bakushin O,Nimble Navigator
+19,Sakura Bakushin O,Pace Chaser Straightaways ◎
+19,Sakura Bakushin O,Sky-High Teio Step
+19,Sakura Bakushin O,Right-Handed ◎
+19,Sakura Bakushin O,Firm Conditions ◎
+19,Sakura Bakushin O,Beeline Burst
+19,Sakura Bakushin O,Prepared to Pass
+19,Sakura Bakushin O,Lone Wolf
+20,Sakura Bakushin O,Genius x Bakushin = Victory
+20,Sakura Bakushin O,Left-Handed ◎
+20,Sakura Bakushin O,Corner Adept ○
+20,Sakura Bakushin O,Turbo Sprint
+20,Sakura Bakushin O,Pace Chaser Straightaways ◎
+20,Sakura Bakushin O,Shooting for Victory!
+20,Sakura Bakushin O,Competitive Spirit ◎
+20,Sakura Bakushin O,Corner Recovery ○
+20,Sakura Bakushin O,Flustered Front Runners
+20,Sakura Bakushin O,Tactical Tweak
+21,Sakura Bakushin O,Genius x Bakushin = Victory
+21,Sakura Bakushin O,Shooting for Victory!
+21,Sakura Bakushin O,Sunny Days ◎
+21,Sakura Bakushin O,Professor of Curvature
+21,Sakura Bakushin O,Straightaway Recovery
+21,Sakura Bakushin O,Turbo Sprint
+21,Sakura Bakushin O,Dodging Danger
+21,Sakura Bakushin O,Lights of Vaudeville
+21,Sakura Bakushin O,Wet Conditions ◎
+21,Sakura Bakushin O,Outer Post Proficiency ◎
+21,Sakura Bakushin O,Corner Recovery ○
+21,Sakura Bakushin O,Final Push
+21,Sakura Bakushin O,Front Runner Corners ◎
+22,Sakura Bakushin O,Genius x Bakushin = Victory
+22,Sakura Bakushin O,Standard Distance ◎
+22,Sakura Bakushin O,Professor of Curvature
+22,Sakura Bakushin O,Ramp Up
+22,Sakura Bakushin O,Pace Chaser Straightaways ◎
+22,Sakura Bakushin O,Triple 7s
+22,Sakura Bakushin O,Sky-High Teio Step
+22,Sakura Bakushin O,Competitive Spirit ◎
+22,Sakura Bakushin O,Straightaway Acceleration
+22,Sakura Bakushin O,Turbo Sprint
+22,Sakura Bakushin O,Straight Descent
+23,Sakura Bakushin O,Genius x Bakushin = Victory
+23,Sakura Bakushin O,Firm Conditions ◎
+23,Sakura Bakushin O,Beeline Burst
+23,Sakura Bakushin O,Sprint Straightaways ◎
+23,Sakura Bakushin O,Pace Chaser Straightaways ◎
+23,Sakura Bakushin O,Flashy☆Landing
+23,Sakura Bakushin O,Professor of Curvature
+23,Sakura Bakushin O,Straightaway Recovery
+23,Sakura Bakushin O,Plan X
+23,Sakura Bakushin O,Pace Chaser Corners ◎
+24,Sakura Bakushin O,Genius x Bakushin = Victory
+24,Sakura Bakushin O,U=ma2
+24,Sakura Bakushin O,Straightaway Adept
+24,Sakura Bakushin O,Prudent Positioning
+24,Sakura Bakushin O,Turbo Sprint
+24,Sakura Bakushin O,Huge Lead
+24,Sakura Bakushin O,Tactical Tweak
+24,Sakura Bakushin O,Red Shift/LP1211-M
+24,Sakura Bakushin O,Firm Conditions ◎
+24,Sakura Bakushin O,Straightaway Recovery
+24,Sakura Bakushin O,Prepared to Pass
+24,Sakura Bakushin O,Flustered Front Runners
+24,Sakura Bakushin O,Pace Chaser Straightaways ◎
+24,Sakura Bakushin O,Lucky Seven
+24,Sakura Bakushin O,Lone Wolf
+25,Seiun Sky,Angling and Scheming
+25,Seiun Sky,Swinging Maestro
+25,Seiun Sky,Prudent Positioning
+25,Seiun Sky,Homestretch Haste
+25,Seiun Sky,Long Straightaways ◎
+25,Seiun Sky,Front Runner Savvy ◎
+25,Seiun Sky,Wet Conditions ◎
+25,Seiun Sky,Focus
+25,Seiun Sky,Ramp Up
+25,Seiun Sky,Fast-Paced
+25,Seiun Sky,Leader's Pride
+25,Seiun Sky,Highlander
+26,Seiun Sky,Angling and Scheming
+26,Seiun Sky,Early Lead
+26,Seiun Sky,Unrestrained
+26,Seiun Sky,Keeping the Lead
+26,Seiun Sky,Front Runner Corners ◎
+26,Seiun Sky,Front Runner Savvy ◎
+26,Seiun Sky,Firm Conditions ◎
+26,Seiun Sky,Fast-Paced
+26,Seiun Sky,Cooldown
+26,Seiun Sky,Front Runner Straightaways ◎
+26,Seiun Sky,Leader's Pride
+27,Tokai Teio,Sky-High Teio Step
+27,Tokai Teio,The Duty of Dignity Calls
+27,Tokai Teio,Corner Recovery ○
+27,Tokai Teio,Nimble Navigator
+27,Tokai Teio,Thunderbolt Step
+27,Tokai Teio,Technician
+27,Tokai Teio,Cut and Drive!
+27,Tokai Teio,Standard Distance ◎
+27,Tokai Teio,Prudent Positioning
+27,Tokai Teio,Go with the Flow
+27,Tokai Teio,Pace Chaser Corners ◎
+27,Tokai Teio,Straight Descent
+28,Tokai Teio,Sky-High Teio Step
+28,Tokai Teio,Firm Conditions ◎
+28,Tokai Teio,Breath of Fresh Air
+28,Tokai Teio,Technician
+28,Tokai Teio,Triumphant Pulse
+28,Tokai Teio,Beeline Burst
+28,Tokai Teio,Killer Tunes
+28,Tokai Teio,Straight Descent
+29,Tokai Teio,Sky-High Teio Step
+29,Tokai Teio,Beeline Burst
+29,Tokai Teio,Focus
+29,Tokai Teio,Medium Straightaways ◎
+29,Tokai Teio,Shrewd Step
+29,Tokai Teio,Corner Adept ○
+29,Tokai Teio,Breath of Fresh Air
+29,Tokai Teio,Killer Tunes
+29,Tokai Teio,Pace Chaser Corners ◎
+30,Tokai Teio,Sky-High Teio Step
+30,Tokai Teio,Beeline Burst
+30,Tokai Teio,Nimble Navigator
+30,Tokai Teio,Technician
+30,Tokai Teio,Red Shift/LP1211-M
+30,Tokai Teio,Breath of Fresh Air
+30,Tokai Teio,Killer Tunes
+31,Tokai Teio,Sky-High Teio Step
+31,Tokai Teio,Spring Runner ◎
+31,Tokai Teio,Professor of Curvature
+31,Tokai Teio,Breath of Fresh Air
+31,Tokai Teio,Prudent Positioning
+31,Tokai Teio,Homestretch Haste
+31,Tokai Teio,Straight Descent
+31,Tokai Teio,Left-Handed ◎
+31,Tokai Teio,Outer Post Proficiency ◎
+31,Tokai Teio,Straightaway Acceleration
+31,Tokai Teio,Focus
+31,Tokai Teio,Go with the Flow
+31,Tokai Teio,Technician
+32,Tokai Teio,Sky-High Teio Step
+32,Tokai Teio,Corner Acceleration ○
+32,Tokai Teio,Beeline Burst
+32,Tokai Teio,Killer Tunes
+32,Tokai Teio,Triumphant Pulse
+32,Tokai Teio,Corner Recovery ○
+32,Tokai Teio,Breath of Fresh Air
+32,Tokai Teio,Lucky Seven
+33,Tokai Teio,Sky-High Teio Step
+33,Tokai Teio,Firm Conditions ◎
+33,Tokai Teio,Corner Recovery ○
+33,Tokai Teio,Breath of Fresh Air
+33,Tokai Teio,Killer Tunes
+33,Tokai Teio,Technician
+33,Tokai Teio,Triumphant Pulse
+33,Tokai Teio,Long Shot ◎
+33,Tokai Teio,Beeline Burst
+33,Tokai Teio,Nimble Navigator
+33,Tokai Teio,Thunderbolt Step
+33,Tokai Teio,Straight Descent
+34,Tokai Teio,Sky-High Teio Step
+34,Tokai Teio,Sunny Days ◎
+34,Tokai Teio,Straightaway Adept
+34,Tokai Teio,Homestretch Haste
+34,Tokai Teio,Front Runner Straightaways ◎
+34,Tokai Teio,Triumphant Pulse
+34,Tokai Teio,Corner Adept ○
+34,Tokai Teio,Breath of Fresh Air
+34,Tokai Teio,Killer Tunes
+35,Tokai Teio,Sky-High Teio Step
+35,Tokai Teio,Corner Adept ○
+35,Tokai Teio,Nimble Navigator
+35,Tokai Teio,Medium Straightaways ◎
+35,Tokai Teio,Technician
+35,Tokai Teio,Firm Conditions ◎
+35,Tokai Teio,Swinging Maestro
+35,Tokai Teio,Killer Tunes
+35,Tokai Teio,Pace Chaser Corners ◎
+35,Tokai Teio,Hydrate
+36,Tokai Teio,Sky-High Teio Step
+36,Tokai Teio,Standard Distance ◎
+36,Tokai Teio,Straightaway Adept
+36,Tokai Teio,Prepared to Pass
+36,Tokai Teio,Technician
+36,Tokai Teio,Triumphant Pulse
+36,Tokai Teio,Corner Adept ○
+36,Tokai Teio,Breath of Fresh Air
+36,Tokai Teio,Killer Tunes
+36,Tokai Teio,Straight Descent
+37,Tokai Teio,Sky-High Teio Step
+37,Tokai Teio,Professor of Curvature
+37,Tokai Teio,Focus
+37,Tokai Teio,Nimble Navigator
+37,Tokai Teio,Medium Straightaways ◎
+37,Tokai Teio,Technician
+37,Tokai Teio,Fighter
+37,Tokai Teio,Victoria por plancha ☆
+37,Tokai Teio,Corner Recovery ○
+37,Tokai Teio,Prudent Positioning
+37,Tokai Teio,Go with the Flow
+37,Tokai Teio,Dodging Danger
+37,Tokai Teio,Straight Descent
+37,Tokai Teio,Playtime's Over!
+38,Tokai Teio,Sky-High Teio Step
+38,Tokai Teio,Corner Adept ○
+38,Tokai Teio,Breath of Fresh Air
+38,Tokai Teio,Killer Tunes
+38,Tokai Teio,Technician
+38,Tokai Teio,Hydrate
+38,Tokai Teio,The Duty of Dignity Calls
+38,Tokai Teio,Corner Recovery ○
+38,Tokai Teio,Nimble Navigator
+38,Tokai Teio,Pace Chaser Corners ◎
+38,Tokai Teio,Straight Descent
+39,Tokai Teio,Sky-High Teio Step
+39,Tokai Teio,Tokyo Racecourse ◎
+39,Tokai Teio,Nimble Navigator
+39,Tokai Teio,Medium Straightaways ◎
+39,Tokai Teio,Technician
+39,Tokai Teio,Slipstream
+39,Tokai Teio,Triumphant Pulse
+39,Tokai Teio,Breath of Fresh Air
+39,Tokai Teio,Killer Tunes
+39,Tokai Teio,Pace Chaser Corners ◎
+39,Tokai Teio,Straight Descent
+40,Tokai Teio,Sky-High Teio Step
+40,Tokai Teio,Spring Runner ◎
+40,Tokai Teio,Corner Recovery ○
+40,Tokai Teio,Breath of Fresh Air
+40,Tokai Teio,Prudent Positioning
+40,Tokai Teio,Go with the Flow
+40,Tokai Teio,Technician
+40,Tokai Teio,Standard Distance ◎
+40,Tokai Teio,Outer Post Proficiency ◎
+40,Tokai Teio,Straightaway Acceleration
+40,Tokai Teio,Focus
+40,Tokai Teio,Nimble Navigator
+40,Tokai Teio,Medium Straightaways ◎
+40,Tokai Teio,Straight Descent
+41,Tokai Teio,Sky-High Teio Step
+41,Tokai Teio,Sunny Days ◎
+41,Tokai Teio,Breath of Fresh Air
+41,Tokai Teio,Prudent Positioning
+41,Tokai Teio,Go with the Flow
+41,Tokai Teio,Steadfast
+41,Tokai Teio,Straight Descent
+41,Tokai Teio,Standard Distance ◎
+41,Tokai Teio,Professor of Curvature
+41,Tokai Teio,Focus
+41,Tokai Teio,Nimble Navigator
+41,Tokai Teio,Stamina to Spare
+41,Tokai Teio,Technician
+41,Tokai Teio,Sympathy
+42,Tokai Teio,Sky-High Teio Step
+42,Tokai Teio,Competitive Spirit ◎
+42,Tokai Teio,Prudent Positioning
+42,Tokai Teio,Go with the Flow
+42,Tokai Teio,Mile Corners ◎
+42,Tokai Teio,Front Runner Corners ◎
+42,Tokai Teio,Technician
+42,Tokai Teio,Standard Distance ◎
+42,Tokai Teio,Breath of Fresh Air
+42,Tokai Teio,Nimble Navigator
+42,Tokai Teio,Prepared to Pass
+42,Tokai Teio,Front Runner Straightaways ◎
+42,Tokai Teio,Dodging Danger
+42,Tokai Teio,Straight Descent
+43,Vodka,Cut and Drive!
+43,Vodka,Corner Adept ○
+43,Vodka,Breath of Fresh Air
+43,Vodka,Homestretch Haste
+43,Vodka,Fighter
+43,Vodka,Triumphant Pulse
+43,Vodka,Corner Acceleration ○
+43,Vodka,Ramp Up
+43,Vodka,Slick Surge
+43,Vodka,Slipstream
+44,Vodka,Cut and Drive!
+44,Vodka,Outer Post Proficiency ◎
+44,Vodka,Straightaway Acceleration
+44,Vodka,Slick Surge
+44,Vodka,Late Surger Corners ○
+44,Vodka,Lucky Seven
+44,Vodka,Firm Conditions ◎
+44,Vodka,Professor of Curvature
+44,Vodka,Breath of Fresh Air
+44,Vodka,Mile Straightaways ◎
+44,Vodka,Fighter
+44,Vodka,Lone Wolf
+45,Vodka,Cut and Drive!
+45,Vodka,Outer Post Proficiency ◎
+45,Vodka,Breath of Fresh Air
+45,Vodka,Slick Surge
+45,Vodka,Late Surger Corners ○
+45,Vodka,Slipstream
+45,Vodka,Triumphant Pulse
+45,Vodka,Professor of Curvature
+45,Vodka,Ramp Up
+45,Vodka,Mile Straightaways ◎
+45,Vodka,Lone Wolf
+46,Vodka,Cut and Drive!
+46,Vodka,Professor of Curvature
+46,Vodka,Nimble Navigator
+46,Vodka,Unrestrained
+46,Vodka,Standard Distance ◎
+46,Vodka,Corner Recovery ○
+46,Vodka,Fast-Paced
+46,Vodka,Front Runner Corners ◎

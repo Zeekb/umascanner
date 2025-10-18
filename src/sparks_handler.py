@@ -1,9 +1,12 @@
 import os
 import glob
 import cv2
+import numpy as np
 from tabs import detect_active_tab
 from tkinter import Tk, Canvas, Button, Frame, BOTH
 from PIL import Image, ImageTk
+from roi_detector import detect_spark_zones
+import easyocr
 
 # ---------------- Utility Functions ----------------
 def get_entries(input_folder):
@@ -88,9 +91,13 @@ class ROISelector:
 
         # Load combined image of only inspiration images
         self.img_original = combine_images_horizontally(self.image_paths)
+        
+        # Auto-detect ROIs
+        reader = easyocr.Reader(['en'])
+        img_cv = cv2.cvtColor(np.array(self.img_original), cv2.COLOR_RGB2BGR)
+        detected_rois = detect_spark_zones(img_cv, reader)
+        self.rois = [(self.entry_name, roi, self.image_paths) for roi in detected_rois]
 
-        # Load previous ROIs for this entry if any
-        self.rois = list(self.all_rois.get(self.entry_name, []))
         self.undo_stack = [list(self.rois)]
         self.redo_stack.clear()
 

@@ -1,29 +1,58 @@
 entry_id,name,type,color,spark_name,count
-0,Agnes Tachyon,representative,blue,Wit,3
-0,Agnes Tachyon,representative,pink,Turf,2
-0,Agnes Tachyon,representative,green,U=ma2,1
-0,Agnes Tachyon,representative,white,Kikuka Sho,1
-0,Agnes Tachyon,representative,white,Hesitant Front Runners,2
-0,Agnes Tachyon,representative,white,URA Finale,1
-0,Agnes Tachyon,representative,white,Satsuki Sho,1
-0,Agnes Tachyon,representative,white,Flustered Front Runners,1
-0,Agnes Tachyon,representative,white,Murmur,2
-0,Agnes Tachyon,legacy,blue,Wit,1
-0,Agnes Tachyon,legacy,blue,Power,3
-0,Agnes Tachyon,legacy,pink,Turf,1
-0,Agnes Tachyon,legacy,pink,Long,2
-0,Agnes Tachyon,legacy,green,"Where There's a Will, There's a Way",2
-0,Agnes Tachyon,legacy,green,Anchors Aweigh!,1
-0,Agnes Tachyon,legacy,white,Trick (Rear),2
-0,Agnes Tachyon,legacy,white,Late Surger Corners ○,1
-0,Agnes Tachyon,legacy,white,URA Finale,2
-0,Agnes Tachyon,legacy,white,Corner Recovery ○,3
-0,Agnes Tachyon,legacy,white,Flustered Pace Chasers,1
-0,Agnes Tachyon,legacy,white,Fighter,2
-0,Agnes Tachyon,legacy,white,Kikuka Sho,3
-0,Agnes Tachyon,legacy,white,Takarazuka Kinen,2
-0,Agnes Tachyon,legacy,white,Corner Adept ○,2
-0,Agnes Tachyon,legacy,white,Straightaway Recovery,1
+47,Agnes Tachyon,representative,blue,Wit,1
+47,Agnes Tachyon,representative,pink,Turf,3
+47,Agnes Tachyon,representative,green,U=ma2,1
+47,Agnes Tachyon,representative,white,Kikuka Sho,2
+47,Agnes Tachyon,representative,white,Corner Adept ○,2
+47,Agnes Tachyon,representative,white,Medium Corners ○,1
+47,Agnes Tachyon,representative,white,Satsuki Sho,1
+47,Agnes Tachyon,representative,white,Arima Kinen,2
+47,Agnes Tachyon,representative,white,Corner Recovery ○,2
+47,Agnes Tachyon,representative,white,URA Finale,1
+47,Agnes Tachyon,legacy,blue,Power,5
+47,Agnes Tachyon,legacy,pink,Medium,2
+47,Agnes Tachyon,legacy,pink,Pace Chaser,1
+47,Agnes Tachyon,legacy,green,Triumphant Pulse,2
+47,Agnes Tachyon,legacy,green,Sky-High Teio Step,1
+47,Agnes Tachyon,legacy,white,Osaka Hai,1
+47,Agnes Tachyon,legacy,white,Tenno Sho (Autumn),1
+47,Agnes Tachyon,legacy,white,Corner Acceleration ○,1
+47,Agnes Tachyon,legacy,white,Thunderbolt Step,1
+47,Agnes Tachyon,legacy,white,Lone Wolf,2
+47,Agnes Tachyon,legacy,white,February S.,1
+47,Agnes Tachyon,legacy,white,NHK Mile C.,1
+47,Agnes Tachyon,legacy,white,Nakayama Racecourse ○,2
+47,Agnes Tachyon,legacy,white,Straightaway Adept,2
+47,Agnes Tachyon,legacy,white,Hydrate,2
+47,Agnes Tachyon,legacy,white,Corner Recovery ○,2
+47,Agnes Tachyon,legacy,white,Nimble Navigator,2
+47,Agnes Tachyon,legacy,white,Takarazuka Kinen,1
+47,Agnes Tachyon,legacy,white,Straightaway Recovery,2
+48,Agnes Tachyon,representative,blue,Wit,3
+48,Agnes Tachyon,representative,pink,Turf,2
+48,Agnes Tachyon,representative,green,U=ma2,1
+48,Agnes Tachyon,representative,white,Kikuka Sho,1
+48,Agnes Tachyon,representative,white,Hesitant Front Runners,2
+48,Agnes Tachyon,representative,white,URA Finale,1
+48,Agnes Tachyon,representative,white,Satsuki Sho,1
+48,Agnes Tachyon,representative,white,Flustered Front Runners,1
+48,Agnes Tachyon,representative,white,Murmur,2
+48,Agnes Tachyon,legacy,blue,Wit,1
+48,Agnes Tachyon,legacy,blue,Power,3
+48,Agnes Tachyon,legacy,pink,Turf,1
+48,Agnes Tachyon,legacy,pink,Long,2
+48,Agnes Tachyon,legacy,green,"Where There's a Will, There's a Way",2
+48,Agnes Tachyon,legacy,green,Anchors Aweigh!,1
+48,Agnes Tachyon,legacy,white,Trick (Rear),2
+48,Agnes Tachyon,legacy,white,Late Surger Corners ○,1
+48,Agnes Tachyon,legacy,white,URA Finale,2
+48,Agnes Tachyon,legacy,white,Corner Recovery ○,3
+48,Agnes Tachyon,legacy,white,Flustered Pace Chasers,1
+48,Agnes Tachyon,legacy,white,Fighter,2
+48,Agnes Tachyon,legacy,white,Kikuka Sho,3
+48,Agnes Tachyon,legacy,white,Takarazuka Kinen,2
+48,Agnes Tachyon,legacy,white,Corner Adept ○,2
+48,Agnes Tachyon,legacy,white,Straightaway Recovery,1
 1,Air Groove,representative,blue,Wit,1
 1,Air Groove,representative,pink,Late Surger,2
 1,Air Groove,representative,green,Blazing Pride,2
@@ -46,3 +75,892 @@ entry_id,name,type,color,spark_name,count
 1,Air Groove,legacy,white,Mile Ch.,1
 1,Air Groove,legacy,white,Queen Elizabeth II Cup,2
 1,Air Groove,legacy,white,Prepared to Pass,3
+2,Air Groove,representative,blue,Speed,1
+2,Air Groove,representative,pink,Medium,2
+2,Air Groove,representative,green,Blazing Pride,2
+2,Air Groove,representative,white,Hanshin J.F.,1
+2,Air Groove,representative,white,Straightaway Recovery,1
+2,Air Groove,representative,white,Tenno Sho (Autumn),1
+2,Air Groove,representative,white,Corner Adept ○,1
+2,Air Groove,legacy,blue,Power,6
+2,Air Groove,legacy,pink,Pace Chaser,3
+2,Air Groove,legacy,green,Triumphant Pulse,1
+2,Air Groove,legacy,white,Asahi Hai F.S.,2
+2,Air Groove,legacy,white,Focus,1
+2,Air Groove,legacy,white,Corner Adept ○,1
+2,Air Groove,legacy,white,URA Finale,4
+2,Air Groove,legacy,white,Mile Ch.,1
+2,Air Groove,legacy,white,Queen Elizabeth II Cup,2
+2,Air Groove,legacy,white,Prepared to Pass,3
+3,Air Groove,representative,blue,Wit,1
+3,Air Groove,representative,pink,Turf,1
+3,Air Groove,representative,white,Sunny Days ○,1
+3,Air Groove,representative,white,Late Surger Corners ○,1
+3,Air Groove,representative,white,Japanese Oaks,2
+3,Air Groove,representative,white,Straightaway Acceleration,2
+3,Air Groove,legacy,blue,Power,6
+3,Air Groove,legacy,pink,Pace Chaser,3
+3,Air Groove,legacy,green,Triumphant Pulse,1
+3,Air Groove,legacy,white,Asahi Hai F.S.,2
+3,Air Groove,legacy,white,Focus,1
+3,Air Groove,legacy,white,Corner Adept ○,1
+3,Air Groove,legacy,white,URA Finale,4
+3,Air Groove,legacy,white,Mile Ch.,1
+3,Air Groove,legacy,white,Queen Elizabeth II Cup,2
+3,Air Groove,legacy,white,Prepared to Pass,3
+4,Air Groove,representative,blue,Power,1
+4,Air Groove,representative,pink,Pace Chaser,2
+4,Air Groove,representative,white,Tenno Sho (Autumn),1
+4,Air Groove,representative,white,Corner Adept ○,1
+4,Air Groove,representative,white,Trick (Rear),1
+4,Air Groove,representative,white,Shuka Sho,2
+4,Air Groove,representative,white,Standard Distance ○,2
+4,Air Groove,representative,white,Straightaway Recovery,1
+4,Air Groove,legacy,blue,Speed,2
+4,Air Groove,legacy,blue,Stamina,3
+4,Air Groove,legacy,pink,Medium,2
+4,Air Groove,legacy,pink,Late Surger,2
+4,Air Groove,legacy,green,Sky-High Teio Step,2
+4,Air Groove,legacy,green,Shooting Star,2
+4,Air Groove,legacy,white,Corner Recovery ○,2
+4,Air Groove,legacy,white,Corner Adept ○,2
+4,Air Groove,legacy,white,Nimble Navigator,2
+4,Air Groove,legacy,white,Firm Conditions ○,2
+4,Air Groove,legacy,white,URA Finale,2
+4,Air Groove,legacy,white,Standard Distance ○,2
+4,Air Groove,legacy,white,Steadfast,2
+5,Fuji Kiseki,representative,blue,Power,3
+5,Fuji Kiseki,representative,pink,Turf,3
+5,Fuji Kiseki,representative,green,Lights of Vaudeville,1
+5,Fuji Kiseki,representative,white,Outer Post Proficiency ○,2
+5,Fuji Kiseki,representative,white,Focus,1
+5,Fuji Kiseki,representative,white,Yasuda Kinen,1
+5,Fuji Kiseki,representative,white,Corner Adept ○,1
+5,Fuji Kiseki,representative,white,URA Finale,1
+5,Fuji Kiseki,legacy,blue,Power,1
+5,Fuji Kiseki,legacy,blue,Speed,3
+5,Fuji Kiseki,legacy,pink,Mile,2
+5,Fuji Kiseki,legacy,pink,Long,2
+5,Fuji Kiseki,legacy,green,Victoria por plancha ☆,2
+5,Fuji Kiseki,legacy,white,Arima Kinen,1
+5,Fuji Kiseki,legacy,white,Front Runner Straightaways ○,1
+5,Fuji Kiseki,legacy,white,Takarazuka Kinen,2
+5,Fuji Kiseki,legacy,white,Focus,2
+5,Fuji Kiseki,legacy,white,URA Finale,3
+5,Fuji Kiseki,legacy,white,Hopeful S.,1
+5,Fuji Kiseki,legacy,white,Medium Corners ○,1
+5,Fuji Kiseki,legacy,white,Homestretch Haste,2
+6,Gold Ship,representative,blue,Stamina,2
+6,Gold Ship,representative,pink,Long,2
+6,Gold Ship,representative,green,Anchors Aweigh!,2
+6,Gold Ship,representative,white,Pressure,2
+6,Gold Ship,representative,white,Corner Recovery ○,2
+6,Gold Ship,legacy,blue,Stamina,4
+6,Gold Ship,legacy,pink,Long,2
+6,Gold Ship,legacy,pink,Medium,2
+6,Gold Ship,legacy,green,Nemesis,1
+6,Gold Ship,legacy,white,Homestretch Haste,2
+6,Gold Ship,legacy,white,Straightaway Spurt,1
+6,Gold Ship,legacy,white,Tenno Sho (Autumn),1
+6,Gold Ship,legacy,white,Standing By,2
+6,Gold Ship,legacy,white,Arima Kinen,3
+6,Gold Ship,legacy,white,Stamina Eater,1
+6,Gold Ship,legacy,white,Corner Adept ○,2
+7,Gold Ship,representative,blue,Stamina,3
+7,Gold Ship,representative,pink,End Closer,2
+7,Gold Ship,representative,green,Anchors Aweigh!,1
+7,Gold Ship,representative,white,Firm Conditions ○,1
+7,Gold Ship,representative,white,URA Finale,1
+7,Gold Ship,representative,white,Satsuki Sho,2
+7,Gold Ship,representative,white,Pressure,2
+7,Gold Ship,legacy,blue,Stamina,2
+7,Gold Ship,legacy,blue,Power,3
+7,Gold Ship,legacy,pink,Medium,4
+7,Gold Ship,legacy,green,Triumphant Pulse,2
+7,Gold Ship,legacy,white,Arima Kinen,3
+7,Gold Ship,legacy,white,Stamina Eater,1
+7,Gold Ship,legacy,white,Corner Adept ○,3
+7,Gold Ship,legacy,white,Tenno Sho (Autumn),1
+7,Gold Ship,legacy,white,Corner Recovery ○,2
+8,Gold Ship,representative,blue,Wit,1
+8,Gold Ship,representative,pink,Pace Chaser,2
+8,Gold Ship,representative,green,Anchors Aweigh!,2
+8,Gold Ship,representative,white,Corner Recovery ○,1
+8,Gold Ship,representative,white,Takarazuka Kinen,3
+8,Gold Ship,representative,white,URA Finale,1
+8,Gold Ship,legacy,blue,Speed,1
+8,Gold Ship,legacy,blue,Wit,1
+8,Gold Ship,legacy,pink,Medium,3
+8,Gold Ship,legacy,pink,Pace Chaser,2
+8,Gold Ship,legacy,green,Sky-High Teio Step,2
+8,Gold Ship,legacy,green,∴win Q.E.D.,1
+8,Gold Ship,legacy,white,Arima Kinen,1
+8,Gold Ship,legacy,white,Japanese Derby,2
+8,Gold Ship,legacy,white,Hydrate,1
+9,Grass Wonder,representative,blue,Wit,1
+9,Grass Wonder,representative,pink,Turf,1
+9,Grass Wonder,representative,green,"Where There's a Will, There's a Way",2
+9,Grass Wonder,representative,white,Trick (Rear),2
+9,Grass Wonder,representative,white,Late Surger Corners ○,1
+9,Grass Wonder,representative,white,URA Finale,2
+9,Grass Wonder,representative,white,Corner Recovery ○,1
+9,Grass Wonder,representative,white,Flustered Pace Chasers,1
+9,Grass Wonder,representative,white,Fighter,2
+9,Grass Wonder,legacy,blue,Stamina,2
+9,Grass Wonder,legacy,blue,Speed,3
+9,Grass Wonder,legacy,pink,Medium,2
+9,Grass Wonder,legacy,pink,Turf,2
+9,Grass Wonder,legacy,green,Legacy of the Strong,2
+9,Grass Wonder,legacy,white,Arima Kinen,3
+9,Grass Wonder,legacy,white,Stamina Eater,1
+9,Grass Wonder,legacy,white,Corner Adept ○,3
+9,Grass Wonder,legacy,white,Tenno Sho (Autumn),3
+9,Grass Wonder,legacy,white,URA Finale,1
+9,Grass Wonder,legacy,white,Osaka Hai,1
+10,Grass Wonder,representative,blue,Stamina,1
+10,Grass Wonder,representative,pink,Late Surger,2
+10,Grass Wonder,representative,green,"Where There's a Will, There's a Way",1
+10,Grass Wonder,representative,white,URA Finale,2
+10,Grass Wonder,legacy,blue,Power,5
+10,Grass Wonder,legacy,pink,Pace Chaser,2
+10,Grass Wonder,legacy,pink,Mile,2
+10,Grass Wonder,legacy,green,Cut and Drive!,2
+10,Grass Wonder,legacy,white,Asahi Hai F.S.,2
+10,Grass Wonder,legacy,white,Focus,1
+10,Grass Wonder,legacy,white,Corner Adept ○,3
+10,Grass Wonder,legacy,white,URA Finale,2
+10,Grass Wonder,legacy,white,Straightaway Recovery,1
+10,Grass Wonder,legacy,white,Slick Surge,1
+11,Grass Wonder,representative,blue,Speed,2
+11,Grass Wonder,representative,pink,Mile,3
+11,Grass Wonder,representative,green,"Where There's a Will, There's a Way",1
+11,Grass Wonder,representative,white,Straightaway Recovery,1
+11,Grass Wonder,representative,white,Asahi Hai F.S.,2
+11,Grass Wonder,legacy,blue,Power,2
+11,Grass Wonder,legacy,blue,Stamina,3
+11,Grass Wonder,legacy,pink,Mile,2
+11,Grass Wonder,legacy,pink,Turf,2
+11,Grass Wonder,legacy,green,Cut and Drive!,2
+11,Grass Wonder,legacy,green,Triumphant Pulse,2
+11,Grass Wonder,legacy,white,Straightaway Recovery,1
+11,Grass Wonder,legacy,white,Corner Adept ○,2
+11,Grass Wonder,legacy,white,Slick Surge,1
+11,Grass Wonder,legacy,white,NHK Mile C.,1
+11,Grass Wonder,legacy,white,Straightaway Adept,2
+11,Grass Wonder,legacy,white,Osaka Hai,1
+11,Grass Wonder,legacy,white,Mile Ch.,1
+12,King Halo,representative,blue,Stamina,1
+12,King Halo,representative,pink,Late Surger,3
+12,King Halo,representative,green,Prideful King,1
+12,King Halo,representative,white,Standard Distance ○,1
+12,King Halo,representative,white,Kikuka Sho,1
+12,King Halo,representative,white,Sprinting Gear,2
+12,King Halo,legacy,blue,Power,5
+12,King Halo,legacy,pink,Sprint,2
+12,King Halo,legacy,pink,Mile,2
+12,King Halo,legacy,green,Shooting for Victory!,1
+12,King Halo,legacy,green,Cut and Drive!,2
+12,King Halo,legacy,white,Sprinters S.,2
+12,King Halo,legacy,white,Corner Recovery ○,2
+12,King Halo,legacy,white,Sprinting Gear,1
+12,King Halo,legacy,white,Oka Sho,1
+12,King Halo,legacy,white,Champions C.,2
+12,King Halo,legacy,white,Straightaway Recovery,2
+12,King Halo,legacy,white,Shifting Gears,1
+12,King Halo,legacy,white,Corner Adept ○,2
+12,King Halo,legacy,white,Slick Surge,1
+13,Maruzensky,representative,blue,Stamina,1
+13,Maruzensky,representative,pink,Medium,2
+13,Maruzensky,representative,green,Red Shift/LP1211-M,1
+13,Maruzensky,representative,white,Tenno Sho (Autumn),1
+13,Maruzensky,representative,white,Osaka Hai,2
+13,Maruzensky,legacy,blue,Stamina,2
+13,Maruzensky,legacy,blue,Power,2
+13,Maruzensky,legacy,pink,Turf,2
+13,Maruzensky,legacy,pink,Pace Chaser,3
+13,Maruzensky,legacy,green,Genius x Bakushin = Victory,2
+13,Maruzensky,legacy,white,Tenno Sho (Autumn),1
+13,Maruzensky,legacy,white,Standard Distance ○,2
+13,Maruzensky,legacy,white,Fast-Paced,2
+13,Maruzensky,legacy,white,Speed Eater,1
+13,Maruzensky,legacy,white,Arima Kinen,2
+13,Maruzensky,legacy,white,Corner Adept ○,1
+13,Maruzensky,legacy,white,Final Push,1
+13,Maruzensky,legacy,white,Front Runner Straightaways ○,1
+13,Maruzensky,legacy,white,Straightaway Adept,1
+13,Maruzensky,legacy,white,Sprinting Gear,2
+14,Maruzensky,representative,blue,Speed,2
+14,Maruzensky,representative,pink,Turf,3
+14,Maruzensky,representative,green,Red Shift/LP1211-M,2
+14,Maruzensky,representative,white,Productive Plan,1
+14,Maruzensky,representative,white,Early Lead,2
+14,Maruzensky,legacy,blue,Stamina,4
+14,Maruzensky,legacy,pink,Medium,1
+14,Maruzensky,legacy,pink,Turf,2
+14,Maruzensky,legacy,green,Angling and Scheming,3
+14,Maruzensky,legacy,white,Satsuki Sho,1
+14,Maruzensky,legacy,white,Takarazuka Kinen,2
+14,Maruzensky,legacy,white,Focus,2
+14,Maruzensky,legacy,white,Groundwork,2
+14,Maruzensky,legacy,white,Osaka Hai,2
+14,Maruzensky,legacy,white,Tenno Sho (Spring),2
+14,Maruzensky,legacy,white,Tenno Sho (Autumn),2
+14,Maruzensky,legacy,white,Fast-Paced,3
+14,Maruzensky,legacy,white,Standard Distance ○,2
+14,Maruzensky,legacy,white,Speed Eater,1
+14,Maruzensky,legacy,white,Arima Kinen,2
+14,Maruzensky,legacy,white,Corner Adept ○,1
+14,Maruzensky,legacy,white,Final Push,1
+14,Maruzensky,legacy,white,Front Runner Straightaways ○,1
+15,Mejiro McQueen,representative,blue,Power,2
+15,Mejiro McQueen,representative,pink,Medium,3
+15,Mejiro McQueen,representative,green,The Duty of Dignity Calls,2
+15,Mejiro McQueen,representative,white,Stamina to Spare,1
+15,Mejiro McQueen,representative,white,Corner Recovery ○,1
+15,Mejiro McQueen,legacy,blue,Stamina,4
+15,Mejiro McQueen,legacy,pink,Long,2
+15,Mejiro McQueen,legacy,pink,Turf,2
+15,Mejiro McQueen,legacy,green,∴win Q.E.D.,2
+15,Mejiro McQueen,legacy,green,Anchors Aweigh!,1
+15,Mejiro McQueen,legacy,white,Asahi Hai F.S.,2
+15,Mejiro McQueen,legacy,white,Firm Conditions ○,3
+15,Mejiro McQueen,legacy,white,Slipstream,2
+15,Mejiro McQueen,legacy,white,Tenno Sho (Autumn),1
+15,Mejiro McQueen,legacy,white,Standard Distance ○,2
+15,Mejiro McQueen,legacy,white,Stamina to Spare,1
+15,Mejiro McQueen,legacy,white,URA Finale,3
+15,Mejiro McQueen,legacy,white,Corner Recovery ○,1
+16,Mejiro McQueen,representative,blue,Guts,1
+16,Mejiro McQueen,representative,pink,Pace Chaser,1
+16,Mejiro McQueen,representative,green,The Duty of Dignity Calls,2
+16,Mejiro McQueen,representative,white,Firm Conditions ○,1
+16,Mejiro McQueen,representative,white,Long Corners ○,1
+16,Mejiro McQueen,representative,white,Kikuka Sho,3
+16,Mejiro McQueen,representative,white,Corner Recovery ○,1
+16,Mejiro McQueen,representative,white,URA Finale,2
+16,Mejiro McQueen,legacy,blue,Stamina,6
+16,Mejiro McQueen,legacy,pink,Turf,4
+16,Mejiro McQueen,legacy,green,Triumphant Pulse,2
+16,Mejiro McQueen,legacy,green,Anchors Aweigh!,1
+16,Mejiro McQueen,legacy,white,NHK Mile C.,1
+16,Mejiro McQueen,legacy,white,Straightaway Adept,2
+16,Mejiro McQueen,legacy,white,Osaka Hai,1
+16,Mejiro McQueen,legacy,white,Mile Ch.,1
+16,Mejiro McQueen,legacy,white,Corner Recovery ○,1
+16,Mejiro McQueen,legacy,white,Firm Conditions ○,2
+16,Mejiro McQueen,legacy,white,URA Finale,1
+17,Mejiro McQueen,representative,blue,Stamina,1
+17,Mejiro McQueen,representative,pink,Pace Chaser,2
+17,Mejiro McQueen,representative,green,The Duty of Dignity Calls,2
+17,Mejiro McQueen,representative,white,Prudent Positioning,2
+17,Mejiro McQueen,legacy,blue,Power,3
+17,Mejiro McQueen,legacy,blue,Stamina,3
+17,Mejiro McQueen,legacy,pink,Pace Chaser,2
+17,Mejiro McQueen,legacy,pink,Turf,2
+17,Mejiro McQueen,legacy,green,Anchors Aweigh!,1
+17,Mejiro McQueen,legacy,white,Asahi Hai F.S.,2
+17,Mejiro McQueen,legacy,white,Focus,1
+17,Mejiro McQueen,legacy,white,Corner Adept ○,1
+17,Mejiro McQueen,legacy,white,URA Finale,3
+17,Mejiro McQueen,legacy,white,Corner Recovery ○,1
+17,Mejiro McQueen,legacy,white,Firm Conditions ○,2
+18,Nice Nature,representative,blue,Power,1
+18,Nice Nature,representative,pink,Pace Chaser,1
+18,Nice Nature,representative,pink,Late Surger,2
+18,Nice Nature,legacy,blue,Stamina,2
+18,Nice Nature,legacy,blue,Wit,3
+18,Nice Nature,legacy,pink,Medium,2
+18,Nice Nature,legacy,pink,Turf,2
+18,Nice Nature,legacy,green,Triumphant Pulse,2
+18,Nice Nature,legacy,white,Arima Kinen,3
+18,Nice Nature,legacy,white,Stamina Eater,1
+18,Nice Nature,legacy,white,Corner Adept ○,4
+18,Nice Nature,legacy,white,February S.,1
+18,Nice Nature,legacy,white,Hydrate,1
+19,Sakura Bakushin O,representative,blue,Stamina,1
+19,Sakura Bakushin O,representative,pink,Mile,2
+19,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,2
+19,Sakura Bakushin O,representative,white,Oka Sho,1
+19,Sakura Bakushin O,representative,white,Standard Distance ○,1
+19,Sakura Bakushin O,representative,white,Prepared to Pass,1
+19,Sakura Bakushin O,representative,white,Takamatsunomiya Kinen,2
+19,Sakura Bakushin O,representative,white,Right-Handed ○,2
+19,Sakura Bakushin O,representative,white,Firm Conditions ○,2
+19,Sakura Bakushin O,representative,white,Lone Wolf,2
+19,Sakura Bakushin O,legacy,blue,Power,2
+19,Sakura Bakushin O,legacy,blue,Speed,2
+19,Sakura Bakushin O,legacy,pink,Turf,2
+19,Sakura Bakushin O,legacy,pink,Medium,1
+19,Sakura Bakushin O,legacy,green,Sky-High Teio Step,1
+19,Sakura Bakushin O,legacy,green,Flashy☆Landing,3
+19,Sakura Bakushin O,legacy,white,Tenno Sho (Spring),1
+19,Sakura Bakushin O,legacy,white,Corner Adept ○,1
+19,Sakura Bakushin O,legacy,white,Straightaway Acceleration,1
+19,Sakura Bakushin O,legacy,white,Pace Chaser Straightaways ○,1
+19,Sakura Bakushin O,legacy,white,Satsuki Sho,1
+19,Sakura Bakushin O,legacy,white,Kikuka Sho,1
+19,Sakura Bakushin O,legacy,white,Corner Recovery ○,3
+19,Sakura Bakushin O,legacy,white,Medium Straightaways ○,1
+19,Sakura Bakushin O,legacy,white,Japan Cup,2
+19,Sakura Bakushin O,legacy,white,Straight Descent,2
+19,Sakura Bakushin O,legacy,white,Tenno Sho (Autumn),1
+19,Sakura Bakushin O,legacy,white,Outer Post Proficiency ○,2
+19,Sakura Bakushin O,legacy,white,Homestretch Haste,1
+20,Sakura Bakushin O,representative,blue,Speed,2
+20,Sakura Bakushin O,representative,pink,Turf,3
+20,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,1
+20,Sakura Bakushin O,representative,white,Corner Adept ○,2
+20,Sakura Bakushin O,representative,white,Sprinters S.,1
+20,Sakura Bakushin O,representative,white,Sprinting Gear,1
+20,Sakura Bakushin O,legacy,blue,Stamina,3
+20,Sakura Bakushin O,legacy,blue,Power,3
+20,Sakura Bakushin O,legacy,pink,End Closer,2
+20,Sakura Bakushin O,legacy,pink,Sprint,2
+20,Sakura Bakushin O,legacy,green,Anchors Aweigh!,1
+20,Sakura Bakushin O,legacy,green,Shooting for Victory!,1
+20,Sakura Bakushin O,legacy,white,Firm Conditions ○,1
+20,Sakura Bakushin O,legacy,white,URA Finale,1
+20,Sakura Bakushin O,legacy,white,Satsuki Sho,2
+20,Sakura Bakushin O,legacy,white,Pressure,2
+20,Sakura Bakushin O,legacy,white,Sprinters S.,2
+20,Sakura Bakushin O,legacy,white,Corner Recovery ○,2
+20,Sakura Bakushin O,legacy,white,Sprinting Gear,1
+20,Sakura Bakushin O,legacy,white,Oka Sho,1
+20,Sakura Bakushin O,legacy,white,Champions C.,2
+20,Sakura Bakushin O,legacy,white,Straightaway Recovery,1
+20,Sakura Bakushin O,legacy,white,Shifting Gears,1
+21,Sakura Bakushin O,representative,blue,Stamina,1
+21,Sakura Bakushin O,representative,pink,Mile,2
+21,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,1
+21,Sakura Bakushin O,representative,white,Sprinting Gear,2
+21,Sakura Bakushin O,representative,white,Corner Adept ○,1
+21,Sakura Bakushin O,legacy,blue,Power,6
+21,Sakura Bakushin O,legacy,pink,Pace Chaser,2
+21,Sakura Bakushin O,legacy,pink,Mile,2
+21,Sakura Bakushin O,legacy,green,Lights of Vaudeville,2
+21,Sakura Bakushin O,legacy,white,Asahi Hai F.S.,2
+21,Sakura Bakushin O,legacy,white,Focus,1
+21,Sakura Bakushin O,legacy,white,Corner Adept ○,1
+21,Sakura Bakushin O,legacy,white,URA Finale,2
+21,Sakura Bakushin O,legacy,white,Unyielding Spirit,3
+21,Sakura Bakushin O,legacy,white,Straightaway Adept,2
+21,Sakura Bakushin O,legacy,white,Groundwork,1
+22,Sakura Bakushin O,representative,blue,Stamina,1
+22,Sakura Bakushin O,representative,pink,Front Runner,1
+22,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,2
+22,Sakura Bakushin O,representative,white,Standard Distance ○,1
+22,Sakura Bakushin O,representative,white,Pace Chaser Straightaways ○,2
+22,Sakura Bakushin O,representative,white,Yasuda Kinen,2
+22,Sakura Bakushin O,representative,white,Straightaway Acceleration,1
+22,Sakura Bakushin O,representative,white,Straight Descent,2
+22,Sakura Bakushin O,legacy,blue,Power,5
+22,Sakura Bakushin O,legacy,pink,Long,2
+22,Sakura Bakushin O,legacy,pink,Mile,2
+22,Sakura Bakushin O,legacy,green,Sky-High Teio Step,2
+22,Sakura Bakushin O,legacy,green,Lights of Vaudeville,2
+22,Sakura Bakushin O,legacy,white,Corner Adept ○,2
+22,Sakura Bakushin O,legacy,white,Japan Cup,2
+22,Sakura Bakushin O,legacy,white,Unyielding Spirit,3
+22,Sakura Bakushin O,legacy,white,Straightaway Adept,2
+22,Sakura Bakushin O,legacy,white,Groundwork,1
+23,Sakura Bakushin O,representative,blue,Wit,2
+23,Sakura Bakushin O,representative,pink,Sprint,2
+23,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,2
+23,Sakura Bakushin O,representative,white,Straightaway Adept,2
+23,Sakura Bakushin O,representative,white,Countermeasure,2
+23,Sakura Bakushin O,representative,white,Pace Chaser Corners ○,3
+23,Sakura Bakushin O,representative,white,Corner Adept ○,2
+23,Sakura Bakushin O,representative,white,Straightaway Recovery,1
+23,Sakura Bakushin O,representative,white,Pace Chaser Straightaways ○,2
+23,Sakura Bakushin O,legacy,blue,Speed,2
+23,Sakura Bakushin O,legacy,blue,Stamina,3
+23,Sakura Bakushin O,legacy,pink,Medium,1
+23,Sakura Bakushin O,legacy,pink,End Closer,2
+23,Sakura Bakushin O,legacy,green,Flashy☆Landing,3
+23,Sakura Bakushin O,legacy,green,Anchors Aweigh!,1
+23,Sakura Bakushin O,legacy,white,Japan Cup,2
+23,Sakura Bakushin O,legacy,white,Corner Recovery ○,2
+23,Sakura Bakushin O,legacy,white,Straight Descent,2
+23,Sakura Bakushin O,legacy,white,Tenno Sho (Autumn),1
+23,Sakura Bakushin O,legacy,white,Outer Post Proficiency ○,2
+23,Sakura Bakushin O,legacy,white,Homestretch Haste,1
+23,Sakura Bakushin O,legacy,white,Firm Conditions ○,1
+23,Sakura Bakushin O,legacy,white,URA Finale,1
+23,Sakura Bakushin O,legacy,white,Satsuki Sho,2
+23,Sakura Bakushin O,legacy,white,Pressure,2
+24,Sakura Bakushin O,representative,blue,Power,2
+24,Sakura Bakushin O,representative,pink,Pace Chaser,1
+24,Sakura Bakushin O,representative,green,Genius x Bakushin = Victory,1
+24,Sakura Bakushin O,representative,white,Prepared to Pass,1
+24,Sakura Bakushin O,representative,white,Tactical Tweak,1
+24,Sakura Bakushin O,representative,white,Straightaway Recovery,2
+24,Sakura Bakushin O,representative,white,Pace Chaser Straightaways ○,1
+24,Sakura Bakushin O,representative,white,Lone Wolf,2
+24,Sakura Bakushin O,legacy,blue,Speed,4
+24,Sakura Bakushin O,legacy,pink,Front Runner,2
+24,Sakura Bakushin O,legacy,pink,Medium,2
+24,Sakura Bakushin O,legacy,green,Red Shift/LP1211-M,2
+24,Sakura Bakushin O,legacy,white,Huge Lead,2
+24,Sakura Bakushin O,legacy,white,Yasuda Kinen,1
+24,Sakura Bakushin O,legacy,white,Hopeful S.,1
+24,Sakura Bakushin O,legacy,white,Straightaway Recovery,1
+24,Sakura Bakushin O,legacy,white,Standard Distance ○,1
+24,Sakura Bakushin O,legacy,white,Prudent Positioning,3
+25,Seiun Sky,representative,blue,Stamina,2
+25,Seiun Sky,representative,pink,Turf,3
+25,Seiun Sky,representative,green,Angling and Scheming,1
+25,Seiun Sky,representative,white,Corner Recovery ○,1
+25,Seiun Sky,representative,white,Long Straightaways ○,2
+25,Seiun Sky,representative,white,Tenno Sho (Autumn),1
+25,Seiun Sky,representative,white,Prudent Positioning,2
+25,Seiun Sky,legacy,blue,Stamina,3
+25,Seiun Sky,legacy,blue,Power,3
+25,Seiun Sky,legacy,pink,Turf,2
+25,Seiun Sky,legacy,pink,Pace Chaser,2
+25,Seiun Sky,legacy,green,Anchors Aweigh!,1
+25,Seiun Sky,legacy,white,Corner Recovery ○,1
+25,Seiun Sky,legacy,white,Firm Conditions ○,2
+25,Seiun Sky,legacy,white,URA Finale,3
+25,Seiun Sky,legacy,white,Asahi Hai F.S.,2
+25,Seiun Sky,legacy,white,Focus,1
+25,Seiun Sky,legacy,white,Corner Adept ○,1
+26,Seiun Sky,representative,blue,Stamina,2
+26,Seiun Sky,representative,pink,Mile,1
+26,Seiun Sky,representative,green,Angling and Scheming,2
+26,Seiun Sky,representative,white,Japan Cup,2
+26,Seiun Sky,representative,white,Hopeful S.,2
+26,Seiun Sky,representative,white,Fast-Paced,1
+26,Seiun Sky,representative,white,Deep Breaths,1
+26,Seiun Sky,representative,white,Japanese Derby,2
+26,Seiun Sky,representative,white,Asahi Hai F.S.,2
+26,Seiun Sky,representative,white,Firm Conditions ○,2
+26,Seiun Sky,representative,white,Final Push,2
+26,Seiun Sky,representative,white,Front Runner Savvy ○,2
+26,Seiun Sky,legacy,blue,Stamina,3
+26,Seiun Sky,legacy,blue,Speed,3
+26,Seiun Sky,legacy,pink,End Closer,2
+26,Seiun Sky,legacy,pink,Mile,2
+26,Seiun Sky,legacy,green,Anchors Aweigh!,1
+26,Seiun Sky,legacy,white,Firm Conditions ○,1
+26,Seiun Sky,legacy,white,URA Finale,1
+26,Seiun Sky,legacy,white,Satsuki Sho,2
+26,Seiun Sky,legacy,white,Pressure,2
+26,Seiun Sky,legacy,white,Kikuka Sho,1
+26,Seiun Sky,legacy,white,Murmur,1
+26,Seiun Sky,legacy,white,Extra Tank,1
+26,Seiun Sky,legacy,white,A Small Breather,1
+27,Tokai Teio,representative,blue,Wit,1
+27,Tokai Teio,representative,pink,Pace Chaser,2
+27,Tokai Teio,representative,green,Sky-High Teio Step,2
+27,Tokai Teio,representative,white,Shrewd Step,1
+27,Tokai Teio,representative,white,Japanese Derby,2
+27,Tokai Teio,legacy,blue,Power,4
+27,Tokai Teio,legacy,pink,Pace Chaser,2
+27,Tokai Teio,legacy,pink,Mile,2
+27,Tokai Teio,legacy,green,The Duty of Dignity Calls,1
+27,Tokai Teio,legacy,green,Cut and Drive!,2
+27,Tokai Teio,legacy,white,Corner Recovery ○,3
+27,Tokai Teio,legacy,white,Hydrate,2
+27,Tokai Teio,legacy,white,Queen Elizabeth II Cup,1
+27,Tokai Teio,legacy,white,Long Corners ○,1
+27,Tokai Teio,legacy,white,Straightaway Recovery,1
+27,Tokai Teio,legacy,white,Corner Adept ○,2
+27,Tokai Teio,legacy,white,Slick Surge,1
+28,Tokai Teio,representative,blue,Wit,1
+28,Tokai Teio,representative,pink,Turf,2
+28,Tokai Teio,representative,green,Sky-High Teio Step,2
+28,Tokai Teio,representative,white,Tenno Sho (Autumn),2
+28,Tokai Teio,representative,white,Up-Tempo,1
+28,Tokai Teio,representative,white,Tenno Sho (Spring),2
+28,Tokai Teio,representative,white,Straightaway Recovery,1
+28,Tokai Teio,representative,white,Straight Descent,1
+28,Tokai Teio,legacy,blue,Power,5
+28,Tokai Teio,legacy,pink,Long,2
+28,Tokai Teio,legacy,pink,Mile,2
+28,Tokai Teio,legacy,green,Triumphant Pulse,2
+28,Tokai Teio,legacy,green,Cut and Drive!,2
+28,Tokai Teio,legacy,white,Queen Elizabeth II Cup,2
+28,Tokai Teio,legacy,white,Champions C.,2
+28,Tokai Teio,legacy,white,Corner Recovery ○,1
+28,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+28,Tokai Teio,legacy,white,Japan Cup,2
+28,Tokai Teio,legacy,white,Corner Acceleration ○,1
+28,Tokai Teio,legacy,white,Hydrate,1
+28,Tokai Teio,legacy,white,Straightaway Recovery,1
+28,Tokai Teio,legacy,white,Corner Adept ○,2
+28,Tokai Teio,legacy,white,Slick Surge,1
+29,Tokai Teio,representative,blue,Speed,1
+29,Tokai Teio,representative,pink,Long,2
+29,Tokai Teio,representative,green,Sky-High Teio Step,1
+29,Tokai Teio,representative,white,Arima Kinen,2
+29,Tokai Teio,representative,white,Straightaway Recovery,1
+29,Tokai Teio,representative,white,Shrewd Step,2
+29,Tokai Teio,representative,white,Japan Cup,2
+29,Tokai Teio,representative,white,Straightaway Adept,1
+29,Tokai Teio,representative,white,Up-Tempo,2
+29,Tokai Teio,legacy,blue,Power,5
+29,Tokai Teio,legacy,pink,Mile,2
+29,Tokai Teio,legacy,pink,Long,2
+29,Tokai Teio,legacy,green,Cut and Drive!,2
+29,Tokai Teio,legacy,green,Triumphant Pulse,2
+29,Tokai Teio,legacy,white,Straightaway Recovery,1
+29,Tokai Teio,legacy,white,Corner Adept ○,2
+29,Tokai Teio,legacy,white,Slick Surge,1
+29,Tokai Teio,legacy,white,Queen Elizabeth II Cup,2
+29,Tokai Teio,legacy,white,Champions C.,2
+29,Tokai Teio,legacy,white,Corner Recovery ○,1
+29,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+29,Tokai Teio,legacy,white,Japan Cup,2
+29,Tokai Teio,legacy,white,Corner Acceleration ○,1
+29,Tokai Teio,legacy,white,Hydrate,1
+30,Tokai Teio,representative,blue,Power,2
+30,Tokai Teio,representative,pink,Medium,1
+30,Tokai Teio,representative,green,Sky-High Teio Step,1
+30,Tokai Teio,representative,white,Nimble Navigator,1
+30,Tokai Teio,representative,white,Straightaway Adept,1
+30,Tokai Teio,legacy,blue,Power,4
+30,Tokai Teio,legacy,pink,Mile,2
+30,Tokai Teio,legacy,pink,Medium,2
+30,Tokai Teio,legacy,green,Cut and Drive!,2
+30,Tokai Teio,legacy,white,Straightaway Recovery,1
+30,Tokai Teio,legacy,white,Corner Adept ○,2
+30,Tokai Teio,legacy,white,Slick Surge,1
+30,Tokai Teio,legacy,white,Osaka Hai,1
+30,Tokai Teio,legacy,white,Hydrate,1
+30,Tokai Teio,legacy,white,Corner Recovery ○,1
+31,Tokai Teio,representative,blue,Guts,1
+31,Tokai Teio,representative,pink,Medium,2
+31,Tokai Teio,representative,green,Sky-High Teio Step,2
+31,Tokai Teio,representative,white,Corner Adept ○,2
+31,Tokai Teio,representative,white,Shrewd Step,2
+31,Tokai Teio,representative,white,Outer Post Proficiency ○,3
+31,Tokai Teio,representative,white,Straightaway Recovery,1
+31,Tokai Teio,representative,white,Straight Descent,2
+31,Tokai Teio,legacy,blue,Power,6
+31,Tokai Teio,legacy,pink,Pace Chaser,2
+31,Tokai Teio,legacy,pink,Turf,3
+31,Tokai Teio,legacy,green,Lights of Vaudeville,1
+31,Tokai Teio,legacy,white,Asahi Hai F.S.,2
+31,Tokai Teio,legacy,white,Focus,2
+31,Tokai Teio,legacy,white,Corner Adept ○,2
+31,Tokai Teio,legacy,white,URA Finale,3
+31,Tokai Teio,legacy,white,Outer Post Proficiency ○,2
+31,Tokai Teio,legacy,white,Yasuda Kinen,1
+32,Tokai Teio,representative,blue,Power,2
+32,Tokai Teio,representative,pink,Pace Chaser,2
+32,Tokai Teio,representative,green,Sky-High Teio Step,2
+32,Tokai Teio,representative,white,Straightaway Recovery,2
+32,Tokai Teio,representative,white,Queen Elizabeth II Cup,2
+32,Tokai Teio,representative,white,Up-Tempo,2
+32,Tokai Teio,legacy,blue,Stamina,3
+32,Tokai Teio,legacy,blue,Power,3
+32,Tokai Teio,legacy,pink,End Closer,2
+32,Tokai Teio,legacy,pink,Medium,2
+32,Tokai Teio,legacy,green,Anchors Aweigh!,1
+32,Tokai Teio,legacy,green,Triumphant Pulse,1
+32,Tokai Teio,legacy,white,Firm Conditions ○,1
+32,Tokai Teio,legacy,white,URA Finale,1
+32,Tokai Teio,legacy,white,Satsuki Sho,2
+32,Tokai Teio,legacy,white,Pressure,2
+32,Tokai Teio,legacy,white,Champions C.,1
+32,Tokai Teio,legacy,white,Cloudy Days ○,2
+32,Tokai Teio,legacy,white,Corner Acceleration ○,2
+32,Tokai Teio,legacy,white,Subdued Front Runners,2
+32,Tokai Teio,legacy,white,Mile Ch.,1
+32,Tokai Teio,legacy,white,Wet Conditions ○,1
+32,Tokai Teio,legacy,white,Corner Adept ○,2
+32,Tokai Teio,legacy,white,Prepared to Pass,2
+33,Tokai Teio,representative,blue,Stamina,1
+33,Tokai Teio,representative,pink,Long,2
+33,Tokai Teio,representative,green,Sky-High Teio Step,1
+33,Tokai Teio,representative,white,Firm Conditions ○,1
+33,Tokai Teio,representative,white,Shrewd Step,2
+33,Tokai Teio,representative,white,Satsuki Sho,1
+33,Tokai Teio,representative,white,Up-Tempo,2
+33,Tokai Teio,legacy,blue,Power,5
+33,Tokai Teio,legacy,pink,Mile,2
+33,Tokai Teio,legacy,pink,Long,2
+33,Tokai Teio,legacy,green,Cut and Drive!,2
+33,Tokai Teio,legacy,green,Triumphant Pulse,2
+33,Tokai Teio,legacy,white,Straightaway Recovery,1
+33,Tokai Teio,legacy,white,Corner Adept ○,2
+33,Tokai Teio,legacy,white,Slick Surge,1
+33,Tokai Teio,legacy,white,Queen Elizabeth II Cup,2
+33,Tokai Teio,legacy,white,Champions C.,2
+33,Tokai Teio,legacy,white,Corner Recovery ○,1
+33,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+33,Tokai Teio,legacy,white,Japan Cup,2
+33,Tokai Teio,legacy,white,Corner Acceleration ○,1
+33,Tokai Teio,legacy,white,Hydrate,1
+34,Tokai Teio,representative,blue,Wit,1
+34,Tokai Teio,representative,pink,Medium,1
+34,Tokai Teio,representative,green,Sky-High Teio Step,1
+34,Tokai Teio,representative,white,Straightaway Adept,1
+34,Tokai Teio,representative,white,Front Runner Straightaways ○,2
+34,Tokai Teio,representative,white,Arima Kinen,1
+34,Tokai Teio,representative,white,Homestretch Haste,2
+34,Tokai Teio,legacy,blue,Stamina,3
+34,Tokai Teio,legacy,blue,Power,3
+34,Tokai Teio,legacy,pink,Turf,2
+34,Tokai Teio,legacy,pink,Medium,2
+34,Tokai Teio,legacy,green,Anchors Aweigh!,1
+34,Tokai Teio,legacy,green,Triumphant Pulse,1
+34,Tokai Teio,legacy,white,Corner Recovery ○,1
+34,Tokai Teio,legacy,white,Firm Conditions ○,2
+34,Tokai Teio,legacy,white,URA Finale,1
+34,Tokai Teio,legacy,white,Champions C.,1
+34,Tokai Teio,legacy,white,Cloudy Days ○,2
+34,Tokai Teio,legacy,white,Corner Acceleration ○,2
+34,Tokai Teio,legacy,white,Subdued Front Runners,2
+34,Tokai Teio,legacy,white,Mile Ch.,1
+34,Tokai Teio,legacy,white,Wet Conditions ○,1
+34,Tokai Teio,legacy,white,Corner Adept ○,2
+34,Tokai Teio,legacy,white,Prepared to Pass,2
+35,Tokai Teio,representative,blue,Wit,1
+35,Tokai Teio,representative,pink,Pace Chaser,2
+35,Tokai Teio,representative,green,Sky-High Teio Step,2
+35,Tokai Teio,representative,white,Corner Adept ○,2
+35,Tokai Teio,representative,white,Pace Chaser Corners ○,1
+35,Tokai Teio,representative,white,Arima Kinen,2
+35,Tokai Teio,representative,white,Up-Tempo,2
+35,Tokai Teio,representative,white,URA Finale,1
+35,Tokai Teio,legacy,blue,Power,4
+35,Tokai Teio,legacy,pink,Medium,2
+35,Tokai Teio,legacy,pink,Mile,2
+35,Tokai Teio,legacy,green,Cut and Drive!,2
+35,Tokai Teio,legacy,white,Osaka Hai,1
+35,Tokai Teio,legacy,white,Hydrate,1
+35,Tokai Teio,legacy,white,Corner Recovery ○,1
+35,Tokai Teio,legacy,white,Straightaway Recovery,1
+35,Tokai Teio,legacy,white,Corner Adept ○,2
+35,Tokai Teio,legacy,white,Slick Surge,1
+36,Tokai Teio,representative,blue,Stamina,1
+36,Tokai Teio,representative,pink,Pace Chaser,1
+36,Tokai Teio,representative,green,Sky-High Teio Step,2
+36,Tokai Teio,representative,white,Arima Kinen,3
+36,Tokai Teio,representative,white,Straightaway Recovery,1
+36,Tokai Teio,representative,white,Satsuki Sho,1
+36,Tokai Teio,representative,white,Hopeful S.,1
+36,Tokai Teio,representative,white,URA Finale,2
+36,Tokai Teio,legacy,blue,Power,5
+36,Tokai Teio,legacy,pink,Mile,2
+36,Tokai Teio,legacy,pink,Long,2
+36,Tokai Teio,legacy,green,Cut and Drive!,2
+36,Tokai Teio,legacy,green,Triumphant Pulse,2
+36,Tokai Teio,legacy,white,Straightaway Recovery,1
+36,Tokai Teio,legacy,white,Corner Adept ○,2
+36,Tokai Teio,legacy,white,Slick Surge,1
+36,Tokai Teio,legacy,white,Queen Elizabeth II Cup,2
+36,Tokai Teio,legacy,white,Champions C.,2
+36,Tokai Teio,legacy,white,Corner Recovery ○,1
+36,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+36,Tokai Teio,legacy,white,Japan Cup,2
+36,Tokai Teio,legacy,white,Corner Acceleration ○,1
+36,Tokai Teio,legacy,white,Hydrate,1
+37,Tokai Teio,representative,blue,Power,1
+37,Tokai Teio,representative,pink,Medium,1
+37,Tokai Teio,representative,green,Sky-High Teio Step,2
+37,Tokai Teio,representative,white,Takarazuka Kinen,2
+37,Tokai Teio,representative,white,Medium Straightaways ○,2
+37,Tokai Teio,representative,white,Satsuki Sho,1
+37,Tokai Teio,representative,white,Corner Adept ○,1
+37,Tokai Teio,representative,white,Fighter,2
+37,Tokai Teio,legacy,blue,Power,6
+37,Tokai Teio,legacy,pink,Pace Chaser,2
+37,Tokai Teio,legacy,pink,Turf,2
+37,Tokai Teio,legacy,green,Victoria por plancha ☆,2
+37,Tokai Teio,legacy,white,Asahi Hai F.S.,2
+37,Tokai Teio,legacy,white,Focus,1
+37,Tokai Teio,legacy,white,Corner Adept ○,1
+37,Tokai Teio,legacy,white,URA Finale,2
+37,Tokai Teio,legacy,white,Takarazuka Kinen,1
+37,Tokai Teio,legacy,white,Summer Runner ○,2
+37,Tokai Teio,legacy,white,Homestretch Haste,1
+37,Tokai Teio,legacy,white,Speed Eater,2
+37,Tokai Teio,legacy,white,Victoria Mile,1
+37,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+37,Tokai Teio,legacy,white,Competitive Spirit ○,1
+37,Tokai Teio,legacy,white,Final Push,1
+38,Tokai Teio,representative,blue,Power,2
+38,Tokai Teio,representative,pink,Pace Chaser,1
+38,Tokai Teio,representative,green,Sky-High Teio Step,1
+38,Tokai Teio,representative,white,Corner Recovery ○,2
+38,Tokai Teio,representative,white,Nimble Navigator,2
+38,Tokai Teio,representative,white,Takarazuka Kinen,1
+38,Tokai Teio,representative,white,Straightaway Recovery,2
+38,Tokai Teio,legacy,blue,Power,4
+38,Tokai Teio,legacy,pink,Mile,2
+38,Tokai Teio,legacy,pink,Pace Chaser,2
+38,Tokai Teio,legacy,green,Cut and Drive!,2
+38,Tokai Teio,legacy,green,The Duty of Dignity Calls,1
+38,Tokai Teio,legacy,white,Straightaway Recovery,1
+38,Tokai Teio,legacy,white,Corner Adept ○,2
+38,Tokai Teio,legacy,white,Slick Surge,1
+38,Tokai Teio,legacy,white,Corner Recovery ○,3
+38,Tokai Teio,legacy,white,Hydrate,2
+38,Tokai Teio,legacy,white,Queen Elizabeth II Cup,1
+38,Tokai Teio,legacy,white,Long Corners ○,1
+39,Tokai Teio,representative,blue,Guts,1
+39,Tokai Teio,representative,pink,Medium,2
+39,Tokai Teio,representative,green,Sky-High Teio Step,1
+39,Tokai Teio,representative,white,Slipstream,1
+39,Tokai Teio,representative,white,Tenno Sho (Spring),1
+39,Tokai Teio,legacy,blue,Power,5
+39,Tokai Teio,legacy,pink,Long,2
+39,Tokai Teio,legacy,pink,Mile,2
+39,Tokai Teio,legacy,green,Triumphant Pulse,2
+39,Tokai Teio,legacy,green,Cut and Drive!,2
+39,Tokai Teio,legacy,white,Queen Elizabeth II Cup,2
+39,Tokai Teio,legacy,white,Champions C.,2
+39,Tokai Teio,legacy,white,Corner Recovery ○,1
+39,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+39,Tokai Teio,legacy,white,Japan Cup,2
+39,Tokai Teio,legacy,white,Corner Acceleration ○,1
+39,Tokai Teio,legacy,white,Hydrate,1
+39,Tokai Teio,legacy,white,Straightaway Recovery,1
+39,Tokai Teio,legacy,white,Corner Adept ○,2
+39,Tokai Teio,legacy,white,Slick Surge,1
+40,Tokai Teio,representative,blue,Wit,1
+40,Tokai Teio,representative,pink,Pace Chaser,2
+40,Tokai Teio,representative,green,Sky-High Teio Step,1
+40,Tokai Teio,representative,white,Corner Recovery ○,1
+40,Tokai Teio,representative,white,Spring Runner ○,1
+40,Tokai Teio,representative,white,Straight Descent,2
+40,Tokai Teio,legacy,blue,Power,6
+40,Tokai Teio,legacy,pink,Pace Chaser,2
+40,Tokai Teio,legacy,pink,Turf,3
+40,Tokai Teio,legacy,green,Lights of Vaudeville,1
+40,Tokai Teio,legacy,white,Asahi Hai F.S.,2
+40,Tokai Teio,legacy,white,Focus,2
+40,Tokai Teio,legacy,white,Corner Adept ○,2
+40,Tokai Teio,legacy,white,URA Finale,3
+40,Tokai Teio,legacy,white,Outer Post Proficiency ○,2
+40,Tokai Teio,legacy,white,Yasuda Kinen,1
+41,Tokai Teio,representative,blue,Speed,1
+41,Tokai Teio,representative,pink,Medium,2
+41,Tokai Teio,representative,green,Sky-High Teio Step,2
+41,Tokai Teio,representative,white,Hopeful S.,1
+41,Tokai Teio,representative,white,Stamina to Spare,1
+41,Tokai Teio,representative,white,Satsuki Sho,2
+41,Tokai Teio,representative,white,Go with the Flow,2
+41,Tokai Teio,representative,white,Shrewd Step,2
+41,Tokai Teio,legacy,blue,Power,6
+41,Tokai Teio,legacy,pink,Pace Chaser,2
+41,Tokai Teio,legacy,pink,Turf,3
+41,Tokai Teio,legacy,green,Lights of Vaudeville,1
+41,Tokai Teio,legacy,white,Asahi Hai F.S.,2
+41,Tokai Teio,legacy,white,Focus,2
+41,Tokai Teio,legacy,white,Corner Adept ○,2
+41,Tokai Teio,legacy,white,URA Finale,3
+41,Tokai Teio,legacy,white,Outer Post Proficiency ○,2
+41,Tokai Teio,legacy,white,Yasuda Kinen,1
+42,Tokai Teio,representative,blue,Stamina,1
+42,Tokai Teio,representative,pink,Medium,2
+42,Tokai Teio,representative,green,Sky-High Teio Step,1
+42,Tokai Teio,representative,white,Tenno Sho (Autumn),2
+42,Tokai Teio,representative,white,Hopeful S.,2
+42,Tokai Teio,representative,white,Prepared to Pass,1
+42,Tokai Teio,representative,white,Osaka Hai,1
+42,Tokai Teio,representative,white,Japan Cup,3
+42,Tokai Teio,representative,white,Prudent Positioning,2
+42,Tokai Teio,legacy,blue,Power,6
+42,Tokai Teio,legacy,pink,Pace Chaser,2
+42,Tokai Teio,legacy,pink,Turf,2
+42,Tokai Teio,legacy,green,Victoria por plancha ☆,2
+42,Tokai Teio,legacy,white,Asahi Hai F.S.,2
+42,Tokai Teio,legacy,white,Focus,1
+42,Tokai Teio,legacy,white,Corner Adept ○,1
+42,Tokai Teio,legacy,white,URA Finale,2
+42,Tokai Teio,legacy,white,Takarazuka Kinen,1
+42,Tokai Teio,legacy,white,Summer Runner ○,2
+42,Tokai Teio,legacy,white,Homestretch Haste,1
+42,Tokai Teio,legacy,white,Speed Eater,2
+42,Tokai Teio,legacy,white,Victoria Mile,1
+42,Tokai Teio,legacy,white,Tenno Sho (Autumn),1
+42,Tokai Teio,legacy,white,Competitive Spirit ○,1
+42,Tokai Teio,legacy,white,Final Push,1
+43,Vodka,representative,blue,Power,2
+43,Vodka,representative,pink,Mile,2
+43,Vodka,representative,green,Cut and Drive!,2
+43,Vodka,representative,white,Straightaway Recovery,1
+43,Vodka,representative,white,Corner Adept ○,2
+43,Vodka,representative,white,Slick Surge,1
+43,Vodka,legacy,blue,Power,5
+43,Vodka,legacy,pink,Turf,2
+43,Vodka,legacy,pink,Medium,2
+43,Vodka,legacy,green,Anchors Aweigh!,2
+43,Vodka,legacy,green,Triumphant Pulse,1
+43,Vodka,legacy,white,Straightaway Adept,2
+43,Vodka,legacy,white,Corner Adept ○,3
+43,Vodka,legacy,white,Champions C.,1
+43,Vodka,legacy,white,Cloudy Days ○,2
+43,Vodka,legacy,white,Corner Acceleration ○,2
+43,Vodka,legacy,white,Subdued Front Runners,2
+43,Vodka,legacy,white,Mile Ch.,1
+43,Vodka,legacy,white,Wet Conditions ○,1
+43,Vodka,legacy,white,Prepared to Pass,2
+44,Vodka,representative,blue,Power,2
+44,Vodka,representative,pink,Medium,2
+44,Vodka,representative,green,Cut and Drive!,2
+44,Vodka,representative,white,Firm Conditions ○,1
+44,Vodka,representative,white,Slick Surge,2
+44,Vodka,representative,white,Hanshin J.F.,1
+44,Vodka,representative,white,Outer Post Proficiency ○,1
+44,Vodka,representative,white,Lone Wolf,2
+44,Vodka,legacy,blue,Wit,1
+44,Vodka,legacy,blue,Stamina,1
+44,Vodka,legacy,pink,Turf,6
+44,Vodka,legacy,green,Anchors Aweigh!,2
+44,Vodka,legacy,white,Corner Adept ○,1
+44,Vodka,legacy,white,Pressure,1
+44,Vodka,legacy,white,Satsuki Sho,1
+44,Vodka,legacy,white,Corner Recovery ○,1
+44,Vodka,legacy,white,Straightaway Acceleration,1
+44,Vodka,legacy,white,Lucky Seven,1
+44,Vodka,legacy,white,Smoke Screen,1
+45,Vodka,representative,blue,Wit,1
+45,Vodka,representative,pink,Medium,3
+45,Vodka,representative,green,Cut and Drive!,1
+45,Vodka,representative,white,Corner Adept ○,2
+45,Vodka,representative,white,Mile Straightaways ○,2
+45,Vodka,representative,white,URA Finale,1
+45,Vodka,representative,white,Tenno Sho (Autumn),1
+45,Vodka,representative,white,Straightaway Recovery,1
+45,Vodka,representative,white,Lone Wolf,1
+45,Vodka,legacy,blue,Wit,3
+45,Vodka,legacy,blue,Power,1
+45,Vodka,legacy,pink,Turf,2
+45,Vodka,legacy,pink,Late Surger,3
+45,Vodka,legacy,green,Triumphant Pulse,2
+45,Vodka,legacy,white,Corner Adept ○,2
+45,Vodka,legacy,white,February S.,1
+45,Vodka,legacy,white,Hydrate,1
+45,Vodka,legacy,white,Firm Conditions ○,1
+45,Vodka,legacy,white,Long Straightaways ○,1
+45,Vodka,legacy,white,Corner Recovery ○,3
+45,Vodka,legacy,white,Lucky Seven,1
+46,Vodka,representative,blue,Guts,1
+46,Vodka,representative,pink,Turf,2
+46,Vodka,representative,green,Cut and Drive!,1
+46,Vodka,representative,white,Hanshin J.F.,2
+46,Vodka,representative,white,Corner Adept ○,1
+46,Vodka,representative,white,Front Runner Corners ○,2
+46,Vodka,representative,white,Mile Ch.,2
+46,Vodka,representative,white,Hopeful S.,1
+46,Vodka,representative,white,Final Push,1
+46,Vodka,representative,white,URA Finale,2
+46,Vodka,legacy,blue,Stamina,2
+46,Vodka,legacy,blue,Wit,1
+46,Vodka,legacy,pink,Front Runner,3
+46,Vodka,legacy,pink,Medium,1
+46,Vodka,legacy,green,Red Shift/LP1211-M,1
+46,Vodka,legacy,green,Sky-High Teio Step,1
+46,Vodka,legacy,white,Yasuda Kinen,1
+46,Vodka,legacy,white,Thunderbolt Step,3
+46,Vodka,legacy,white,Osaka Hai,1
+46,Vodka,legacy,white,Steadfast,1
+46,Vodka,legacy,white,URA Finale,1
+46,Vodka,legacy,white,Straightaway Adept,1
+46,Vodka,legacy,white,Front Runner Straightaways ○,2
+46,Vodka,legacy,white,Arima Kinen,1
+46,Vodka,legacy,white,Homestretch Haste,2

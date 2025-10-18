@@ -156,15 +156,44 @@ def _move_processed_folders(folder_names):
 def _save_results_to_csvs(final_results):
     logger = logging.getLogger(__name__)
     logger.info("\n=== Step 4: Saving individual results to CSV files ===")
+    
+    # Load existing all_runners.csv to preserve entry_ids for updates
+    all_runners_output_file = os.path.join(BASE_DIR, "runner_tables", "all_runners.csv")
+    existing_all_runners_df = pd.DataFrame() # Initialize as empty DataFrame
+    if os.path.exists(all_runners_output_file):
+        try:
+            existing_all_runners_df = pd.read_csv(all_runners_output_file, dtype={'entry_id': str, 'entry_hash': str})
+            logger.info(f"Loaded existing all_runners.csv from {all_runners_output_file}.")
+        except Exception as e:
+            logger.warning(f"Error loading existing all_runners.csv: {e}. Proceeding as if no existing data.")
+
+    # Map entry_hash to existing entry_id for updates
+    entry_hash_to_id = {}
+    if not existing_all_runners_df.empty:
+        entry_hash_to_id = existing_all_runners_df.set_index('entry_hash')['entry_id'].to_dict()
+
+    # Determine the next available entry_id
+    next_entry_id = 1
+    if not existing_all_runners_df.empty:
+        numeric_ids = pd.to_numeric(existing_all_runners_df['entry_id'], errors='coerce').dropna()
+        if not numeric_ids.empty:
+            next_entry_id = int(numeric_ids.max()) + 1
+
     entries_rows, stats_rows, rankings_rows, skills_rows, sparks_rows = [], [], [], [], []
 
     for folder_name, character_data in final_results.items():
         if not character_data.name:
             continue
         
-        entry_hash = hashlib.md5(f"{folder_name}_{character_data.name}".encode("utf-8")).hexdigest()
-        entry_id = str(len(entries_rows)) # Generate a unique entry_id for this batch, starting from 0
-        entries_rows.append({"entry_id": entry_id, "name": character_data.name, "score": character_data.score, "entry_hash": entry_hash})
+        current_entry_hash = hashlib.md5(f"{folder_name}_{character_data.name}".encode("utf-8")).hexdigest()
+        
+        # Use existing entry_id if updating, otherwise assign a new one
+        entry_id = entry_hash_to_id.get(current_entry_hash)
+        if entry_id is None: # New entry
+            entry_id = str(next_entry_id)
+            next_entry_id += 1
+        
+        entries_rows.append({"entry_id": entry_id, "name": character_data.name, "score": character_data.score, "entry_hash": current_entry_hash})
 
         for stat_name, value in character_data.stats.__dict__.items():
             stats_rows.append({"entry_id": entry_id, "name": character_data.name, "stat_name": stat_name, "value": value})
@@ -181,12 +210,20 @@ def _save_results_to_csvs(final_results):
                 for spark_name, count in sparks.items():
                     sparks_rows.append({"entry_id": entry_id, "name": character_data.name, "type": spark_type, "color": color, "spark_name": spark_name, "count": count})
 
+    # Convert new data to DataFrames
+    new_entries_df = pd.DataFrame(entries_rows)
+    new_stats_df = pd.DataFrame(stats_rows)
+    new_rankings_df = pd.DataFrame(rankings_rows)
+    new_skills_df = pd.DataFrame(skills_rows)
+    new_sparks_df = pd.DataFrame(sparks_rows)
+
+    # Save individual CSVs (overwriting old ones)
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
-    pd.DataFrame(entries_rows).to_csv(os.path.join(OUTPUT_FOLDER, "entries.csv"), index=False)
-    pd.DataFrame(stats_rows).to_csv(os.path.join(OUTPUT_FOLDER, "stats.csv"), index=False)
-    pd.DataFrame(rankings_rows).to_csv(os.path.join(OUTPUT_FOLDER, "rankings.csv"), index=False)
-    pd.DataFrame(skills_rows).to_csv(os.path.join(OUTPUT_FOLDER, "skills.csv"), index=False)
-    pd.DataFrame(sparks_rows).to_csv(os.path.join(OUTPUT_FOLDER, "sparks.csv"), index=False)
+    new_entries_df.to_csv(os.path.join(OUTPUT_FOLDER, "entries.csv"), index=False)
+    new_stats_df.to_csv(os.path.join(OUTPUT_FOLDER, "stats.csv"), index=False)
+    new_rankings_df.to_csv(os.path.join(OUTPUT_FOLDER, "rankings.csv"), index=False)
+    new_skills_df.to_csv(os.path.join(OUTPUT_FOLDER, "skills.csv"), index=False)
+    new_sparks_df.to_csv(os.path.join(OUTPUT_FOLDER, "sparks.csv"), index=False)
     logger.info("Saved results to 5 CSV files.")
 
 def _join_all_tables():

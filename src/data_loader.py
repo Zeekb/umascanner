@@ -1,6 +1,9 @@
 import json
 import os
-from config import DATA_FOLDER
+
+# --- Path Configuration ---
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_FOLDER = os.path.join(BASE_DIR, "data", "game_data")
 
 def _load_json(path):
     """Helper to load a JSON file with UTF-8 encoding."""
