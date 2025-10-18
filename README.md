@@ -5,6 +5,8 @@ This guide will help you install and use the UMA Scanner to get information from
 
 ---
 
+
+
 ## Step 0: Download and Install Python
 
 First, you need to install Python on your computer.
@@ -69,7 +71,7 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
     *   Look at the example image at `assets/SparkAreaExample.PNG` to see how to do this.
     *   <img src="assets/SparkAreaExample.PNG" alt="SparkAreaExample.PNG" width="800"/>
 3.  After you have drawn spark boxes for all your characters, the program will read the information (stats, skills, and sparks) from your screenshots.
-4.  The screenshots you have finished will be moved to the `data/processed_images` folder. The information from the screenshots will be saved in the `runner_tables` folder.
+4.  The screenshots you have finished will be moved to the `data/processed_images` folder. The information from the screenshots will be saved in the `data` folder.
 
 ---
 

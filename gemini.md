@@ -5,12 +5,19 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 ## Project Structure
 
 ```
-C:\Users\shack\Desktop\Repos\umascanner\
+.
 ├───assets
 │   ├───current_output.PNG
 │   ├───SparkAreaExample.PNG
 │   └───target_output.jpg
 ├───data
+│   ├───all_runners.csv
+│   ├───all_tables
+│   │   ├───entries.csv
+│   │   ├───rankings.csv
+│   │   ├───skills.csv
+│   │   ├───sparks.csv
+│   │   └───stats.csv
 │   ├───game_data
 │   │   ├───racers.json
 │   │   ├───skills.json
@@ -20,24 +27,17 @@ C:\Users\shack\Desktop\Repos\umascanner\
 │   ├───processed_images
 │   ├───legacy
 │   └───profile_images
-├───runner_tables
-│   ├───all_runners.csv
-│   └───all_tables
-│       ├───entries.csv
-│       ├───rankings.csv
-│       ├───skills.csv
-│       ├───sparks.csv
-│       └───stats.csv
 ├───src
 │   ├───config.json
 │   ├───data_loader.py
 │   ├───folder_creator.py
+│   ├───image_processor.py
 │   ├───image_utils.py
 │   ├───main_parser.py
-│   ├───image_processor.py
 │   ├───ocr_utils.py
 │   ├───post_processing.py
 │   ├───rankings.py
+│   ├───roi_detector.py
 │   ├───schema.py
 │   ├───spark_parser.py
 │   ├───sparks_handler.py
@@ -49,40 +49,14 @@ C:\Users\shack\Desktop\Repos\umascanner\
 └───requirements.txt
 ```
 
-## How to Run
+## Recent Changes
 
-1.  **Install Dependencies:**
-    *   Run the `install_dependencies.bat` script or use `pip install -r requirements.txt`.
+During the last session, the following changes were made to the project:
 
-2.  **Prepare Images:**
-    *   Place your *Umamusume* screenshots into the `data/input_images` folder.
-
-3.  **Create Character Folders:**
-    *   Run the `folder_creator.py` script from within the `src` directory:
-        ```bash
-        python src/folder_creator.py
-        ```
-
-4.  **Process Images and Select Spark ROIs:**
-    *   Run the `image_processor.py` script from within the `src` directory:
-        ```bash
-        python src/image_processor.py
-        ```
-    *   A GUI will appear to guide you through selecting spark areas on your screenshots.
-
-5.  **View the Results:**
-    *   Run the `uma_analyzer_themed.py` script from within the `src` directory:
-        ```bash
-        python src/uma_analyzer_themed.py
-        ```
-    *   This application will display the data from `runner_tables/all_runners.csv`.
-
-## How to Contribute
-
-1.  **Fork the repository.**
-2.  **Create a new branch for your feature or bug fix.**
-3.  **Make your changes and commit them with clear messages.**
-4.  **Push your changes to your fork.**
-5.  **Create a pull request to the main repository.**
-
-```
+1.  **Fixed `UnboundLocalError` in `src/conflict_resolver.py`:** Corrected a bug where `new_data` was referenced before assignment in the `save_resolution` function.
+2.  **Improved Spark Conflict Resolution:** Modified `src/post_processing.py` to sort spark lists consistently before comparison, resolving conflicts triggered solely by inconsistent spark ordering.
+3.  **Removed `folder_name` column:** The `folder_name` column is no longer included in `all_runners.csv`.
+4.  **Relocated `all_runners.csv`:** The `all_runners.csv` file is now saved in the `data` folder instead of the `runner_tables` folder.
+5.  **Removed `runner_tables` folder:** The `runner_tables` directory has been deleted.
+6.  **Updated File References:** All internal file references to `runner_tables` have been updated to `data`.
+7.  **Updated `README.md`:** The `README.md` file has been updated to reflect the new project structure and workflow.

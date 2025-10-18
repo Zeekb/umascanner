@@ -10,6 +10,7 @@ from tkinter import Tk
 import queue
 import threading
 import logging
+import re
 from typing import Optional
 import json
 from multiprocessing import cpu_count
@@ -23,6 +24,8 @@ from spark_parser import parse_sparks
 from sparks_handler import get_entries, combine_images_horizontally, ROISelector
 from tabs import detect_active_tab
 from post_processing import update_all_runners
+from ocr_utils import normalize_name
+from image_utils import select_layout, crop_rois, load_image
 
 # --- Path Configuration ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -200,6 +203,99 @@ def _create_new_runners_dataframe(final_results):
 
     return pd.DataFrame(new_runners_rows)
 
+def _group_loose_images():
+    logger.info("\n=== Step 0: Organizing loose images ===")
+    # ---------------- Configuration ----------------
+    reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"]) # Updated initialization
+    stat_keys = config["STAT_KEYS"] # Use global config
+
+    # ---------------- Scan base folder for images ----------------
+    all_images = [
+        os.path.join(INPUT_FOLDER, entry.name)
+        for entry in os.scandir(INPUT_FOLDER)
+        if entry.is_file() and entry.name.lower().endswith((".png", ".jpg", ".jpeg"))
+    ]
+
+    if not all_images:
+        logger.info("No loose images found in input_images. Skipping folder organization.")
+        return False
+
+    grouped_images = {}          # key: (base_folder_name, stats_hash), value: list of images
+    folder_name_counters = {}    # key: base_folder_name, value: next folder index
+
+    for img_path in all_images:
+        try:
+            img = load_image(img_path)
+            if img is None:
+                continue
+
+            layout = select_layout(img)
+            rois, _ = crop_rois(img, layout)
+
+            # OCR name, score, and stats
+            ocr_rois = [rois["name"], rois["score"]] + [rois[k] for k in stat_keys]
+            stacked_text = []
+            for roi in ocr_rois:
+                text = reader.readtext(roi, detail=0, paragraph=False)
+                stacked_text.append(" ".join(text))
+
+            # Extract name and score
+            name = normalize_name(stacked_text[0]).strip().replace(" ", "_") if len(stacked_text) > 0 else None
+            
+            # Ensure score_text is a string before applying regex
+            score_text = str(stacked_text[1]) if len(stacked_text) > 1 else ""
+            
+            # Remove all non-digit characters, including potential unicode dots or other symbols
+            score = re.sub(r"[^0-9]", "", score_text)
+            
+            if not name or not score:
+                logger.warning(f"Could not extract name or score from {img_path}. Skipping.")
+                continue
+
+            # Extract stats
+            stats = {}
+            for i, k in enumerate(stat_keys):
+                val = re.sub(r"\\D", "", stacked_text[i+2]) if len(stacked_text) > i+2 else "0"
+                stats[k] = int(val) if val else 0
+
+            # Compute stats hash
+            stats_str = "_".join(f"{k}:{v}" for k, v in sorted(stats.items()))
+            stats_hash = hashlib.md5(stats_str.encode("utf-8")).hexdigest()
+
+            base_folder_name = f"{name}{score}"
+            folder_key = (base_folder_name, stats_hash)
+
+            # Add image to grouped dict
+            if folder_key not in grouped_images:
+                grouped_images[folder_key] = []
+            grouped_images[folder_key].append(img_path)
+
+        except Exception as e:
+            logger.error(f"Failed to parse {img_path}: {e}")
+
+    # ---------------- Create folders and move images ----------------
+    for (base_folder_name, stats_hash), img_list in grouped_images.items():
+        # Determine folder name (_2, _3 for duplicate base names)
+        count = folder_name_counters.get(base_folder_name, 1)
+        folder_name = base_folder_name if count == 1 else f"{base_folder_name}_{count}"
+        folder_name_counters[base_folder_name] = count + 1
+
+        folder_path = os.path.join(INPUT_FOLDER, folder_name)
+        os.makedirs(folder_path, exist_ok=True)
+
+        for img_path in img_list:
+            dest_path = os.path.join(folder_path, os.path.basename(img_path))
+            counter = 1
+            base_name_file, ext = os.path.splitext(os.path.basename(img_path))
+            while os.path.exists(dest_path):
+                dest_path = os.path.join(folder_path, f"{base_name_file}_{counter}{ext}")
+                counter += 1
+            shutil.move(img_path, dest_path)
+
+    logger.info("Images grouped into folders by Name + Score + Stats.")
+    return True
+
+
 def _run_roi_selection(processing_q):
     logger.info("=== Step 1: Launching ROI Selector GUI ===")
     entries = get_entries(INPUT_FOLDER)
@@ -225,6 +321,9 @@ def main():
     if os.path.exists(conflicts_file):
         with open(conflicts_file, 'w') as f:
             json.dump([], f)
+
+    # Group loose images if any
+    _group_loose_images()
 
     processing_q = queue.Queue()
     final_results = {}
