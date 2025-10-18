@@ -2,10 +2,11 @@ import os
 import glob
 import cv2
 import numpy as np
-from tabs import detect_active_tab
-from tkinter import Tk, Canvas, Button, Frame, BOTH, font as tkFont
+import threading
+from tkinter import Tk, Canvas, Button, Frame, BOTH, font as tkFont, ttk
 from PIL import Image, ImageTk
 from roi_detector import detect_spark_zones
+from tabs import detect_active_tab
 import easyocr
 
 # --- Umamusume Themed Colors (from uma_analyzer_themed.py) ---
@@ -52,11 +53,10 @@ class ROISelector:
     HANDLE_SIZE = 8
 
     def __init__(self, master, entries_dict):
-        """
-        entries_dict: dict of folder_name -> list of non-inspiration images
-        """
         self.master = master
         self.master.configure(bg=UMA_LIGHT_BG)
+
+        self.reader = easyocr.Reader(['en'])
 
         self.entries = list(entries_dict.items())
         self.entry_index = 0
@@ -79,20 +79,25 @@ class ROISelector:
         self.canvas = Canvas(main_frame, bg="black")
         self.canvas.pack(fill=BOTH, expand=True)
 
-        button_frame = Frame(main_frame, bg=UMA_MEDIUM_BG, bd=1, relief="solid")
-        button_frame.pack(fill="x", side="bottom", pady=5)
+        self.button_frame = Frame(main_frame, bg=UMA_MEDIUM_BG, bd=1, relief="solid")
+        self.button_frame.pack(fill="x", side="bottom", pady=5)
 
         button_font = tkFont.Font(family="Arial", size=14, weight="bold")
 
-        # Buttons
-        undo_button = Button(button_frame, text="Undo", command=self.undo_roi, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
+        undo_button = Button(self.button_frame, text="Undo", command=self.undo_roi, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
         undo_button.pack(side="left", padx=10, pady=5)
-        redo_button = Button(button_frame, text="Redo", command=self.redo_roi, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
+        redo_button = Button(self.button_frame, text="Redo", command=self.redo_roi, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
         redo_button.pack(side="left", padx=0, pady=5)
-        next_button = Button(button_frame, text="Next Entry", command=self.next_entry, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
+        next_button = Button(self.button_frame, text="Next Entry", command=self.next_entry, bg=UMA_ACCENT_BLUE, fg=UMA_TEXT_LIGHT, font=button_font, relief="flat", padx=10, pady=5)
         next_button.pack(side="right", padx=10, pady=5)
         
-        # Bindings
+        style = ttk.Style(self.master)
+        style.configure("Horizontal.TProgressbar",
+                        background=UMA_ACCENT_BLUE,
+                        troughcolor=UMA_MEDIUM_BG,
+                        thickness=25)
+        self.progress = ttk.Progressbar(self.canvas, mode='indeterminate', length=400)
+
         self.canvas.bind("<ButtonPress-1>", self.on_button_press)
         self.canvas.bind("<B1-Motion>", self.on_mouse_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
@@ -104,21 +109,65 @@ class ROISelector:
         self.canvas.bind("<B2-Motion>", self.do_pan)
         self.master.bind("<Configure>", lambda e: self.refresh_display())
 
-        self.master.after(100, self.load_image)
+        self.master.after(100, self.load_next_image_threaded)
 
-    # ---------------- Image Handling ----------------
-    def load_image(self):
+    def show_loading(self, is_loading, entry_name="", progress_text=""):
+        if is_loading:
+            self.canvas.delete("all")
+            self.master.update_idletasks()
+            cx = self.canvas.winfo_width() / 2
+            cy = self.canvas.winfo_height() / 2
+
+            self.canvas.create_text(cx, cy - 60, text=f"Loading: {entry_name}", 
+                                    font=("Arial", 16, "bold"), fill=UMA_TEXT_LIGHT)
+            self.canvas.create_text(cx, cy + 60, text=progress_text, 
+                                    font=("Arial", 12), fill=UMA_TEXT_LIGHT)
+
+            self.progress.place(in_=self.canvas, relx=0.5, rely=0.5, anchor='center')
+            self.progress.start(10)
+            for child in self.button_frame.winfo_children():
+                child.config(state='disabled')
+            self.master.update_idletasks()
+        else:
+            self.progress.stop()
+            self.progress.place_forget()
+            for child in self.button_frame.winfo_children():
+                child.config(state='normal')
+
+    def load_next_image_threaded(self):
         if not self.entries or self.entry_index >= len(self.entries):
+            self.master.quit()
             return
+        
+        entry_name = self.entries[self.entry_index][0]
+        progress_text = f"{self.entry_index + 1}/{len(self.entries)}"
+        self.show_loading(True, entry_name=entry_name, progress_text=progress_text)
 
-        self.entry_name, self.image_paths = self.entries[self.entry_index]
-        self.img_original = combine_images_horizontally(self.image_paths)
-        
-        reader = easyocr.Reader(['en'])
-        img_cv = cv2.cvtColor(np.array(self.img_original), cv2.COLOR_RGB2BGR)
-        detected_rois = detect_spark_zones(img_cv, reader)
-        self.rois = [(self.entry_name, roi, self.image_paths) for roi in detected_rois]
-        
+        thread = threading.Thread(target=self._load_image_worker)
+        thread.daemon = True
+        thread.start()
+
+    def _load_image_worker(self):
+        entry_name, image_paths = self.entries[self.entry_index]
+        try:
+            img_original = combine_images_horizontally(image_paths)
+            img_cv = cv2.cvtColor(np.array(img_original), cv2.COLOR_RGB2BGR)
+            detected_rois = detect_spark_zones(img_cv, self.reader)
+            rois = [(entry_name, roi, image_paths) for roi in detected_rois]
+            self.master.after(0, self.on_load_complete, entry_name, img_original, rois)
+        except Exception as e:
+            print(f"Error processing {entry_name}: {e}")
+            self.master.after(0, self.on_load_error)
+
+    def on_load_error(self):
+        self.show_loading(False)
+        self.next_entry()
+
+    def on_load_complete(self, entry_name, img_original, rois):
+        self.show_loading(False)
+        self.entry_name = entry_name
+        self.img_original = img_original
+        self.rois = rois
         self.undo_stack = [list(self.rois)]
         self.redo_stack.clear()
 
@@ -139,21 +188,21 @@ class ROISelector:
         self.refresh_display()
         self.master.title(f"ROI Selector - Entry {self.entry_index + 1}/{len(self.entries)}: {self.entry_name}")
 
-    # ---------------- Refresh Display ----------------
     def refresh_display(self):
         if not hasattr(self, "img_original") or self.img_original is None:
             return
-        
         w = int(self.img_original.width * self.zoom_factor)
         h = int(self.img_original.height * self.zoom_factor)
-        
         if w <= 0 or h <= 0: return
 
         display_image = self.img_original.resize((w, h), Image.Resampling.LANCZOS)
         self.tk_img = ImageTk.PhotoImage(display_image)
         self.canvas.delete("all")
         self.canvas.create_image(self.pan_x, self.pan_y, anchor="nw", image=self.tk_img)
-        
+        self.refresh_rois_only()
+
+    def refresh_rois_only(self):
+        self.canvas.delete("roi")
         for roi in self.rois:
             x1, y1, x2, y2 = roi[1]
             self.canvas.create_rectangle(
@@ -161,26 +210,24 @@ class ROISelector:
                 int(y1 * self.zoom_factor + self.pan_y),
                 int(x2 * self.zoom_factor + self.pan_x),
                 int(y2 * self.zoom_factor + self.pan_y),
-                outline=UMA_ACCENT_PINK, width=3
+                outline=UMA_ACCENT_PINK, width=3, tags="roi"
             )
 
-    # ---------------- ROI Drawing / Resize / Move ----------------
     def detect_handle(self, x, y):
         for idx, roi in enumerate(self.rois):
             x1, y1, x2, y2 = roi[1]
             x1s, y1s, x2s, y2s = int(x1*self.zoom_factor+self.pan_x), int(y1*self.zoom_factor+self.pan_y), int(x2*self.zoom_factor+self.pan_x), int(y2*self.zoom_factor+self.pan_y)
-            
             if abs(y-y2s)<=self.HANDLE_SIZE and x1s<x<x2s: return idx, 'bottom'
             if x1s < x < x2s and y1s < y < y2s: return idx, 'move'
         return None, None
 
     def on_mouse_move(self, event):
-        if self.selected_roi_index is None: # Only change cursor when not dragging
+        if self.selected_roi_index is None:
             _, edge = self.detect_handle(event.x, event.y)
             if edge:
                 if edge == 'move':
                     self.canvas.config(cursor='fleur')
-                elif edge in ['bottom']:
+                elif edge == 'bottom':
                     self.canvas.config(cursor='sb_v_double_arrow')
             else:
                 self.canvas.config(cursor='arrow')
@@ -193,76 +240,59 @@ class ROISelector:
             self.redo_stack.clear()
             if self.resizing_edge == 'move':
                 self.original_roi_for_drag = self.rois[self.selected_roi_index][1]
-                self.move_axis = None # Reset move axis lock
+                self.move_axis = None
 
     def on_mouse_drag(self, event):
         if self.selected_roi_index is not None and self.resizing_edge:
             roi = self.rois[self.selected_roi_index]
-            
             if self.resizing_edge == 'move':
                 dx = (event.x - self.start_x) / self.zoom_factor
                 dy = (event.y - self.start_y) / self.zoom_factor
-
                 if self.move_axis is None:
-                    if abs(dx) > abs(dy):
-                        self.move_axis = 'horizontal'
-                    else:
-                        self.move_axis = 'vertical'
-                
+                    self.move_axis = 'horizontal' if abs(dx) > abs(dy) else 'vertical'
                 x1, y1, x2, y2 = self.original_roi_for_drag
-                
                 if self.move_axis == 'horizontal':
                     new_x1, new_x2 = x1 + dx, x2 + dx
                     new_y1, new_y2 = y1, y2
-                else: # vertical
+                else:
                     new_y1, new_y2 = y1 + dy, y2 + dy
                     new_x1, new_x2 = x1, x2
-
                 img_w, img_h = self.img_original.width, self.img_original.height
                 roi_w, roi_h = new_x2 - new_x1, new_y2 - new_y1
-
                 new_x1 = max(0, min(new_x1, img_w - roi_w))
                 new_y1 = max(0, min(new_y1, img_h - roi_h))
                 new_x2 = new_x1 + roi_w
                 new_y2 = new_y1 + roi_h
-
                 self.rois[self.selected_roi_index] = (roi[0], (new_x1, new_y1, new_x2, new_y2), roi[2])
-            
-            elif self.resizing_edge in ['bottom']:
+            elif self.resizing_edge == 'bottom':
                 x1, y1, x2, y2 = roi[1]
                 y1s, y2s = y1*self.zoom_factor+self.pan_y, y2*self.zoom_factor+self.pan_y
                 ny = event.y
-                
                 if 'bottom' in self.resizing_edge: y2s = ny
-
                 y1n = max(0, min(self.img_original.height, int((min(y1s, y2s)-self.pan_y)/self.zoom_factor)))
                 y2n = max(0, min(self.img_original.height, int((max(y1s, y2s)-self.pan_y)/self.zoom_factor)))
-                
                 self.rois[self.selected_roi_index] = (roi[0], (x1, y1n, x2, y2n), roi[2])
-
-            self.refresh_display()
+            self.refresh_rois_only()
 
     def on_button_release(self, event):
         self.selected_roi_index = None
         self.resizing_edge = None
         self.original_roi_for_drag = None
         self.move_axis = None
-        self.canvas.config(cursor='arrow') # Reset cursor on release
+        self.canvas.config(cursor='arrow')
 
-    # ---------------- Undo/Redo ----------------
     def undo_roi(self):
         if len(self.undo_stack) > 1:
             self.redo_stack.append(list(self.rois))
             self.rois = list(self.undo_stack.pop())
-            self.refresh_display()
+            self.refresh_rois_only()
 
     def redo_roi(self):
         if self.redo_stack:
             self.undo_stack.append(list(self.rois))
             self.rois = self.redo_stack.pop()
-            self.refresh_display()
+            self.refresh_rois_only()
 
-    # ---------------- Zoom & Pan ----------------
     def on_zoom(self, event):
         factor = 1.1 if (event.num == 4 or event.delta > 0) else 1 / 1.1
         self.zoom_factor = min(5.0, max(0.2, self.zoom_factor * factor))
@@ -277,14 +307,11 @@ class ROISelector:
         self.pan_start_x, self.pan_start_y = event.x, event.y
         self.refresh_display()
 
-    # ---------------- Entry Navigation ----------------
     def next_entry(self):
-        self.all_rois[self.entry_name] = list(self.rois)
+        if hasattr(self, 'entry_name'):
+            self.all_rois[self.entry_name] = list(self.rois)
         self.rois.clear()
         self.undo_stack.clear()
         self.redo_stack.clear()
         self.entry_index += 1
-        if self.entry_index < len(self.entries):
-            self.load_image()
-        else:
-            self.master.quit()
+        self.load_next_image_threaded()
