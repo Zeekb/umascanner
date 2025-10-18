@@ -7,7 +7,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 logger = logging.getLogger(__name__)
 
 def update_all_runners(new_runners_df):
-    output_file = os.path.join(BASE_DIR, "runner_tables", "all_runners.csv")
+    output_file = os.path.join(BASE_DIR, "data", "all_runners.csv")
 
     try:
         existing_df = pd.read_csv(output_file, dtype={'entry_hash': str})
@@ -29,7 +29,7 @@ def update_all_runners(new_runners_df):
 
             common_hashes = new_runners_df_indexed.index.intersection(existing_df_indexed.index)
 
-            ignore_cols = ['entry_id', 'last_updated', 'folder_name']
+            ignore_cols = ['entry_id', 'last_updated']
 
             for hash_val in common_hashes:
                 existing_entry = existing_df_indexed.loc[hash_val].drop(ignore_cols, errors='ignore')
@@ -107,5 +107,6 @@ def update_all_runners(new_runners_df):
             combined_df['entry_id'] = pd.to_numeric(combined_df['entry_id'])
             combined_df.sort_values('entry_id', inplace=True)
 
+        combined_df = combined_df.drop(columns=['folder_name'], errors='ignore')
         combined_df.to_csv(output_file, index=False)
         logger.info(f"Successfully updated {output_file}")

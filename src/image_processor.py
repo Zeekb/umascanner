@@ -29,7 +29,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FOLDER = os.path.join(BASE_DIR, "data")
 INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
 COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
-OUTPUT_FOLDER = os.path.join(BASE_DIR, "runner_tables", "all_tables")
+OUTPUT_FOLDER = os.path.join(BASE_DIR, "data", "all_tables")
 LOG_FILE = os.path.join(BASE_DIR, "app.log")
 
 # --- Load Configuration ---
@@ -150,7 +150,7 @@ def _create_new_runners_dataframe(final_results):
         logger.info("No new results to process.")
         return pd.DataFrame()
 
-    all_runners_output_file = os.path.join(BASE_DIR, "runner_tables", "all_runners.csv")
+    all_runners_output_file = os.path.join(BASE_DIR, "data", "all_runners.csv")
     try:
         existing_all_runners_df = pd.read_csv(all_runners_output_file, dtype={'entry_id': str, 'entry_hash': str})
     except FileNotFoundError:

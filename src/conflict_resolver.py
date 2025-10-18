@@ -261,7 +261,7 @@ class ConflictResolutionDialog(QDialog):
                 except (ValueError, TypeError):
                     resolved_entry[col] = 0
 
-        all_runners_file = os.path.join(BASE_DIR, 'runner_tables', 'all_runners.csv')
+        all_runners_file = os.path.join(BASE_DIR, 'data', 'all_runners.csv')
         df = pd.read_csv(all_runners_file, dtype={'entry_hash': str})
         row_index = df.index[df['entry_hash'] == conflict['hash']].tolist()
         if row_index:

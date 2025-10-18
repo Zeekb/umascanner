@@ -219,7 +219,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.apply_filters()
 
     def load_data(self):
-        file_path = os.path.join(BASE_DIR, 'runner_tables', 'all_runners.csv')
+        file_path = os.path.join(BASE_DIR, 'data', 'all_runners.csv')
         if not os.path.exists(file_path): return None
         df = pd.read_csv(file_path)
         df['sparks'] = df['sparks'].apply(json.loads)
