@@ -218,5 +218,5 @@ __marimo__/
 # Ignore assets, but keep the example image
 /assets/*
 !/assets/SparkAreaExample.PNG
-
+!/assets/profile_images/
 gemini.md

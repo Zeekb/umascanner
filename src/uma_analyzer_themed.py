@@ -660,7 +660,7 @@ class UmaDetailDialog(QDialog):
         image_name = self.runner_data['name'].replace(' ', '_')
         image_path = None
         for ext in ['png', 'jpg', 'jpeg']:
-            potential_path = os.path.join(BASE_DIR, 'data', 'profile_images', f'{image_name}.{ext}')
+            potential_path = os.path.join(BASE_DIR, 'assets', 'profile_images', f'{image_name}.{ext}')
             if os.path.exists(potential_path):
                 image_path = potential_path
                 break
