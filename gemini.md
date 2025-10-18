@@ -30,7 +30,6 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 ├───src
 │   ├───config.json
 │   ├───data_loader.py
-│   ├───folder_creator.py
 │   ├───image_processor.py
 │   ├───image_utils.py
 │   ├───main_parser.py
@@ -59,4 +58,7 @@ During the last session, the following changes were made to the project:
 4.  **Relocated `all_runners.csv`:** The `all_runners.csv` file is now saved in the `data` folder instead of the `runner_tables` folder.
 5.  **Removed `runner_tables` folder:** The `runner_tables` directory has been deleted.
 6.  **Updated File References:** All internal file references to `runner_tables` have been updated to `data`.
-7.  **Updated `README.md`:** The `README.md` file has been updated to reflect the new project structure and workflow.
+7.  **Integrated Folder Creator:** The logic from `src/folder_creator.py` has been integrated into `src/image_processor.py`, and the standalone `src/folder_creator.py` file has been removed.
+8.  **Fixed `re` module import:** Added `import re` to `src/image_processor.py` to resolve a `NameError`.
+9.  **Fixed Folder Naming Issue:** Corrected the score extraction logic in `_group_loose_images` to ensure proper folder naming (e.g., `Agnes_Tachyon9870` instead of `Agnes_Tachyon9.870`).
+10. **Updated `README.md`:** The `README.md` file has been updated to reflect the new project structure and workflow.

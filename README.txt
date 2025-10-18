@@ -38,12 +38,9 @@ Method 2: Use the `requirements.txt` file
 
 ---
 
-Step 2: Prepare and Organize Your Screenshots
+Step 2: Prepare Your Screenshots
 
-1.  Put all your game screenshots into the `data/input_images` folder.
-2.  Next, run a script that will automatically organize your screenshots into folders for each character. A simple way to do this is to open the `src` folder in your file explorer, click on the address bar, type `cmd` and press Enter. This will open a "Command Prompt" in the correct folder. Then, type the following command and press Enter:
-
-    python folder_creator.py
+1.  Put all your loose game screenshots into the `data/input_images` folder. The system will automatically organize them when you run the processor in the next step.
 
 A quick note:
 
@@ -51,27 +48,27 @@ A quick note:
 
 ---
 
-Step 3: Get Information from Your Screenshots
+Step 3: Process Your Screenshots
 
-1.  Now it's time to get the information from your screenshots. In the same "Command Prompt" window, type this command and press Enter:
+1.  Run the main processing script from your "Terminal" or "Command Prompt". Make sure you are in the project's root folder.
 
-    python image_processor.py
+    python src/image_processor.py
 
-2.  A new window will open. In this window, you will need to draw boxes around the 'spark' areas on your screenshots for each character.
-    *   Look at the example image at `assets/SparkAreaExample.PNG` to see how to do this.
-3.  After you have drawn spark boxes for all your characters, the program will read the information (stats, skills, and sparks) from your screenshots.
-4.  The screenshots you have finished will be moved to the `data/processed_images` folder. The information from the screenshots will be saved in the `runner_tables` folder.
-
----
-
-Step 4: See Your Results
-
-1.  To see all the information you have collected, type this command in the same "Command Prompt" window and press Enter:
-
-    python uma_analyzer_themed.py
-
-2.  This will open a new window where you can see all the information from your screenshots in a table. You can sort and filter the table to find the information you want.
+2.  The script will first automatically group your images into character folders.
+3.  Next, a new window will open for "Spark Area Confirmation". The program automatically detects the "spark" areas. Your task is to review these automatically drawn boxes and adjust them if they are incorrect.
+4.  After you confirm the spark areas, the script will process all the information.
+5.  If the script finds conflicting data for a character, a "Conflict Resolution" window may appear. This allows you to choose which data to keep.
+6.  Once finished, the processed folders are moved to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
 
 ---
 
-You're done! All your stats are now collected and ready to use.
+Step 4: View Your Results
+
+1.  To view the collected data, run the analyzer application from your "Terminal" or "Command Prompt":
+
+    python src/uma_analyzer_themed.py
+
+2.  This opens a graphical interface where you can see all your runners' data in a table. You can sort and filter the data.
+3.  You can also double-click on a runner to see a detailed view.
+
+---
