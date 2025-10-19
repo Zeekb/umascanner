@@ -35,63 +35,55 @@ First, you need to install Python on your computer.
 ---
 
 
-Step 1: Install Extra Tools
+Step 1: Install Dependencies
 
-Next, you need to install some extra tools that the UMA Scanner needs to work. Here are two ways to do it:
+The installation is a two-step process. First, you will install the main deep learning library (PyTorch), then you will install the remaining application dependencies.
 
-Method 1: Use the installation script (for Windows)
+Step 1a: Choose and Install PyTorch
 
-1.  Find the file named `install_dependencies.bat` and double-click on it.
-2.  This will automatically install everything you need.
+You have two options for installing PyTorch. Using a GPU is highly recommended for performance.
 
-OR
-
-Method 2: Use the `requirements.txt` file
-
-1.  Open your "Terminal" or "Command Prompt" in the same folder where you have the UMA Scanner files.
-2.  Type this command and press Enter:
-
-    pip install -r requirements.txt
-
+*   Performance Note: Using a CPU is the most compatible option, but it is much slower. For a batch of 200 characters, processing can take up to 2 hours on a CPU versus 20 minutes on a GPU.
 
 ---
 
+OPTION 1: CPU Version (Recommended for compatibility)
 
-Step 1a: [Optional RECOMMENDED] Enabling GPU Acceleration
+This is the easiest option and will work on any machine.
 
-For a significant performance increase, it is HIGHLY recommended to run the OCR process on an NVIDIA GPU. The default installation uses the CPU to ensure compatibility across all machines. With an expected batch size of up to 200 entries this is the difference between 20 minutes and 2 hours, well worth the time.
+*   Download Size: ~700-900 MB
+*   Action: Double-click and run the `install_pytorch_cpu.bat` script.
 
-Performance Comparison:
-Based on a test with 5 character folders:
-*   CPU Time: 205 seconds
-*   GPU Time: 33 seconds
+---
 
-This is a ~6x speed improvement.
+OPTION 2: GPU Version (Recommended for performance)
 
-To enable GPU acceleration, you must manually install a version of PyTorch that supports your specific hardware. The application is configured to use the GPU by default ("gpu": true in src/config.json), but it will only work if you complete these steps.
+This option requires a compatible NVIDIA GPU and provides a ~6x speed improvement.
 
-Requirements:
-1.  An NVIDIA GPU.
-2.  Correctly installed NVIDIA drivers.
-3.  The NVIDIA CUDA Toolkit.
+*   Download Size: ~2.5 - 4.5 GB
+*   Action: Follow these manual steps:
+    1.  IMPORTANT: If you have ever installed PyTorch before, uninstall it first to avoid conflicts:
+        
+        pip uninstall torch torchvision torchaudio
+        
+    2.  Find your maximum supported CUDA version by running this command in your terminal:
+        
+        nvidia-smi
+        
+        Look for the "CUDA Version" in the top-right of the output (e.g., 12.2).
+    3.  Go to the official PyTorch website (https://pytorch.org/get-started/locally/).
+    4.  Use the website's tool to select your system settings and a CUDA version that is less than or equal to the one from the previous step.
+    5.  Copy and run the generated `pip` command.
 
-Installation:
-1.  IMPORTANT: Uninstall the existing CPU-only version of PyTorch first to avoid conflicts:
-    
-    pip uninstall torch torchvision torchaudio
-    
-2.  Check your driver's maximum supported CUDA version by running this command in your terminal:
+---
 
-    nvidia-smi
-    
-    Look for the "CUDA Version" in the top-right of the output. Your driver can support any CUDA version up to this number.
-3.  Go to the official PyTorch website (https://pytorch.org/get-started/locally/).
-4.  Use the "PyTorch Build" selector to choose the options that match your system. For the CUDA option, pick a version that is less than or equal to the one you found in the previous step.
-5.  Copy the generated command (e.g., pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118).
-6.  Run the installation command from the PyTorch website in your Terminal or Command Prompt.
-7.  After this is complete, the install_dependencies.bat script can be run, or if you have already run it, the program will now use your GPU.
+Step 1b: Install Application Dependencies
 
-If you enable GPU in the config but do not have a proper GPU setup, the program will fall back to the CPU and you will see a warning message.
+After you have installed PyTorch using one of the options above, you can install the rest of the required libraries.
+
+*   Action: Double-click and run the `install_dependencies.bat` script.
+
+This will install all other libraries, including `EasyOCR`, needed to run the scanner.
 
 
 ---
