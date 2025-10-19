@@ -146,8 +146,6 @@ __marimo__/
 
 # Generated data files
 /data/all_runners*.csv
-/data/all_runners_Zeek.csv
-/data/all_tables/
 
 # Generated data directories
 /data/input_images/*
