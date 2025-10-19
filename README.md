@@ -65,7 +65,7 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
 2.  The script will first automatically group any loose images in `data/input_images` into character folders.
 3.  Next, a new window will open for **Spark Area Confirmation**. The program automatically detects the "spark" areas on your screenshots. Your task is to review these automatically drawn boxes for each character and adjust them if they are incorrect.
     *   Use the example image at `assets/SparkAreaExample.PNG` as a reference for how the boxes should look.
-    *   <img src="assets/SparkAreaExample.PNG" alt="SparkAreaExample.PNG" width="800"/>
+    <img src="assets/SparkAreaExample.PNG" alt="SparkAreaExample.PNG" width="1200"/>
 4.  After you confirm the spark areas for all characters, the script will process all the information.
 5.  If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window may appear. This allows you to choose which data to keep.
 6.  Once finished, the processed character folders will be moved from `data/input_images` to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
@@ -83,5 +83,7 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
 2.  This opens a graphical interface where you can see all your runners' data in a sortable and filterable table.
    
 3.  You can double-click on any runner in the "Stats Summary" tab to see a detailed view of their stats, skills, and aptitudes.
+    *   Here's an image at `assets/ExampleAnalyzerView.png` as a reference for how the ui looks and what you can do with it.
+    <img src="assets/ExampleAnalyzerView.png" alt="SparkAreaExample.PNG" width="1800"/>
 
 ---

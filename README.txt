@@ -71,4 +71,6 @@ Step 4: View Your Results
 2.  This opens a graphical interface where you can see all your runners' data in a table. You can sort and filter the data.
 3.  You can also double-click on a runner to see a detailed view.
 
+    There's an image at "assets/ExampleAnalyzerView.png" as a reference for how the ui looks and what you can do with it.
+
 ---
