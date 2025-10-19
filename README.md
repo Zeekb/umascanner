@@ -3,6 +3,21 @@ A simple guide to setting up and using the UMA Scanner.
 
 This guide will help you install and use the UMA Scanner to get information from your screenshots.
 
+
+## Step -1: [Optional] Remove my data from the program before running your own
+
+If you don't want my runner data in your program, before doinging anything delete the `all-runners.csv` file in the `data` folder
+I kept it in so people can play with the Analyzer (Described below) without putting in their own screenshots.
+
+1.  Go to the [official Python website](https://www.python.org/downloads/).
+2.  Download the latest version of Python.
+3.  When you install Python, make sure to check the box that says **"Add Python to PATH"**. This is very important.
+4.  To check if Python is installed correctly, open a program called **Terminal** or **Command Prompt** and type this command, then press Enter:
+
+    ```bash
+    python --version
+    ```
+
 ---
 
 
