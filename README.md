@@ -6,7 +6,7 @@ This guide will help you install and use the UMA Scanner to get information from
 
 ## Step -1: [Optional] Remove my data from the program before running your own
 
-If you don't want my runner data in your program, before doinging anything delete the `all-runners.csv` file in the `data` folder
+If you don't want my runner data in your program, before doing anything, delete the `all-runners.csv` file in the `data` folder
 I kept it in so people can play with the Analyzer (Described below) without putting in their own screenshots.
 
 1.  Go to the [official Python website](https://www.python.org/downloads/).
