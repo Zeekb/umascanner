@@ -10,8 +10,9 @@ Running this for myself takes about 20 minutes for 200 entries, so go grab somet
 
 ## Step -1: [Optional] Add my data for the program before running your own
 
-If you want to play with my runner data in your program, before doing anything, change the `all-runners_Zeek.csv` file in the `data` folder to `all-runners.csv`.
-I kept it in so people can play with the **Analyzer** (Described below) without putting in their own screenshots.
+If you want to play with my runner data in your program to see what you can dowith it, before doing anything, change the `all-runners_Zeek.csv` file in the `data` folder to `all-runners.csv`.
+I kept it in so people can play with the **Analyzer** (Described below) without putting in their own screenshots or needing to complete steps 1a, 2 or 3.
+Skip to step 4 after completing step 1b.
 
 
 ---
