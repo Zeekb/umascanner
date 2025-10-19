@@ -14,6 +14,13 @@
     "rankings": [835, 1030, 255, 1015],
     "skills": [1120, 1920, 116, 970]
   },
+  "SPARK_ROI_DETECTION": {
+    "OFFSET_FROM_SCREENSHOT_LEFT_EDGE": 205,
+    "FIXED_SPARK_AREA_WIDTH": 827,
+    "ZONE_Y1_OFFSET": -26,
+    "ZONE_Y2_FALLBACK": -420,
+    "ZONE_Y2_NEXT_SPARK_OFFSET": -77
+  },
   "SAVE_DEBUG_IMAGES": false,
   "MIN_OCR_WIDTH": 30,
   "STAT_KEYS": ["speed", "stamina", "power", "guts", "wit"],

@@ -7,28 +7,19 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 ```
 .
 ├───assets
-│   ├───current_output.PNG
-│   ├───SparkAreaExample.PNG
-│   └───target_output.jpg
+│   ├───profile_images
+│   └───ExampleAnalyzerView.png
 ├───data
 │   ├───all_runners.csv
-│   ├───all_tables
-│   │   ├───entries.csv
-│   │   ├───rankings.csv
-│   │   ├───skills.csv
-│   │   ├───sparks.csv
-│   │   └───stats.csv
 │   ├───game_data
 │   │   ├───racers.json
 │   │   ├───skills.json
-│   │   ├───spark_correction_rules.json
 │   │   └───sparks.json
 │   ├───input_images
-│   ├───processed_images
-│   ├───legacy
-│   └───profile_images
+│   └───processed_images
 ├───src
 │   ├───config.json
+│   ├───conflict_resolver.py
 │   ├───data_loader.py
 │   ├───image_processor.py
 │   ├───image_utils.py
@@ -41,24 +32,36 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 │   ├───spark_parser.py
 │   ├───sparks_handler.py
 │   ├───tabs.py
-│   ├───uma_analyzer_themed.py
-│   └───__pycache__
+│   └───uma_analyzer_themed.py
 ├───install_dependencies.bat
 ├───README.md
+├───README.txt
 └───requirements.txt
 ```
 
-## Recent Changes
+## File Descriptions
 
-During the last session, the following changes were made to the project:
+### `src` directory
 
-1.  **Fixed `UnboundLocalError` in `src/conflict_resolver.py`:** Corrected a bug where `new_data` was referenced before assignment in the `save_resolution` function.
-2.  **Improved Spark Conflict Resolution:** Modified `src/post_processing.py` to sort spark lists consistently before comparison, resolving conflicts triggered solely by inconsistent spark ordering.
-3.  **Removed `folder_name` column:** The `folder_name` column is no longer included in `all_runners.csv`.
-4.  **Relocated `all_runners.csv`:** The `all_runners.csv` file is now saved in the `data` folder instead of the `runner_tables` folder.
-5.  **Removed `runner_tables` folder:** The `runner_tables` directory has been deleted.
-6.  **Updated File References:** All internal file references to `runner_tables` have been updated to `data`.
-7.  **Integrated Folder Creator:** The logic from `src/folder_creator.py` has been integrated into `src/image_processor.py`, and the standalone `src/folder_creator.py` file has been removed.
-8.  **Fixed `re` module import:** Added `import re` to `src/image_processor.py` to resolve a `NameError`.
-9.  **Fixed Folder Naming Issue:** Corrected the score extraction logic in `_group_loose_images` to ensure proper folder naming (e.g., `Agnes_Tachyon9870` instead of `Agnes_Tachyon9.870`).
-10. **Updated `README.md`:** The `README.md` file has been updated to reflect the new project structure and workflow.
+*   **`image_processor.py`**: The main script that orchestrates the entire data extraction process. It groups loose images, detects ROIs, processes character data in parallel, and handles data conflicts.
+*   **`uma_analyzer_themed.py`**: A PyQt5-based GUI application for viewing, sorting, and filtering the extracted runner data from `all_runners.csv`.
+*   **`main_parser.py`**: Responsible for parsing the main character information, including stats, rankings, and skills from screenshots.
+*   **`spark_parser.py`**: Parses spark details (color, name, count) from the detected spark ROIs.
+*   **`roi_detector.py`**: Automatically detects the regions of interest (ROIs) for spark information on combined screenshots.
+*   **`conflict_resolver.py`**: A PyQt5 GUI that launches when the `image_processor` detects conflicting data for an existing character, allowing the user to choose which data to keep.
+*   **`post_processing.py`**: Handles the logic for updating the main `all_runners.csv` file, comparing new data with existing data, and flagging conflicts.
+*   **`data_loader.py`**: Loads static game data, such as lists of known racers, skills, and sparks, from the `data/game_data` directory.
+*   **`ocr_utils.py`**: Provides utility functions for the OCR process, primarily for cleaning and fuzzy-matching text against known game data.
+*   **`image_utils.py`**: Contains helper functions for common image manipulation tasks like loading images, cropping ROIs, and selecting layouts.
+*   **`schema.py`**: Defines the Python dataclasses used to structure the character data during processing.
+*   **`rankings.py`**: Specifically handles the parsing of the aptitude (ranking) table from screenshots by analyzing the color of the grades.
+*   **`tabs.py`**: A utility to detect which tab (e.g., "skills" or "inspiration") is active in a screenshot.
+*   **`sparks_handler.py`**: Contains a legacy Tkinter-based GUI for manual ROI selection. While still in the codebase, the primary workflow now uses automatic detection from `roi_detector.py`.
+*   **`config.json`**: A configuration file that stores various settings for the application, such as OCR parameters, ROI coordinates, and color values for grade detection.
+
+### `data` directory
+
+*   **`all_runners.csv`**: The main output file where all extracted and processed character data is stored.
+*   **`input_images/`**: The folder where users should place their game screenshots for processing.
+*   **`processed_images/`**: After processing, the image folders are moved from `input_images` to this directory.
+*   **`game_data/`**: Contains JSON files with static game information used for OCR normalization and data enrichment (e.g., `racers.json`, `skills.json`, `sparks.json`).

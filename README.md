@@ -72,9 +72,12 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
     python src/image_processor.py
     ```
 
-2.  The script will first automatically group any loose images in `data/input_images` into character folders.
-3.  If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window may appear. This allows you to choose which data to keep.
-4.  Once finished, the processed character folders will be moved from `data/input_images` to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
+2.  The script will perform the following steps automatically:
+    *   **Groups Loose Images:** Any loose screenshots in `data/input_images` are automatically organized into character folders based on their name and score.
+    *   **Detects ROIs:** The script automatically detects the spark information regions from your screenshots.
+    *   **Processes Data:** It then extracts all stats, ranks, skills, and sparks for each character.
+    *   **Handles Conflicts:** If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window will appear. This allows you to choose which data to keep.
+    *   **Saves Results:** The extracted data is saved in `data/all_runners.csv`, and the processed character folders are moved from `data/input_images` to `data/processed_images`.
 
 ---
 

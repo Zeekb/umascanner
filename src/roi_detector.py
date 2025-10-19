@@ -6,6 +6,11 @@ import json
 import os
 from difflib import get_close_matches # New import
 
+# --- Load Configuration ---
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
+    config = json.load(f)
+SPARK_ROI_CONFIG = config["SPARK_ROI_DETECTION"]
+
 def load_spark_info():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     sparks_path = os.path.join(script_dir, "..", "data", "game_data", "sparks.json")
@@ -77,22 +82,22 @@ def detect_spark_zones(image, reader):
         y1_text = current_spark['y1_text']
 
         # Fixed offset from the left edge of a single screenshot
-        offset_from_screenshot_left_edge = 205 
-        fixed_spark_area_width = 827
+        offset_from_screenshot_left_edge = SPARK_ROI_CONFIG["OFFSET_FROM_SCREENSHOT_LEFT_EDGE"]
+        fixed_spark_area_width = SPARK_ROI_CONFIG["FIXED_SPARK_AREA_WIDTH"]
 
         zone_x1 = screenshot_index * single_screenshot_width + offset_from_screenshot_left_edge
         zone_x2 = zone_x1 + fixed_spark_area_width
         
-        zone_y1 = y1_text - 26 # Adjusted to not include area above blue spark term
+        zone_y1 = y1_text + SPARK_ROI_CONFIG["ZONE_Y1_OFFSET"]
 
         # Determine zone_y2 dynamically
-        zone_y2 = h - 420 # Adjusted to extend further down
+        zone_y2 = h + SPARK_ROI_CONFIG["ZONE_Y2_FALLBACK"]
 
         # Find the next blue spark in the same screenshot column
         for next_spark in blue_spark_detections[i+1:]:
             if next_spark['screenshot_index'] == screenshot_index:
                 # The bottom of the current zone is the top of the next zone's title
-                zone_y2 = next_spark['y1_text'] - 77
+                zone_y2 = next_spark['y1_text'] + SPARK_ROI_CONFIG["ZONE_Y2_NEXT_SPARK_OFFSET"]
                 break
         
         potential_zones.append((zone_x1, zone_y1, zone_x2, zone_y2))
