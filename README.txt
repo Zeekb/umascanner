@@ -3,6 +3,16 @@ A simple guide to setting up and using the UMA Scanner.
 
 This guide will help you install and use the UMA Scanner to get information from your mobile game screenshots.
 
+!! NOTE !!
+Running this for myself takes about 20 minutes for 200 entries, so go grab something to drink and put on a video :)
+
+---
+
+## Step -1: [Optional] Remove my data from the program before running your own
+
+If you don't want my runner data in your program, before doing anything, delete the `all-runners.csv` file in the `data` folder
+I kept it in so people can play with the Analyzer (Described below) without putting in their own screenshots.
+
 ---
 
 Step 0: Download and Install Python
@@ -55,10 +65,8 @@ Step 3: Process Your Screenshots
     python src/image_processor.py
 
 2.  The script will first automatically group your images into character folders.
-3.  Next, a new window will open for "Spark Area Confirmation". The program automatically detects the "spark" areas. Your task is to review these automatically drawn boxes and adjust them if they are incorrect.
-4.  After you confirm the spark areas, the script will process all the information.
-5.  If the script finds conflicting data for a character, a "Conflict Resolution" window may appear. This allows you to choose which data to keep.
-6.  Once finished, the processed folders are moved to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
+3.  If the script finds conflicting data for a character, a "Conflict Resolution" window may appear. This allows you to choose which data to keep.
+4.  Once finished, the processed folders are moved to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
 
 ---
 

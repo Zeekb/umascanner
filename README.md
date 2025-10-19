@@ -4,6 +4,10 @@ A simple guide to setting up and using the UMA Scanner.
 This guide will help you install and use the UMA Scanner to get information from your screenshots.
 
 
+!! NOTE !!
+Running this for myself takes about 20 minutes for 200 entries, so go grab something to drink and put on a video :)
+
+
 ## Step -1: [Optional] Remove my data from the program before running your own
 
 If you don't want my runner data in your program, before doing anything, delete the `all-runners.csv` file in the `data` folder
@@ -69,12 +73,8 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
     ```
 
 2.  The script will first automatically group any loose images in `data/input_images` into character folders.
-3.  Next, a new window will open for **Spark Area Confirmation**. The program automatically detects the "spark" areas on your screenshots. Your task is to review these automatically drawn boxes for each character and adjust them if they are incorrect.
-    *   Use the example image at `assets/SparkAreaExample.PNG` as a reference for how the boxes should look.
-    <img src="assets/SparkAreaExample.PNG" alt="SparkAreaExample.PNG" width="1200"/>
-4.  After you confirm the spark areas for all characters, the script will process all the information.
-5.  If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window may appear. This allows you to choose which data to keep.
-6.  Once finished, the processed character folders will be moved from `data/input_images` to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
+3.  If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window may appear. This allows you to choose which data to keep.
+4.  Once finished, the processed character folders will be moved from `data/input_images` to `data/processed_images`. The extracted data is saved in `data/all_runners.csv`.
 
 ---
 
