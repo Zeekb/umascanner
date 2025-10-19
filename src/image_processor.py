@@ -6,7 +6,6 @@ import pandas as pd
 import hashlib
 import shutil
 from PIL import Image
-from tkinter import Tk
 import queue
 import threading
 import logging
@@ -21,7 +20,8 @@ import subprocess
 from schema import init_schema, CharacterData
 from main_parser import parse_umamusume
 from spark_parser import parse_sparks
-from sparks_handler import get_entries, combine_images_horizontally, ROISelector
+from sparks_handler import get_entries, combine_images_horizontally
+from roi_detector import detect_spark_zones
 from tabs import detect_active_tab
 from post_processing import update_all_runners
 from ocr_utils import normalize_name
@@ -296,19 +296,33 @@ def _group_loose_images():
     return True
 
 
-def _run_roi_selection(processing_q):
-    logger.info("=== Step 1: Launching ROI Selector GUI ===")
+def _run_roi_detection_automatically(processing_q):
+    logger.info("=== Step 1: Running automatic ROI detection ===")
     entries = get_entries(INPUT_FOLDER)
     if not entries:
-        logger.error(f"No subfolders with images found in {INPUT_FOLDER}. Did you run folder_creator.py?")
-        raise FileNotFoundError(f"No subfolders with images found in {INPUT_FOLDER}.")
+        logger.error(f"No subfolders with inspiration images found in {INPUT_FOLDER}.")
+        return []
 
-    root = Tk()
-    root.state('zoomed')
-    roi_app = ROISelector(root, entries, processing_q)
-    root.mainloop()
-    logger.info("ROI selection complete.")
+    reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"])
+
+    for folder_name, image_paths in entries.items():
+        logger.info(f"Detecting ROIs for {folder_name}...")
+        try:
+            img_original = combine_images_horizontally(image_paths)
+            img_cv = cv2.cvtColor(np.array(img_original), cv2.COLOR_RGB2BGR)
+            
+            detected_rois = detect_spark_zones(img_cv, reader)
+            
+            rois_for_queue = [(folder_name, roi, image_paths) for roi in detected_rois]
+            processing_q.put((folder_name, rois_for_queue))
+
+        except Exception as e:
+            logger.error(f"Error processing {folder_name} for ROI detection: {e}")
+            processing_q.put((folder_name, []))
+
+    logger.info("Automatic ROI detection complete.")
     return list(entries.keys())
+
 
 def main():
     logging.basicConfig(level=getattr(logging, LOG_LEVEL), format=LOG_FORMAT, handlers=[
@@ -338,7 +352,7 @@ def main():
         workers.append(worker)
 
     try:
-        processed_folder_names = _run_roi_selection(processing_q)
+        processed_folder_names = _run_roi_detection_automatically(processing_q)
         processing_q.join()
     finally:
         for _ in range(num_workers):
