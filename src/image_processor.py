@@ -16,6 +16,8 @@ from multiprocessing import cpu_count
 from datetime import datetime
 import sys
 import subprocess
+import torch
+import warnings
 
 from schema import init_schema, CharacterData
 from main_parser import parse_umamusume
@@ -206,7 +208,7 @@ def _create_new_runners_dataframe(final_results):
 def _group_loose_images():
     logger.info("\n=== Step 0: Organizing loose images ===")
     # ---------------- Configuration ----------------
-    reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"]) # Updated initialization
+    reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"])
     stat_keys = config["STAT_KEYS"] # Use global config
 
     # ---------------- Scan base folder for images ----------------
@@ -328,6 +330,11 @@ def main():
     logging.basicConfig(level=getattr(logging, LOG_LEVEL), format=LOG_FORMAT, handlers=[
         logging.FileHandler(LOG_FILE, mode='w'), logging.StreamHandler()
     ])
+
+    # Check for GPU availability and warn if necessary
+    if OCR_READER_CONFIG.get("gpu") and not torch.cuda.is_available():
+        warnings.warn("\n\nGPU acceleration is enabled in config.json, but a compatible GPU and/or PyTorch installation was not found. \nFalling back to CPU. This will be significantly slower.\n")
+
     logger.info("Starting Umamusume Scanner...")
 
     # Clear conflicts from previous run

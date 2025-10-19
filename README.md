@@ -54,6 +54,44 @@ Next, you need to install some extra tools that the UMA Scanner needs to work. H
 
 ---
 
+## Step 1a: [Optional RECOMMENDED] Enabling GPU Acceleration
+
+For a significant performance increase, it is HIGHLY recommended to run the OCR process on an NVIDIA GPU. The default installation uses the CPU to ensure compatibility across all machines. With an expected batch size of up to 200 entries this is the difference between **20 minutes and 2 hours**, well worth the time.
+
+**Performance Comparison:**
+Based on a test with 5 character folders:
+*   **CPU Time:** 205 seconds
+*   **GPU Time:** 33 seconds
+
+This is a **~6x speed improvement**.
+
+To enable GPU acceleration, you must manually install a version of PyTorch that supports your specific hardware. The application is configured to use the GPU by default (`"gpu": true` in `src/config.json`), but it will only work if you complete these steps.
+
+**Requirements:**
+1.  An NVIDIA GPU.
+2.  Correctly installed NVIDIA drivers.
+3.  The NVIDIA CUDA Toolkit.
+
+**Installation:**
+1.  **IMPORTANT:** Uninstall the existing CPU-only version of PyTorch first to avoid conflicts:
+    ```bash
+    pip uninstall torch torchvision torchaudio
+    ```
+2.  Check your driver's maximum supported CUDA version by running this command in your terminal:
+    ```bash
+    nvidia-smi
+    ```
+    Look for the "CUDA Version" in the top-right of the output. Your driver can support any CUDA version *up to* this number.
+3.  Go to the [official PyTorch website](https://pytorch.org/get-started/locally/).
+4.  Use the "PyTorch Build" selector to choose the options that match your system. For the CUDA option, pick a version that is less than or equal to the one you found in the previous step.
+5.  Copy the generated command (e.g., `pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118`).
+6.  Run the installation command from the PyTorch website in your Terminal or Command Prompt.
+7.  After this is complete, the `install_dependencies.bat` script can be run, or if you have already run it, the program will now use your GPU.
+
+If you enable GPU in the config but do not have a proper GPU setup, the program will fall back to the CPU and you will see a warning message.
+
+---
+
 ## Step 2: Prepare Your Screenshots
 
 1.  Put all your loose game screenshots into the `data/input_images` folder. The system will automatically organize them when you run `image_processor.py` in step 3.
