@@ -234,9 +234,14 @@ class UmaAnalyzerPyQt(QMainWindow):
         with open(file_path, 'r', encoding='utf-8') as f: return json.load(f)
 
     def load_racers(self):
-        file_path = os.path.join(BASE_DIR, 'data', 'game_data', 'racers.json')
-        if not os.path.exists(file_path): return None
-        with open(file_path, 'r', encoding='utf-8') as f: return [''] + sorted(json.load(f))
+        if self.data is None:
+            return [''] # Return empty list if data loading failed
+        
+        # Get unique names from the 'name' column of the dataframe
+        unique_names = sorted(self.data['name'].unique())
+        
+        # Return the list with an empty string at the beginning for the "all" option
+        return [''] + unique_names
 
     def _remove_dialog_from_list(self, dialog_to_remove):
         try:
