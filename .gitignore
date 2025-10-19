@@ -206,18 +206,32 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-# Ignore user-generated data
-# Ignore contents of data directories, but keep the directories themselves
+# Custom project-specific ignores
+
+# Ignore generated data files
+/data/all_runners*.csv
+/data/all_tables/
+
+# Ignore contents of data directories, but keep the directories themselves.
+# (Assumes a .gitkeep file exists in each of these directories to be tracked)
 /data/input_images/*
 !/data/input_images/.gitkeep
 /data/processed_images/*
 !/data/processed_images/.gitkeep
 /data/legacy/*
 !/data/legacy/.gitkeep
+/data/profile_images/*
+!/data/profile_images/.gitkeep
 
-# Ignore assets, but keep the example image
+# Ignore user-generated assets, keeping example files and directory structure
 /assets/*
 !/assets/SparkAreaExample.PNG
 !/assets/ExampleAnalyzerView.png
 !/assets/profile_images/
-gemini.md
+/assets/profile_images/*
+!/assets/profile_images/.gitkeep
+
+# Ignore other files
+/gemini.md
+/.DS_Store
+/README.txt
