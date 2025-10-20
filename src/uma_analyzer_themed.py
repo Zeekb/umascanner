@@ -34,8 +34,8 @@ from PyQt5.QtWidgets import (
     QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton,
     QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QRadioButton, QGraphicsDropShadowEffect
 )
-from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath, QPen, QFontMetrics
-from PyQt5.QtCore import Qt, QRect
+from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath, QPen, QFontMetrics, QIcon
+from PyQt5.QtCore import Qt, QRect, QEvent
 
 class OutlineLabel(QLabel):
     def __init__(self, text="", parent=None, outline_color=Qt.black, outline_width=3, text_color=Qt.white, force_left_align=False):
@@ -208,7 +208,6 @@ QMainWindow {{
 QDockWidget {{
     background-color: {UMA_MEDIUM_BG};
     border: 1px solid {UMA_DARK_BG};
-    titlebar-close-icon: url(close.png); /* Placeholder for custom icon */
 }}
 
 QDockWidget::title {{
@@ -457,6 +456,7 @@ class UmaAnalyzerPyQt(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Umamusume: Pretty Derby - Runner Analyzer")
+        self.setWindowIcon(QIcon(os.path.join(BASE_DIR, 'assets', 'icon.jpg')))
         self.setGeometry(100, 100, 1800, 1000)
 
         self.data = self.load_data()
@@ -691,6 +691,9 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         if isinstance(widget, QSlider):
             widget.setRange(0, 1200)
+            widget.setSingleStep(1) 
+            widget.installEventFilter(self)
+            slider_layout = QHBoxLayout()
             slider_layout = QHBoxLayout()
             num_input = QLineEdit(str(widget.value()))
             num_input.setFixedWidth(50)
@@ -707,6 +710,20 @@ class UmaAnalyzerPyQt(QMainWindow):
         elif isinstance(widget, QLineEdit): widget.textChanged.connect(self.apply_filters)
         elif isinstance(widget, QCheckBox): widget.stateChanged.connect(self.toggle_rep_filter)
 
+    # ADD THIS ENTIRE METHOD
+    def eventFilter(self, obj, event):
+        if isinstance(obj, QSlider) and event.type() == QEvent.Wheel:
+            # Check the scroll direction
+            delta = event.angleDelta().y()
+            if delta > 0:
+                obj.setValue(obj.value() + obj.singleStep())
+            elif delta < 0:
+                obj.setValue(obj.value() - obj.singleStep())
+            return True # Event is handled, stop default processing
+        
+        # Pass on all other events
+        return super().eventFilter(obj, event)
+     
     def reset_filters(self):
         for name, widget in self.controls.items():
             default_value = self.default_controls[name]
@@ -1485,9 +1502,17 @@ def calculateRank(score):
 
 
 if __name__ == "__main__":
+    my_app_id = 'umascanner.zeek.21102025' 
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)
+    except AttributeError:
+        pass
     app = QApplication(sys.argv)
-    app.setFont(QFont("Segoe UI", 12)) # Consider a more thematic font if available
-    app.setStyleSheet(QSS_DETAIL_DIALOG + QSS) # Apply the custom QSS
+    
+    icon_path = os.path.join(BASE_DIR, 'assets', 'icon.png')
+    app.setWindowIcon(QIcon(icon_path))
+    app.setFont(QFont("Segoe UI", 12))
+    app.setStyleSheet(QSS_DETAIL_DIALOG + QSS)
     main_window = UmaAnalyzerPyQt()
     main_window.showMaximized()
     sys.exit(app.exec_())
