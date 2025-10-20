@@ -319,10 +319,11 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         self.data = self.load_data()
         self.spark_info = self.load_spark_designations()
+        self.skill_types = self.load_skill_types() # ADDED
         self.racers = self.load_racers()
         self.open_dialogs = []
 
-        if self.data is None or self.spark_info is None or self.racers is None:
+        if self.data is None or self.spark_info is None or self.racers is None or self.skill_types is None:
             sys.exit(1)
 
         # --- Themed stat colors ---
@@ -354,6 +355,18 @@ class UmaAnalyzerPyQt(QMainWindow):
         file_path = os.path.join(BASE_DIR, 'data', 'game_data', 'sparks.json')
         if not os.path.exists(file_path): return None
         with open(file_path, 'r', encoding='utf-8') as f: return json.load(f)
+
+    def load_skill_types(self):
+        file_path = os.path.join(BASE_DIR, 'data', 'game_data', 'skill_types.json')
+        if not os.path.exists(file_path):
+            logging.error(f"Skill types file not found at: {file_path}")
+            return None
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            logging.error(f"Failed to load or parse skill_types.json: {e}")
+            return None
 
     def load_racers(self):
         if self.data is None:
@@ -402,7 +415,7 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         runner_data = selected_runner_df.iloc[0].to_dict()
         
-        dialog = UmaDetailDialog(runner_data, self.spark_info, self)
+        dialog = UmaDetailDialog(runner_data, self.spark_info, self.skill_types, self)
         self.open_dialogs.append(dialog)
         dialog.finished.connect(lambda: self._remove_dialog_from_list(dialog))
         dialog.show()
@@ -699,12 +712,14 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
 class UmaDetailDialog(QDialog):
-    def __init__(self, runner_data, spark_info, parent=None):
+    # UPDATED signature
+    def __init__(self, runner_data, spark_info, skill_types, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"Umamusume Details: {runner_data['name']}")
         self.setGeometry(200, 200, 600, 900)
         self.runner_data = runner_data
         self.spark_info = spark_info
+        self.skill_types = skill_types if skill_types else {}
         self.setStyleSheet(QSS_DETAIL_DIALOG)
         self.init_ui()
 
@@ -748,7 +763,7 @@ class UmaDetailDialog(QDialog):
     def _format_skill_name_with_symbols(self, skill_name):
         # Regex to find the specific symbols
         # The symbols are: U+25CE (Circled White Bullet), U+25CB (White Circle), U+00D7 (Multiplication Sign)
-        # Using a non-greedy match for the skill name part
+        # Using a non-greedy match for the skill name part 
         formatted_name = re.sub(r'(◎|○|×)', r'<span style="font-size: 16pt; font-family: \'Segoe UI Symbol\';">\1</span>', skill_name)
         return formatted_name
 
@@ -1105,21 +1120,78 @@ class UmaDetailDialog(QDialog):
             mid = (n + 1) // 2  # ensures first column gets the extra item if odd
             
             for i, skill in enumerate(skills):
+                # --- NEW LOGIC FOR ICON + TEXT ---
+                
+                # 1. Create container and layout
+                skill_container = QWidget()
+                skill_layout = QHBoxLayout(skill_container)
+                skill_layout.setContentsMargins(8, 5, 10, 5) # l, t, r, b
+                skill_layout.setSpacing(8)
+
+                # 2. Get skill type and icon
+                skill_type = self.skill_types.get(skill, None)
+                icon_label = QLabel()
+                icon_label.setFixedSize(32, 32) # Standard icon size
+                icon_label.setStyleSheet("border: none; background: transparent;") # No border or bg
+
+                if skill_type:
+                    icon_path = os.path.join(BASE_DIR, 'assets', 'skill_icons', f'{skill_type}.png')
+                    if os.path.exists(icon_path):
+                        pixmap = QPixmap(icon_path)
+                        icon_label.setPixmap(pixmap.scaled(32, 32, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+                    else:
+                        logging.warning(f"Icon not found for skill type '{skill_type}' at {icon_path}")
+                else:
+                    logging.warning(f"Skill '{skill}' not found in skill_types.json")
+
+                skill_layout.addWidget(icon_label)
+
+                # 3. Create text label
                 formatted_skill_name = self._format_skill_name_with_symbols(skill)
                 skill_label = QLabel(formatted_skill_name)
                 skill_label.setStyleSheet(
-                    f"QLabel {{ background-color: #F5F5F5; color: {UMA_TEXT_DARK}; border: 2px solid #C0C0C0; border-radius: 10px; padding: 9px 10px; text-align: left; font-weight: bold; letter-spacing: 1px; }}"
+                    f"QLabel {{ background-color: transparent; color: {UMA_TEXT_DARK}; border: none; padding: 0; text-align: left; font-weight: bold; letter-spacing: 1px; }}"
                 )
-                skill_label.setTextFormat(Qt.RichText) # Enable rich text rendering
-                skill_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter) # Align text within the label
-                # Determine row and column
+                skill_label.setTextFormat(Qt.RichText)
+                skill_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+                skill_label.setWordWrap(True)
+                
+                skill_layout.addWidget(skill_label, 1) # Add with stretch factor
+
+                # --- 4. DYNAMICALLY STYLE CONTAINER ---
+                container_style = ""
+                default_border = "border: 2px solid #C0C0C0; border-radius: 10px;" # Default border
+                
+                # Rule 2: Rainbow (checked first as it's more specific)
+                # Gradient based on uniquebox.PNG (Higher Saturation)
+                if skill_type and skill_type.startswith('unique') and i == 0:
+                    rainbow_bg = "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #F9E08B, stop:0.35 #C4FFC8, stop:0.65 #B8ECFF, stop:1 #F6BFFF);"
+                    rainbow_border = "border: 2px solid #C8C8C8; border-radius: 10px;" # Light border
+                    container_style = f"QWidget {{ background: {rainbow_bg} {rainbow_border} }}"
+                
+                # Rule 1: Gold
+                # Gradient based on goldbox.PNG (Higher Saturation)
+                elif skill_type and skill_type.endswith('g'):
+                    gold_bg = "qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #FFEA8A, stop:1 #FFC24A);"
+                    gold_border = "border: 2px solid #E6A245; border-radius: 10px;"
+                    container_style = f"QWidget {{ background: {gold_bg} {gold_border} }}"
+                
+                # Rule 3: Default
+                else:
+                    default_bg = "#F5F5F5;"
+                    container_style = f"QWidget {{ background-color: {default_bg} {default_border} }}"
+
+                skill_container.setStyleSheet(container_style)
+
+                # 5. Add container to grid
                 if i < mid:
                     row = i
                     col = 0
                 else:
                     row = i - mid
                     col = 1
-                skills_layout.addWidget(skill_label, row, col)
+                skills_layout.addWidget(skill_container, row, col)
+                # --- END OF MODIFIED LOGIC ---
         else:
             skills_layout.addWidget(QLabel("No skills listed."), 0, 0)
 

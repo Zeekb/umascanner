@@ -157,14 +157,6 @@ __marimo__/
 /data/profile_images/*
 !/data/profile_images/.gitkeep
 
-# Generated assets
-/assets/*
-!/assets/SparkAreaExample.PNG
-!/assets/ExampleAnalyzerView.png
-!/assets/profile_images/
-/assets/profile_images/*
-!/assets/profile_images/.gitkeep
-
 # Other
 /gemini.md
 /.DS_Store
