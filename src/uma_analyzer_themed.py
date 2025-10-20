@@ -4,6 +4,7 @@ import json
 import os
 import re
 import logging
+import ctypes
 
 # Configure logging to file
 logging.basicConfig(filename='app.log', level=logging.INFO,
@@ -189,9 +190,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # --- Umamusume Themed Colors ---
-UMA_LIGHT_BG = "#FFF8E1"  # Very light cream/yellow
-UMA_MEDIUM_BG = "#FFECB3" # Light pastel yellow
-UMA_DARK_BG = "#FFD54F"   # Richer yellow/gold
+UMA_LIGHT_BG = "#FEFEFE"  # Very light grey (from dialog QGroupBox)
+UMA_MEDIUM_BG = "#FFFFFF" # White (from dialog QDialog)
+UMA_DARK_BG = "#71d71c"   # Green accent (from dialog QGroupBox::title)
 UMA_ACCENT_PINK = "#FF80AB" # Vibrant pink
 UMA_ACCENT_BLUE = "#82B1FF" # Sky blue
 UMA_TEXT_DARK = "#8C4410" # Dark brown-ish grey
@@ -200,14 +201,14 @@ UMA_TEXT_LIGHT = "#FFFFFF" # White
 # --- Qt Style Sheet (QSS) for Umamusume Theme ---
 QSS = f"""
 QMainWindow {{
-    background-color: {UMA_LIGHT_BG};
+    font-family: 'Segoe UI';
+    color: {UMA_TEXT_DARK};
 }}
 
 QDockWidget {{
     background-color: {UMA_MEDIUM_BG};
     border: 1px solid {UMA_DARK_BG};
     titlebar-close-icon: url(close.png); /* Placeholder for custom icon */
-    titlebar-normal-icon: url(normal.png); /* Placeholder for custom icon */
 }}
 
 QDockWidget::title {{
@@ -264,9 +265,56 @@ QLabel {{
     color: {UMA_TEXT_DARK};
 }}
 
-QComboBox, QLineEdit, QPushButton, QCheckBox {{
+QComboBox, QLineEdit, QPushButton {{
     background-color: {UMA_TEXT_LIGHT};
     border: 1px solid {UMA_DARK_BG};
+    padding: 3px;
+    color: {UMA_TEXT_DARK};
+}}
+
+QComboBox {{
+    padding-right: 18px; 
+}}
+
+QComboBox::drop-down {{
+    subcontrol-origin: padding; /* Position relative to padding */
+    subcontrol-position: top right;
+    width: 18px;
+
+    /* Use the light-grey from scrollbar track as the button background */
+    background: #f0f0f0; 
+    
+    /* Remove the main border from this sub-control */
+    border: none;
+}}
+
+/* Style the hover state to match scrollbar interaction */
+QComboBox::drop-down:hover {{
+    background: #e0e0e0; /* Slightly darker */
+}}
+
+/* Style the arrow itself */
+QComboBox::down-arrow {{
+    /* This is a standard QSS "border trick" to draw a triangle */
+    width: 0; 
+    height: 0; 
+    border-style: solid;
+    
+    /* Make the arrow 5px high */
+    border-width: 5px; 
+
+    /* * Set top color to the dark-grey scroll handle color (#c0c0c0).
+     * Set other 3 sides to transparent.
+     * This creates a 5px triangle pointing down.
+    */
+    border-color: transparent #c0c0c0 #c0c0c0 transparent;
+
+    margin-left:4px;
+    margin-top:15px;
+}}
+
+QCheckBox {{
+    background-color: {UMA_TEXT_LIGHT};
     padding: 3px;
     color: {UMA_TEXT_DARK};
 }}
@@ -297,9 +345,39 @@ QSlider::handle:horizontal {{
     margin: -5px 0; /* handle is 16px wide, so -2 to make it centered */
     border-radius: 9px;
 }}
+
+QScrollBar:vertical {{
+    border: none;
+    background: #f0f0f0;
+    width: 6px;
+    margin: 0px 0px 0px 0px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}}
+
+QScrollBar::handle:vertical {{
+    background: #c0c0c0;
+    min-height: 20px;
+    border-radius: 5px;
+}}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+    border: none;
+    background: none;
+}}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
+    background: none;
+}}
+
 """
 
 QSS_DETAIL_DIALOG = f"""
+QMainWindow {{
+    font-family: 'Segoe UI';
+    color: {UMA_TEXT_DARK};
+}}
+
 QDialog {{
     background-color: white;
 }}
@@ -336,6 +414,22 @@ QPushButton {{
 QPushButton:hover {{
     background-color: {UMA_ACCENT_PINK};
 }}
+
+QSlider::groove:horizontal {{
+    border: 1px solid {UMA_ACCENT_BLUE};
+    height: 8px; /* the groove height */
+    background: {UMA_ACCENT_BLUE};
+    margin: 2px 0;
+    border-radius: 4px;
+}}
+
+QSlider::handle:horizontal {{
+    background: {UMA_ACCENT_PINK};
+    border: 1px solid {UMA_ACCENT_BLUE};
+    width: 18px;
+    margin: -5px 0; /* handle is 16px wide, so -2 to make it centered */
+    border-radius: 9px;
+}}
 """
 
 class RichTextDelegate(QStyledItemDelegate):
@@ -362,7 +456,7 @@ class RichTextDelegate(QStyledItemDelegate):
 class UmaAnalyzerPyQt(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Uma Musume Runner Analyzer (PyQt)")
+        self.setWindowTitle("Umamusume: Pretty Derby - Runner Analyzer")
         self.setGeometry(100, 100, 1800, 1000)
 
         self.data = self.load_data()
@@ -373,18 +467,6 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         if self.data is None or self.spark_info is None or self.racers is None or self.skill_types is None:
             sys.exit(1)
-
-        # --- Themed stat colors ---
-        self.stat_colors = {
-            (0, 100): '#F8F8F8',    # Very Light Grey
-            (100, 200): '#E0F7FA',  # Light Cyan
-            (200, 300): '#E8EAF6',  # Light Indigo
-            (300, 400): '#BBDEFB',  # Light Blue
-            (400, 600): '#C8E6C9',  # Light Green
-            (600, 800): '#FFCDD2',  # Light Red/Pink
-            (800, 1000): '#FFECB3', # Light Orange/Yellow
-            (1000, 1201): '#FFF9C4' # Lighter Yellow
-        }
 
         self.init_ui()
         self.apply_filters()
@@ -426,6 +508,38 @@ class UmaAnalyzerPyQt(QMainWindow):
         # Return the list with an empty string at the beginning for the "all" option
         return [''] + unique_names
 
+    def _get_taskbar_height(self):
+        """Get the taskbar height to avoid spawning the window underneath it."""
+        # This is a Windows-specific implementation
+        if os.name == 'nt':
+            try:
+                # Get the handle of the taskbar
+                taskbar_handle = ctypes.windll.user32.FindWindowW("Shell_TrayWnd", None)
+                if not taskbar_handle:
+                    return 0
+
+                # Get the rectangle of the taskbar
+                rect = ctypes.wintypes.RECT()
+                if not ctypes.windll.user32.GetWindowRect(taskbar_handle, ctypes.byref(rect)):
+                    return 0
+
+                # The taskbar can be on any side of the screen
+                taskbar_height = rect.bottom - rect.top
+                taskbar_width = rect.right - rect.left
+
+                # We only care about the height if the taskbar is at the bottom
+                # A more robust solution would check all sides
+                screen_width = ctypes.windll.user32.GetSystemMetrics(0)
+                if taskbar_width == screen_width:
+                    return taskbar_height
+                else: # Taskbar is on the side
+                    return 0
+
+            except Exception as e:
+                logging.error(f"Exception while getting taskbar height: {e}")
+                return 0 # Return a default value in case of error
+        return 0 # Not on Windows
+
     def _remove_dialog_from_list(self, dialog_to_remove):
         try:
             self.open_dialogs.remove(dialog_to_remove)
@@ -434,6 +548,13 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
     def show_runner_details(self, row, column):
+        # Get the taskbar position to ensure the dialog doesn't spawn under it
+        try:
+            taskbar_height = self._get_taskbar_height()
+        except Exception as e:
+            logging.error(f"Could not get taskbar height: {e}")
+            taskbar_height = 0
+
         table = self.tables["Stats Summary"]
 
         # Find the column index for "Entry Id" dynamically
@@ -463,9 +584,25 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         runner_data = selected_runner_df.iloc[0].to_dict()
         
+        # Pass the available geometry to the dialog
         dialog = UmaDetailDialog(runner_data, self.spark_info, self.skill_types, self)
         self.open_dialogs.append(dialog)
         dialog.finished.connect(lambda: self._remove_dialog_from_list(dialog))
+        
+        # --- Center the dialog on the screen, avoiding the taskbar ---
+        screen_geometry = QApplication.desktop().availableGeometry()
+        
+        # Adjust for taskbar if height was fetched
+        screen_geometry.setHeight(screen_geometry.height() - taskbar_height)
+
+        dialog_width = 600 # Set your dialog's width
+        dialog_height = 900 # Set your dialog's height
+        
+        # Center calculation
+        x = screen_geometry.x() + (screen_geometry.width() - dialog_width) / 2
+        y = screen_geometry.y() + (screen_geometry.height() - dialog_height) / 2
+        
+        dialog.setGeometry(int(x), int(y), dialog_width, dialog_height)
         dialog.show()
 
 
@@ -474,12 +611,16 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.setCentralWidget(self.central_widget)
         self.layout = QHBoxLayout(self.central_widget)
 
-        self.controls_dock = QDockWidget("Filters and Controls", self)
-        self.addDockWidget(Qt.LeftDockWidgetArea, self.controls_dock)
+        # Create a QGroupBox for the filters
+        self.controls_groupbox = QGroupBox("Filters and Controls")
+        self.controls_groupbox.setLayout(QVBoxLayout())
+        self.controls_groupbox.setFixedWidth(250)
+        self.layout.addWidget(self.controls_groupbox)
+
         self.controls_widget = QWidget()
         self.controls_widget.setMinimumWidth(200) # Set a minimum width for the controls widget
         self.controls_layout = QVBoxLayout(self.controls_widget)
-        self.controls_dock.setWidget(self.controls_widget)
+        self.controls_groupbox.layout().addWidget(self.controls_widget)
 
         self.tabs = QTabWidget()
         self.layout.addWidget(self.tabs)
@@ -532,8 +673,9 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.add_control('min_pink', 'Min Pink Spark Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '')
         self.add_control('filter_white', 'White Spark Type', QComboBox(), white_spark_options, '')
         self.add_control('min_white', 'Min White Spark Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '')
+        self.controls_layout.setSpacing(5)
         
-        self.controls_layout.addStretch()
+        self.controls_layout.addStretch(0)
 
     def add_control(self, name, label, widget, options=None, default_value=None):
         self.controls_layout.addWidget(QLabel(label))
@@ -703,6 +845,40 @@ class UmaAnalyzerPyQt(QMainWindow):
                 highlighted_parts.append(part)
         return ", ".join(highlighted_parts)
 
+    def get_grade_for_stat(self, value):
+        if value >= 1150: return 'SS+'
+        elif value >= 1100: return 'SS'
+        elif value >= 1050: return 'S+'
+        elif value >= 1000: return 'S'
+        elif value >= 900: return 'A+'
+        elif value >= 800: return 'A'
+        elif value >= 700: return 'B+'
+        elif value >= 600: return 'B'
+        elif value >= 500: return 'C+'
+        elif value >= 400: return 'C'
+        elif value >= 350: return 'D+'
+        elif value >= 300: return 'D'
+        elif value >= 250: return 'E+'
+        elif value >= 200: return 'E'
+        elif value >= 150: return 'F+'
+        elif value >= 100: return 'F'
+        else: return 'G'
+
+    def get_aptitude_grade_color(self, grade):
+        grade_colors = {
+            'SS': '#f0bd1a',
+            'S': '#f0bd1a',
+            'A': '#f48337',
+            'B': '#e56487',
+            'C': '#61c340',
+            'D': '#49ace2',
+            'E': '#d477f2',
+            'F': '#766ad6',
+            'G': '#b3b2b3'
+        }        
+        base_grade = grade.split('<')[0].rstrip('+')
+        return grade_colors.get(base_grade, '#424242')
+
     def update_table(self, table, df, controls):
         table.clear()
         table.setRowCount(len(df))
@@ -724,8 +900,12 @@ class UmaAnalyzerPyQt(QMainWindow):
                 item.setTextAlignment(Qt.AlignCenter)
 
                 if col.lower() in ['speed', 'stamina', 'power', 'guts', 'wit']:
-                    color = self.get_color_for_value(cell_value)
-                    if color: item.setBackground(color)
+                    grade = self.get_grade_for_stat(cell_value)
+                    color_hex = self.get_aptitude_grade_color(grade)
+                    
+                    if color_hex:
+                        color = QColor(color_hex).lighter(150)
+                        item.setBackground(color)
                 
                 if col in ['Blue Sparks', 'Pink Sparks']:
                     item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
@@ -749,15 +929,6 @@ class UmaAnalyzerPyQt(QMainWindow):
                 table.setColumnWidth(i, 150) # Adjusted for compactness
             else:
                 table.horizontalHeader().setSectionResizeMode(i, QHeaderView.Stretch) # Default for others
-        
-    def get_color_for_value(self, value):
-        if not isinstance(value, (int, float)):
-            return None
-        for (min_val, max_val), color in self.stat_colors.items():
-            if min_val <= value < max_val:
-                return QColor(color)
-        return None
-
 
 class UmaDetailDialog(QDialog):
     # UPDATED signature
@@ -1316,8 +1487,8 @@ def calculateRank(score):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setFont(QFont("Segoe UI", 12)) # Consider a more thematic font if available
-    app.setStyleSheet(QSS) # Apply the custom QSS
+    app.setStyleSheet(QSS_DETAIL_DIALOG + QSS) # Apply the custom QSS
     main_window = UmaAnalyzerPyQt()
-    main_window.show()
+    main_window.showMaximized()
     sys.exit(app.exec_())
 
