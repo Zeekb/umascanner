@@ -43,6 +43,7 @@ class OutlineLabel(QLabel):
         self._outline_width = outline_width
         self._text_color = QColor(text_color) if not isinstance(text_color, QColor) else text_color
         self._force_left_align = force_left_align
+        self._text_gradient_colors = None
 
     def setOutlineColor(self, color):
         self._outline_color = QColor(color) if not isinstance(color, QColor) else color
@@ -56,15 +57,18 @@ class OutlineLabel(QLabel):
         self._text_color = QColor(color) if not isinstance(color, QColor) else color
         self.update()
 
+    def setTextGradient(self, color_top, color_bottom):
+        """Sets a vertical gradient for the text fill."""
+        self._text_gradient_colors = (QColor(color_top), QColor(color_bottom))
+        self._text_color = QColor(color_top)
+        self.update()
+
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
 
         # Remove HTML tags for drawing
         plain_text = re.sub(r'<[^>]+>', '', self.text())
-
-        # Debugging: Log colors
-        logging.info(f"OutlineLabel text: {plain_text}, Outline Color: {self._outline_color.name()}, Text Color: {self._text_color.name()}")
 
         metrics = painter.fontMetrics()
         
@@ -87,7 +91,8 @@ class OutlineLabel(QLabel):
 
         # Create QPainterPath for main text
         path_main = QPainterPath()
-        path_main.addText(int(x_main), int(y_main), self.font(), main_text)
+        if main_text: # Only add text if it's not an empty string
+            path_main.addText(int(x_main), int(y_main), self.font(), main_text)
 
         # Handle the '+' if present
         path_plus = QPainterPath()
@@ -106,30 +111,73 @@ class OutlineLabel(QLabel):
             
             path_plus.addText(int(x_plus), int(y_plus), smaller_font, plus_text)
 
-        # --- MODIFIED DRAWING LOGIC ---
-        # Draw outline for main text
-        pen_main = QPen(self._outline_color, self._outline_width)
-        pen_main.setJoinStyle(Qt.RoundJoin)
-        painter.setPen(pen_main)
-        painter.setBrush(Qt.NoBrush)
-        painter.drawPath(path_main)
+        # --- GRADIENT FLIPPED LOGIC ---
+        
+        # 1. Draw main text (ONLY IF PATH IS NOT EMPTY)
+        if not path_main.isEmpty():
+            # 1a. Draw outline for main text
+            pen_main = QPen(self._outline_color, self._outline_width)
+            pen_main.setJoinStyle(Qt.RoundJoin)
+            painter.setPen(pen_main)
+            painter.setBrush(Qt.NoBrush)
+            painter.drawPath(path_main)
 
-        # Draw main text fill
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(self._text_color)
-        painter.drawPath(path_main)
+            # 1b. Draw main text fill
+            painter.setPen(Qt.NoPen)
+            use_gradient = False
+            if self._text_gradient_colors:
+                try:
+                    text_rect = path_main.boundingRect()
+                    # Added check for valid rect
+                    if text_rect.isValid() and text_rect.height() > 0:
+                        gradient = QLinearGradient(text_rect.topLeft(), text_rect.bottomLeft()) # Vertical
+                        # --- GRADIENT FLIPPED ---
+                        gradient.setColorAt(0, self._text_gradient_colors[1]) # bottom color (now at top)
+                        gradient.setColorAt(1, self._text_gradient_colors[0]) # top color (now at bottom)
+                        # --- END FLIP ---
+                        painter.setBrush(gradient)
+                        use_gradient = True
+                except Exception as e:
+                    logging.warning(f"Failed to create gradient for main text: {e}")
+                    use_gradient = False
+            
+            if not use_gradient:
+                painter.setBrush(self._text_color)
+                
+            painter.drawPath(path_main)
 
-        # Draw outline for plus text (doubled)
-        pen_plus = QPen(self._outline_color, self._outline_width)
-        pen_plus.setJoinStyle(Qt.RoundJoin)
-        painter.setPen(pen_plus)
-        painter.setBrush(Qt.NoBrush)
-        painter.drawPath(path_plus)
+        # 2. Draw plus text (ONLY IF PATH IS NOT EMPTY)
+        if not path_plus.isEmpty():
+            # 2a. Draw outline for plus text
+            pen_plus = QPen(self._outline_color, self._outline_width)
+            pen_plus.setJoinStyle(Qt.RoundJoin)
+            painter.setPen(pen_plus)
+            painter.setBrush(Qt.NoBrush)
+            painter.drawPath(path_plus)
 
-        # Draw plus text fill
-        painter.setPen(Qt.NoPen)
-        painter.setBrush(self._text_color)
-        painter.drawPath(path_plus)
+            # 2b. Draw plus text fill
+            painter.setPen(Qt.NoPen)
+            use_gradient_plus = False
+            if self._text_gradient_colors:
+                try:
+                    plus_rect = path_plus.boundingRect() 
+                    # Added check for valid rect
+                    if plus_rect.isValid() and plus_rect.height() > 0: 
+                        gradient_plus = QLinearGradient(plus_rect.topLeft(), plus_rect.bottomLeft())
+                        # --- GRADIENT FLIPPED ---
+                        gradient_plus.setColorAt(0, self._text_gradient_colors[1]) # bottom color (now at top)
+                        gradient_plus.setColorAt(1, self._text_gradient_colors[0]) # top color (now at bottom)
+                        # --- END FLIP ---
+                        painter.setBrush(gradient_plus)
+                        use_gradient_plus = True
+                except Exception as e:
+                    logging.warning(f"Failed to create gradient for plus text: {e}")
+                    use_gradient_plus = False
+
+            if not use_gradient_plus:
+                painter.setBrush(self._text_color)
+                
+            painter.drawPath(path_plus)
 
         painter.end()
 
@@ -877,7 +925,7 @@ class UmaDetailDialog(QDialog):
         # Brighter for top-left
         brighter_color = base_color.lighter(0).name() 
         # Darker for bottom-right
-        darker_color = base_color.darker(10).name()   
+        darker_color = base_color.darker(6).name()   
 
         # x1:0, y1:0 is top-left
         # x2:1, y2:1 is bottom-right
@@ -885,7 +933,7 @@ class UmaDetailDialog(QDialog):
             background-color: qlineargradient(
                 x1: 0, y1: 1, x2: 1, y2: 0,
                 stop: 0 {brighter_color}, 
-                stop: 0.5 {base_color.name()}, 
+                stop: 0.7 {base_color.name()}, 
                 stop: 1 {darker_color}
             );
             border-radius: 40px;
@@ -977,12 +1025,18 @@ class UmaDetailDialog(QDialog):
             elif i == len(stat_names) - 1:
                 content_radius_style = "border-bottom-right-radius: 9px;"
             
-            # --- MODIFIED: Added border_style ---
             content_widget.setStyleSheet(f"background-color: white; {content_radius_style} {border_style}")
 
             grade_text_color = self.get_stat_grade_text_color(stat_grade)
             mixed_outline_color = self._mix_colors(grade_text_color, UMA_TEXT_DARK, ratio=0.7)
-            grade_label = OutlineLabel(stat_grade, outline_color=mixed_outline_color, outline_width=2, text_color=QColor(grade_text_color), force_left_align=True)
+            
+            base_qcolor = QColor(grade_text_color)
+            top_color = base_qcolor.lighter(100).name()
+            bottom_color = base_qcolor.darker(83).name()
+
+            grade_label = OutlineLabel(stat_grade, outline_color=mixed_outline_color, outline_width=2, text_color=base_qcolor, force_left_align=True)
+            grade_label.setTextGradient(bottom_color, top_color) # APPLY GRADIENT
+
             grade_label.setFixedWidth(56) # Set a fixed width for the grade label
             grade_label.setAlignment(Qt.AlignCenter)
             grade_label.setStyleSheet("font-weight: bold; font-size: 25pt; background-color: transparent; border: none; padding: 3px; letter-spacing: -4px;")
@@ -1043,7 +1097,13 @@ class UmaDetailDialog(QDialog):
 
                 grade_color = self.get_aptitude_grade_color(apt_value)
                 mixed_outline_color = self._mix_colors(grade_color, UMA_TEXT_DARK, ratio=0.7)
-                grade_label = OutlineLabel(apt_value, outline_color=mixed_outline_color, outline_width=2, text_color=QColor(grade_color))
+                base_qcolor = QColor(grade_color)
+                top_color = base_qcolor.lighter(100).name()
+                bottom_color = base_qcolor.darker(83).name()
+
+                grade_label = OutlineLabel(apt_value, outline_color=mixed_outline_color, outline_width=2, text_color=base_qcolor)
+                grade_label.setTextGradient(bottom_color, top_color) # APPLY GRADIENT
+
                 grade_label.setAlignment(Qt.AlignCenter)
                 grade_label.setStyleSheet(f"font-weight: bold; font-size: 19pt; border: none; padding: 3px 12px 3px 3px; ")
                 apt_button_layout.addWidget(grade_label, 0) # Add with stretch factor 0
@@ -1072,6 +1132,7 @@ class UmaDetailDialog(QDialog):
         skills_section_widget.setStyleSheet("border: 0px solid #71d71c; border-radius: 5px;")
 
         scroll_area = QScrollArea()
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn) # <-- THIS LINE IS ADDED
         scroll_bar = scroll_area.verticalScrollBar()
         scroll_bar.setSingleStep(5)
         scroll_area.setWidgetResizable(True)
@@ -1109,7 +1170,7 @@ class UmaDetailDialog(QDialog):
         scroll_widget = QWidget()
         skills_layout = QGridLayout(scroll_widget)  # use grid layout for 2 columns
         skills_layout.setSpacing(8)
-        skills_layout.setContentsMargins(10, 10, 10, 10) # Add margins to the skills layout
+        skills_layout.setContentsMargins(15, 15, 15, 15) # Add margins to the skills layout
 
         skills_str = self.runner_data.get('skills', '')
         if skills_str:
@@ -1155,6 +1216,22 @@ class UmaDetailDialog(QDialog):
                 skill_label.setTextFormat(Qt.RichText)
                 skill_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
                 skill_label.setWordWrap(True)
+                
+                # --- NEW: Set FIXED height for 2 lines ---
+                font_metrics = skill_label.fontMetrics()
+                # Get height of two lines of text
+                two_line_height = font_metrics.height() * 2 
+                
+                icon_height = 32 # From icon_label.setFixedSize(32, 32)
+                # Content height is the taller of the icon or two lines of text
+                content_height = max(icon_height, two_line_height)
+                
+                vertical_padding = 15 + 5 # From skill_layout.setContentsMargins(8, 5, 10, 5)
+                fixed_container_height = content_height + vertical_padding
+                
+                # --- THIS IS THE CHANGE ---
+                skill_container.setFixedHeight(int(fixed_container_height))
+                # --- END CHANGE ---
                 
                 skill_layout.addWidget(skill_label, 1) # Add with stretch factor
 
@@ -1203,16 +1280,6 @@ class UmaDetailDialog(QDialog):
         scroll_area.setWidget(scroll_widget)
         skills_section_layout.addWidget(scroll_area)
         main_layout.addWidget(skills_section_widget, 1)
-
-
-
-        # --- Close Button ---
-# --- Close Button ---
-        close_button = QPushButton("Close")
-        new_padding = 44 + 40
-        close_button.setStyleSheet(f"background-color: #F0F0F0; color: #5D4037; border: 2px solid #BDBDBD; border-radius: 10px; padding: 6px {new_padding}px; font-weight: bold;")
-        close_button.clicked.connect(self.accept)
-        main_layout.addWidget(close_button, 0, Qt.AlignCenter)
 
 
 def calculateRank(score):
