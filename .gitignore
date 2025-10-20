@@ -170,3 +170,5 @@ __marimo__/
 /.DS_Store
 /README.txt
 .gemini/
+
+/ui_images/*

@@ -3,14 +3,136 @@ import pandas as pd
 import json
 import os
 import re
+import logging
+
+# Configure logging to file
+logging.basicConfig(filename='app.log', level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+class StreamToLogger(object):
+    """Fake file-like stream object that redirects writes to a logger instance."""
+    def __init__(self, logger, level):
+        self.logger = logger
+        self.level = level
+        self.linebuf = ''
+
+    def write(self, buf):
+        for line in buf.rstrip().splitlines():
+            self.logger.log(self.level, line.rstrip())
+
+    def flush(self):
+        pass
+
+# Redirect stdout and stderr to logging
+sys.stdout = StreamToLogger(logging.getLogger('STDOUT'), logging.INFO)
+sys.stderr = StreamToLogger(logging.getLogger('STDERR'), logging.ERROR)
+
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
-    QTabWidget, QTableWidget, QTableWidgetItem, QDockWidget, QLabel, 
-    QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton, 
-    QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QRadioButton
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
+    QTabWidget, QTableWidget, QTableWidgetItem, QDockWidget, QLabel,
+    QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton,
+    QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QVBoxLayout, QHBoxLayout, QGridLayout, QRadioButton, QGraphicsDropShadowEffect
 )
-from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath
+from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath, QPen, QFontMetrics
 from PyQt5.QtCore import Qt, QRect
+
+class OutlineLabel(QLabel):
+    def __init__(self, text="", parent=None, outline_color=Qt.black, outline_width=3, text_color=Qt.white, force_left_align=False):
+        super().__init__(text, parent)
+        self._outline_color = QColor(outline_color) if not isinstance(outline_color, QColor) else outline_color
+        self._outline_width = outline_width
+        self._text_color = QColor(text_color) if not isinstance(text_color, QColor) else text_color
+        self._force_left_align = force_left_align
+
+    def setOutlineColor(self, color):
+        self._outline_color = QColor(color) if not isinstance(color, QColor) else color
+        self.update()
+
+    def setOutlineWidth(self, width):
+        self._outline_width = width
+        self.update()
+
+    def setTextColor(self, color):
+        self._text_color = QColor(color) if not isinstance(color, QColor) else color
+        self.update()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        # Remove HTML tags for drawing
+        plain_text = re.sub(r'<[^>]+>', '', self.text())
+
+        # Debugging: Log colors
+        logging.info(f"OutlineLabel text: {plain_text}, Outline Color: {self._outline_color.name()}, Text Color: {self._text_color.name()}")
+
+        metrics = painter.fontMetrics()
+        
+        main_text = plain_text
+        plus_text = ""
+        if plain_text.endswith('+'):
+            main_text = plain_text[:-1]
+            plus_text = '+'
+
+        # Calculate position for main text
+        if self._force_left_align:
+            x_main = 5 # Left-aligned with padding
+            # Calculate y_main for left-aligned text
+            text_height = metrics.height()
+            y_main = (self.height() - text_height) / 2 + metrics.ascent()
+        else:
+            main_text_rect = metrics.boundingRect(self.rect(), Qt.AlignCenter, main_text)
+            x_main = main_text_rect.x()
+            y_main = main_text_rect.y() + metrics.ascent() # Adjust y to be baseline
+
+        # Create QPainterPath for main text
+        path_main = QPainterPath()
+        path_main.addText(int(x_main), int(y_main), self.font(), main_text)
+
+        # Handle the '+' if present
+        path_plus = QPainterPath()
+        if plus_text:
+            # Create a smaller font for the '+'
+            smaller_font = QFont(self.font())
+            smaller_font.setPointSize(int(smaller_font.pointSize() * 0.7))
+            plus_metrics = QFontMetrics(smaller_font)
+
+            # Position the '+' relative to the main text
+            # Calculate the right edge of the main text
+            main_text_right_edge = x_main + metrics.width(main_text)
+            # Position '+' slightly to the right of the main text's right edge
+            x_plus = main_text_right_edge - plus_metrics.width(plus_text) / 2 + 3 # Adjust as needed
+            y_plus = y_main - metrics.height() * 0.3 # Keep relative y position
+            
+            path_plus.addText(int(x_plus), int(y_plus), smaller_font, plus_text)
+
+        # --- MODIFIED DRAWING LOGIC ---
+        # Draw outline for main text
+        pen_main = QPen(self._outline_color, self._outline_width)
+        pen_main.setJoinStyle(Qt.RoundJoin)
+        painter.setPen(pen_main)
+        painter.setBrush(Qt.NoBrush)
+        painter.drawPath(path_main)
+
+        # Draw main text fill
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(self._text_color)
+        painter.drawPath(path_main)
+
+        # Draw outline for plus text (doubled)
+        pen_plus = QPen(self._outline_color, self._outline_width)
+        pen_plus.setJoinStyle(Qt.RoundJoin)
+        painter.setPen(pen_plus)
+        painter.setBrush(Qt.NoBrush)
+        painter.drawPath(path_plus)
+
+        # Draw plus text fill
+        painter.setPen(Qt.NoPen)
+        painter.setBrush(self._text_color)
+        painter.drawPath(path_plus)
+
+        painter.end()
+
 
 # --- Path Configuration ---
 # The absolute path to the project's root directory.
@@ -24,7 +146,7 @@ UMA_MEDIUM_BG = "#FFECB3" # Light pastel yellow
 UMA_DARK_BG = "#FFD54F"   # Richer yellow/gold
 UMA_ACCENT_PINK = "#FF80AB" # Vibrant pink
 UMA_ACCENT_BLUE = "#82B1FF" # Sky blue
-UMA_TEXT_DARK = "#424242" # Dark grey
+UMA_TEXT_DARK = "#8C4410" # Dark brown-ish grey
 UMA_TEXT_LIGHT = "#FFFFFF" # White
 
 # --- Qt Style Sheet (QSS) for Umamusume Theme ---
@@ -131,11 +253,11 @@ QSlider::handle:horizontal {{
 
 QSS_DETAIL_DIALOG = f"""
 QDialog {{
-    background-color: {UMA_LIGHT_BG};
+    background-color: white;
 }}
 
 QGroupBox {{
-    background-color: {UMA_MEDIUM_BG};
+    background-color: #FEFEFE;
     border: 1px solid {UMA_DARK_BG};
     border-radius: 5px;
     margin-top: 1ex; /* leave space at the top for the title */
@@ -147,7 +269,7 @@ QGroupBox::title {{
     subcontrol-origin: margin;
     subcontrol-position: top center; /* position at the top center */
     padding: 0 3px;
-    background-color: {UMA_DARK_BG};
+    background-color: #71d71c;
     color: {UMA_TEXT_LIGHT};
     border-radius: 3px;
 }}
@@ -580,14 +702,14 @@ class UmaDetailDialog(QDialog):
     def __init__(self, runner_data, spark_info, parent=None):
         super().__init__(parent)
         self.setWindowTitle(f"Umamusume Details: {runner_data['name']}")
-        self.setGeometry(200, 200, 600, 800)
+        self.setGeometry(200, 200, 600, 900)
         self.runner_data = runner_data
         self.spark_info = spark_info
         self.setStyleSheet(QSS_DETAIL_DIALOG)
         self.init_ui()
 
     def get_grade_for_stat(self, value):
-        if value == 1200: return 'SS+'
+        if value >= 1150: return 'SS+'
         elif value >= 1100: return 'SS'
         elif value >= 1050: return 'S+'
         elif value >= 1000: return 'S'
@@ -605,42 +727,40 @@ class UmaDetailDialog(QDialog):
         elif value >= 100: return 'F'
         else: return 'G'
 
-    def get_color_for_grade(self, grade):
-        grade_colors = {
-            'SS+': '#FFD700',
-            'SS': '#FFD700',
-            'S+': '#FFD700',
-            'S': '#FFD54F',
-            'A+': '#FFDAB9',
-            'A': '#FFDAB9',
-            'B+': '#FFCDD2',
-            'B': '#FFCDD2',
-            'C+': '#C8E6C9',
-            'C': '#C8E6C9',
-            'D+': '#BBDEFB',
-            'D': '#BBDEFB',
-            'E+': '#E8EAF6',
-            'E': '#E8EAF6',
-            'F+': '#E0F7FA',
-            'F': '#E0F7FA',
-            'G': '#F8F8F8',
-            'N/A': '#F8F8F8'
-        }
-        return grade_colors.get(grade, '#696969')
+    def get_stat_grade_text_color(self, grade):
+        return self.get_aptitude_grade_color(grade)
 
     def get_aptitude_grade_color(self, grade):
         grade_colors = {
-            'S': '#FFB74D',  # Orange
-            'A': '#E57373',  # Red
-            'B': '#FF80AB',  # Pink
-            'C': '#81C784',  # Green
-            'D': '#64B5F6',  # Blue
-            'E': '#9575CD',  # Purple
-            'F': '#7986CB',  # Indigo
-            'G': '#9E9E9E'   # Darker Grey
-        }
-        base_grade = grade.rstrip('+')
-        return grade_colors.get(base_grade, '#424242')
+            'SS': '#f0bd1a',
+            'S': '#f0bd1a',
+            'A': '#f48337',
+            'B': '#e56487',
+            'C': '#61c340',
+            'D': '#49ace2',
+            'E': '#d477f2',
+            'F': '#766ad6',
+            'G': '#b3b2b3'
+        }        
+        base_grade = grade.split('<')[0].rstrip('+')
+        return grade_colors.get(base_grade, '#424242')        
+
+    def _format_skill_name_with_symbols(self, skill_name):
+        # Regex to find the specific symbols
+        # The symbols are: U+25CE (Circled White Bullet), U+25CB (White Circle), U+00D7 (Multiplication Sign)
+        # Using a non-greedy match for the skill name part
+        formatted_name = re.sub(r'(◎|○|×)', r'<span style="font-size: 16pt; font-family: \'Segoe UI Symbol\';">\1</span>', skill_name)
+        return formatted_name
+
+    def _mix_colors(self, color1, color2, ratio=0.5):
+        # Ensure colors are QColor objects
+        qc1 = QColor(color1)
+        qc2 = QColor(color2)
+
+        r = int(qc1.red() * (1 - ratio) + qc2.red() * ratio)
+        g = int(qc1.green() * (1 - ratio) + qc2.green() * ratio)
+        b = int(qc1.blue() * (1 - ratio) + qc2.blue() * ratio)
+        return QColor(r, g, b)
 
     def init_ui(self):
         main_layout = QVBoxLayout(self)
@@ -650,7 +770,7 @@ class UmaDetailDialog(QDialog):
         # --- Header Section ---
         header_widget = QWidget()
         header_layout = QHBoxLayout(header_widget)
-        header_layout.setContentsMargins(0, 0, 0, 0)
+        header_layout.setContentsMargins(20, 0, 0, 0)
         header_layout.setSpacing(15)
 
         # Left side: Image and Score
@@ -679,7 +799,7 @@ class UmaDetailDialog(QDialog):
             source_pixmap = QPixmap(image_path)
 
             # 2. Calculate zoom and crop dimensions
-            zoom_factor = 1.4
+            zoom_factor = 1.4 # Increased zoom from 1.4
             
             # Scale source to be zoom_factor bigger than the target image_size
             scaled_size = source_pixmap.size()
@@ -688,7 +808,7 @@ class UmaDetailDialog(QDialog):
 
             # Define the crop rectangle (94x94) from the zoomed pixmap
             crop_x = (scaled_pixmap.width() - image_size) / 2
-            crop_y = 0 # Focus on top-center
+            crop_y = 0
             crop_rect = QRect(int(crop_x), int(crop_y), image_size, image_size)
             cropped_pixmap = scaled_pixmap.copy(crop_rect)
 
@@ -708,15 +828,15 @@ class UmaDetailDialog(QDialog):
 
             char_image_label.setPixmap(final_pixmap)
             char_image_label.setAlignment(Qt.AlignCenter) # Center the smaller pixmap
-            char_image_label.setStyleSheet("background-color: transparent; border: 4px solid #FFD700; border-radius: 50px;")
+            char_image_label.setStyleSheet("background-color: transparent; border: 4px solid #AAAAAA; border-radius: 50px;")
         else:
-            char_image_label.setStyleSheet("background-color: #E0E0E0; border-radius: 50px; border: 4px solid #FFD700;")
+            char_image_label.setStyleSheet("background-color: #E0E0E0; border-radius: 50px; border: 4px solid #AAAAAA;")
         
         left_header_layout.addWidget(char_image_label)
 
         score_label = QLabel(f"<b>{self.runner_data['score']:,}</b>")
         score_label.setAlignment(Qt.AlignCenter)
-        score_label.setStyleSheet("font-size: 16pt;")
+        score_label.setStyleSheet("font-size: 14pt; background-color: white; border: 2px solid #C0C0C0; border-radius: 8px; padding: 2px 8px;")
         left_header_layout.addWidget(score_label)
         
         header_layout.addLayout(left_header_layout)
@@ -729,22 +849,50 @@ class UmaDetailDialog(QDialog):
         rank_name_layout = QHBoxLayout()
         rank_name_layout.setSpacing(15)
         
-        rank_vbox = QVBoxLayout()
-        rank_vbox.setSpacing(0)
-        rank_vbox.setAlignment(Qt.AlignCenter)
+        rank_badge_container = QFrame()
+        rank_badge_container.setFixedSize(80, 80)
+        rank_badge_layout = QVBoxLayout(rank_badge_container)
+        rank_badge_layout.setContentsMargins(5,5,5,5)
+        rank_badge_layout.setSpacing(0)
         rank_grade = calculateRank(int(self.runner_data['score']))
-        rank_grade_label = QLabel(rank_grade)
-        rank_grade_label.setAlignment(Qt.AlignCenter)
-        rank_grade_label.setStyleSheet(f"font-weight: bold; font-size: 22pt; color: {self.get_aptitude_grade_color(rank_grade)};")
-        rank_vbox.addWidget(rank_grade_label)
-        rank_text_label = QLabel("RANK")
-        rank_text_label.setAlignment(Qt.AlignCenter)
-        rank_text_label.setStyleSheet("font-weight: bold;")
-        rank_vbox.addWidget(rank_text_label)
-        rank_name_layout.addLayout(rank_vbox)
+        badge_color = self.get_aptitude_grade_color(rank_grade)
+        
+        # --- NEW DIAGONAL GRADIENT LOGIC ---
+        base_color = QColor(badge_color)
+        # Brighter for top-left
+        brighter_color = base_color.lighter(0).name() 
+        # Darker for bottom-right
+        darker_color = base_color.darker(10).name()   
 
-        name_label = QLabel(f"<font size='6'><b>{self.runner_data['name']}</b></font>")
+        # x1:0, y1:0 is top-left
+        # x2:1, y2:1 is bottom-right
+        gradient_style = f"""
+            background-color: qlineargradient(
+                x1: 0, y1: 1, x2: 1, y2: 0,
+                stop: 0 {brighter_color}, 
+                stop: 0.5 {base_color.name()}, 
+                stop: 1 {darker_color}
+            );
+            border-radius: 40px;
+        """
+        rank_badge_container.setStyleSheet(gradient_style)
+
+        rank_grade_label = OutlineLabel(rank_grade, outline_color=QColor(UMA_TEXT_DARK), outline_width=2, text_color=Qt.white)
+
+        rank_grade_label = OutlineLabel(rank_grade, outline_color=QColor(UMA_TEXT_DARK), outline_width=2, text_color=Qt.white)
+        rank_grade_label.setAlignment(Qt.AlignCenter)
+        rank_grade_label.setStyleSheet("font-weight: bold; font-size: 28pt; background: transparent; padding: 3px;")
+        rank_badge_layout.addWidget(rank_grade_label)
+
+        rank_text_label = OutlineLabel("RANK", outline_color=QColor(UMA_TEXT_DARK), outline_width=1, text_color=Qt.white)
+        rank_text_label.setAlignment(Qt.AlignCenter)
+        rank_text_label.setStyleSheet("font-weight: bold; background: transparent; margin-top: -8px;")
+        rank_badge_layout.addWidget(rank_text_label)
+        rank_name_layout.addWidget(rank_badge_container)
+
+        name_label = QLabel(f"<b>{self.runner_data['name']}</b>")
         name_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        name_label.setStyleSheet(f"font-size: 24pt; color: {UMA_TEXT_DARK}; font-weight: bold; padding-left: 40px; letter-spacing: 1px;")
         rank_name_layout.addWidget(name_label)
         rank_name_layout.addStretch()
         
@@ -754,12 +902,17 @@ class UmaDetailDialog(QDialog):
         main_layout.addWidget(header_widget)
 
         # --- Stats Section ---
-        stats_group_box = QGroupBox()
-        stats_group_box.setStyleSheet("background-color: #E8F5E9; border-radius: 10px; padding-top: 5px; padding-bottom: 5px;")
-        stats_layout = QGridLayout(stats_group_box)
-        stats_layout.setContentsMargins(10, 5, 10, 5)
-        stats_layout.setHorizontalSpacing(10)
-        stats_layout.setVerticalSpacing(2)
+        stats_container = QFrame()
+        stats_container.setObjectName("statsContainer")
+        stats_container.setStyleSheet("""
+            #statsContainer {
+                border: 2px solid #71d71c;
+                border-radius: 10px;
+            }
+        """)
+        stats_main_layout = QHBoxLayout(stats_container)
+        stats_main_layout.setContentsMargins(0, 0, 0, 0)
+        stats_main_layout.setSpacing(0)
         
         stat_names = ['speed', 'stamina', 'power', 'guts', 'wit']
         stat_icons = {
@@ -770,36 +923,75 @@ class UmaDetailDialog(QDialog):
             stat_value = self.runner_data.get(stat, 0)
             stat_grade = self.get_grade_for_stat(stat_value)
 
-            stat_label_layout = QHBoxLayout()
-            stat_label_layout.addStretch()
-            stat_label_layout.addWidget(QLabel(stat_icons.get(stat, '')))
-            stat_label_layout.addWidget(QLabel(stat.title()))
-            stat_label_layout.addStretch()
-            stats_layout.addLayout(stat_label_layout, 0, i)
+            # Create a vertical container for the whole column
+            column_container = QWidget()
+            column_container.setFixedWidth(120)
+            column_layout = QVBoxLayout(column_container)
+            column_layout.setContentsMargins(0, 0, 0, 0)
+            column_layout.setSpacing(0)
 
-            value_grade_layout = QHBoxLayout()
-            value_grade_layout.setSpacing(5)
-            value_grade_layout.addStretch()
-
-            grade_label = QLabel(stat_grade)
-            grade_label.setMinimumWidth(40)
-            grade_label.setAlignment(Qt.AlignCenter)
-            grade_label.setStyleSheet(f"background-color: {self.get_color_for_grade(stat_grade)}; color: #000000; padding: 3px; border-radius: 8px; font-weight: bold; font-size: 12pt;")
-            value_grade_layout.addWidget(grade_label)
-
-            value_label = QLabel(str(stat_value))
-            value_label.setStyleSheet("font-weight: bold; font-size: 12pt;")
-            value_grade_layout.addWidget(value_label)
+            # --- FIX: Define border style here ---
+            # We will apply this to the children, not the parent container
+            border_style = "border-right: 2px dashed #A5D6A7;" if i < len(stat_names) - 1 else ""
             
-            value_grade_layout.addStretch()
-            stats_layout.addLayout(value_grade_layout, 1, i)
-        main_layout.addWidget(stats_group_box)
+            # --- REMOVED this block ---
+            # if i < len(stat_names) - 1:
+            #     column_container.setStyleSheet("border-right: 2px dashed #A5D6A7;")
+
+            # --- Top Row (Header) ---
+            header_label = OutlineLabel(f"{stat_icons.get(stat, '')} {stat.title()}", outline_color=QColor('#fefefe'), outline_width=0.5, text_color=Qt.white)
+            header_label.setAlignment(Qt.AlignHCenter | Qt.AlignVCenter)
+            header_radius_style = ""
+            if i == 0:
+                header_radius_style = "border-top-left-radius: 9px;"
+            elif i == len(stat_names) - 1:
+                header_radius_style = "border-top-right-radius: 9px;"
+            
+            # --- MODIFIED: Added border_style ---
+            header_label.setStyleSheet(f"background-color: #71d71c; padding: 5px; font-size: 14pt; {header_radius_style} padding: 3px; letter-spacing: 1px; {border_style}")
+            column_layout.addWidget(header_label)
+
+            # --- Bottom Row (Content) ---
+            content_widget = QWidget()
+            content_layout = QHBoxLayout(content_widget)
+            content_layout.setContentsMargins(0, 5, 0, 5)
+            content_layout.setSpacing(0)
+            content_radius_style = ""
+            if i == 0:
+                content_radius_style = "border-bottom-left-radius: 9px;"
+            elif i == len(stat_names) - 1:
+                content_radius_style = "border-bottom-right-radius: 9px;"
+            
+            # --- MODIFIED: Added border_style ---
+            content_widget.setStyleSheet(f"background-color: white; {content_radius_style} {border_style}")
+
+            grade_text_color = self.get_stat_grade_text_color(stat_grade)
+            mixed_outline_color = self._mix_colors(grade_text_color, UMA_TEXT_DARK, ratio=0.7)
+            grade_label = OutlineLabel(stat_grade, outline_color=mixed_outline_color, outline_width=2, text_color=QColor(grade_text_color), force_left_align=True)
+            grade_label.setFixedWidth(56) # Set a fixed width for the grade label
+            grade_label.setAlignment(Qt.AlignCenter)
+            grade_label.setStyleSheet("font-weight: bold; font-size: 25pt; background-color: transparent; border: none; padding: 3px; letter-spacing: -4px;")
+            
+            value_label = QLabel(str(stat_value))
+            value_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter) # Align value to the right
+            value_label.setStyleSheet("font-weight: bold; font-size: 17pt; letter-spacing: 1px; background-color: transparent; border: none; padding-right: 5px;") # Add some right padding
+
+            content_layout.addWidget(grade_label)
+            content_layout.addStretch(1)
+            content_layout.addWidget(value_label)
+            
+            column_layout.addWidget(content_widget)
+
+            # Add the whole column to the main horizontal layout
+            stats_main_layout.addWidget(column_container)
+
+        main_layout.addWidget(stats_container)
 
         # --- Aptitude Section ---
         aptitude_widget = QWidget()
         aptitude_layout = QGridLayout(aptitude_widget)
-        aptitude_layout.setContentsMargins(10, 10, 10, 10)
-        aptitude_layout.setSpacing(10)
+        aptitude_layout.setContentsMargins(9, 10, 2, 10)
+        aptitude_layout.setSpacing(5)
         aptitude_layout.setVerticalSpacing(15)
 
         aptitude_types = ['track', 'distance', 'style']
@@ -811,7 +1003,7 @@ class UmaDetailDialog(QDialog):
 
         for row_idx, apt_type in enumerate(aptitude_types):
             apt_type_label = QLabel(f"<b>{apt_type.title()}</b>")
-            apt_type_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)
+            apt_type_label.setAlignment(Qt.AlignCenter) # Changed from AlignRight
             aptitude_layout.addWidget(apt_type_label, row_idx, 0)
 
             details = aptitude_details[apt_type]
@@ -820,41 +1012,89 @@ class UmaDetailDialog(QDialog):
                 apt_value = self.runner_data.get(apt_key, 'N/A').upper()
 
                 apt_button = QWidget()
-                apt_button.setStyleSheet("font-weight: bold; font-size: 12pt; background-color: #FFFFFF; border: 1px solid #D0D0D0; border-radius: 8px;")
+                apt_button.setFixedWidth(120) # --- ADD THIS LINE ---
+                apt_button.setStyleSheet("font-weight: bold; font-size: 12pt; background-color: #FFFFFF; border: 2px solid #D0D0D0; border-radius: 8px;")
                 
                 apt_button_layout = QHBoxLayout(apt_button)
-                apt_button_layout.setContentsMargins(8, 3, 8, 3)
+                apt_button_layout.setContentsMargins(3, 3, 3, 3)
                 apt_button_layout.setSpacing(5)
 
-                detail_label = QLabel(detail.title())
-                apt_button_layout.addWidget(detail_label)
+                detail_label = OutlineLabel(detail.title(), outline_color=Qt.white, outline_width=1, text_color=QColor(UMA_TEXT_DARK))
+                detail_label.setStyleSheet("border: none; font-size: 15pt;")
+                detail_label.setAlignment(Qt.AlignCenter)
+                apt_button_layout.addWidget(detail_label, 1)
 
-                grade_label = QLabel(apt_value)
+                # apt_button_layout.addStretch(1) # Removed stretch from here
+
                 grade_color = self.get_aptitude_grade_color(apt_value)
-                grade_label.setStyleSheet(f"color: {grade_color}; font-weight: bold; font-size: 15pt;")
-                apt_button_layout.setAlignment(Qt.AlignLeft | Qt.AlignRight)
-                apt_button_layout.addWidget(grade_label)
+                mixed_outline_color = self._mix_colors(grade_color, UMA_TEXT_DARK, ratio=0.7)
+                grade_label = OutlineLabel(apt_value, outline_color=mixed_outline_color, outline_width=2, text_color=QColor(grade_color))
+                grade_label.setAlignment(Qt.AlignCenter)
+                grade_label.setStyleSheet(f"font-weight: bold; font-size: 19pt; border: none; padding: 3px 12px 3px 3px; ")
+                apt_button_layout.addWidget(grade_label, 0) # Add with stretch factor 0
 
                 aptitude_layout.addWidget(apt_button, row_idx, col_idx + 1)
         
         max_cols = max(len(v) for v in aptitude_details.values())
-        aptitude_layout.setColumnStretch(max_cols + 1, 1)
+        for i in range(1, max_cols + 1):
+            aptitude_layout.setColumnStretch(i, 1)
 
         main_layout.addWidget(aptitude_widget)
 
         # --- Skills Section ---
-        skills_group_box = QGroupBox("Skills")
-        skills_group_box_layout = QVBoxLayout(skills_group_box)
-        skills_group_box_layout.setContentsMargins(10, 20, 10, 10)
-        skills_group_box_layout.setSpacing(5)
+        skills_section_widget = QWidget() # New container widget
+        skills_section_layout = QVBoxLayout(skills_section_widget)
+        skills_section_layout.setContentsMargins(0, 0, 0, 0)
+        skills_section_layout.setSpacing(5)
+
+        # OutlineLabel for the title
+        skills_title_label = OutlineLabel("Skills", outline_color=QColor(UMA_TEXT_DARK), outline_width=1, text_color=UMA_TEXT_LIGHT)
+        skills_title_label.setAlignment(Qt.AlignCenter)
+        skills_title_label.setStyleSheet("font-weight: bold; font-size: 14pt; background-color: #71d71c; border-top-left-radius: 5px; border-top-right-radius: 5px; padding: 3px;")
+        skills_section_layout.addWidget(skills_title_label)
+
+        # Apply border to the main section widget
+        skills_section_widget.setStyleSheet("border: 0px solid #71d71c; border-radius: 5px;")
 
         scroll_area = QScrollArea()
+        scroll_bar = scroll_area.verticalScrollBar()
+        scroll_bar.setSingleStep(5)
         scroll_area.setWidgetResizable(True)
-        scroll_area.setStyleSheet("background-color: transparent; border: none;")
+        scroll_area.setStyleSheet("""
+            QScrollArea {
+                background-color: transparent;
+                border: none;
+            }
+            QScrollArea > QWidget {
+                background-color: #F5F5F5; /* Light gray background for the inner area */
+                border-radius: 5px;
+            }
+            QScrollBar:vertical {
+                border: none;
+                background: #f0f0f0;
+                width: 6px;
+                margin: 0px 0px 0px 0px;
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+            QScrollBar::handle:vertical {
+                background: #c0c0c0;
+                min-height: 20px;
+                border-radius: 5px;
+            }
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+                border: none;
+                background: none;
+            }
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+                background: none;
+            }
+        """)
 
         scroll_widget = QWidget()
         skills_layout = QGridLayout(scroll_widget)  # use grid layout for 2 columns
-        skills_layout.setSpacing(5)
+        skills_layout.setSpacing(8)
+        skills_layout.setContentsMargins(10, 10, 10, 10) # Add margins to the skills layout
 
         skills_str = self.runner_data.get('skills', '')
         if skills_str:
@@ -865,10 +1105,13 @@ class UmaDetailDialog(QDialog):
             mid = (n + 1) // 2  # ensures first column gets the extra item if odd
             
             for i, skill in enumerate(skills):
-                skill_button = QPushButton(skill)
-                skill_button.setStyleSheet(
-                    f"background-color: {UMA_ACCENT_BLUE}; color: {UMA_TEXT_LIGHT}; border-radius: 10px; padding: 5px 10px;"
+                formatted_skill_name = self._format_skill_name_with_symbols(skill)
+                skill_label = QLabel(formatted_skill_name)
+                skill_label.setStyleSheet(
+                    f"QLabel {{ background-color: #F5F5F5; color: {UMA_TEXT_DARK}; border: 2px solid #C0C0C0; border-radius: 8px; padding: 9px 10px; text-align: left; font-weight: bold; letter-spacing: 1px; }}"
                 )
+                skill_label.setTextFormat(Qt.RichText) # Enable rich text rendering
+                skill_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter) # Align text within the label
                 # Determine row and column
                 if i < mid:
                     row = i
@@ -876,23 +1119,28 @@ class UmaDetailDialog(QDialog):
                 else:
                     row = i - mid
                     col = 1
-                skills_layout.addWidget(skill_button, row, col)
+                skills_layout.addWidget(skill_label, row, col)
         else:
             skills_layout.addWidget(QLabel("No skills listed."), 0, 0)
 
         # Add stretch to bottom of both columns
         skills_layout.setRowStretch((len(skills) + 1) // 2, 1)
+        skills_layout.setColumnStretch(0, 1)
+        skills_layout.setColumnStretch(1, 1)
 
         scroll_area.setWidget(scroll_widget)
-        skills_group_box_layout.addWidget(scroll_area)
-        main_layout.addWidget(skills_group_box)
+        skills_section_layout.addWidget(scroll_area)
+        main_layout.addWidget(skills_section_widget, 1)
 
 
 
         # --- Close Button ---
+# --- Close Button ---
         close_button = QPushButton("Close")
+        new_padding = 44 + 40
+        close_button.setStyleSheet(f"background-color: #F0F0F0; color: #5D4037; border: 2px solid #BDBDBD; border-radius: 8px; padding: 6px {new_padding}px; font-weight: bold;")
         close_button.clicked.connect(self.accept)
-        main_layout.addWidget(close_button)
+        main_layout.addWidget(close_button, 0, Qt.AlignCenter)
 
 
 def calculateRank(score):
@@ -928,7 +1176,7 @@ def calculateRank(score):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    app.setFont(QFont("Calibri", 12)) # Consider a more thematic font if available
+    app.setFont(QFont("Segoe UI", 12)) # Consider a more thematic font if available
     app.setStyleSheet(QSS) # Apply the custom QSS
     main_window = UmaAnalyzerPyQt()
     main_window.show()
