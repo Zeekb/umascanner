@@ -27,27 +27,27 @@ def normalize_text(s):
 def normalize_spark(name, components=None, color_hint=None):
     """
     Normalize spark names robustly, optionally using OCR word components for disambiguation.
-    :param name: the combined OCR text
-    :param components: optional list of detected words
-    :param color_hint: if provided, restricts search to one color category (e.g. 'pink')
     """
     name_norm = normalize_text(name)
+    logger.debug(f"Normalizing spark: '{name}' (normalized: '{name_norm}') with color hint: {color_hint}")
+
     best_match, best_color, longest_len = None, None, 0
 
-    # Restrict candidates if color_hint is given
     candidate_colors = [color_hint] if color_hint else SPARKS_BY_COLOR.keys()
 
     # --- Contextual correction ---
     if components:
         joined = " ".join(c.lower() for c in components)
-        for rule in SPARK_CORRECTION_RULES: # Iterate through rules
+        for rule in SPARK_CORRECTION_RULES:
             if all(keyword.lower() in joined for keyword in rule["keywords"]):
+                logger.debug(f"  -> Matched correction rule for '{rule['spark_name']}'")
                 return rule["color"], rule["spark_name"]
         
     # --- Exact match ---
     for color in candidate_colors:
         for c in SPARKS_BY_COLOR[color]:
             if name_norm == normalize_text(c):
+                logger.debug(f"  -> Found exact match: '{c}' (color: {color})")
                 return color, c
 
     # --- Substring match ---
@@ -58,6 +58,9 @@ def normalize_spark(name, components=None, color_hint=None):
                 if len(c_norm) > longest_len:
                     best_match, best_color, longest_len = c, color, len(c_norm)
 
+    if best_match:
+        logger.debug(f"  -> Found substring match: '{best_match}' (color: {best_color})")
+
     # --- Fuzzy match ---
     if not best_match or longest_len < max(3, len(name_norm)//2):
         for color in candidate_colors:
@@ -66,8 +69,16 @@ def normalize_spark(name, components=None, color_hint=None):
             matches = get_close_matches(name_norm, candidates_map.keys(), n=1, cutoff=cutoff)
             if matches:
                 best_match, best_color = candidates_map[matches[0]], color
+                logger.debug(f"  -> Found fuzzy match: '{best_match}' (color: {best_color})")
                 break
 
+    # --- Final Validation --
+    # If a pink spark was matched, it MUST have had the 'pink' hint.
+    if best_color == "pink" and color_hint != "pink":
+        logger.debug(f"  -> REJECTED pink match '{best_match}' because color_hint was not 'pink'.")
+        return None, None
+
+    logger.debug(f"  => Final Match: '{best_match}' (color: {best_color})")
     return best_color, best_match
 
 
@@ -76,36 +87,39 @@ def normalize_spark(name, components=None, color_hint=None):
 def _process_spark_roi(roi, reader, color_hint=None):
     """Helper to parse a single spark ROI, check confidence, and return results."""
     if roi.size == 0:
-        return None, None, 0
+        return None, None, 0, 0
 
     text_results = reader.readtext(roi)
     if not text_results:
-        return None, None, 0
+        return None, None, 0, 0
 
     all_text_parts = []
     total_confidence = 0
-    for (bbox, text, confidence) in text_results:
+    y_pos = 0
+    for i, (bbox, text, confidence) in enumerate(text_results):
+        if i == 0: # Get y-pos from the first detected word
+            y_pos = (bbox[0][1] + bbox[2][1]) / 2
         all_text_parts.append(text)
         if confidence < 0.7:
-            logger.warning(f"  [SPARK WARNING] Low confidence ({confidence:.2f}) for text: '{text}'") # Replaced print
+            logger.warning(f"  [SPARK WARNING] Low confidence ({confidence:.2f}) for text: '{text}'")
         total_confidence += confidence
     
     clean_text = " ".join(all_text_parts).strip()
     if not clean_text:
-        return None, None, 0
+        return None, None, 0, 0
 
     avg_confidence = total_confidence / len(text_results)
     if avg_confidence < 0.5:
-        logger.warning(f"  [SPARK WARNING] Avg confidence is very low ({avg_confidence:.2f}) for '{clean_text}'. Matching may be unreliable.") # Replaced print
+        logger.warning(f"  [SPARK WARNING] Avg confidence is very low ({avg_confidence:.2f}) for '{clean_text}'. Matching may be unreliable.")
 
     color, spark_name = normalize_spark(clean_text, all_text_parts, color_hint=color_hint)
     if not spark_name:
-        return None, None, 0
+        return None, None, 0, 0
 
     stars = count_yellow_stars(roi)
-    return color, spark_name, stars
+    return color, spark_name, stars, y_pos
 
-def parse_sparks(img, reader):
+def parse_sparks(img, reader, debug_prefix=""):
     if img is None:
         logger.error("Image could not be loaded.")
         return {}
@@ -115,21 +129,29 @@ def parse_sparks(img, reader):
         col_w = w // 2
         left_col, right_col = img[:, :col_w], img[:, col_w:]
 
-        sparks = {c: {} for c in ["blue", "pink", "green", "white"]}
+        sparks = {c: [] for c in ["blue", "pink", "green", "white"]}
 
         # ---- Process both columns ----
         for i, col_img in enumerate([left_col, right_col]):
             row_boxes = detect_boxes(col_img)
+
+#            if debug_prefix:
+#                debug_col_img = col_img.copy()
+#               for y1_box, y2_box in row_boxes:
+#                    cv2.rectangle(debug_col_img, (0, y1_box), (col_img.shape[1], y2_box), (0, 255, 0), 2)
+#                cv2.imwrite(f"{debug_prefix}_col_{i}.png", debug_col_img)
+
             for j, (y1, y2) in enumerate(row_boxes):
                 roi = col_img[y1:y2, :]
                 
-                # Force pink-only matching for the topmost right column spark
                 hint = "pink" if i == 1 and j == 0 else None
 
-                color, spark_name, stars = _process_spark_roi(roi, reader, color_hint=hint)
+                color, spark_name, stars, y_pos_rel = _process_spark_roi(roi, reader, color_hint=hint)
 
                 if color and spark_name and stars > 0:
-                    sparks[color][spark_name] = sparks[color].get(spark_name, 0) + stars
+                    y_pos_abs = y1 + y_pos_rel
+                    is_right_col = (i == 1)
+                    sparks[color].append({"name": spark_name, "count": stars, "y_pos": y_pos_abs, "is_right_col": is_right_col})
 
         logger.debug(f"parse_sparks returning: {sparks}")
         return sparks
