@@ -907,7 +907,7 @@ class UmaDetailDialog(QDialog):
         stats_container.setStyleSheet("""
             #statsContainer {
                 border: 2px solid #71d71c;
-                border-radius: 10px;
+                border-radius: 12px;
             }
         """)
         stats_main_layout = QHBoxLayout(stats_container)
@@ -948,7 +948,7 @@ class UmaDetailDialog(QDialog):
                 header_radius_style = "border-top-right-radius: 9px;"
             
             # --- MODIFIED: Added border_style ---
-            header_label.setStyleSheet(f"background-color: #71d71c; padding: 5px; font-size: 14pt; {header_radius_style} padding: 3px; letter-spacing: 1px; {border_style}")
+            header_label.setStyleSheet(f"background-color: #71d71c; font-size: 14pt; {header_radius_style} padding: 3px; letter-spacing: 1px; {border_style}")
             column_layout.addWidget(header_label)
 
             # --- Bottom Row (Content) ---
@@ -1013,7 +1013,7 @@ class UmaDetailDialog(QDialog):
 
                 apt_button = QWidget()
                 apt_button.setFixedWidth(120) # --- ADD THIS LINE ---
-                apt_button.setStyleSheet("font-weight: bold; font-size: 12pt; background-color: #FFFFFF; border: 2px solid #D0D0D0; border-radius: 8px;")
+                apt_button.setStyleSheet("font-weight: bold; font-size: 12pt; background-color: #FFFFFF; border: 2px solid #D0D0D0; border-radius: 10px;")
                 
                 apt_button_layout = QHBoxLayout(apt_button)
                 apt_button_layout.setContentsMargins(3, 3, 3, 3)
@@ -1108,7 +1108,7 @@ class UmaDetailDialog(QDialog):
                 formatted_skill_name = self._format_skill_name_with_symbols(skill)
                 skill_label = QLabel(formatted_skill_name)
                 skill_label.setStyleSheet(
-                    f"QLabel {{ background-color: #F5F5F5; color: {UMA_TEXT_DARK}; border: 2px solid #C0C0C0; border-radius: 8px; padding: 9px 10px; text-align: left; font-weight: bold; letter-spacing: 1px; }}"
+                    f"QLabel {{ background-color: #F5F5F5; color: {UMA_TEXT_DARK}; border: 2px solid #C0C0C0; border-radius: 10px; padding: 9px 10px; text-align: left; font-weight: bold; letter-spacing: 1px; }}"
                 )
                 skill_label.setTextFormat(Qt.RichText) # Enable rich text rendering
                 skill_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter) # Align text within the label
@@ -1138,7 +1138,7 @@ class UmaDetailDialog(QDialog):
 # --- Close Button ---
         close_button = QPushButton("Close")
         new_padding = 44 + 40
-        close_button.setStyleSheet(f"background-color: #F0F0F0; color: #5D4037; border: 2px solid #BDBDBD; border-radius: 8px; padding: 6px {new_padding}px; font-weight: bold;")
+        close_button.setStyleSheet(f"background-color: #F0F0F0; color: #5D4037; border: 2px solid #BDBDBD; border-radius: 10px; padding: 6px {new_padding}px; font-weight: bold;")
         close_button.clicked.connect(self.accept)
         main_layout.addWidget(close_button, 0, Qt.AlignCenter)
 
