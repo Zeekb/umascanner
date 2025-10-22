@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     QTabWidget, QTableWidget, QTableWidgetItem, QDockWidget, QLabel,
     QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton,
     QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QGridLayout, QRadioButton, QGraphicsDropShadowEffect,
-    QSizePolicy, QMessageBox # Added QSizePolicy, QMessageBox
+    QSizePolicy, QMessageBox, QCompleter, QAbstractItemView
 )
 from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath, QPen, QFontMetrics, QIcon, QLinearGradient, QTextOption
 from PyQt5.QtCore import Qt, QRect, QEvent, QRectF
@@ -252,14 +252,20 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.skill_types = self.load_skill_types()
         self.racers = self.load_racers()
         self.open_dialogs = []
-        # --- Initialize filter widget lists ---
-        self.spark_filter_widgets = [] # To hold spark filters + labels
-        self.aptitude_filter_widgets = [] # To hold new aptitude filters + labels
+        self.max_total_white_sparks = 0
+        self.max_rep_white_sparks = 0 
+        self.spark_filter_widgets = []
+        self.aptitude_filter_widgets = []
 
         if self.data is None or self.spark_info is None or self.racers is None or self.skill_types is None:
             logging.critical("Failed to load necessary data files. Exiting.")
             QMessageBox.critical(self, "Data Loading Error", "Failed to load necessary data files (all_runners.csv, sparks.json, etc.).\nPlease check the 'data' and 'data/game_data' folders.\nSee app.log for details.")
             sys.exit(1) # Exit after showing message
+
+        self._calculate_max_white_sparks()
+        logging.info(f"Max white sparks calculated: Total={self.max_total_white_sparks}, Rep={self.max_rep_white_sparks}")
+
+        self.init_ui()
 
         self.init_ui()
         # Apply filters only after UI is fully initialized
@@ -361,6 +367,36 @@ class UmaAnalyzerPyQt(QMainWindow):
              logging.exception("Error loading racers:")
              return ['']
 
+    def _calculate_max_white_sparks(self):
+        """Calculates and stores the max total and rep white spark counts from the data."""
+        if self.data is None or 'sparks' not in self.data.columns:
+            logging.warning("Cannot calculate max white sparks, data not loaded or 'sparks' column missing.")
+            return
+
+        max_total = 0
+        max_rep = 0
+        
+        # Iterate over the 'sparks' column
+        for sparks_list in self.data['sparks']:
+            if not isinstance(sparks_list, list):
+                continue
+            
+            # Filter for white sparks once
+            white_sparks = [s for s in sparks_list if isinstance(s, dict) and s.get('color') == 'white']
+            
+            # Get the total count (number of white spark items)
+            total_count = len(white_sparks)
+            # Get the rep count
+            rep_count = sum(1 for s in white_sparks if s.get('type') == 'representative')
+            
+            if total_count > max_total:
+                max_total = total_count
+            if rep_count > max_rep:
+                max_rep = rep_count
+                
+        # Store these values in the class instance
+        self.max_total_white_sparks = max_total
+        self.max_rep_white_sparks = max_rep
 
     def _get_taskbar_height(self):
         """Calculates the height of the Windows taskbar to avoid window overlap."""
@@ -411,7 +447,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         # --- Determine source table based on current tab ---
         current_index = self.tabs.currentIndex()
         if current_index == 0:
-            table = self.tables["Stats Summary"]
+            table = self.tables["Parent Summary"]
         elif current_index == 1:
              table = self.tables["Aptitude Summary"]
         else:
@@ -495,7 +531,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.tab_widgets = {}
         self.tables = {}
         # --- Changed tab order ---
-        tab_names = ["Stats Summary", "Aptitude Summary", "White Sparks", "Skills Summary"]
+        tab_names = ["Parent Summary", "Aptitude Summary", "White Sparks", "Skills Summary"]
         for name in tab_names:
             tab = QWidget()
             tab.setObjectName(name.replace(" ", "_")) # Set object name
@@ -512,7 +548,7 @@ class UmaAnalyzerPyQt(QMainWindow):
             # Set resize mode based on tab
             if name == "Aptitude Summary":
                  table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch) # Stretch aptitudes
-            elif name == "Stats Summary":
+            elif name == "Parent Summary":
                  table.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive) # Interactive for stats
             else: # Default for others (can be adjusted)
                  table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeToContents)
@@ -522,8 +558,8 @@ class UmaAnalyzerPyQt(QMainWindow):
             layout.addWidget(table)
 
         # Set delegates and connect signals
-        self.tables["Stats Summary"].setItemDelegate(RichTextDelegate(self))
-        self.tables["Stats Summary"].cellDoubleClicked.connect(self.show_runner_details)
+        self.tables["Parent Summary"].setItemDelegate(RichTextDelegate(self))
+        self.tables["Parent Summary"].cellDoubleClicked.connect(self.show_runner_details)
         self.tables["Aptitude Summary"].setItemDelegate(RichTextDelegate(self))
         self.tables["Aptitude Summary"].cellDoubleClicked.connect(self.show_runner_details)
 
@@ -533,7 +569,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         # --- Setup Controls ---
         self.controls = {}
         self.default_controls = {}
-        self.spark_filter_widgets = [] # Reset lists
+        self.spark_filter_widgets = [] # Reset lists (though no longer used for visibility)
         self.aptitude_filter_widgets = []
 
         reset_button = QPushButton("Reset Filters")
@@ -542,9 +578,7 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         # --- Basic Filters (Runner, Sort, Stats - Always Visible) ---
         sort_by_options = ['Name', 'Score', 'Speed', 'Stamina', 'Power', 'Guts', 'Wit', 'White Spark Count']
-        aptitude_sort_options = ['Turf', 'Dirt', 'Sprint', 'Mile', 'Medium', 'Long', 'Front', 'Pace', 'Late', 'End']
-        sort_by_options.extend(aptitude_sort_options)
-
+        
         racers_list = self.racers if isinstance(self.racers, list) and self.racers else ['']
 
         # Pass None for layout_group for always-visible controls
@@ -559,61 +593,75 @@ class UmaAnalyzerPyQt(QMainWindow):
         line.setFrameShadow(QFrame.Sunken)
         self.controls_layout.addWidget(line) # Keep separator
 
-        # --- Spark Filters (Store references in self.spark_filter_widgets) ---
+        # --- Create Filter Containers ---
+        # --- Spark Filters Container ---
+        self.spark_filter_container = QWidget()
+        self.spark_filter_layout = QVBoxLayout(self.spark_filter_container)
+        self.spark_filter_layout.setContentsMargins(0, 0, 0, 0) # No extra margins
+        self.spark_filter_layout.setSpacing(self.controls_layout.spacing()) # Use same spacing as main
+        self.controls_layout.addWidget(self.spark_filter_container)
+
+        # --- Aptitude Filters Container ---
+        self.aptitude_filter_container = QWidget()
+        self.aptitude_filter_layout = QVBoxLayout(self.aptitude_filter_container)
+        self.aptitude_filter_layout.setContentsMargins(0, 0, 0, 0) # No extra margins
+        self.aptitude_filter_layout.setSpacing(self.controls_layout.spacing()) # Use same spacing as main
+        self.controls_layout.addWidget(self.aptitude_filter_container)
+
+
+        # --- Spark Filters (Add to self.spark_filter_layout) ---
         blue_spark_options = [''] + (self.spark_info.get('blue', []) if self.spark_info else [])
         pink_spark_options = [''] + (self.spark_info.get('pink', []) if self.spark_info else [])
         white_spark_options = ['']
         if self.spark_info and 'white' in self.spark_info:
              white_spark_options += self.spark_info['white'].get('race', []) + self.spark_info['white'].get('skill', [])
 
-        # Pass self.spark_filter_widgets
-        self.add_control('filter_rep', 'Rep. Sparks Only', QCheckBox(), default_value=False, layout_group=self.spark_filter_widgets)
-        self.add_control('filter_blue', 'Blue Spark', QComboBox(), blue_spark_options, '', layout_group=self.spark_filter_widgets)
-        self.add_control('min_blue', 'Min Blue Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=self.spark_filter_widgets)
-        self.add_control('filter_pink', 'Pink Spark', QComboBox(), pink_spark_options, '', layout_group=self.spark_filter_widgets)
-        self.add_control('min_pink', 'Min Pink Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=self.spark_filter_widgets)
-        self.add_control('filter_white', 'White Spark', QComboBox(), white_spark_options, '', layout_group=self.spark_filter_widgets)
-        self.add_control('min_white', 'Min White Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=self.spark_filter_widgets)
-
-        # --- New Aptitude Filters (Store references in self.aptitude_filter_widgets) ---
-        aptitude_grades = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G', ''] # Include empty
-        default_apt_grade = 'A'
+        # Pass target_layout_override
+        self.add_control('filter_rep', 'Rep. Sparks Only', QCheckBox(), default_value=False, layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('filter_blue', 'Blue Spark', QComboBox(), blue_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('min_blue', 'Min Blue Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('filter_pink', 'Pink Spark', QComboBox(), pink_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('min_pink', 'Min Pink Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('filter_white', 'White Spark', QComboBox(), white_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        initial_white_range = [''] + [str(i) for i in range(1, self.max_total_white_sparks + 1)]
+        self.add_control('min_white', 'Min White Count', QComboBox(), initial_white_range, '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        
+        # --- New Aptitude Filters (Add to self.aptitude_filter_layout) ---
+        aptitude_grades = ['', 'S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'] # Include empty
+        default_apt_grade = ''
 
         # Track Aptitudes
-        apt_track_label = QLabel("Min Track Grade:")
-        self.controls_layout.addWidget(apt_track_label)
-        self.aptitude_filter_widgets.append(apt_track_label) # Add label to list
+        apt_track_label = QLabel("Track Aptitude:")
+        self.aptitude_filter_layout.addWidget(apt_track_label) # CHANGED
         track_layout = QHBoxLayout()
-        # Pass self.aptitude_filter_widgets and specific_layout
-        self.add_control('apt_min_turf', 'Turf', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=track_layout)
-        self.add_control('apt_min_dirt', 'Dirt', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=track_layout)
-        self.controls_layout.addLayout(track_layout)
+        # Pass layout_group=None, as the list is no longer used for visibility
+        self.add_control('apt_min_turf', 'Turf', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=track_layout) # CHANGED
+        self.add_control('apt_min_dirt', 'Dirt', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=track_layout) # CHANGED
+        self.aptitude_filter_layout.addLayout(track_layout) # CHANGED
 
         # Distance Aptitudes
-        apt_dist_label = QLabel("Min Distance Grade:")
-        self.controls_layout.addWidget(apt_dist_label)
-        self.aptitude_filter_widgets.append(apt_dist_label)
+        apt_dist_label = QLabel("Distance Aptitude:")
+        self.aptitude_filter_layout.addWidget(apt_dist_label) # CHANGED
         dist_layout_1 = QHBoxLayout()
         dist_layout_2 = QHBoxLayout()
-        self.add_control('apt_min_sprint', 'Sprint', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=dist_layout_1)
-        self.add_control('apt_min_mile', 'Mile', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=dist_layout_1)
-        self.add_control('apt_min_medium', 'Medium', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=dist_layout_2)
-        self.add_control('apt_min_long', 'Long', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=dist_layout_2)
-        self.controls_layout.addLayout(dist_layout_1)
-        self.controls_layout.addLayout(dist_layout_2)
+        self.add_control('apt_min_sprint', 'Sprint', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=dist_layout_1) # CHANGED
+        self.add_control('apt_min_mile', 'Mile', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=dist_layout_1) # CHANGED
+        self.add_control('apt_min_medium', 'Med.', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=dist_layout_2) # CHANGED
+        self.add_control('apt_min_long', 'Long', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=dist_layout_2) # CHANGED
+        self.aptitude_filter_layout.addLayout(dist_layout_1) # CHANGED
+        self.aptitude_filter_layout.addLayout(dist_layout_2) # CHANGED
 
         # Style Aptitudes
-        apt_style_label = QLabel("Min Style Grade:")
-        self.controls_layout.addWidget(apt_style_label)
-        self.aptitude_filter_widgets.append(apt_style_label)
+        apt_style_label = QLabel("Style Aptitude:")
+        self.aptitude_filter_layout.addWidget(apt_style_label) # CHANGED
         style_layout_1 = QHBoxLayout()
         style_layout_2 = QHBoxLayout()
-        self.add_control('apt_min_front', 'Front', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=style_layout_1)
-        self.add_control('apt_min_pace', 'Pace', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=style_layout_1)
-        self.add_control('apt_min_late', 'Late', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=style_layout_2)
-        self.add_control('apt_min_end', 'End', QComboBox(), aptitude_grades, default_apt_grade, layout_group=self.aptitude_filter_widgets, specific_layout=style_layout_2)
-        self.controls_layout.addLayout(style_layout_1)
-        self.controls_layout.addLayout(style_layout_2)
+        self.add_control('apt_min_front', 'Front', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=style_layout_1) # CHANGED
+        self.add_control('apt_min_pace', 'Pace', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=style_layout_1) # CHANGED
+        self.add_control('apt_min_late', 'Late', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=style_layout_2) # CHANGED
+        self.add_control('apt_min_end', 'End', QComboBox(), aptitude_grades, default_apt_grade, layout_group=None, specific_layout=style_layout_2) # CHANGED
+        self.aptitude_filter_layout.addLayout(style_layout_1) # CHANGED
+        self.aptitude_filter_layout.addLayout(style_layout_2) # CHANGED
 
 
         # --- Final Layout Adjustments ---
@@ -624,16 +672,23 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
     # --- Modified add_control method ---
-    def add_control(self, name, label, widget, options=None, default_value=None, layout_group=None, specific_layout=None):
+    def add_control(self, name, label, widget, options=None, default_value=None, layout_group=None, specific_layout=None, target_layout_override=None):
         """A helper method to create and add a filter control to the layout."""
         control_label = QLabel(label)
         self.controls[name] = widget
         self.default_controls[name] = default_value
 
         # Determine target layout
-        target_layout = specific_layout if specific_layout is not None else self.controls_layout
+        if specific_layout is not None:
+            target_layout = specific_layout # This is an HBox
+        elif target_layout_override is not None:
+            target_layout = target_layout_override # This is the container's VBox
+        else:
+            target_layout = self.controls_layout # This is the main VBox
 
         # Widgets to add to the layout group for visibility control
+        # This list is no longer used for visibility, but we still populate it
+        # in case other logic relies on it (though it shouldn't).
         widgets_to_group = []
 
         if isinstance(widget, QSlider):
@@ -643,11 +698,12 @@ class UmaAnalyzerPyQt(QMainWindow):
             slider_layout = QHBoxLayout()
             # Use default_value for initial LineEdit text
             num_input = QLineEdit(str(default_value if default_value is not None else 0))
+            widget.num_input_le = num_input
             num_input.setFixedWidth(50)
 
-            # Add label to main layout ONLY if slider isn't in a specific_layout
+            # Add label to target layout ONLY if slider isn't in a specific_layout
             if specific_layout is None:
-                 self.controls_layout.addWidget(control_label)
+                 target_layout.addWidget(control_label) # FIXED: Use target_layout
                  # If also grouped, add label to group list for hiding
                  if layout_group is not None:
                       widgets_to_group.append(control_label)
@@ -687,15 +743,30 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
         # Add items to ComboBox
-        if isinstance(widget, QComboBox) and options: widget.addItems(options)
+        if isinstance(widget, QComboBox) and options: 
+            widget.addItems(options)
+            
+            searchable_combos = ['runner_filter', 'filter_blue', 'filter_pink', 'filter_white']
+            if name in searchable_combos:
+                widget.setEditable(True)
 
-        # Set default value
+                completer = QCompleter(widget.model(), widget)
+                completer.setFilterMode(Qt.MatchContains)
+                completer.setCaseSensitivity(Qt.CaseInsensitive)
+                completer.setCompletionMode(QCompleter.PopupCompletion)
+                try:
+                    popup_view = completer.popup()
+                    popup_view.setSizeAdjustPolicy(QAbstractItemView.AdjustToContents)
+                except AttributeError as e:
+                    logging.warning(f"Could not set sizeAdjustPolicy on completer popup: {e}")
+
+                widget.setCompleter(completer)
+                
         if default_value is not None:
             if isinstance(widget, QComboBox):
                  index = widget.findText(str(default_value), Qt.MatchFixedString)
                  widget.setCurrentIndex(index if index >= 0 else 0)
             elif isinstance(widget, QCheckBox): widget.setChecked(default_value)
-            # Slider default handled during creation
 
         # Connect signals (moved some connections from slider block)
         if isinstance(widget, QComboBox): widget.currentIndexChanged.connect(self.apply_filters)
@@ -735,13 +806,8 @@ class UmaAnalyzerPyQt(QMainWindow):
 
     # --- Modified reset_filters method ---
     def reset_filters(self):
-        """Resets relevant filter controls based on the current tab."""
-        current_tab_index = self.tabs.currentIndex()
-        is_aptitude_tab = (current_tab_index == 1)
-        logging.info(f"Resetting filters. Aptitude tab active: {is_aptitude_tab}")
-
-        spark_filter_names = ['filter_rep', 'filter_blue', 'min_blue', 'filter_pink', 'min_pink', 'filter_white', 'min_white']
-        aptitude_filter_names = [name for name in self.controls if name.startswith('apt_min_')]
+        """Resets *all* filter controls to their default values."""
+        logging.info(f"Resetting all filters.")
 
         # Disconnect signals temporarily to prevent multiple updates during reset
         signal_blockers = {}
@@ -750,40 +816,28 @@ class UmaAnalyzerPyQt(QMainWindow):
                 signal_blockers[widget] = widget.blockSignals(True)
                 # Also block LineEdit signals associated with sliders
                 if isinstance(widget, QSlider):
-                     layout_item = widget.parentWidget().layout().itemAt(widget.parentWidget().layout().indexOf(widget) + 1)
-                     if layout_item and isinstance(layout_item.widget(), QLineEdit):
-                          le = layout_item.widget()
+                     if hasattr(widget, 'num_input_le'): # Use the fix from earlier
+                          le = widget.num_input_le
                           signal_blockers[le] = le.blockSignals(True)
             except Exception as e:
                  logging.error(f"Error blocking signal for {name}: {e}")
 
 
-        # Reset values based on tab
+        # Reset *all* values
         for name, widget in self.controls.items():
-            # Determine if this control should be reset on this tab
-            should_reset = True
-            if is_aptitude_tab and name in spark_filter_names:
-                should_reset = False
-            elif not is_aptitude_tab and name in aptitude_filter_names:
-                should_reset = False
-
-            if should_reset:
-                default_value = self.default_controls.get(name)
-                # logging.debug(f"Resetting '{name}' to '{default_value}'") # Debug logging
-                if isinstance(widget, QComboBox):
-                     index = widget.findText(str(default_value) if default_value is not None else '', Qt.MatchFixedString)
-                     widget.setCurrentIndex(index if index >= 0 else 0)
-                elif isinstance(widget, QSlider):
-                    new_value = default_value if default_value is not None else 0
-                    widget.setValue(new_value)
-                    # Update associated QLineEdit
-                    layout_item = widget.parentWidget().layout().itemAt(widget.parentWidget().layout().indexOf(widget) + 1)
-                    if layout_item and isinstance(layout_item.widget(), QLineEdit):
-                         layout_item.widget().setText(str(new_value))
-                elif isinstance(widget, QCheckBox):
-                     widget.setChecked(default_value if default_value is not None else False)
-            # else:
-            #     logging.debug(f"Skipping reset for '{name}' on this tab.") # Debug logging
+            default_value = self.default_controls.get(name)
+            # logging.debug(f"Resetting '{name}' to '{default_value}'") # Debug logging
+            if isinstance(widget, QComboBox):
+                 index = widget.findText(str(default_value) if default_value is not None else '', Qt.MatchFixedString)
+                 widget.setCurrentIndex(index if index >= 0 else 0)
+            elif isinstance(widget, QSlider):
+                new_value = default_value if default_value is not None else 0
+                widget.setValue(new_value)
+                # Update associated QLineEdit
+                if hasattr(widget, 'num_input_le'): # Use the fix from earlier
+                     widget.num_input_le.setText(str(new_value))
+            elif isinstance(widget, QCheckBox):
+                 widget.setChecked(default_value if default_value is not None else False)
 
 
         # Restore signals
@@ -794,7 +848,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                  logging.error(f"Error restoring signal for widget {widget}: {e}")
 
         # Special handling for filter_rep checkbox connection if it was reset
-        if 'filter_rep' in self.controls and not is_aptitude_tab:
+        if 'filter_rep' in self.controls:
             rep_checkbox = self.controls['filter_rep']
             try: rep_checkbox.stateChanged.disconnect(self.toggle_rep_filter)
             except TypeError: pass
@@ -804,22 +858,18 @@ class UmaAnalyzerPyQt(QMainWindow):
         # Trigger a single update after resetting
         self.apply_filters()
 
-
-    # --- New method handle_tab_change ---
+    # --- New method handle_tab_change (REPLACED) ---
     def handle_tab_change(self, index):
         """Shows/hides filter sections based on the selected tab."""
-        is_aptitude_tab = (index == 1) # Aptitude Summary is index 1
+        # Aptitude Summary is index 1
+        is_aptitude_tab = (index == 1)
         logging.debug(f"Tab changed to index {index}. Is Aptitude Tab: {is_aptitude_tab}")
 
-        # Toggle Spark Filters visibility
-        for widget in self.spark_filter_widgets:
-            if widget: # Check widget exists
-                widget.setVisible(not is_aptitude_tab)
+        # Toggle Spark Filters container visibility
+        self.spark_filter_container.setVisible(not is_aptitude_tab)
 
-        # Toggle Aptitude Filters visibility
-        for widget in self.aptitude_filter_widgets:
-            if widget: # Check widget exists
-                widget.setVisible(is_aptitude_tab)
+        # Toggle Aptitude Filters container visibility
+        self.aptitude_filter_container.setVisible(is_aptitude_tab)
 
         # Optional: Trigger re-filter when tab changes? Could be slow.
         # self.apply_filters()
@@ -828,12 +878,30 @@ class UmaAnalyzerPyQt(QMainWindow):
     def toggle_rep_filter(self):
         """Adjusts the range of spark count filters when the 'Representative Only' checkbox is toggled."""
         is_rep = self.controls['filter_rep'].isChecked()
-        new_range = [''] + [str(i) for i in range(1, 4)] if is_rep else [''] + [str(i) for i in range(1, 10)]
 
-        for key in ['min_blue', 'min_pink', 'min_white']:
-             if key in self.controls:
+        # --- START REPLACED LOGIC ---
+
+        # 1. Define ranges for blue/pink (based on 'count' property: 1-3 stars or 1-9)
+        blue_pink_range = [''] + [str(i) for i in range(1, 4)] if is_rep else [''] + [str(i) for i in range(1, 10)]
+
+        # 2. Define ranges for white (based on *number* of sparks, using our new max values)
+        # Use max(1, ...) to handle edge case where max is 0, which would create an empty range(1, 1)
+        white_max = self.max_rep_white_sparks if is_rep else self.max_total_white_sparks
+        white_range = [''] + [str(i) for i in range(1, white_max + 1)]
+
+        # 3. Create a map of which range to use for which filter
+        key_to_range_map = {
+            'min_blue': blue_pink_range,
+            'min_pink': blue_pink_range,
+            'min_white': white_range
+        }
+
+        # 4. Apply the new ranges to all relevant dropdowns
+        for key, new_range in key_to_range_map.items():
+            if key in self.controls:
                 widget = self.controls[key]
                 current_val = widget.currentText()
+                
                 widget.blockSignals(True)
                 widget.clear()
                 widget.addItems(new_range)
@@ -842,26 +910,31 @@ class UmaAnalyzerPyQt(QMainWindow):
                 # Try restoring selection or adjusting
                 new_index = widget.findText(current_val)
                 if new_index != -1:
-                     widget.setCurrentIndex(new_index)
+                    # Value still exists in the new list, just set it
+                    widget.setCurrentIndex(new_index)
                 elif current_val and current_val.isdigit():
                     val_int = int(current_val)
-                    if is_rep and val_int > 3:
-                        widget.setCurrentText('3') # Clamp down
-                    # No need to clamp up when switching back from rep only
-                    elif not is_rep:
-                        # Should find the original value unless it was > 9 originally
+                    
+                    # Get the highest possible value from the new list
+                    max_val_in_range = int(new_range[-1]) if len(new_range) > 1 else 0
+
+                    if val_int > max_val_in_range:
+                        # Clamp down to the new maximum if the old value is now too high
+                        widget.setCurrentText(str(max_val_in_range))
+                    else:
+                        # The value is still valid (e.g., was '5', new max is '12'), so just set it
                         idx = widget.findText(current_val)
                         widget.setCurrentIndex(idx if idx !=-1 else 0)
-                    else: # If it was > 3 and now is_rep, set to max '3'
-                         widget.setCurrentText('3')
                 else:
                     widget.setCurrentIndex(0) # Default to empty
 
+        # --- END REPLACED LOGIC ---
+        
         self.apply_filters()
-
+        
     # --- Modified apply_filters method ---
     def apply_filters(self):
-        """Applies filters relevant to the currently viewed or all tabs."""
+        """Applies all filters to all tabs."""
         if self.data is None:
             logging.error("apply_filters called but self.data is None. Aborting.")
             return
@@ -875,24 +948,26 @@ class UmaAnalyzerPyQt(QMainWindow):
             elif isinstance(w, QSlider): controls[key] = w.value()
 
         try:
-            # --- Filtering for Stats Summary Tab ---
-            # Apply Runner, Stats, and Spark filters
-            filtered_df_stats = self.filter_data(self.data.copy(), controls, apply_sparks=True, apply_aptitudes=False)
+            # --- Filtering for Parent Summary Tab ---
+            # Apply Runner, Stats, Sparks, AND Aptitude filters
+            filtered_df_stats_base = self.filter_data(self.data.copy(), controls, apply_sparks=True, apply_aptitudes=False)
+            filtered_df_stats = self.apply_aptitude_grade_filters(filtered_df_stats_base, controls) # <-- ADDED THIS
             stats_summary_df = self.generate_stats_summary_columns(filtered_df_stats.copy(), controls)
-            self.update_table(self.tables["Stats Summary"], stats_summary_df, controls)
+            self.update_table(self.tables["Parent Summary"], stats_summary_df, controls)
 
             # --- Filtering for Aptitude Summary Tab ---
-            # Apply Runner, Stats filters first (no sparks)
-            base_filtered_df_apt = self.filter_data(self.data.copy(), controls, apply_sparks=False, apply_aptitudes=False)
+            # Apply Runner, Stats, Sparks, AND Aptitude filters
+            base_filtered_df_apt = self.filter_data(self.data.copy(), controls, apply_sparks=True, apply_aptitudes=False)
             # Then apply Aptitude Grade filters
             filtered_df_apt = self.apply_aptitude_grade_filters(base_filtered_df_apt, controls)
             aptitude_summary_df = self.generate_aptitude_summary_columns(filtered_df_apt.copy(), controls)
             self.update_table(self.tables["Aptitude Summary"], aptitude_summary_df, controls)
 
             # --- Placeholder for updating other tabs ---
-            # If these tabs exist, they likely need spark filters applied
+            # Apply Runner, Stats, Sparks, AND Aptitude filters
             if "White Sparks" in self.tables or "Skills Summary" in self.tables:
-                 filtered_df_other = self.filter_data(self.data.copy(), controls, apply_sparks=True, apply_aptitudes=False)
+                 filtered_df_other_base = self.filter_data(self.data.copy(), controls, apply_sparks=True, apply_aptitudes=False)
+                 filtered_df_other = self.apply_aptitude_grade_filters(filtered_df_other_base, controls) # <-- ADDED THIS
                  if "White Sparks" in self.tables:
                       # white_spark_df = self.generate_white_spark_columns(filtered_df_other.copy(), controls)
                       # self.update_table(self.tables["White Sparks"], white_spark_df, controls)
@@ -914,7 +989,8 @@ class UmaAnalyzerPyQt(QMainWindow):
         if runner_filter:
             # Use boolean indexing carefully, handle potential missing 'name' column
             if 'name' in df.columns:
-                 df = df[df['name'] == runner_filter]
+                 # CHANGED: Use str.contains for partial, case-insensitive matching
+                 df = df[df['name'].str.contains(runner_filter, case=False, na=False)]
             else:
                  logging.warning("'name' column not found for runner filter.")
 
@@ -944,7 +1020,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                     spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'blue']
                     if use_rep_only: spark_list = [s for s in spark_list if s.get('type') == 'representative']
                     if filter_blue:
-                        spark_sum = sum(int(s.get('count', 0)) for s in spark_list if s.get('spark_name') == filter_blue)
+                        spark_sum = sum(int(s.get('count', 0)) for s in spark_list if filter_blue.lower() in str(s.get('spark_name')).lower())
                         return spark_sum >= min_blue if min_blue > 0 else spark_sum > 0
                     elif min_blue > 0:
                         spark_counts = {}
@@ -965,7 +1041,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                     spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'pink']
                     if use_rep_only: spark_list = [s for s in spark_list if s.get('type') == 'representative']
                     if filter_pink:
-                        spark_sum = sum(int(s.get('count', 0)) for s in spark_list if s.get('spark_name') == filter_pink)
+                        spark_sum = sum(int(s.get('count', 0)) for s in spark_list if filter_pink.lower() in str(s.get('spark_name')).lower())
                         return spark_sum >= min_pink if min_pink > 0 else spark_sum > 0
                     elif min_pink > 0:
                         spark_counts = {}
@@ -983,17 +1059,40 @@ class UmaAnalyzerPyQt(QMainWindow):
             if filter_white or min_white > 0:
                 def check_white(sparks):
                     if not isinstance(sparks, list): return False
-                    spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'white']
-                    if use_rep_only: spark_list = [s for s in spark_list if s.get('type') == 'representative']
-                    if filter_white:
-                         # Ensure count check handles potential non-integer counts safely
-                         return any(
-                             s.get('spark_name') == filter_white and
-                             int(s.get('count', 0)) >= min_white for s in spark_list
-                         ) if min_white > 0 else any(s.get('spark_name') == filter_white for s in spark_list)
-                    elif min_white > 0:
-                         return any(int(s.get('count', 0)) >= min_white for s in spark_list)
-                    return True
+                    
+                    # Get all white sparks first
+                    spark_list_all = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'white']
+
+                    if filter_white: 
+                        # --- Case 1: A specific spark name IS selected ---
+                        # This logic works like Blue/Pink: find a specific spark
+                        # and check its summed 'count' property.
+                        
+                        spark_list_filtered = spark_list_all
+                        if use_rep_only: 
+                            spark_list_filtered = [s for s in spark_list_all if s.get('type') == 'representative']
+
+                        spark_sum = sum(
+                            int(s.get('count', 0)) for s in spark_list_filtered
+                            if filter_white.lower() in str(s.get('spark_name')).lower()
+                        )
+                        return spark_sum >= min_white if min_white > 0 else spark_sum > 0
+
+                    elif min_white > 0: 
+                        # --- Case 2: NO specific spark name is selected ---
+                        # This logic mirrors the "White Spark Count" column, as you suggested.
+                        # It counts *items* (sum(1)), not the 'count' property.
+                        
+                        if use_rep_only:
+                            # Count *only* representative spark items
+                            rep_count = sum(1 for s in spark_list_all if s.get('type') == 'representative')
+                            return rep_count >= min_white
+                        else:
+                            # Count *all* white spark items
+                            total_count = len(spark_list_all)
+                            return total_count >= min_white
+
+                    return True # Pass if filter_white is empty and min_white is 0
                 conditions.append(df['sparks'].apply(check_white))
 
 
@@ -1049,7 +1148,7 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
     def generate_stats_summary_columns(self, df, controls):
-        """Generates computed columns for the stats summary table and sorts the data."""
+        """Generates computed columns for the parent summary table and sorts the data."""
         # --- Generate Spark Columns ---
         if 'sparks' not in df.columns:
              logging.error("'sparks' column missing, cannot generate spark summaries.")
@@ -1103,7 +1202,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                  raise ValueError(f"Sort column '{sort_by}' not found")
 
         except Exception as e:
-            logging.exception(f"Error during stats summary sorting by '{sort_by}':")
+            logging.exception(f"Error during Parent summary sorting by '{sort_by}':")
             logging.warning("Falling back to sorting by name.")
             # Ensure 'name' column exists before fallback sort
             if 'name' in df.columns:
@@ -1117,7 +1216,7 @@ class UmaAnalyzerPyQt(QMainWindow):
              if col in df.columns:
                   final_df[col] = df[col]
              else:
-                  logging.warning(f"Missing column for Stats Summary: {col}. Adding as empty.")
+                  logging.warning(f"Missing column for Parent Summary: {col}. Adding as empty.")
                   final_df[col] = pd.Series([None] * len(df), index=df.index) # Use None/NaN for missing
 
         return final_df
@@ -1312,8 +1411,8 @@ class UmaAnalyzerPyQt(QMainWindow):
 
                  # --- Alignment (Reverted to original logic) ---
                  item.setTextAlignment(Qt.AlignCenter) # Default center
-                 # Special alignment only for sparks in Stats Summary
-                 if current_tab_name == "Stats Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
+                 # Special alignment only for sparks in Parent Summary
+                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
                      item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
                  # --- Background Coloring ---
@@ -1334,8 +1433,8 @@ class UmaAnalyzerPyQt(QMainWindow):
                          font.setBold(True)
                          item.setFont(font)
 
-                 # --- HTML for Sparks (Stats Summary Only, original logic) ---
-                 if current_tab_name == "Stats Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
+                 # --- HTML for Sparks (Parent Summary Only, original logic) ---
+                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
                      html = self.get_highlighted_spark_html(str(cell_value), original_col.split()[0].lower(), controls)
                      item.setText(html) # Let delegate handle HTML
 
@@ -1344,7 +1443,7 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         # --- Adjust column widths (Reverted to original logic, applied AFTER population) ---
         # Note: Original logic set modes *before* population, which is less ideal. Applying width *after*.
-        if current_tab_name == "Stats Summary":
+        if current_tab_name == "Parent Summary":
              for col_idx, clean_header in enumerate(clean_headers):
                  if col_idx == entry_id_idx and entry_id_idx != -1: continue
                  header_lower = clean_header.lower()
@@ -1367,21 +1466,22 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         elif current_tab_name == "Aptitude Summary":
              # Original file had Stretch for all columns in Aptitude summary (implicitly via header default)
-             # Keep Stretch for aptitudes, but make others interactive/fixed like Stats Summary
+             # Keep Stretch for aptitudes, but make others interactive/fixed like Parent Summary
              for col_idx, clean_header in enumerate(clean_headers):
-                 if col_idx == entry_id_idx and entry_id_idx != -1: continue
-                 header_lower = clean_header.lower()
-                 original_col = col_map.get(header_lower)
+                if col_idx == entry_id_idx and entry_id_idx != -1: continue
+                header_lower = clean_header.lower()
+                original_col = col_map.get(header_lower)
 
-                 if original_col in ['score'] + stat_cols_original:
-                     table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Fixed)
-                     table.setColumnWidth(col_idx, 100)
-                 elif original_col == 'name':
-                     table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                     table.resizeColumnToContents(col_idx) # Resize name to contents
-                     table.setColumnWidth(col_idx, max(150, table.columnWidth(col_idx))) # Ensure min width
-                 else: # Aptitudes
-                     table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Stretch)
+                if original_col in ['score'] + stat_cols_original:
+                    table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Fixed)
+                    table.setColumnWidth(col_idx, 100)
+                elif original_col == 'name':
+                    table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
+                    table.resizeColumnToContents(col_idx) # Resize name to contents
+                    table.setColumnWidth(col_idx, max(150, table.columnWidth(col_idx))) # Ensure min width
+                else: # Aptitudes
+                    table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
+                    table.setColumnWidth(col_idx, 66) 
 
 
         # Re-hide entry_id if needed
