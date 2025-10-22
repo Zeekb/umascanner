@@ -212,21 +212,31 @@ class RichTextDelegate(QStyledItemDelegate):
         painter.save()
 
         self.initStyleOption(option, index)
-        style = option.widget.style()
+        style = option.widget.style() if option.widget else QApplication.style()
         style.drawPrimitive(QStyle.PE_PanelItemViewItem, option, painter, option.widget)
 
         text = index.data(Qt.DisplayRole)
+
         # If the text contains HTML tags, use QTextDocument to render it.
-        if text and ('<b>' in text): # Original simple check
+        # A more robust check could be to look for any HTML tag.
+        if text and ('<' in text and '>' in text):
             doc = QTextDocument()
             doc.setDefaultFont(option.font)
+
+            # Set the text color from the style option to handle selection color correctly.
+            # The HTML color attribute will override this for specific parts of the text.
+            text_color = option.palette.color(option.palette.HighlightedText if option.state & QStyle.State_Selected else option.palette.Text)
+            doc.setDefaultStyleSheet(f"color: {text_color.name()}")
+
             doc.setHtml(text)
-            option.text = "" # Prevent default text rendering
+            option.text = ""  # Prevent default text rendering
+            style.drawControl(QStyle.CE_ItemViewItem, option, painter, option.widget) # Draw the background and focus rectangle
+
             painter.translate(option.rect.topLeft())
             doc.drawContents(painter)
         else:
             # Otherwise, use the default painting method.
-            super().paint(painter, option, index) # Call super for non-HTML
+            super().paint(painter, option, index)  # Call super for non-HTML
 
         painter.restore()
 
@@ -253,7 +263,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.racers = self.load_racers()
         self.open_dialogs = []
         self.max_total_white_sparks = 0
-        self.max_rep_white_sparks = 0 
+        self.max_parent_white_sparks = 0 
         self.spark_filter_widgets = []
         self.aptitude_filter_widgets = []
 
@@ -263,7 +273,7 @@ class UmaAnalyzerPyQt(QMainWindow):
             sys.exit(1) # Exit after showing message
 
         self._calculate_max_white_sparks()
-        logging.info(f"Max white sparks calculated: Total={self.max_total_white_sparks}, Rep={self.max_rep_white_sparks}")
+        logging.info(f"Max white sparks calculated: Total={self.max_total_white_sparks}, Parent={self.max_parent_white_sparks}")
 
         self.init_ui()
 
@@ -368,13 +378,13 @@ class UmaAnalyzerPyQt(QMainWindow):
              return ['']
 
     def _calculate_max_white_sparks(self):
-        """Calculates and stores the max total and rep white spark counts from the data."""
+        """Calculates and stores the max total and parent white spark counts from the data."""
         if self.data is None or 'sparks' not in self.data.columns:
             logging.warning("Cannot calculate max white sparks, data not loaded or 'sparks' column missing.")
             return
 
         max_total = 0
-        max_rep = 0
+        max_parent = 0
         
         # Iterate over the 'sparks' column
         for sparks_list in self.data['sparks']:
@@ -386,17 +396,17 @@ class UmaAnalyzerPyQt(QMainWindow):
             
             # Get the total count (number of white spark items)
             total_count = len(white_sparks)
-            # Get the rep count
-            rep_count = sum(1 for s in white_sparks if s.get('type') == 'representative')
+            # Get the parent count
+            parent_count = sum(1 for s in white_sparks if s.get('type') == 'parent')
             
             if total_count > max_total:
                 max_total = total_count
-            if rep_count > max_rep:
-                max_rep = rep_count
+            if parent_count > max_parent:
+                max_parent = parent_count
                 
         # Store these values in the class instance
         self.max_total_white_sparks = max_total
-        self.max_rep_white_sparks = max_rep
+        self.max_parent_white_sparks = max_parent
 
     def _get_taskbar_height(self):
         """Calculates the height of the Windows taskbar to avoid window overlap."""
@@ -577,7 +587,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.controls_layout.addWidget(reset_button)
 
         # --- Basic Filters (Runner, Sort, Stats - Always Visible) ---
-        sort_by_options = ['Name', 'Score', 'Speed', 'Stamina', 'Power', 'Guts', 'Wit', 'White Spark Count']
+        sort_by_options = ['Name', 'Score', 'Speed', 'Stamina', 'Power', 'Guts', 'Wit', 'Whites']
         
         racers_list = self.racers if isinstance(self.racers, list) and self.racers else ['']
 
@@ -611,21 +621,21 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         # --- Spark Filters (Add to self.spark_filter_layout) ---
         blue_spark_options = [''] + (self.spark_info.get('blue', []) if self.spark_info else [])
+        green_spark_options = [''] + (self.spark_info.get('green', []) if self.spark_info else [])
         pink_spark_options = [''] + (self.spark_info.get('pink', []) if self.spark_info else [])
         white_spark_options = ['']
         if self.spark_info and 'white' in self.spark_info:
              white_spark_options += self.spark_info['white'].get('race', []) + self.spark_info['white'].get('skill', [])
 
         # Pass target_layout_override
-        self.add_control('filter_rep', 'Rep. Sparks Only', QCheckBox(), default_value=False, layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('filter_rep', 'Parent Sparks Only', QCheckBox(), default_value=False, layout_group=None, target_layout_override=self.spark_filter_layout)
         self.add_control('filter_blue', 'Blue Spark', QComboBox(), blue_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
         self.add_control('min_blue', 'Min Blue Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('filter_green', 'Green Spark', QComboBox(), green_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
+        self.add_control('min_green', 'Min Green Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=None, target_layout_override=self.spark_filter_layout)
         self.add_control('filter_pink', 'Pink Spark', QComboBox(), pink_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
         self.add_control('min_pink', 'Min Pink Count', QComboBox(), [''] + [str(i) for i in range(1, 10)], '', layout_group=None, target_layout_override=self.spark_filter_layout)
-        self.add_control('filter_white', 'White Spark', QComboBox(), white_spark_options, '', layout_group=None, target_layout_override=self.spark_filter_layout)
-        initial_white_range = [''] + [str(i) for i in range(1, self.max_total_white_sparks + 1)]
-        self.add_control('min_white', 'Min White Count', QComboBox(), initial_white_range, '', layout_group=None, target_layout_override=self.spark_filter_layout)
-        
+         
         # --- New Aptitude Filters (Add to self.aptitude_filter_layout) ---
         aptitude_grades = ['', 'S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'] # Include empty
         default_apt_grade = ''
@@ -669,7 +679,6 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         # --- Initial Filter Visibility ---
         self.handle_tab_change(self.tabs.currentIndex()) # Set initial visibility
-
 
     # --- Modified add_control method ---
     def add_control(self, name, label, widget, options=None, default_value=None, layout_group=None, specific_layout=None, target_layout_override=None):
@@ -876,23 +885,21 @@ class UmaAnalyzerPyQt(QMainWindow):
 
 
     def toggle_rep_filter(self):
-        """Adjusts the range of spark count filters when the 'Representative Only' checkbox is toggled."""
-        is_rep = self.controls['filter_rep'].isChecked()
+        """Adjusts the range of spark count filters when the 'Parent Only' checkbox is toggled."""
+        is_parent_only = self.controls['filter_rep'].isChecked()
 
-        # --- START REPLACED LOGIC ---
-
-        # 1. Define ranges for blue/pink (based on 'count' property: 1-3 stars or 1-9)
-        blue_pink_range = [''] + [str(i) for i in range(1, 4)] if is_rep else [''] + [str(i) for i in range(1, 10)]
+        # 1. Define ranges for blue/green/pink (based on 'count' property: 1-3 stars or 1-9)
+        blue_pink_green_range = [''] + [str(i) for i in range(1, 4)] if is_parent_only else [''] + [str(i) for i in range(1, 10)]
 
         # 2. Define ranges for white (based on *number* of sparks, using our new max values)
-        # Use max(1, ...) to handle edge case where max is 0, which would create an empty range(1, 1)
-        white_max = self.max_rep_white_sparks if is_rep else self.max_total_white_sparks
+        white_max = self.max_parent_white_sparks if is_parent_only else self.max_total_white_sparks
         white_range = [''] + [str(i) for i in range(1, white_max + 1)]
 
         # 3. Create a map of which range to use for which filter
         key_to_range_map = {
-            'min_blue': blue_pink_range,
-            'min_pink': blue_pink_range,
+            'min_blue': blue_pink_green_range,
+            'min_green': blue_pink_green_range,
+            'min_pink': blue_pink_green_range,
             'min_white': white_range
         }
 
@@ -910,28 +917,20 @@ class UmaAnalyzerPyQt(QMainWindow):
                 # Try restoring selection or adjusting
                 new_index = widget.findText(current_val)
                 if new_index != -1:
-                    # Value still exists in the new list, just set it
                     widget.setCurrentIndex(new_index)
                 elif current_val and current_val.isdigit():
                     val_int = int(current_val)
-                    
-                    # Get the highest possible value from the new list
                     max_val_in_range = int(new_range[-1]) if len(new_range) > 1 else 0
-
                     if val_int > max_val_in_range:
-                        # Clamp down to the new maximum if the old value is now too high
                         widget.setCurrentText(str(max_val_in_range))
                     else:
-                        # The value is still valid (e.g., was '5', new max is '12'), so just set it
                         idx = widget.findText(current_val)
                         widget.setCurrentIndex(idx if idx !=-1 else 0)
                 else:
-                    widget.setCurrentIndex(0) # Default to empty
-
-        # --- END REPLACED LOGIC ---
+                    widget.setCurrentIndex(0)
         
         self.apply_filters()
-        
+
     # --- Modified apply_filters method ---
     def apply_filters(self):
         """Applies all filters to all tabs."""
@@ -987,9 +986,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         # --- Runner Filter ---
         runner_filter = controls.get('runner_filter')
         if runner_filter:
-            # Use boolean indexing carefully, handle potential missing 'name' column
             if 'name' in df.columns:
-                 # CHANGED: Use str.contains for partial, case-insensitive matching
                  df = df[df['name'].str.contains(runner_filter, case=False, na=False)]
             else:
                  logging.warning("'name' column not found for runner filter.")
@@ -999,7 +996,6 @@ class UmaAnalyzerPyQt(QMainWindow):
             min_val = controls.get(stat, 0)
             if min_val > 0:
                 if stat in df.columns:
-                     # Convert column to numeric, coercing errors, fill NA with 0 before comparison
                      df = df[pd.to_numeric(df[stat], errors='coerce').fillna(0) >= min_val]
                 else:
                      logging.warning(f"Stat filter column '{stat}' not found.")
@@ -1007,10 +1003,10 @@ class UmaAnalyzerPyQt(QMainWindow):
 
         # --- Spark Filters (Conditional) ---
         if apply_sparks:
-            use_rep_only = controls.get('filter_rep', False)
+            use_parent_only = controls.get('filter_rep', False)
             conditions = []
 
-            # Blue Spark Filter Logic (Copied from previous correct version)
+            # Blue Spark Filter Logic
             filter_blue = controls.get('filter_blue')
             min_blue_str = controls.get('min_blue')
             min_blue = int(min_blue_str) if min_blue_str and min_blue_str.isdigit() else 0
@@ -1018,7 +1014,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                 def check_blue(sparks):
                     if not isinstance(sparks, list): return False
                     spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'blue']
-                    if use_rep_only: spark_list = [s for s in spark_list if s.get('type') == 'representative']
+                    if use_parent_only: spark_list = [s for s in spark_list if s.get('type') == 'parent']
                     if filter_blue:
                         spark_sum = sum(int(s.get('count', 0)) for s in spark_list if filter_blue.lower() in str(s.get('spark_name')).lower())
                         return spark_sum >= min_blue if min_blue > 0 else spark_sum > 0
@@ -1031,7 +1027,28 @@ class UmaAnalyzerPyQt(QMainWindow):
                     return True
                 conditions.append(df['sparks'].apply(check_blue))
 
-            # Pink Spark Filter Logic (Copied from previous correct version)
+            # Green Spark Filter Logic
+            filter_green = controls.get('filter_green')
+            min_green_str = controls.get('min_green')
+            min_green = int(min_green_str) if min_green_str and min_green_str.isdigit() else 0
+            if filter_green or min_green > 0:
+                def check_green(sparks):
+                    if not isinstance(sparks, list): return False
+                    spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'green']
+                    if use_parent_only: spark_list = [s for s in spark_list if s.get('type') == 'parent']
+                    if filter_green:
+                        spark_sum = sum(int(s.get('count', 0)) for s in spark_list if filter_green.lower() in str(s.get('spark_name')).lower())
+                        return spark_sum >= min_green if min_green > 0 else spark_sum > 0
+                    elif min_green > 0:
+                        spark_counts = {}
+                        for s in spark_list:
+                            s_name = s.get('spark_name')
+                            if s_name: spark_counts[s_name] = spark_counts.get(s_name, 0) + int(s.get('count', 0))
+                        return any(total >= min_green for total in spark_counts.values())
+                    return True
+                conditions.append(df['sparks'].apply(check_green))
+
+            # Pink Spark Filter Logic
             filter_pink = controls.get('filter_pink')
             min_pink_str = controls.get('min_pink')
             min_pink = int(min_pink_str) if min_pink_str and min_pink_str.isdigit() else 0
@@ -1039,7 +1056,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                 def check_pink(sparks):
                     if not isinstance(sparks, list): return False
                     spark_list = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'pink']
-                    if use_rep_only: spark_list = [s for s in spark_list if s.get('type') == 'representative']
+                    if use_parent_only: spark_list = [s for s in spark_list if s.get('type') == 'parent']
                     if filter_pink:
                         spark_sum = sum(int(s.get('count', 0)) for s in spark_list if filter_pink.lower() in str(s.get('spark_name')).lower())
                         return spark_sum >= min_pink if min_pink > 0 else spark_sum > 0
@@ -1052,7 +1069,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                     return True
                 conditions.append(df['sparks'].apply(check_pink))
 
-            # White Spark Filter Logic (Copied from previous correct version)
+            # White Spark Filter Logic
             filter_white = controls.get('filter_white')
             min_white_str = controls.get('min_white')
             min_white = int(min_white_str) if min_white_str and min_white_str.isdigit() else 0
@@ -1060,17 +1077,12 @@ class UmaAnalyzerPyQt(QMainWindow):
                 def check_white(sparks):
                     if not isinstance(sparks, list): return False
                     
-                    # Get all white sparks first
                     spark_list_all = [s for s in sparks if isinstance(s, dict) and s.get('color') == 'white']
 
                     if filter_white: 
-                        # --- Case 1: A specific spark name IS selected ---
-                        # This logic works like Blue/Pink: find a specific spark
-                        # and check its summed 'count' property.
-                        
                         spark_list_filtered = spark_list_all
-                        if use_rep_only: 
-                            spark_list_filtered = [s for s in spark_list_all if s.get('type') == 'representative']
+                        if use_parent_only: 
+                            spark_list_filtered = [s for s in spark_list_all if s.get('type') == 'parent']
 
                         spark_sum = sum(
                             int(s.get('count', 0)) for s in spark_list_filtered
@@ -1079,33 +1091,22 @@ class UmaAnalyzerPyQt(QMainWindow):
                         return spark_sum >= min_white if min_white > 0 else spark_sum > 0
 
                     elif min_white > 0: 
-                        # --- Case 2: NO specific spark name is selected ---
-                        # This logic mirrors the "White Spark Count" column, as you suggested.
-                        # It counts *items* (sum(1)), not the 'count' property.
-                        
-                        if use_rep_only:
-                            # Count *only* representative spark items
-                            rep_count = sum(1 for s in spark_list_all if s.get('type') == 'representative')
-                            return rep_count >= min_white
+                        if use_parent_only:
+                            parent_count = sum(1 for s in spark_list_all if s.get('type') == 'parent')
+                            return parent_count >= min_white
                         else:
-                            # Count *all* white spark items
                             total_count = len(spark_list_all)
                             return total_count >= min_white
 
-                    return True # Pass if filter_white is empty and min_white is 0
+                    return True
                 conditions.append(df['sparks'].apply(check_white))
 
-
-            # Apply spark conditions
             if conditions:
                 final_condition = pd.Series(True, index=df.index)
                 for cond in conditions:
-                    # Align index before combining
-                    cond = cond.reindex(df.index, fill_value=True) # Fill missing indices as True (don't filter them out)
+                    cond = cond.reindex(df.index, fill_value=True)
                     final_condition &= cond
                 df = df[final_condition]
-
-        # Note: apply_aptitudes parameter is no longer used here; filtering moved
 
         return df
 
@@ -1125,11 +1126,9 @@ class UmaAnalyzerPyQt(QMainWindow):
         conditions = []
         for control_name, df_col_name in aptitude_filter_map.items():
             min_grade_str = controls.get(control_name, '')
-            # Only apply filter if a grade (not empty string) is selected
             if min_grade_str and df_col_name in df.columns:
                 min_grade_val = aptitude_rank_map.get(min_grade_str.upper(), -100)
 
-                # Map column to numeric, handle missing/invalid using fillna, then compare
                 column_numeric_values = df[df_col_name].astype(str).str.upper().map(aptitude_rank_map).fillna(-100)
                 condition = column_numeric_values >= min_grade_val
                 conditions.append(condition)
@@ -1140,7 +1139,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         if conditions:
             final_condition = pd.Series(True, index=df.index)
             for cond in conditions:
-                 cond = cond.reindex(df.index, fill_value=True) # Align index
+                 cond = cond.reindex(df.index, fill_value=True)
                  final_condition &= cond
             df = df[final_condition]
 
@@ -1149,21 +1148,22 @@ class UmaAnalyzerPyQt(QMainWindow):
 
     def generate_stats_summary_columns(self, df, controls):
         """Generates computed columns for the parent summary table and sorts the data."""
-        # --- Generate Spark Columns ---
         if 'sparks' not in df.columns:
              logging.error("'sparks' column missing, cannot generate spark summaries.")
              df['Blue Sparks'] = ''
+             df['Green Sparks'] = ''
              df['Pink Sparks'] = ''
-             df['White Spark Count'] = '0(0)'
+             df['Whites'] = '0(0)'
         else:
             df['Blue Sparks'] = df['sparks'].apply(lambda s: self.combine_sparks(s, 'blue'))
+            df['Green Sparks'] = df['sparks'].apply(lambda s: self.combine_sparks(s, 'green'))
             df['Pink Sparks'] = df['sparks'].apply(lambda s: self.combine_sparks(s, 'pink'))
-            def count_white_sparks(sparks): # Function copied from previous version
+            def count_white_sparks(sparks):
                 if not isinstance(sparks, list): return "0(0)"
                 total_count = sum(1 for sp in sparks if isinstance(sp, dict) and sp.get('color') == 'white')
-                rep_count = sum(1 for sp in sparks if isinstance(sp, dict) and sp.get('color') == 'white' and sp.get('type') == 'representative')
-                return f"{total_count}({rep_count})"
-            df['White Spark Count'] = df['sparks'].apply(count_white_sparks)
+                parent_count = sum(1 for sp in sparks if isinstance(sp, dict) and sp.get('color') == 'white' and sp.get('type') == 'parent')
+                return f"{total_count}({parent_count})"
+            df['Whites'] = df['sparks'].apply(count_white_sparks)
 
         # --- Sorting Logic ---
         sort_by = controls.get('sort_by', 'Name').lower().replace(' ', '_')
@@ -1171,20 +1171,20 @@ class UmaAnalyzerPyQt(QMainWindow):
         aptitude_rank_map = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100}
 
         try:
+            # Note: The sort_by value from the dropdown is still "White Spark Count"
             if sort_by == 'white_spark_count':
-                use_rep = controls.get('filter_rep', False)
+                use_parent = controls.get('filter_rep', False)
                 def get_sort_key(count_str):
                     match = re.match(r'(\d+)\((\d+)\)', str(count_str))
                     if match:
-                        total, rep = map(int, match.groups())
-                        return rep if use_rep else total
+                        total, parent = map(int, match.groups())
+                        return parent if use_parent else total
                     return -1
-                # Ensure column exists before creating sort key
-                if 'White Spark Count' in df.columns:
-                     df['sort_key'] = df['White Spark Count'].apply(get_sort_key)
+                if 'Whites' in df.columns:
+                     df['sort_key'] = df['Whites'].apply(get_sort_key)
                      df = df.sort_values(by='sort_key', ascending=ascending, na_position='last').drop(columns=['sort_key'])
                 else:
-                     raise ValueError("White Spark Count column missing for sorting")
+                     raise ValueError("Whites column missing for sorting")
 
             elif sort_by in ['turf', 'dirt', 'sprint', 'mile', 'medium', 'long', 'front', 'pace', 'late', 'end']:
                 sort_col_name = f'rank_{sort_by}'
@@ -1204,23 +1204,19 @@ class UmaAnalyzerPyQt(QMainWindow):
         except Exception as e:
             logging.exception(f"Error during Parent summary sorting by '{sort_by}':")
             logging.warning("Falling back to sorting by name.")
-            # Ensure 'name' column exists before fallback sort
             if 'name' in df.columns:
                  df = df.sort_values(by='name', ascending=True, na_position='last')
-            # Else, no sort possible? Or sort by index? Keep unsorted for now.
 
-        # --- Select and Order Final Columns ---
-        stats_summary_cols = ['entry_id', 'name', 'score', 'speed', 'stamina', 'power', 'guts', 'wit', 'Blue Sparks', 'Pink Sparks', 'White Spark Count']
+        stats_summary_cols = ['entry_id', 'name', 'score', 'speed', 'stamina', 'power', 'guts', 'wit', 'Blue Sparks', 'Green Sparks', 'Pink Sparks', 'Whites']
         final_df = pd.DataFrame()
         for col in stats_summary_cols:
              if col in df.columns:
                   final_df[col] = df[col]
              else:
                   logging.warning(f"Missing column for Parent Summary: {col}. Adding as empty.")
-                  final_df[col] = pd.Series([None] * len(df), index=df.index) # Use None/NaN for missing
+                  final_df[col] = pd.Series([None] * len(df), index=df.index)
 
         return final_df
-
 
     # --- Copied generate_aptitude_summary_columns method ---
     def generate_aptitude_summary_columns(self, df, controls):
@@ -1257,7 +1253,7 @@ class UmaAnalyzerPyQt(QMainWindow):
                 else:
                      df_aptitude = df_aptitude.sort_values(by=sort_by, ascending=ascending, na_position='last', key=lambda col: col.astype(str).str.lower())
             elif sort_by == 'white_spark_count':
-                logging.info("Sorting Aptitude tab by White Spark Count requested, falling back to Name sort.")
+                logging.info("Sorting Aptitude tab by Whites requested, falling back to Name sort.")
                 if 'name' in df_aptitude.columns:
                      df_aptitude = df_aptitude.sort_values(by='name', ascending=True, na_position='last')
             else:
@@ -1272,79 +1268,119 @@ class UmaAnalyzerPyQt(QMainWindow):
         return df_aptitude
 
 
-    # --- Reverted combine_sparks to original version ---
     def combine_sparks(self, sparks_list, color):
         """Combines spark data for a single runner into a display string."""
-        if not sparks_list or not isinstance(sparks_list, list): return "" # Handle None or non-list
-        source_sparks = [s for s in sparks_list if isinstance(s, dict) and s.get('color') == color] # Added dict check
+        if not sparks_list or not isinstance(sparks_list, list): return ""
+        source_sparks = [s for s in sparks_list if isinstance(s, dict) and s.get('color') == color]
         total_map = {}
         for s in source_sparks:
-             # Added check for spark_name existence and count validity
              name = s.get('spark_name')
              try: count = int(s.get('count', 0))
              except (ValueError, TypeError): count = 0
              if name: total_map[name] = total_map.get(name, 0) + count
 
-        rep_map = {}
+        parent_map = {}
         for s in source_sparks:
-             if s.get('type') == 'representative':
+             if s.get('type') == 'parent':
                  name = s.get('spark_name')
                  try: count = int(s.get('count', 0))
                  except (ValueError, TypeError): count = 0
-                 if name: rep_map[name] = rep_map.get(name, 0) + count
+                 if name: parent_map[name] = parent_map.get(name, 0) + count
 
         order = self.spark_info.get(color, []) if self.spark_info else []
 
-        # Sort items: first by predefined order, then alphabetically for unknowns
         def sort_key(item):
             name = item[0]
             try:
-                # Find index in order list, fallback to infinity if not found
                 idx = order.index(name) if name in order else float('inf')
                 return (idx, name)
             except ValueError:
-                return (float('inf'), name) # Should not happen with 'in' check
+                return (float('inf'), name)
 
         sorted_items = sorted(total_map.items(), key=sort_key)
 
-        # Format output string, including only those with count > 0
         result_parts = []
         for name, total in sorted_items:
              if total > 0:
-                rep_count = rep_map.get(name, 0)
-                if rep_count > 0:
-                     result_parts.append(f"{name} {total}({rep_count})")
+                parent_count = parent_map.get(name, 0)
+                if parent_count > 0:
+                     result_parts.append(f"{name} {total}({parent_count})")
                 else:
                      result_parts.append(f"{name} {total}")
-
-        return ", ".join(result_parts)
-
+        
+        # Use a unique delimiter that won't appear in spark names for internal processing
+        UNIQUE_DELIMITER = "|||" 
+        return UNIQUE_DELIMITER.join(result_parts)
 
     def get_highlighted_spark_html(self, cell_value, color, controls):
         """Wraps spark text in bold tags if it matches the current filter."""
-        # --- Reverted to original version ---
         filter_type = controls.get(f'filter_{color}')
         min_count_str = controls.get(f'min_{color}')
         min_count = int(min_count_str) if min_count_str and min_count_str.isdigit() else 0
+        use_parent_only = controls.get('filter_rep', False)
 
-        if not filter_type and not min_count > 0:
-            return cell_value
-
-        parts = cell_value.split(', ')
+        UNIQUE_DELIMITER = "|||"
+        parts = cell_value.split(UNIQUE_DELIMITER)
+        
         highlighted_parts = []
         for part in parts:
+            if not part: continue # Skip any empty parts from the split
+
             should_bold = False
-            # Original logic relying on startsWith and regex for count
-            if filter_type and part.strip().startswith(filter_type):
-                should_bold = True
-            elif not filter_type and min_count > 0:
-                match = re.search(r' (\d+)', part) # Search for first number
-                if match and int(match.group(1)) >= min_count:
+            
+            # --- 1. Extract data from the spark string ---
+            name_match = re.match(r'([^ ]+)', part.strip())
+            # Handle names with spaces correctly by grabbing everything before the numbers
+            name_match = re.match(r'(.*?)\s\d+', part.strip())
+            spark_name = name_match.group(1).strip() if name_match else part.strip()
+
+            total_count = 0
+            total_match = re.search(r' (\d+)', part)
+            if total_match:
+                total_count = int(total_match.group(1))
+
+            parent_count = 0
+            is_parent_spark = False
+            parent_match = re.search(r'\((\d+)\)', part)
+            if parent_match:
+                parent_count = int(parent_match.group(1))
+                is_parent_spark = True
+
+            # --- 2. Determine if the spark passes active filters ---
+            passes_filters = False
+            is_name_filter_active = bool(filter_type)
+            is_count_filter_active = min_count > 0
+
+            if is_name_filter_active:
+                if spark_name == filter_type:
+                    count_to_check = parent_count if use_parent_only else total_count
+                    if is_count_filter_active:
+                        if count_to_check >= min_count:
+                            passes_filters = True
+                    else:
+                        passes_filters = True
+            elif is_count_filter_active:
+                count_to_check = parent_count if use_parent_only else total_count
+                if count_to_check >= min_count:
+                    passes_filters = True
+            
+            # --- 3. Apply the final bolding logic ---
+            if use_parent_only:
+                if is_parent_spark:
+                    if not is_name_filter_active and not is_count_filter_active:
+                        should_bold = True
+                    elif passes_filters:
+                        should_bold = True
+            else:
+                if passes_filters:
                     should_bold = True
 
-            highlighted_parts.append(f'<b>{part}</b>' if should_bold else part)
+            formatted_part = f'<b>{part}</b>' if should_bold else part
+            colored_part = f"<font color='black'>{formatted_part}</font>" if should_bold else f"<font color='{UMA_TEXT_DARK}'>{formatted_part}</font>"
+            highlighted_parts.append(colored_part)
+            
+        # Rejoin with the correct comma and space for display
         return ", ".join(highlighted_parts)
-
 
     # --- Modified update_table method ---
     def update_table(self, table, df, controls):
@@ -1368,6 +1404,7 @@ class UmaAnalyzerPyQt(QMainWindow):
             header = c.replace('_', ' ').replace('rank ', '').title()
             clean_headers.append(header)
             col_map[header.lower()] = c
+        
         table.setColumnCount(len(clean_headers))
         table.setHorizontalHeaderLabels(clean_headers)
 
@@ -1381,7 +1418,6 @@ class UmaAnalyzerPyQt(QMainWindow):
              except ValueError:
                   entry_id_idx = -1
 
-
         stat_cols_original = ['speed', 'stamina', 'power', 'guts', 'wit']
 
         # --- Populate Data ---
@@ -1392,30 +1428,26 @@ class UmaAnalyzerPyQt(QMainWindow):
                      table.setItem(i, j, QTableWidgetItem("ERR"))
                      continue
 
-                 # Still create hidden entry_id item
                  if j == entry_id_idx and entry_id_idx != -1:
                       item = QTableWidgetItem(str(row[original_col]))
                       table.setItem(i, j, item)
                       continue
 
-
                  cell_value = row[original_col]
-                 display_text = ""
-                 # Original formatting for score
-                 if original_col == 'score' and isinstance(cell_value, (int, float)):
-                      display_text = f"{cell_value:,}" # Keep original comma format
-                 else:
-                      display_text = str(cell_value)
+                 
+                 # --- NEW: Shorten aptitude names within the Pink Sparks column content ---
+                 if original_col == 'Pink Sparks' and isinstance(cell_value, str):
+                     cell_value = cell_value.replace("Front Runner", "Front")
+                     cell_value = cell_value.replace("Pace Chaser", "Pace")
+                     cell_value = cell_value.replace("Late Surger", "Late")
+                     cell_value = cell_value.replace("End Closer", "End")
 
+                 display_text = f"{cell_value:,}" if original_col == 'score' and isinstance(cell_value, (int, float)) else str(cell_value)
                  item = QTableWidgetItem(display_text)
-
-                 # --- Alignment (Reverted to original logic) ---
-                 item.setTextAlignment(Qt.AlignCenter) # Default center
-                 # Special alignment only for sparks in Parent Summary
-                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
+                 item.setTextAlignment(Qt.AlignCenter)
+                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Green Sparks', 'Pink Sparks']:
                      item.setTextAlignment(Qt.AlignLeft | Qt.AlignVCenter)
 
-                 # --- Background Coloring ---
                  color_hex = None
                  grade = None
                  if original_col in stat_cols_original and isinstance(cell_value, (int, float)):
@@ -1427,22 +1459,17 @@ class UmaAnalyzerPyQt(QMainWindow):
 
                  if color_hex:
                      item.setBackground(QColor(color_hex).lighter(150))
-                     # Keep optional bold for S/A aptitudes
                      if grade in ['S', 'A'] and original_col.startswith('rank_'):
                          font = item.font()
                          font.setBold(True)
                          item.setFont(font)
 
-                 # --- HTML for Sparks (Parent Summary Only, original logic) ---
-                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Pink Sparks']:
+                 if current_tab_name == "Parent Summary" and original_col in ['Blue Sparks', 'Green Sparks', 'Pink Sparks']:
                      html = self.get_highlighted_spark_html(str(cell_value), original_col.split()[0].lower(), controls)
-                     item.setText(html) # Let delegate handle HTML
+                     item.setText(html)
 
                  table.setItem(i, j, item)
 
-
-        # --- Adjust column widths (Reverted to original logic, applied AFTER population) ---
-        # Note: Original logic set modes *before* population, which is less ideal. Applying width *after*.
         if current_tab_name == "Parent Summary":
              for col_idx, clean_header in enumerate(clean_headers):
                  if col_idx == entry_id_idx and entry_id_idx != -1: continue
@@ -1451,22 +1478,20 @@ class UmaAnalyzerPyQt(QMainWindow):
 
                  if original_col in ['score'] + stat_cols_original:
                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Fixed)
-                     table.setColumnWidth(col_idx, 100) # Original fixed width
+                     table.setColumnWidth(col_idx, 90)
                  elif original_col == 'name':
                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                     table.setColumnWidth(col_idx, 150) # Original width
-                 elif original_col == 'White Spark Count':
+                     table.setColumnWidth(col_idx, 150)
+                 elif original_col == 'Whites':
                       table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                      table.setColumnWidth(col_idx, 180) # Original width
-                 elif 'Sparks' in clean_header: # Blue/Pink
-                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive) # Was Interactive originally
-                      table.setColumnWidth(col_idx, 300) # Original width
-                 else: # Default Stretch as per original file's behavior for unhandled columns
+                      table.setColumnWidth(col_idx, 60)
+                 elif 'Sparks' in clean_header and 'Green' not in clean_header:
+                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
+                      table.setColumnWidth(col_idx, 200)
+                 else:
                       table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Stretch)
 
         elif current_tab_name == "Aptitude Summary":
-             # Original file had Stretch for all columns in Aptitude summary (implicitly via header default)
-             # Keep Stretch for aptitudes, but make others interactive/fixed like Parent Summary
              for col_idx, clean_header in enumerate(clean_headers):
                 if col_idx == entry_id_idx and entry_id_idx != -1: continue
                 header_lower = clean_header.lower()
@@ -1477,14 +1502,12 @@ class UmaAnalyzerPyQt(QMainWindow):
                     table.setColumnWidth(col_idx, 100)
                 elif original_col == 'name':
                     table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                    table.resizeColumnToContents(col_idx) # Resize name to contents
-                    table.setColumnWidth(col_idx, max(150, table.columnWidth(col_idx))) # Ensure min width
+                    table.resizeColumnToContents(col_idx)
+                    table.setColumnWidth(col_idx, max(150, table.columnWidth(col_idx)))
                 else: # Aptitudes
                     table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
                     table.setColumnWidth(col_idx, 66) 
 
-
-        # Re-hide entry_id if needed
         if entry_id_idx != -1 and not table.isColumnHidden(entry_id_idx):
             table.setColumnHidden(entry_id_idx, True)
 
