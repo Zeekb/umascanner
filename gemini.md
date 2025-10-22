@@ -6,14 +6,26 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 
 ```
 .
+├───.gitignore
+├───app_requirements.txt
+├───install_dependencies.bat
+├───install_pytorch_cpu.bat
+├───README.md
+├───README.txt
+├───.git
 ├───assets
+│   ├───ExampleAnalyzerView.png
+│   ├───icon.jpg
 │   ├───profile_images
-│   └───ExampleAnalyzerView.png
+│   └───skill_icons
 ├───data
 │   ├───all_runners.csv
+│   ├───conflicts.json
 │   ├───game_data
 │   │   ├───racers.json
+│   │   ├───skill_types.json
 │   │   ├───skills.json
+│   │   ├───spark_correction_rules.json
 │   │   └───sparks.json
 │   ├───input_images
 │   └───processed_images
@@ -32,11 +44,8 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 │   ├───spark_parser.py
 │   ├───sparks_handler.py
 │   ├───tabs.py
-│   └───uma_analyzer_themed.py
-├───install_dependencies.bat
-├───README.md
-├───README.txt
-└───requirements.txt
+│   ├───uma_analyzer_themed.py
+│   └───__pycache__
 ```
 
 ## File Descriptions
@@ -62,6 +71,22 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 ### `data` directory
 
 *   **`all_runners.csv`**: The main output file where all extracted and processed character data is stored.
+*   **`conflicts.json`**: Stores information about data conflicts that arise during processing.
 *   **`input_images/`**: The folder where users should place their game screenshots for processing.
 *   **`processed_images/`**: After processing, the image folders are moved from `input_images` to this directory.
-*   **`game_data/`**: Contains JSON files with static game information used for OCR normalization and data enrichment (e.g., `racers.json`, `skills.json`, `sparks.json`).
+*   **`game_data/`**: Contains JSON files with static game information used for OCR normalization and data enrichment.
+    *   **`racers.json`**: Contains data about known racers.
+    *   **`skill_types.json`**: Contains data about different skill types.
+    *   **`skills.json`**: Contains data about known skills.
+    *   **`spark_correction_rules.json`**: Defines rules for correcting spark data.
+    *   **`sparks.json`**: Contains data about known sparks.
+
+### Other Files and Directories
+
+*   **`.gitignore`**: Specifies intentionally untracked files that Git should ignore.
+*   **`app_requirements.txt`**: Lists Python dependencies specifically for the application's runtime.
+*   **`install_pytorch_cpu.bat`**: A Windows batch script to install the CPU version of PyTorch.
+*   **`.git/`**: The hidden directory used by Git to store the repository's history and configuration.
+*   **`assets/icon.jpg`**: The application's icon file.
+*   **`assets/skill_icons/`**: Directory containing various skill icon images used in the application.
+*   **`src/__pycache__/`**: Directory where Python stores bytecode cache files.
