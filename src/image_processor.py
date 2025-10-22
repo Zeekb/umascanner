@@ -100,58 +100,51 @@ def process_folder(folder_name, all_rois) -> Optional[tuple[str, CharacterData]]
         return folder_name, character_data
 
     combined_img = combine_images_horizontally(spark_image_paths)
-    rep_filled = False
+
+    final_sparks_list = []
+
+    # This maps the ROI index to your desired type name.
+    # It assumes the ROIs are detected in a consistent order (rep, then the two legacy).
+    # roi_detector sorts them by x then y, which should be consistent.
+    roi_type_map = ["parent", "grandparent_1", "grandparent_2"]
+
+    # DELETE the line `rep_filled = False`
+
+    # MODIFY the loop
     for roi_idx, roi_data in enumerate(rois_list):
+        # This check prevents errors if more than 3 ROIs are somehow detected
+        if roi_idx >= len(roi_type_map):
+            logger.warning(f"Found more than 3 spark ROIs for {folder_name}, ignoring extras.")
+            break
+        
+        current_roi_type = roi_type_map[roi_idx]
+
         _, roi_box, _ = roi_data
         roi_crop = combined_img.crop(roi_box)
         roi_cv_crop = cv2.cvtColor(np.array(roi_crop), cv2.COLOR_RGB2BGR)
         
         try:
-            #debug_prefix = os.path.join(DEBUG_FOLDER, folder_name, f"roi_{roi_idx}")
             sparks_result = parse_sparks(roi_cv_crop, reader)
-            logger.debug(f"Processing {folder_name} ROI {roi_idx} | Sparks: {sparks_result}")
+            logger.debug(f"Processing {folder_name} ROI {roi_idx} ({current_roi_type}) | Sparks: {sparks_result}")
 
-            if not rep_filled:
-                # --- REPRESENTATIVE ROI --- #
+            # --- NEW LOGIC: Iterate and append with the correct type ---
+            for color, sparks_list in sparks_result.items():
+                for spark in sparks_list:
+                    # spark_parser already gives us name, count, etc.
+                    # We just add the type and color.
+                    final_sparks_list.append({
+                        "type": current_roi_type,
+                        "color": color,
+                        "spark_name": spark['name'],
+                        "count": spark['count']
+                    })
 
-                # Pink: Top-most on right is rep, all others are legacy
-                pink_sparks = sparks_result.get('pink', [])
-                right_col_pinks = sorted([s for s in pink_sparks if s.get('is_right_col')], key=lambda s: s['y_pos'])
-                left_col_pinks = [s for s in pink_sparks if not s.get('is_right_col')]
-
-                if right_col_pinks:
-                    rep_spark = right_col_pinks.pop(0)
-                    character_data.sparks.representative['pink'][rep_spark['name']] = rep_spark['count']
-                    logger.info(f"SELECTED designated pink representative: '{rep_spark['name']}'")
-                
-                for spark in right_col_pinks + left_col_pinks:
-                    character_data.sparks.legacy['pink'][spark['name']] = character_data.sparks.legacy['pink'].get(spark['name'], 0) + spark['count']
-
-                # Blue & Green: Top-most is rep, all others are legacy
-                for color in ['blue', 'green']:
-                    sparks_list = sorted(sparks_result.get(color, []), key=lambda s: s['y_pos'])
-                    if sparks_list:
-                        rep_spark = sparks_list.pop(0)
-                        character_data.sparks.representative[color][rep_spark['name']] = rep_spark['count']
-                        logger.info(f"SELECTED representative '{color}' spark: '{rep_spark['name']}'")
-                    for spark in sparks_list:
-                        character_data.sparks.legacy[color][spark['name']] = character_data.sparks.legacy[color].get(spark['name'], 0) + spark['count']
-
-                # White & others: All are representative
-                for color in sparks_result:
-                    if color not in ['pink', 'blue', 'green']:
-                        for spark in sparks_result[color]:
-                            character_data.sparks.representative[color][spark['name']] = character_data.sparks.representative[color].get(spark['name'], 0) + spark['count']
-                
-                rep_filled = True
-            else:
-                # --- LEGACY ROIs ---
-                for color, sparks_list in sparks_result.items():
-                    for spark_dict in sparks_list:
-                        character_data.sparks.legacy[color][spark_dict['name']] = \
-                            character_data.sparks.legacy[color].get(spark_dict['name'], 0) + spark_dict['count']
         except Exception as e:
             logger.error(f"[ERROR] Parser 2 failed on ROI for {folder_name}: {e}")
+
+    # REPLACE the old return statement's sparks handling
+    # At the end of the function, before 'return ...'
+    character_data.sparks = final_sparks_list # Replace the old Sparks object with our new list
 
     return folder_name, character_data
 
@@ -231,12 +224,7 @@ def _create_new_runners_dataframe(final_results):
         
         row["skills"] = "|".join(character_data.skills)
 
-        sparks_list = []
-        for spark_type in ["representative", "legacy"]:
-            for color, sparks in character_data.sparks.__dict__[spark_type].items():
-                for spark_name, count in sparks.items():
-                    sparks_list.append({"type": spark_type, "color": color, "spark_name": spark_name, "count": count})
-        row["sparks"] = json.dumps(sparks_list)
+        row["sparks"] = json.dumps(character_data.sparks)
 
         new_runners_rows.append(row)
 

@@ -126,39 +126,51 @@ class ConflictResolutionDialog(QDialog):
         button_layout.addWidget(self.save_button)
         main_layout.addLayout(button_layout)
 
+    # In conflict_resolver.py, function format_and_diff_sparks
     def format_and_diff_sparks(self, existing_sparks_data, new_sparks_data):
         def parse_sparks(sparks_data):
             if not sparks_data: return {}
             try:
                 sparks_list = json.loads(sparks_data) if isinstance(sparks_data, str) else sparks_data
-                return {(s['color'], s['type'], s['spark_name']): s['count'] for s in sparks_list}
+                # The key is now just the spark's origin (type)
+                # The value is a list of sparks for that origin
+                parsed = {"parent": [], "grandparent_1": [], "grandparent_2": []}
+                for s in sparks_list:
+                    if s['type'] in parsed:
+                        parsed[s['type']].append(s)
+                return parsed
             except (json.JSONDecodeError, TypeError): return {}
 
         existing_sparks = parse_sparks(existing_sparks_data)
         new_sparks = parse_sparks(new_sparks_data)
-        all_spark_keys = sorted(list(set(existing_sparks.keys()) | set(new_sparks.keys())))
         
         diff_results = {}
-        categories = [f"{color}_{'rep' if type_ == 'representative' else 'leg'}" for color in ["blue", "pink", "green", "white"] for type_ in ["representative", "legacy"]]
-        for key in categories:
-            diff_results[key] = {'existing': [], 'new': []}
+        
+        # Iterate through the three main types
+        for spark_type in ["parent", "grandparent_1", "grandparent_2"]:
+            existing_map = {(s['color'], s['spark_name']): s['count'] for s in existing_sparks.get(spark_type, [])}
+            new_map = {(s['color'], s['spark_name']): s['count'] for s in new_sparks.get(spark_type, [])}
+            all_spark_keys = sorted(list(set(existing_map.keys()) | set(new_map.keys())))
+            
+            diff_results[spark_type] = {'existing': [], 'new': []}
 
-        for color, type_, name in all_spark_keys:
-            key = f"{color}_{'rep' if type_ == 'representative' else 'leg'}"
-            existing_count = existing_sparks.get((color, type_, name))
-            new_count = new_sparks.get((color, type_, name))
+            for color, name in all_spark_keys:
+                existing_count = existing_map.get((color, name))
+                new_count = new_map.get((color, name))
+                
+                # This diffing logic remains largely the same
+                if existing_count is not None and new_count is not None:
+                    if existing_count == new_count:
+                        diff_results[spark_type]['existing'].append(f'<font color="black">{name} {existing_count}*</font>')
+                        diff_results[spark_type]['new'].append(f'<font color="black">{name} {new_count}*</font>')
+                    else:
+                        diff_results[spark_type]['existing'].append(f'<font color="blue">{name} {existing_count}*</font>')
+                        diff_results[spark_type]['new'].append(f'<font color="blue">{name} {new_count}*</font>')
+                elif existing_count is not None:
+                    diff_results[spark_type]['existing'].append(f'<font color="red">{name} {existing_count}*</font>')
+                elif new_count is not None:
+                    diff_results[spark_type]['new'].append(f'<font color="green">{name} {new_count}*</font>')
 
-            if existing_count is not None and new_count is not None:
-                if existing_count == new_count:
-                    diff_results[key]['existing'].append(f'<font color="black">{name} {existing_count}</font>')
-                    diff_results[key]['new'].append(f'<font color="black">{name} {new_count}</font>')
-                else:
-                    diff_results[key]['existing'].append(f'<font color="blue">{name} {existing_count}</font>')
-                    diff_results[key]['new'].append(f'<font color="blue">{name} {new_count}</font>')
-            elif existing_count is not None:
-                diff_results[key]['existing'].append(f'<font color="red">{name} {existing_count}</font>')
-            elif new_count is not None:
-                diff_results[key]['new'].append(f'<font color="green">{name} {new_count}</font>')
         return diff_results
 
     def display_conflict(self, index):
@@ -204,9 +216,7 @@ class ConflictResolutionDialog(QDialog):
         for category, data in diff_results.items():
             if not data['existing'] and not data['new']: continue
             has_sparks = True
-            color, type_short = category.split('_')
-            type_label = "Parent" if type_short == "rep" else "Grandparent"
-            cat_label = QLabel(f"<b>{color.title()} {type_label}:</b>")
+            cat_label = QLabel(f"<b>{category.replace('_', ' ').title()}:</b>")
             existing_label, new_label = QLabel(", ".join(data['existing'])), QLabel(", ".join(data['new']))
             existing_label.setWordWrap(True); new_label.setWordWrap(True)
             cb_existing = QCheckBox()
@@ -243,14 +253,13 @@ class ConflictResolutionDialog(QDialog):
         existing_sparks_list = json.loads(existing_data.get('sparks', '[]') or '[]')
         new_sparks_list = json.loads(new_data.get('sparks', '[]') or '[]')
 
-        for category, checkbox in self.spark_choice_widgets.items():
-            color, type_short = category.split('_')
-            type_full = 'representative' if type_short == 'rep' else 'legacy'
+        # The key of spark_choice_widgets is now "parent", "grandparent_1", etc.
+        for spark_type, checkbox in self.spark_choice_widgets.items():
             source_list = existing_sparks_list if checkbox.isChecked() else new_sparks_list
             for spark in source_list:
-                if spark.get('color') == color and spark.get('type') == type_full:
+                if spark.get('type') == spark_type:
                     resolved_sparks.append(spark)
-        
+
         resolved_entry['sparks'] = json.dumps(resolved_sparks)
 
         numeric_cols = ['entry_id', 'score', 'speed', 'stamina', 'power', 'guts', 'wit']

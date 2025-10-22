@@ -31,7 +31,7 @@ class CharacterData:
     stats: Stats = field(default_factory=Stats)
     rankings: Rankings = field(default_factory=Rankings)
     skills: List[str] = field(default_factory=list)
-    sparks: Sparks = field(default_factory=Sparks)
+    sparks: List[Dict] = field(default_factory=list)
 
 def init_schema() -> CharacterData:
     """Return a fresh CharacterData dataclass instance."""
