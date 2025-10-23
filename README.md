@@ -5,7 +5,7 @@ This guide will help you install and use the UMA Scanner to get information from
 
 
 !! NOTE !!
-Running this for myself takes about 20 minutes for 200 entries, so go grab something to drink and put on a video :)
+Running this for myself takes about 15 minutes for 200 entries, so go grab something to drink and put on a video :)
 
 
 ## Step -1: [Optional] Add my data for the program before running your own
