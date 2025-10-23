@@ -43,5 +43,10 @@
         "keywords": ["end closer", "corner"],
         "color": "white",
         "spark_name": "End Closer Corners ○"
+    },
+    {
+        "keywords": ["goo", "ist", "feo"],
+        "color": "green",
+        "spark_name": "G00 1st. F\u221e;"
     }
 ]
