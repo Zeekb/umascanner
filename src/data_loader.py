@@ -11,7 +11,7 @@ def _load_json(path):
         return json.load(f)
 
 # --- Load Known Data ---
-KNOWN_RACERS = _load_json(os.path.join(DATA_FOLDER, "racers.json"))
+KNOWN_RUNNERS = _load_json(os.path.join(DATA_FOLDER, "runners.json"))
 KNOWN_SKILLS = _load_json(os.path.join(DATA_FOLDER, "skills.json"))
 _known_sparks_raw = _load_json(os.path.join(DATA_FOLDER, "sparks.json"))
 SPARK_CORRECTION_RULES = _load_json(os.path.join(DATA_FOLDER, "spark_correction_rules.json")) # New line

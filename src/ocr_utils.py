@@ -1,6 +1,6 @@
 import re
 from difflib import get_close_matches
-from data_loader import KNOWN_RACERS, KNOWN_SKILLS
+from data_loader import KNOWN_RUNNERS, KNOWN_SKILLS
 
 def fuzzy_match(text, candidates, cutoff=0.6):
     """Fuzzy match OCR text against known candidates."""
@@ -9,7 +9,7 @@ def fuzzy_match(text, candidates, cutoff=0.6):
     return match[0] if match else text
 
 def normalize_name(name):
-    return fuzzy_match(name, KNOWN_RACERS)
+    return fuzzy_match(name, KNOWN_RUNNERS)
 
 def normalize_skills(raw_skills):
     """Clean OCR skill text and fuzzy match against known list."""

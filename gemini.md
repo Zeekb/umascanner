@@ -22,7 +22,7 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 │   ├───all_runners.csv
 │   ├───conflicts.json
 │   ├───game_data
-│   │   ├───racers.json
+│   │   ├───runners.json
 │   │   ├───skill_types.json
 │   │   ├───skills.json
 │   │   ├───spark_correction_rules.json
@@ -59,7 +59,7 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 *   **`roi_detector.py`**: Automatically detects the regions of interest (ROIs) for spark information on combined screenshots.
 *   **`conflict_resolver.py`**: A PyQt5 GUI that launches when the `image_processor` detects conflicting data for an existing character, allowing the user to choose which data to keep.
 *   **`post_processing.py`**: Handles the logic for updating the main `all_runners.csv` file, comparing new data with existing data, and flagging conflicts.
-*   **`data_loader.py`**: Loads static game data, such as lists of known racers, skills, and sparks, from the `data/game_data` directory.
+*   **`data_loader.py`**: Loads static game data, such as lists of known runners, skills, and sparks, from the `data/game_data` directory.
 *   **`ocr_utils.py`**: Provides utility functions for the OCR process, primarily for cleaning and fuzzy-matching text against known game data.
 *   **`image_utils.py`**: Contains helper functions for common image manipulation tasks like loading images, cropping ROIs, and selecting layouts.
 *   **`schema.py`**: Defines the Python dataclasses used to structure the character data during processing.
@@ -75,7 +75,7 @@ UMA Scanner is a Python-based tool for extracting and analyzing data from screen
 *   **`input_images/`**: The folder where users should place their game screenshots for processing.
 *   **`processed_images/`**: After processing, the image folders are moved from `input_images` to this directory.
 *   **`game_data/`**: Contains JSON files with static game information used for OCR normalization and data enrichment.
-    *   **`racers.json`**: Contains data about known racers.
+    *   **`runners.json`**: Contains data about known runners.
     *   **`skill_types.json`**: Contains data about different skill types.
     *   **`skills.json`**: Contains data about known skills.
     *   **`spark_correction_rules.json`**: Defines rules for correcting spark data.

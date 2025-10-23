@@ -32,6 +32,9 @@ class CharacterData:
     rankings: Rankings = field(default_factory=Rankings)
     skills: List[str] = field(default_factory=list)
     sparks: List[Dict] = field(default_factory=list)
+    parent: str = ""
+    gp1: str = ""
+    gp2: str = ""
 
 def init_schema() -> CharacterData:
     """Return a fresh CharacterData dataclass instance."""
