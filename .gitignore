@@ -145,7 +145,7 @@ __marimo__/
 # Custom project-specific ignores
 
 # Generated data files
-/data/all_runners*.csv
+/data/all_runners.json
 
 # Generated data directories
 /data/input_images/*

@@ -1,112 +1,122 @@
+import pandas as pd
 import os
 import json
-import pandas as pd
-import logging
 
+# This is the custom formatter, which is correct and remains.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-logger = logging.getLogger(__name__)
 
-def update_all_runners(new_runners_df):
-    output_file = os.path.join(BASE_DIR, "data", "all_runners.csv")
+def format_json_with_compact_sparks(all_runners_data: list) -> str:
+    """
+    Custom JSON formatter for a readable, semi-compact output.
+    - Each runner entry is indented.
+    - The 'skills' array is an indented, multi-line list.
+    - The 'sparks' objects within their arrays are on single lines.
+    """
+    output_parts = []
+    for runner_index, runner_dict in enumerate(all_runners_data):
+        lines = []
+        lines.append("  {")
+        simple_keys = [k for k in runner_dict.keys() if k not in ['sparks', 'skills']]
+        for key_index, key in enumerate(simple_keys):
+            value = runner_dict[key]
+            value_str = json.dumps(value, ensure_ascii=False)
+            is_last_simple_key = (key_index == len(simple_keys) - 1)
+            comma = ""
+            if not is_last_simple_key or 'skills' in runner_dict or 'sparks' in runner_dict:
+                comma = ","
+            lines.append(f'    "{key}": {value_str}{comma}')
+        if 'skills' in runner_dict and runner_dict['skills']:
+            lines.append('    "skills": [')
+            skill_lines = [f'      {json.dumps(s, ensure_ascii=False)}' for s in runner_dict['skills']]
+            lines.append(",\n".join(skill_lines))
+            comma = "," if 'sparks' in runner_dict else ""
+            lines.append(f'    ]{comma}')
+        if 'sparks' in runner_dict:
+            lines.append('    "sparks": {')
+            sparks_data = runner_dict.get('sparks', {})
+            for spark_type_index, (spark_type, spark_list) in enumerate(sparks_data.items()):
+                compact_spark_lines = [f"        {json.dumps(s, ensure_ascii=False)}" for s in spark_list]
+                spark_block = ",\n".join(compact_spark_lines)
+                lines.append(f'      "{spark_type}": [\n{spark_block}\n      ]')
+                if spark_type_index < len(sparks_data) - 1:
+                    lines[-1] += ","
+            lines.append('    }')
+        lines.append("  }")
+        if runner_index < len(all_runners_data) - 1:
+            lines[-1] += ","
+        output_parts.append("\n".join(lines))
+    return "[\n" + "\n".join(output_parts) + "\n]\n"
 
+
+def update_all_runners(new_runners_df: pd.DataFrame):
+    """
+    Reads existing all_runners.json, detects conflicts, writes them to a file,
+    and updates the main JSON with ONLY non-conflicting new entries.
+    """
+    if new_runners_df.empty:
+        print("No new runners to update.")
+        return
+
+    output_file = os.path.join(BASE_DIR, "data", "all_runners.json")
+    conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
+    
     try:
-        existing_df = pd.read_csv(output_file, dtype={'entry_hash': str})
-        logger.info(f"Loaded existing joined data from {output_file}.")
-    except FileNotFoundError:
-        existing_df = pd.DataFrame()
-    except Exception as e:
-        logger.error(f"Error loading {output_file}: {e}. Starting with an empty DataFrame.")
+        with open(output_file, 'r', encoding='utf-8') as f:
+            existing_data_list = json.load(f)
+        existing_df = pd.DataFrame(existing_data_list)
+    except (FileNotFoundError, ValueError):
         existing_df = pd.DataFrame()
 
-    if not new_runners_df.empty:
-        if not existing_df.empty:
-            conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
-            conflicts = []
-            hashes_to_exclude_from_new = []
+    conflicts = []
+    hashes_with_conflicts = []
 
-            existing_df_indexed = existing_df.set_index('entry_hash')
-            new_runners_df_indexed = new_runners_df.set_index('entry_hash')
+    # --- Conflict Detection Logic ---
+    if not existing_df.empty and not new_runners_df.empty:
+        existing_indexed = existing_df.set_index('entry_hash')
+        new_indexed = new_runners_df.set_index('entry_hash')
+        common_hashes = new_indexed.index.intersection(existing_indexed.index)
 
-            common_hashes = new_runners_df_indexed.index.intersection(existing_df_indexed.index)
+        ignore_cols = ['entry_id', 'last_updated']
 
-            ignore_cols = ['entry_id', 'last_updated']
+        for hash_val in common_hashes:
+            existing_entry = existing_indexed.loc[hash_val].drop(ignore_cols, errors='ignore').to_dict()
+            new_entry = new_indexed.loc[hash_val].drop(ignore_cols, errors='ignore').to_dict()
 
-            for hash_val in common_hashes:
-                existing_entry = existing_df_indexed.loc[hash_val].drop(ignore_cols, errors='ignore')
-                new_entry = new_runners_df_indexed.loc[hash_val].drop(ignore_cols, errors='ignore')
+            if existing_entry != new_entry:
+                conflicts.append({
+                    'hash': hash_val,
+                    'existing': existing_indexed.loc[hash_val].to_dict(),
+                    'new': new_indexed.loc[hash_val].to_dict()
+                })
+                hashes_with_conflicts.append(hash_val)
 
-                type_order = {'representative': 0, 'legacy': 1}
-                color_order = {'blue': 0, 'pink': 1, 'green': 2, 'white': 3}
-                # Normalize sparks column before comparison
-                if 'sparks' in existing_entry and (pd.isna(existing_entry['sparks']) or existing_entry['sparks'] == ''):
-                    existing_entry['sparks'] = '[]'
-                else:
-                    try:
-                        sparks_list = json.loads(existing_entry['sparks'])
-                        sparks_list.sort(key=lambda s: (
-                            type_order.get(s['type'], 99),
-                            color_order.get(s['color'], 99),
-                            s['spark_name']
-                        ))
-                        existing_entry['sparks'] = json.dumps(sparks_list)
-                    except (json.JSONDecodeError, TypeError):
-                        pass # Keep original if not valid JSON
+    if conflicts:
+        print(f"Detected {len(conflicts)} conflicts. Writing to {conflicts_file}")
+        with open(conflicts_file, 'w', encoding='utf-8') as f:
+            json.dump(conflicts, f, indent=2)
+        
+        # Exclude conflicting entries from this update
+        new_runners_df = new_runners_df[~new_runners_df['entry_hash'].isin(hashes_with_conflicts)]
+        if new_runners_df.empty:
+            print("All new entries have conflicts. 'all_runners.json' will not be updated until resolved.")
+            return
+
+    # --- Merge and Save Non-Conflicting Data ---
+    updated_hashes = new_runners_df['entry_hash'].tolist()
     
-                if 'sparks' in new_entry and (pd.isna(new_entry['sparks']) or new_entry['sparks'] == ''):
-                    new_entry['sparks'] = '[]'
-                else:
-                    try:
-                        sparks_list = json.loads(new_entry['sparks'])
-                        sparks_list.sort(key=lambda s: (
-                            type_order.get(s['type'], 99),
-                            color_order.get(s['color'], 99),
-                            s['spark_name']
-                        ))
-                        new_entry['sparks'] = json.dumps(sparks_list)
-                    except (json.JSONDecodeError, TypeError):
-                        pass # Keep original if not valid JSON
+    if not existing_df.empty:
+        existing_df = existing_df[~existing_df['entry_hash'].isin(updated_hashes)]
+
+    combined_df = pd.concat([existing_df, new_runners_df], ignore_index=True)
+
+    combined_df['entry_id'] = pd.to_numeric(combined_df['entry_id'])
+    combined_df = combined_df.sort_values(by="entry_id").reset_index(drop=True)
+    combined_df['entry_id'] = combined_df['entry_id'].astype(str)
+
+    final_data_list = combined_df.to_dict(orient='records')
+    formatted_json_string = format_json_with_compact_sparks(final_data_list)
     
-                if not existing_entry.fillna('').to_dict() == new_entry.fillna('').to_dict():
-                    conflicts.append({
-                        'hash': hash_val,
-                        'existing': existing_df_indexed.loc[hash_val].fillna('').to_dict(),
-                        'new': new_runners_df_indexed.loc[hash_val].fillna('').to_dict()
-                    })
-                    hashes_to_exclude_from_new.append(hash_val)
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(formatted_json_string)
 
-            if conflicts:
-                existing_conflicts = []
-                if os.path.exists(conflicts_file):
-                    with open(conflicts_file, 'r') as f:
-                        try:
-                            existing_conflicts = json.load(f)
-                        except json.JSONDecodeError:
-                            logger.warning("Could not decode existing conflicts file. It will be overwritten.")
-                
-                existing_conflict_hashes = {c['hash'] for c in existing_conflicts}
-                for conflict in conflicts:
-                    if conflict['hash'] not in existing_conflict_hashes:
-                        existing_conflicts.append(conflict)
-                
-                with open(conflicts_file, 'w') as f:
-                    json.dump(existing_conflicts, f, indent=4)
-                logger.warning(f"Found {len(conflicts)} new conflicts. Total unresolved conflicts: {len(existing_conflicts)}. Please resolve them using the UI.")
-
-            if hashes_to_exclude_from_new:
-                new_runners_df = new_runners_df[~new_runners_df['entry_hash'].isin(hashes_to_exclude_from_new)]
-
-            combined_df = pd.concat([existing_df, new_runners_df], ignore_index=True)
-            combined_df.drop_duplicates(subset=['entry_hash'], keep='last', inplace=True)
-        else:
-            combined_df = new_runners_df
-    else:
-        combined_df = existing_df
-
-    if not combined_df.empty:
-        if 'entry_id' in combined_df.columns:
-            combined_df['entry_id'] = pd.to_numeric(combined_df['entry_id'])
-            combined_df.sort_values('entry_id', inplace=True)
-
-        combined_df = combined_df.drop(columns=['folder_name'], errors='ignore')
-        combined_df.to_csv(output_file, index=False)
-        logger.info(f"Successfully updated {output_file}")
+    print(f"Successfully updated {output_file} with {len(new_runners_df)} new/updated entries.")

@@ -3,59 +3,54 @@ import pandas as pd
 import json
 import os
 from PyQt5.QtWidgets import (
-    QApplication, QDialog, QWidget, QVBoxLayout, QHBoxLayout, 
-    QLabel, QPushButton, QGroupBox, QGridLayout, QCheckBox, QSizePolicy,
-    QButtonGroup
+    QApplication, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGroupBox, 
+    QGridLayout, QSizePolicy, QButtonGroup, QWidget, QScrollArea, QRadioButton
 )
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
-from datetime import datetime
+
+# --- Re-use the custom formatter from post_processing.py ---
+def format_json_with_compact_sparks(all_runners_data: list) -> str:
+    # [This is the exact same function from post_processing.py]
+    output_parts = []
+    for runner_index, runner_dict in enumerate(all_runners_data):
+        lines = []
+        lines.append("  {")
+        simple_keys = [k for k in runner_dict.keys() if k not in ['sparks', 'skills']]
+        for key_index, key in enumerate(simple_keys):
+            value = runner_dict[key]
+            value_str = json.dumps(value, ensure_ascii=False)
+            is_last_simple_key = (key_index == len(simple_keys) - 1)
+            comma = ""
+            if not is_last_simple_key or 'skills' in runner_dict or 'sparks' in runner_dict:
+                comma = ","
+            lines.append(f'    "{key}": {value_str}{comma}')
+        if 'skills' in runner_dict and runner_dict['skills']:
+            lines.append('    "skills": [')
+            skill_lines = [f'      {json.dumps(s, ensure_ascii=False)}' for s in runner_dict['skills']]
+            lines.append(",\n".join(skill_lines))
+            comma = "," if 'sparks' in runner_dict else ""
+            lines.append(f'    ]{comma}')
+        if 'sparks' in runner_dict:
+            lines.append('    "sparks": {')
+            sparks_data = runner_dict.get('sparks', {})
+            for spark_type_index, (spark_type, spark_list) in enumerate(sparks_data.items()):
+                compact_spark_lines = [f"        {json.dumps(s, ensure_ascii=False)}" for s in spark_list]
+                spark_block = ",\n".join(compact_spark_lines)
+                lines.append(f'      "{spark_type}": [\n{spark_block}\n      ]')
+                if spark_type_index < len(sparks_data) - 1:
+                    lines[-1] += ","
+            lines.append('    }')
+        lines.append("  }")
+        if runner_index < len(all_runners_data) - 1:
+            lines[-1] += ","
+        output_parts.append("\n".join(lines))
+    return "[\n" + "\n".join(output_parts) + "\n]\n"
 
 # --- Path Configuration ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# --- Themed Colors and Styles ---
-UMA_LIGHT_BG = "#FFF8E1"
-UMA_MEDIUM_BG = "#FFECB3"
-UMA_DARK_BG = "#FFD54F"
-UMA_ACCENT_PINK = "#FF80AB"
-UMA_ACCENT_BLUE = "#82B1FF"
-UMA_TEXT_DARK = "#424242"
-UMA_TEXT_LIGHT = "#FFFFFF"
-
-QSS = f"""
-QDialog {{
-    background-color: {UMA_LIGHT_BG};
-}}
-QGroupBox {{
-    background-color: {UMA_MEDIUM_BG};
-    border: 1px solid {UMA_DARK_BG};
-    border-radius: 5px;
-    margin-top: 1ex;
-    font-weight: bold;
-    color: {UMA_TEXT_DARK};
-}}
-QGroupBox::title {{
-    subcontrol-origin: margin;
-    subcontrol-position: top center;
-    padding: 0 3px;
-    background-color: {UMA_DARK_BG};
-    color: {UMA_TEXT_LIGHT};
-    border-radius: 3px;
-}}
-QLabel {{
-    color: {UMA_TEXT_DARK};
-}}
-QPushButton {{
-    background-color: {UMA_ACCENT_BLUE};
-    color: {UMA_TEXT_LIGHT};
-    border-radius: 5px;
-    padding: 5px 10px;
-}}
-QPushButton:hover {{
-    background-color: {UMA_ACCENT_PINK};
-}}
-"""
+# --- (Your QSS and Color definitions would go here) ---
 
 def clear_layout(layout):
     if layout is not None:
@@ -71,226 +66,266 @@ class ConflictResolutionDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Conflict Resolution")
-        self.setGeometry(100, 100, 1600, 800)
+        self.setGeometry(100, 100, 1600, 900)
         
         self.conflicts = []
         self.current_conflict_index = 0
-        self.spark_choice_widgets = {}
+        self.choice_widgets = {}
         self.load_conflicts()
         
         self.init_ui()
         if self.conflicts:
-            self.display_conflict(self.current_conflict_index)
+            self.display_conflict(0)
         else:
-            self.info_label.setText("No conflicts found.")
+            self.main_layout.addWidget(QLabel("No conflicts found."))
             self.save_button.setEnabled(False)
 
     def load_conflicts(self):
         self.conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
         if os.path.exists(self.conflicts_file):
-            with open(self.conflicts_file, 'r') as f:
-                try:
-                    self.conflicts = json.load(f)
-                except json.JSONDecodeError:
-                    self.conflicts = []
+            with open(self.conflicts_file, 'r', encoding='utf-8') as f:
+                self.conflicts = json.load(f)
 
     def init_ui(self):
-        main_layout = QVBoxLayout(self)
+        # --- Main Dialog Layout (this holds everything) ---
+        dialog_layout = QVBoxLayout(self)
+
+        # --- Scroll Area Setup ---
+        self.scroll_area = QScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)
+        
+        scroll_content_widget = QWidget()
+        self.main_layout = QVBoxLayout(scroll_content_widget) # This layout is for scrollable content
+        self.scroll_area.setWidget(scroll_content_widget)
+        
+        # Add the scroll area to the main dialog layout
+        dialog_layout.addWidget(self.scroll_area)
+        # --- END Scroll Area Setup ---
+
         self.info_label = QLabel()
-        self.info_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        main_layout.addWidget(self.info_label)
+        self.main_layout.addWidget(self.info_label)
 
-        basic_info_group = QGroupBox("Basic Info")
-        self.basic_info_layout = QGridLayout(basic_info_group)
-        main_layout.addWidget(basic_info_group)
-
-        key_group = QGroupBox("Color Key")
+        key_group = QGroupBox("Sparks Legend")
         key_layout = QHBoxLayout(key_group)
         key_layout.addWidget(QLabel('<font color="black">Black: Unchanged</font>'))
         key_layout.addWidget(QLabel('<font color="green">Green: New Spark</font>'))
         key_layout.addWidget(QLabel('<font color="red">Red: Spark Not Present in New</font>'))
-        key_layout.addWidget(QLabel('<font color="blue">Blue: Count Changed</font>'))
+        key_layout.addWidget(QLabel('<font color="blue">Blue: Count/Value Changed</font>'))
         key_layout.addStretch()
-        main_layout.addWidget(key_group)
+        self.main_layout.addWidget(key_group)
+
+        # Main container for basic, non-stat, non-apt fields
+        self.fields_group = QGroupBox("Conflicting Fields")
+        self.fields_layout = QGridLayout(self.fields_group)
+        self.main_layout.addWidget(self.fields_group)
         
-        self.sparks_group = QGroupBox("Sparks")
+        # Dedicated group for stats
+        self.stats_group = QGroupBox("Conflicting Stats")
+        self.stats_layout = QHBoxLayout(self.stats_group)
+        self.main_layout.addWidget(self.stats_group)
+
+        # Dedicated group for aptitudes
+        self.apts_group = QGroupBox("Conflicting Aptitudes")
+        self.apts_layout = QGridLayout(self.apts_group)
+        self.main_layout.addWidget(self.apts_group)
+        
+        # Dedicated group for skills
+        self.skills_group = QGroupBox("Conflicting Skills")
+        self.skills_layout = QVBoxLayout(self.skills_group)
+        self.main_layout.addWidget(self.skills_group)
+        
+        # Dedicated group for sparks
+        self.sparks_group = QGroupBox("Conflicting Sparks")
         self.sparks_layout = QGridLayout(self.sparks_group)
-        main_layout.addWidget(self.sparks_group)
+        self.main_layout.addWidget(self.sparks_group)
 
-
-
+        # Buttons are added to the main dialog_layout, NOT the scrollable main_layout.
         button_layout = QHBoxLayout()
         button_layout.addStretch()
         self.save_button = QPushButton("Save and Resolve Next")
         self.save_button.clicked.connect(self.save_resolution)
         button_layout.addWidget(self.save_button)
-        main_layout.addLayout(button_layout)
+        dialog_layout.addLayout(button_layout) # This is the crucial fix
 
-    # In conflict_resolver.py, function format_and_diff_sparks
-    def format_and_diff_sparks(self, existing_sparks_data, new_sparks_data):
-        def parse_sparks(sparks_data):
-            if not sparks_data: return {}
-            try:
-                sparks_list = json.loads(sparks_data) if isinstance(sparks_data, str) else sparks_data
-                # The key is now just the spark's origin (type)
-                # The value is a list of sparks for that origin
-                parsed = {"parent": [], "grandparent_1": [], "grandparent_2": []}
-                for s in sparks_list:
-                    if s['type'] in parsed:
-                        parsed[s['type']].append(s)
-                return parsed
-            except (json.JSONDecodeError, TypeError): return {}
-
-        existing_sparks = parse_sparks(existing_sparks_data)
-        new_sparks = parse_sparks(new_sparks_data)
-        
-        diff_results = {}
-        
-        # Iterate through the three main types
-        for spark_type in ["parent", "grandparent_1", "grandparent_2"]:
-            existing_map = {(s['color'], s['spark_name']): s['count'] for s in existing_sparks.get(spark_type, [])}
-            new_map = {(s['color'], s['spark_name']): s['count'] for s in new_sparks.get(spark_type, [])}
-            all_spark_keys = sorted(list(set(existing_map.keys()) | set(new_map.keys())))
-            
-            diff_results[spark_type] = {'existing': [], 'new': []}
-
-            for color, name in all_spark_keys:
-                existing_count = existing_map.get((color, name))
-                new_count = new_map.get((color, name))
-                
-                # This diffing logic remains largely the same
-                if existing_count is not None and new_count is not None:
-                    if existing_count == new_count:
-                        diff_results[spark_type]['existing'].append(f'<font color="black">{name} {existing_count}*</font>')
-                        diff_results[spark_type]['new'].append(f'<font color="black">{name} {new_count}*</font>')
-                    else:
-                        diff_results[spark_type]['existing'].append(f'<font color="blue">{name} {existing_count}*</font>')
-                        diff_results[spark_type]['new'].append(f'<font color="blue">{name} {new_count}*</font>')
-                elif existing_count is not None:
-                    diff_results[spark_type]['existing'].append(f'<font color="red">{name} {existing_count}*</font>')
-                elif new_count is not None:
-                    diff_results[spark_type]['new'].append(f'<font color="green">{name} {new_count}*</font>')
-
-        return diff_results
+    def diff_sparks(self, existing_sparks, new_sparks):
+        # ... (This helper function remains the same)
+        diffs = {}
+        for spark_type in ["parent", "gp1", "gp2"]:
+            e_map = {(s['color'], s['spark_name']): s['count'] for s in existing_sparks.get(spark_type, [])}
+            n_map = {(s['color'], s['spark_name']): s['count'] for s in new_sparks.get(spark_type, [])}
+            all_keys = sorted(list(set(e_map.keys()) | set(n_map.keys())))
+            e_display, n_display = [], []
+            for color, name in all_keys:
+                e_count, n_count = e_map.get((color, name)), n_map.get((color, name))
+                if e_count and n_count:
+                    tag = "black" if e_count == n_count else "blue"
+                    e_display.append(f'<font color="{tag}">{name}({e_count})</font>')
+                    n_display.append(f'<font color="{tag}">{name}({n_count})</font>')
+                elif e_count:
+                    e_display.append(f'<font color="red">{name}({e_count})</font>')
+                elif n_count:
+                    n_display.append(f'<font color="green">{name}({n_count})</font>')
+            diffs[spark_type] = (", ".join(e_display), ", ".join(n_display))
+        return diffs
 
     def display_conflict(self, index):
-        clear_layout(self.basic_info_layout)
-        clear_layout(self.sparks_layout)
+        # Clear all layouts before populating
+        for layout in [self.fields_layout, self.stats_layout, self.apts_layout, self.skills_layout, self.sparks_layout]:
+            clear_layout(layout)
+        self.choice_widgets = {}
 
         self.current_conflict_index = index
-        self.info_label.setText(f"Conflict {index + 1} of {len(self.conflicts)}")
-
         conflict = self.conflicts[index]
-        existing_data = conflict['existing']
-        new_data = conflict['new']
+        existing, new = conflict['existing'], conflict['new']
+        self.info_label.setText(f"<h2>Conflict {index + 1} of {len(self.conflicts)} for: {new.get('name', 'N/A')}</h2> (Hash: {conflict['hash']})")
 
-        self.basic_info_layout.addWidget(QLabel("<b>Field</b>"), 0, 0)
-        self.basic_info_layout.addWidget(QLabel("<b>Existing</b>"), 0, 1)
-        self.basic_info_layout.addWidget(QLabel("<b>New</b>"), 0, 2)
-        info_fields = ['name', 'score', 'stats', 'last_updated']
-        for i, field in enumerate(info_fields):
-            self.basic_info_layout.addWidget(QLabel(f"{field.title()}:"), i + 1, 0)
-            if field == 'stats':
-                existing_val = ", ".join([str(existing_data.get(s, '')) for s in ['speed', 'stamina', 'power', 'guts', 'wit']])
-                new_val = ", ".join([str(new_data.get(s, '')) for s in ['speed', 'stamina', 'power', 'guts', 'wit']])
-            else:
-                existing_val, new_val = existing_data.get(field, ''), new_data.get(field, '')
-            if field == 'last_updated':
-                try: existing_val = datetime.strptime(existing_val, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %I:%M %p")
-                except (ValueError, TypeError): pass
-                try: new_val = datetime.strptime(new_val, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d %I:%M %p")
-                except (ValueError, TypeError): pass
-            self.basic_info_layout.addWidget(QLabel(str(existing_val)), i + 1, 1)
-            self.basic_info_layout.addWidget(QLabel(str(new_val)), i + 1, 2)
+        # Define key categories
+        stat_keys = ['speed', 'stamina', 'power', 'guts', 'wit']
+        apt_keys = sorted([k for k in new if k.startswith('apt_')])
+        basic_keys = ['name', 'score', 'gp1', 'gp2']
+        complex_keys = ['skills', 'sparks']
 
-        self.spark_choice_widgets = {}
-        self.sparks_layout.addWidget(QLabel("<b>Category</b>"), 0, 0)
-        self.sparks_layout.addWidget(QLabel("<b>Existing</b>"), 0, 1)
-        self.sparks_layout.addWidget(QLabel("<b>New</b>"), 0, 2)
-        self.sparks_layout.setColumnStretch(1, 1)
-        self.sparks_layout.setColumnStretch(2, 1)
+        # --- Populate Basic Info ---
+        self.fields_group.setVisible(False)
+        field_row = 0
+        for key in basic_keys:
+            if existing.get(key) != new.get(key):
+                self.fields_group.setVisible(True)
+                self.fields_layout.addWidget(QLabel(f"<b>{key.replace('_', ' ').title()}:</b>"), field_row, 0)
+                self.fields_layout.addLayout(self.create_choice_row(key, str(existing.get(key)), str(new.get(key))), field_row, 1)
+                field_row += 1
 
-        diff_results = self.format_and_diff_sparks(existing_data.get('sparks'), new_data.get('sparks'))
-        row = 1
-        has_sparks = False
-        for category, data in diff_results.items():
-            if not data['existing'] and not data['new']: continue
-            has_sparks = True
-            cat_label = QLabel(f"<b>{category.replace('_', ' ').title()}:</b>")
-            existing_label, new_label = QLabel(", ".join(data['existing'])), QLabel(", ".join(data['new']))
-            existing_label.setWordWrap(True); new_label.setWordWrap(True)
-            cb_existing = QCheckBox()
-            cb_new = QCheckBox()
-            cb_existing.setChecked(True)
-            button_group = QButtonGroup(self)
-            button_group.addButton(cb_existing)
-            button_group.addButton(cb_new)
-            button_group.setExclusive(True)
-            self.spark_choice_widgets[category] = cb_existing
-            existing_widget = QWidget()
-            existing_layout = QHBoxLayout(existing_widget)
-            existing_layout.addWidget(cb_existing)
-            existing_layout.addWidget(existing_label, 1)
-            new_widget = QWidget()
-            new_layout = QHBoxLayout(new_widget)
-            new_layout.addWidget(cb_new)
-            new_layout.addWidget(new_label, 1)
-            self.sparks_layout.addWidget(cat_label, row, 0)
-            self.sparks_layout.addWidget(existing_widget, row, 1)
-            self.sparks_layout.addWidget(new_widget, row, 2)
-            row += 1
+        # --- Populate Stats Horizontally ---
+        self.stats_group.setVisible(False)
+        stats_have_conflict = any(existing.get(k) != new.get(k) for k in stat_keys)
+        if stats_have_conflict:
+            self.stats_group.setVisible(True)
+            for key in stat_keys:
+                self.stats_layout.addLayout(self.create_vertical_choice_column(key, str(existing.get(key)), str(new.get(key))))
         
-        if not has_sparks:
-            self.sparks_layout.addWidget(QLabel("No sparks found for this entry."), 1, 0, 1, 3)
+        # --- Populate Aptitudes ---
+        self.apts_group.setVisible(False)
+        apt_row = 0
+        for key in apt_keys:
+            if existing.get(key) != new.get(key):
+                self.apts_group.setVisible(True)
+                self.apts_layout.addWidget(QLabel(f"<b>{key.replace('apt_', '').title()}:</b>"), apt_row, 0)
+                self.apts_layout.addLayout(self.create_choice_row(key, str(existing.get(key)), str(new.get(key))), apt_row, 1)
+                apt_row += 1
+
+        # --- Populate Skills ---
+        self.skills_group.setVisible(False)
+        if existing.get('skills') != new.get('skills'):
+            self.skills_group.setVisible(True)
+            e_skills, n_skills = set(existing.get('skills', [])), set(new.get('skills', []))
+            e_display = sorted([f'<font color="red">{s}</font>' for s in e_skills - n_skills] + [s for s in e_skills & n_skills])
+            n_display = sorted([f'<font color="green">{s}</font>' for s in n_skills - e_skills] + [s for s in n_skills & e_skills])
+            self.skills_layout.addLayout(self.create_choice_row('skills', "<br>".join(e_display), "<br>".join(n_display)))
+
+        # --- Populate Sparks ---
+        self.sparks_group.setVisible(False)
+        if existing.get('sparks') != new.get('sparks'):
+            self.sparks_group.setVisible(True)
+            spark_diffs = self.diff_sparks(existing.get('sparks',{}), new.get('sparks',{}))
+            spark_row = 0
+            for spark_type in ["parent", "gp1", "gp2"]:
+                e_text, n_text = spark_diffs[spark_type]
+                if e_text != n_text:
+                    self.sparks_layout.addWidget(QLabel(f"<b>{spark_type.title()}:</b>"), spark_row, 0)
+                    self.sparks_layout.addLayout(self.create_choice_row(spark_type, e_text, n_text), spark_row, 1)
+                    spark_row += 1
+
+    def create_choice_row(self, key, existing_text, new_text):
+        # ... (This helper function remains the same)
+        layout = QHBoxLayout()
+        group = QButtonGroup(self)
+        rb_existing = QRadioButton("Use Existing")
+        rb_existing.setChecked(True)
+        lbl_existing = QLabel(f'<font color="blue">{existing_text}</font>')
+        lbl_existing.setWordWrap(True)
+        vbox_existing = QVBoxLayout()
+        vbox_existing.addWidget(rb_existing); vbox_existing.addWidget(lbl_existing)
+        rb_new = QRadioButton("Use New")
+        lbl_new = QLabel(f'<font color="blue">{new_text}</font>')
+        lbl_new.setWordWrap(True)
+        vbox_new = QVBoxLayout()
+        vbox_new.addWidget(rb_new); vbox_new.addWidget(lbl_new)
+        group.addButton(rb_existing); group.addButton(rb_new)
+        layout.addLayout(vbox_existing, 1); layout.addLayout(vbox_new, 1)
+        self.choice_widgets[key] = rb_existing
+        return layout
+
+    def create_vertical_choice_column(self, key, existing_text, new_text):
+        layout = QVBoxLayout()
+        group = QButtonGroup(self)
+        
+        lbl_key = QLabel(f"<b>{key.title()}</b>")
+        lbl_key.setAlignment(Qt.AlignCenter)
+        layout.addWidget(lbl_key)
+
+        rb_existing = QRadioButton(f"Existing: {existing_text}")
+        rb_existing.setChecked(True)
+        
+        rb_new = QRadioButton(f"New: {new_text}")
+        
+        # Color the text if they are different
+        if existing_text != new_text:
+            rb_existing.setText(f'Existing: <font color="blue">{existing_text}</font>')
+            rb_new.setText(f'New: <font color="blue">{new_text}</font>')
+
+        group.addButton(rb_existing); group.addButton(rb_new)
+        layout.addWidget(rb_existing); layout.addWidget(rb_new)
+        layout.addStretch()
+
+        self.choice_widgets[key] = rb_existing
+        return layout
 
     def save_resolution(self):
-        if not (0 <= self.current_conflict_index < len(self.conflicts)): return
-
         conflict = self.conflicts[self.current_conflict_index]
-        resolved_entry, existing_data, new_data = conflict['new'].copy(), conflict['existing'], conflict['new']
+        resolved_entry = conflict['new'].copy() # Start with the new entry
+
+        # Overwrite with "existing" choices where selected
+        for key, rb_existing in self.choice_widgets.items():
+            if rb_existing.isChecked():
+                if key in ["parent", "gp1", "gp2"]: # Handle granular sparks
+                    if 'sparks' not in resolved_entry: resolved_entry['sparks'] = {}
+                    resolved_entry['sparks'][key] = conflict['existing']['sparks'].get(key)
+                else: # Handle all other fields
+                    resolved_entry[key] = conflict['existing'].get(key)
         
-        resolved_sparks = []
-        existing_sparks_list = json.loads(existing_data.get('sparks', '[]') or '[]')
-        new_sparks_list = json.loads(new_data.get('sparks', '[]') or '[]')
+        # For sparks, ensure non-conflicting types are carried over from the 'new' entry
+        if 'sparks' in resolved_entry and 'sparks' in conflict['new']:
+            for spark_type in ["parent", "gp1", "gp2"]:
+                if spark_type not in self.choice_widgets: # This type had no conflict
+                    resolved_entry['sparks'][spark_type] = conflict['new']['sparks'].get(spark_type)
 
-        # The key of spark_choice_widgets is now "parent", "grandparent_1", etc.
-        for spark_type, checkbox in self.spark_choice_widgets.items():
-            source_list = existing_sparks_list if checkbox.isChecked() else new_sparks_list
-            for spark in source_list:
-                if spark.get('type') == spark_type:
-                    resolved_sparks.append(spark)
+        # --- SAVE TO JSON ---
+        all_runners_file = os.path.join(BASE_DIR, 'data', 'all_runners.json')
+        with open(all_runners_file, 'r', encoding='utf-8') as f:
+            all_data = json.load(f)
+        
+        for i, entry in enumerate(all_data):
+            if entry.get('entry_hash') == conflict['hash']:
+                all_data[i] = resolved_entry
+                break
+        
+        with open(all_runners_file, 'w', encoding='utf-8') as f:
+            f.write(format_json_with_compact_sparks(all_data))
 
-        resolved_entry['sparks'] = json.dumps(resolved_sparks)
-
-        numeric_cols = ['entry_id', 'score', 'speed', 'stamina', 'power', 'guts', 'wit']
-        for col in numeric_cols:
-            if col in resolved_entry:
-                try:
-                    resolved_entry[col] = int(resolved_entry[col])
-                except (ValueError, TypeError):
-                    resolved_entry[col] = 0
-
-        all_runners_file = os.path.join(BASE_DIR, 'data', 'all_runners.csv')
-        df = pd.read_csv(all_runners_file, dtype={'entry_hash': str})
-        row_index = df.index[df['entry_hash'] == conflict['hash']].tolist()
-        if row_index:
-            idx = row_index[0]
-            for col, value in resolved_entry.items():
-                if col in df.columns: df.loc[idx, col] = value
-            df.to_csv(all_runners_file, index=False)
-
+        # --- Update conflicts file ---
         self.conflicts.pop(self.current_conflict_index)
-        with open(self.conflicts_file, 'w') as f: json.dump(self.conflicts, f, indent=4)
+        with open(self.conflicts_file, 'w', encoding='utf-8') as f:
+            json.dump(self.conflicts, f, indent=2)
 
         if not self.conflicts:
-            self.info_label.setText("All conflicts resolved."); self.accept()
+            self.info_label.setText("<h2>All conflicts resolved!</h2>"); self.accept()
         else:
             self.display_conflict(self.current_conflict_index % len(self.conflicts))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     app.setFont(QFont("Calibri", 12))
-    app.setStyleSheet(QSS)
+    # app.setStyleSheet(QSS)
     dialog = ConflictResolutionDialog()
     if dialog.conflicts:
         dialog.exec_()

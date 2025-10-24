@@ -344,7 +344,20 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
         except Exception as e:
             logger.error(f"[ERROR] Main processing loop failed on ROI for {folder_name}: {e}")
 
-    character_data.sparks = final_sparks_list
+    grouped_sparks = {"parent": [], "gp1": [], "gp2": []}
+    for spark_info in final_sparks_list:
+        spark_type = spark_info.get("type")
+        if spark_type in grouped_sparks:
+            # Create a new dictionary for the spark, excluding the now-redundant 'type' key.
+            new_spark_entry = {
+                "color": spark_info.get("color"),
+                "spark_name": spark_info.get("spark_name"),
+                "count": spark_info.get("count")
+            }
+            grouped_sparks[spark_type].append(new_spark_entry)
+
+    # Assign the newly structured dictionary to character_data.
+    character_data.sparks = grouped_sparks
     return folder_name, character_data
 
 def processing_worker(q, final_results, lock, reader):
@@ -373,54 +386,53 @@ def _move_processed_folders(folder_names):
         shutil.move(source_path, dest_path)
         logger.info(f"Moved {folder_name} to {COMPLETED_FOLDER}")
 
+# --- IN image_processor.py ---
+
 def _create_new_runners_dataframe(final_results):
     """
     Transforms the processed character data into a pandas DataFrame, assigning new or
-    existing entry IDs based on a hash of the folder and character name.
+    existing entry IDs based on a hash of the folder and character name from all_runners.json.
     """
-    logger.info("\n=== Step 4: Creating new runners DataFrame ===")
+    logger.info("\n=== Step 4: Creating new runners DataFrame from JSON ===")
     if not final_results:
         logger.info("No new results to process.")
         return pd.DataFrame()
 
-    all_runners_output_file = os.path.join(BASE_DIR, "data", "all_runners.csv")
+    all_runners_output_file = os.path.join(BASE_DIR, "data", "all_runners.json")
     try:
-        existing_all_runners_df = pd.read_csv(all_runners_output_file, dtype={'entry_id': str, 'entry_hash': str})
-    except FileNotFoundError:
+        existing_all_runners_df = pd.read_json(all_runners_output_file, dtype={'entry_id': str, 'entry_hash': str})
+        if existing_all_runners_df.empty:
+            existing_all_runners_df = pd.DataFrame(columns=['entry_id', 'entry_hash'])
+    except (FileNotFoundError, ValueError):
         existing_all_runners_df = pd.DataFrame(columns=['entry_id', 'entry_hash'])
 
-    # Create a mapping of existing hashes to IDs to maintain consistency.
     entry_hash_to_id = pd.Series(existing_all_runners_df.entry_id.values, index=existing_all_runners_df.entry_hash).to_dict()
     numeric_ids = pd.to_numeric(existing_all_runners_df['entry_id'], errors='coerce').dropna()
     next_entry_id = int(numeric_ids.max()) + 1 if not numeric_ids.empty else 1
 
     new_runners_rows = []
-    # Convert each processed character into a row for the DataFrame.
     for folder_name, character_data in final_results.items():
         if not character_data.name: continue
 
-        # Generate a hash to uniquely identify this entry.
         current_entry_hash = hashlib.md5(f"{folder_name}_{character_data.name}".encode("utf-8")).hexdigest()
         entry_id = entry_hash_to_id.get(current_entry_hash, str(next_entry_id))
         if entry_id == str(next_entry_id): next_entry_id += 1
 
         row = {
             "entry_id": entry_id,
-            "name": character_data.name,
-            "score": character_data.score,
+            "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "entry_hash": current_entry_hash,
-            "folder_name": folder_name,
-            "last_updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "name": character_data.name,
+            "score": character_data.score
         }
 
-        # Flatten nested data structures (stats, rankings, skills) into the row.
         for stat_name, value in character_data.stats.__dict__.items(): row[stat_name] = value
         for category, sub in character_data.rankings.__dict__.items():
-            for subcat, grade in sub.items(): row[f"rank_{subcat}"] = grade
+            for subcat, grade in sub.items(): row[f"apt_{subcat}"] = grade
         row["gp1"] = character_data.gp1
         row["gp2"] = character_data.gp2
-        row["skills"] = "|".join(character_data.skills)
-        row["sparks"] = json.dumps(character_data.sparks)
+        row["skills"] = character_data.skills
+        row["sparks"] = character_data.sparks
         new_runners_rows.append(row)
 
     return pd.DataFrame(new_runners_rows)
