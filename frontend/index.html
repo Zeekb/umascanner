@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UMA Analyzer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Tab Buttons -->
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
+            <button class="tab-button" data-tab="aptitude-summary">Aptitude Summary</button>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="filter-panel">
+            <div class="filter-section">
+                <div class="filter-group">
+                    <label for="filter-runner">Runner:</label>
+                    <select id="filter-runner"></select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-sort">Sort By:</label>
+                    <select id="filter-sort"></select>
+                    <select id="filter-sort-direction">
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
+                    </select>
+                </div>
+                 <div class="filter-group">
+                    <label for="filter-rep">Parent Sparks Only:</label>
+                    <input type="checkbox" id="filter-rep">
+                </div>
+            </div>
+            <div class="filter-section sliders">
+                <div class="slider-container">
+                    <label>Spd: <span id="val-speed">0</span></label>
+                    <input type="range" id="filter-speed" min="0" max="1800" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Stm: <span id="val-stamina">0</span></label>
+                    <input type="range" id="filter-stamina" min="0" max="1800" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Pow: <span id="val-power">0</span></label>
+                    <input type="range" id="filter-power" min="0" max="1800" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Gts: <span id="val-guts">0</span></label>
+                    <input type="range" id="filter-guts" min="0" max="1800" value="0">
+                </div>
+                <div class="slider-container">
+                    <label>Wit: <span id="val-wit">0</span></label>
+                    <input type="range" id="filter-wit" min="0" max="1800" value="0">
+                </div>
+            </div>
+             <div class="filter-section">
+                <div class="filter-group">
+                    <label for="filter-blue-spark">Blue Spark:</label>
+                    <select id="filter-blue-spark"></select>
+                    <label for="min-blue">Min:</label>
+                    <select id="min-blue"></select>
+                </div>
+                 <div class="filter-group">
+                    <label for="filter-pink-spark">Pink Spark:</label>
+                    <select id="filter-pink-spark"></select>
+                    <label for="min-pink">Min:</label>
+                    <select id="min-pink"></select>
+                </div>
+            </div>
+             <div class="filter-section" id="aptitude-filters">
+                <div class="filter-group">
+                    <label>Aptitudes:</label>
+                    <select id="apt-turf"><option value="">Turf</option></select>
+                    <select id="apt-dirt"><option value="">Dirt</option></select>
+                    <select id="apt-mile"><option value="">Mile</option></select>
+                    <select id="apt-long"><option value="">Long</option></select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Content Area -->
+        <div class="table-container">
+            <!-- Parent Summary Tab -->
+            <div class="tab-content active" id="parent-summary">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Stats</th>
+                            <th>Blue Sparks</th>
+                            <th>Pink Sparks</th>
+                            <th>White Sparks</th>
+                            <th>Grandparents</th>
+                        </tr>
+                    </thead>
+                    <tbody id="parent-summary-body"></tbody>
+                </table>
+            </div>
+            <!-- Aptitude Summary Tab -->
+            <div class="tab-content" id="aptitude-summary">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Stats</th>
+                            <th>Turf</th>
+                            <th>Dirt</th>
+                            <th>Sprint</th>
+                            <th>Mile</th>
+                            <th>Medium</th>
+                            <th>Long</th>
+                            <th>Front</th>
+                            <th>Pace</th>
+                            <th>Late</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody id="aptitude-summary-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

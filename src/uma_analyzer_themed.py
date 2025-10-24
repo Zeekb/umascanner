@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import (
     QTabWidget, QTableWidget, QTableWidgetItem, QDockWidget, QLabel,
     QComboBox, QLineEdit, QCheckBox, QSlider, QHeaderView, QPushButton,
     QStyledItemDelegate, QStyle, QFrame, QDialog, QScrollArea, QGroupBox, QGridLayout, QRadioButton, QGraphicsDropShadowEffect,
-    QSizePolicy, QMessageBox, QCompleter, QAbstractItemView
+    QSizePolicy, QMessageBox, QCompleter, QAbstractItemView, QListWidget
 )
 from PyQt5.QtGui import QColor, QTextDocument, QFont, QPixmap, QPainter, QPainterPath, QPen, QFontMetrics, QIcon, QLinearGradient, QTextOption
 from PyQt5.QtCore import Qt, QRect, QEvent, QRectF
@@ -260,14 +260,14 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.data = self.load_data()
         self.spark_info = self.load_spark_designations()
         self.skill_types = self.load_skill_types()
-        self.racers = self.load_racers()
+        self.runners = self.load_runners()
         self.open_dialogs = []
         self.max_total_white_sparks = 0
         self.max_parent_white_sparks = 0 
         self.spark_filter_widgets = []
         self.aptitude_filter_widgets = []
 
-        if self.data is None or self.spark_info is None or self.racers is None or self.skill_types is None:
+        if self.data is None or self.spark_info is None or self.runners is None or self.skill_types is None:
             logging.critical("Failed to load necessary data files. Exiting.")
             QMessageBox.critical(self, "Data Loading Error", "Failed to load necessary data files (all_runners.csv, sparks.json, etc.).\nPlease check the 'data' and 'data/game_data' folders.\nSee app.log for details.")
             sys.exit(1) # Exit after showing message
@@ -360,22 +360,115 @@ class UmaAnalyzerPyQt(QMainWindow):
             logging.exception(f"Failed to load or parse skill_types.json:")
             return None
 
-    def load_racers(self):
+    def load_runners(self):
         """Gets a unique, sorted list of runner names from the data."""
         if self.data is None:
-            logging.warning("Cannot load racers, main data is missing.")
+            logging.warning("Cannot load runners, main data is missing.")
             return ['']
         try:
             # Drop NaN/empty names before getting unique, then sort
             unique_names = sorted(self.data['name'].dropna().astype(str).unique())
-            logging.info(f"Loaded {len(unique_names)} unique racers.")
+            logging.info(f"Loaded {len(unique_names)} unique runners.")
             return [''] + unique_names
         except KeyError:
-            logging.error("Column 'name' not found in the data. Cannot load racers.")
+            logging.error("Column 'name' not found in the data. Cannot load runners.")
             return ['']
         except Exception as e:
-             logging.exception("Error loading racers:")
+             logging.exception("Error loading runners:")
              return ['']
+
+    def populate_lineage_runner_list(self):
+        """Fills the runner list in the Lineage Builder tab."""
+        self.lineage_runner_list.setRowCount(0) # Clear the list
+        if self.data is None:
+            return
+
+        # Create a simple DataFrame with just name and entry_id for display
+        runners_to_display = self.data[['name', 'entry_id']].copy()
+        self.lineage_runner_list.setRowCount(len(runners_to_display))
+
+        for i, row in runners_to_display.iterrows():
+            name_item = QTableWidgetItem(row['name'])
+            # Store entry_id in the item's data role for later retrieval
+            name_item.setData(Qt.UserRole, row['entry_id'])
+            self.lineage_runner_list.setItem(i, 0, name_item)
+
+    def update_lineage_display(self, item):
+        """Updates the right panel when a runner is selected, matching parents by name and spark list."""
+        entry_id = item.data(Qt.UserRole)
+        if self.data is None:
+            return
+
+        # The runner we selected to view the lineage of
+        child_runner_series = self.data[self.data['entry_id'] == entry_id].iloc[0]
+
+        # 1. Get grandparent names and display them
+        gp1_raw = child_runner_series.get('gp1', 'Unknown')
+        gp2_raw = child_runner_series.get('gp2', 'Unknown')
+
+        gp1_display_text = f"{str(gp1_raw).removesuffix(' c')} (< 3\u2606)" if ' c' in str(gp1_raw) else str(gp1_raw)
+        gp2_display_text = f"{str(gp2_raw).removesuffix(' c')} (< 3\u2606)" if ' c' in str(gp2_raw) else str(gp2_raw)
+        self.lineage_gp1_label.setText(gp1_display_text)
+        self.lineage_gp2_label.setText(gp2_display_text)
+
+        gp1_clean_name = str(gp1_raw).removesuffix(' c')
+        gp2_clean_name = str(gp2_raw).removesuffix(' c')
+
+        # 2. Extract the spark contributions from the grandparents
+        child_sparks_list = child_runner_series.get('sparks', [])
+        if not isinstance(child_sparks_list, list): child_sparks_list = []
+
+        target_gp1_sparks = [s for s in child_sparks_list if s.get('type') == 'gp1']
+        target_gp2_sparks = [s for s in child_sparks_list if s.get('type') == 'gp2']
+
+        self.lineage_compatible_parents_list.clear()
+
+        def sort_sparks(sparks_list):
+            """A helper to sort a list of spark dictionaries for consistent comparison."""
+            if not isinstance(sparks_list, list):
+                return []
+            return sorted(sparks_list, key=lambda s: (s.get('color', ''), s.get('spark_name', ''), s.get('count', 0)))
+
+        def find_and_display_matches(gp_clean_name, target_gp_sparks):
+            """
+            Finds runners in the library that match the grandparent's name and spark contribution by comparing
+            the spark lists while ignoring the 'type' key.
+            """
+            if pd.notna(gp_clean_name) and gp_clean_name != "Unknown" and target_gp_sparks:
+                
+                # **THE FIX**: Create a "type"-less version of the target sparks for a clean comparison.
+                target_sparks_for_comparison = [
+                    {k: v for k, v in spark.items() if k != 'type'} for spark in target_gp_sparks
+                ]
+                canonical_target_sparks = sort_sparks(target_sparks_for_comparison)
+
+                # Find all runners in the library with the same name as the grandparent
+                potential_parents = self.data[self.data['name'] == gp_clean_name]
+
+                for _, parent_row in potential_parents.iterrows():
+                    parent_sparks_list = parent_row.get('sparks', [])
+                    if not isinstance(parent_sparks_list, list): continue
+
+                    # Get this potential parent's *own* parent-level sparks
+                    candidate_parent_sparks = [s for s in parent_sparks_list if s.get('type') == 'parent']
+                    
+                    # **THE FIX**: Create a corresponding "type"-less version of the candidate's sparks.
+                    candidate_sparks_for_comparison = [
+                        {k: v for k, v in spark.items() if k != 'type'} for spark in candidate_parent_sparks
+                    ]
+                    canonical_candidate_sparks = sort_sparks(candidate_sparks_for_comparison)
+                    
+                    # This comparison will now succeed because the 'type' key is ignored.
+                    if canonical_target_sparks == canonical_candidate_sparks:
+                        list_item_text = f"{parent_row['name']} (Score: {parent_row['score']}) - Exact Spark Match Found"
+                        self.lineage_compatible_parents_list.addItem(list_item_text)
+
+        # Run the corrected search for both grandparents
+        find_and_display_matches(gp1_clean_name, target_gp1_sparks)
+        find_and_display_matches(gp2_clean_name, target_gp2_sparks)
+
+        if self.lineage_compatible_parents_list.count() == 0:
+            self.lineage_compatible_parents_list.addItem("No exact parent matches found in your library.")
 
     def _calculate_max_white_sparks(self):
         """Calculates and stores the max total and parent white spark counts from the data."""
@@ -541,7 +634,7 @@ class UmaAnalyzerPyQt(QMainWindow):
         self.tab_widgets = {}
         self.tables = {}
         # --- Changed tab order ---
-        tab_names = ["Parent Summary", "Aptitude Summary", "White Sparks", "Skills Summary"]
+        tab_names = ["Parent Summary", "Aptitude Summary", "Spark & Skill Finder", "Lineage Builder"]
         for name in tab_names:
             tab = QWidget()
             tab.setObjectName(name.replace(" ", "_")) # Set object name
@@ -567,6 +660,63 @@ class UmaAnalyzerPyQt(QMainWindow):
             self.tables[name] = table
             layout.addWidget(table)
 
+        lineage_tab_layout = self.tab_widgets["Lineage Builder"]
+
+        # Create a main horizontal layout for the two panels
+        lineage_main_layout = QHBoxLayout()
+        lineage_tab_layout.addLayout(lineage_main_layout)
+
+        # -- Left Panel: Runner Selection --
+        left_panel_group = QGroupBox("Select a Runner")
+        left_panel_layout = QVBoxLayout()
+        left_panel_group.setLayout(left_panel_layout)
+        # Set a max width for the selection panel
+        left_panel_group.setMaximumWidth(400)
+
+        self.lineage_runner_list = QTableWidget()
+        self.lineage_runner_list.setColumnCount(1)
+        self.lineage_runner_list.setHorizontalHeaderLabels(["Runner"])
+        self.lineage_runner_list.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.lineage_runner_list.verticalHeader().setVisible(False)
+        self.lineage_runner_list.setSelectionBehavior(QAbstractItemView.SelectRows)
+        self.lineage_runner_list.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        left_panel_layout.addWidget(self.lineage_runner_list)
+
+        # -- Right Panel: Lineage Display --
+        right_panel_group = QGroupBox("Lineage Details")
+        right_panel_layout = QVBoxLayout()
+        right_panel_group.setLayout(right_panel_layout)
+
+        # Grandparent Display
+        gp_layout = QGridLayout()
+        gp_layout.addWidget(QLabel("<b>Grandparent 1:</b>"), 0, 0)
+        self.lineage_gp1_label = QLabel("N/A")
+        gp_layout.addWidget(self.lineage_gp1_label, 0, 1)
+
+        gp_layout.addWidget(QLabel("<b>Grandparent 2:</b>"), 1, 0)
+        self.lineage_gp2_label = QLabel("N/A")
+        gp_layout.addWidget(self.lineage_gp2_label, 1, 1)
+        gp_layout.setColumnStretch(1, 1) # Allow label to expand
+        right_panel_layout.addLayout(gp_layout)
+
+        # Separator
+        line = QFrame()
+        line.setFrameShape(QFrame.HLine)
+        line.setFrameShadow(QFrame.Sunken)
+        right_panel_layout.addWidget(line)
+
+        # Compatible Parents Display
+        right_panel_layout.addWidget(QLabel("<b>Your Runners Matching Grandparents:</b>"))
+        self.lineage_compatible_parents_list = QListWidget()
+        right_panel_layout.addWidget(self.lineage_compatible_parents_list)
+
+        # Add panels to the main layout
+        lineage_main_layout.addWidget(left_panel_group)
+        lineage_main_layout.addWidget(right_panel_group)
+
+        self.populate_lineage_runner_list()
+        self.lineage_runner_list.itemClicked.connect(self.update_lineage_display)
+
         # Set delegates and connect signals
         self.tables["Parent Summary"].setItemDelegate(RichTextDelegate(self))
         self.tables["Parent Summary"].cellDoubleClicked.connect(self.show_runner_details)
@@ -589,10 +739,10 @@ class UmaAnalyzerPyQt(QMainWindow):
         # --- Basic Filters (Runner, Sort, Stats - Always Visible) ---
         sort_by_options = ['Name', 'Score', 'Speed', 'Stamina', 'Power', 'Guts', 'Wit', 'Whites']
         
-        racers_list = self.racers if isinstance(self.racers, list) and self.racers else ['']
+        runners_list = self.runners if isinstance(self.runners, list) and self.runners else ['']
 
         # Pass None for layout_group for always-visible controls
-        self.add_control('runner_filter', 'Runner', QComboBox(), racers_list, '', layout_group=None)
+        self.add_control('runner_filter', 'Runner', QComboBox(), runners_list, '', layout_group=None)
         self.add_control('sort_by', 'Sort By', QComboBox(), sort_by_options, 'Name', layout_group=None)
         self.add_control('sort_dir', 'Sort Direction', QComboBox(), ['ASC', 'DESC'], 'ASC', layout_group=None)
         for stat in ['speed', 'stamina', 'power', 'guts', 'wit']:
@@ -1165,6 +1315,13 @@ class UmaAnalyzerPyQt(QMainWindow):
                 return f"{total_count}({parent_count})"
             df['Whites'] = df['sparks'].apply(count_white_sparks)
 
+        if 'gp1' in df.columns:
+            # Ensure column is string type and remove trailing " c"
+            df['gp1'] = df['gp1'].astype(str).apply(lambda x: x.removesuffix(' c'))
+        if 'gp2' in df.columns:
+            # Ensure column is string type and remove trailing " c"
+            df['gp2'] = df['gp2'].astype(str).apply(lambda x: x.removesuffix(' c'))
+            
         # --- Sorting Logic ---
         sort_by = controls.get('sort_by', 'Name').lower().replace(' ', '_')
         ascending = controls.get('sort_dir', 'ASC') == 'ASC'
@@ -1207,7 +1364,12 @@ class UmaAnalyzerPyQt(QMainWindow):
             if 'name' in df.columns:
                  df = df.sort_values(by='name', ascending=True, na_position='last')
 
-        stats_summary_cols = ['entry_id', 'name', 'score', 'speed', 'stamina', 'power', 'guts', 'wit', 'Blue Sparks', 'Green Sparks', 'Pink Sparks', 'Whites']
+        stats_summary_cols = [
+            'entry_id', 'name', 'score', 'speed', 'stamina', 'power', 'guts', 'wit',
+            'Blue Sparks', 'Green Sparks', 'Pink Sparks', 'Whites',
+            'gp1', 'gp2'
+        ]
+
         final_df = pd.DataFrame()
         for col in stats_summary_cols:
              if col in df.columns:
@@ -1478,16 +1640,19 @@ class UmaAnalyzerPyQt(QMainWindow):
 
                  if original_col in ['score'] + stat_cols_original:
                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Fixed)
-                     table.setColumnWidth(col_idx, 90)
+                     table.setColumnWidth(col_idx, 70)
                  elif original_col == 'name':
                      table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                     table.setColumnWidth(col_idx, 150)
+                     table.setColumnWidth(col_idx, 130)
                  elif original_col == 'Whites':
                       table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
                       table.setColumnWidth(col_idx, 60)
                  elif 'Sparks' in clean_header and 'Green' not in clean_header:
                       table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
-                      table.setColumnWidth(col_idx, 200)
+                      table.setColumnWidth(col_idx, 180)
+                 elif original_col in ['gp1', 'gp2']:
+                    table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Interactive)
+                    table.setColumnWidth(col_idx, 120)
                  else:
                       table.horizontalHeader().setSectionResizeMode(col_idx, QHeaderView.Stretch)
 
@@ -1573,11 +1738,10 @@ class UmaDetailDialog(QDialog):
         # --- Use path relative to BASE_DIR ---
         profile_img_dir = os.path.join(BASE_DIR, 'assets', 'profile_images')
         if os.path.isdir(profile_img_dir):
-            for ext in ['png', 'jpg', 'jpeg']: # Original extensions
-                potential_path = os.path.join(profile_img_dir, f'{image_name}.{ext}')
-                if os.path.exists(potential_path):
-                    image_path = potential_path
-                    break
+            potential_path = os.path.join(profile_img_dir, f'{image_name}.png')
+            if os.path.exists(potential_path):
+                image_path = potential_path
+
         else:
              logging.warning(f"Profile images directory not found: {profile_img_dir}")
 
@@ -1960,7 +2124,7 @@ if __name__ == "__main__":
         app = QApplication(sys.argv)
 
     # Set AppUserModelID for Windows taskbar icon grouping
-    my_app_id = 'umascanner.zeek.211025' # Reverted ID format
+    my_app_id = 'umascanner.zeek.24102025'
     try:
         if os.name == 'nt':
              ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(my_app_id)

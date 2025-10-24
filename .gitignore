@@ -157,6 +157,9 @@ __marimo__/
 /data/profile_images/*
 !/data/profile_images/.gitkeep
 
+#frontend 
+/frontend/node_modules/*
+
 # Other
 /gemini.md
 /.DS_Store

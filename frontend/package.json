@@ -1,0 +1,25 @@
+{
+  "name": "umascanner",
+  "version": "1.0.0",
+  "description": "A simple guide to setting up and using the UMA Scanner.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zeekb/umascanner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Zeekb/umascanner/issues"
+  },
+  "homepage": "https://github.com/Zeekb/umascanner#readme",
+  "dependencies": {
+    "electron": "^38.4.0"
+  }
+}
