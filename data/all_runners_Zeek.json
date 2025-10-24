@@ -7,12 +7,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "S", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Tokai Teio",
     "skills": [
-      "Corner Recovery ○",     "Professor of Curvature",
-      "Go with the Flow",      "Standard Distance ◎",
-      "Medium Corners ◎",      "Straight Descent",
-      "Murmur",                "Triumphant Pulse",
-      "Nimble Navigator",      "U=ma2",
-      "Preferred Position"
+      "U=ma2",                  "Triumphant Pulse",
+      "Standard Distance ◎",    "Professor of Curvature",
+      "Corner Recovery ○",      "Nimble Navigator",
+      "Go with the Flow",       "Preferred Position",
+      "Medium Corners ◎",       "Murmur",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -61,12 +61,12 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "D", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "B", "end": "F",
     "gp1": "Grass Wonder", "gp2": "Oguri Cap",
     "skills": [
-      "Frenzied End Closers",      "Sharp Gaze",
-      "Frenzied Front Runners",    "Standard Distance ◎",
-      "Hesitant Front Runners",    "Summer Runner ◎",
-      "Hesitant Pace Chasers",     "Tether",
-      "Mile Straightaways ◎",      "U=ma2",
-      "Murmur",                    "Wet Conditions ◎"
+      "U=ma2",                     "Standard Distance ◎",
+      "Wet Conditions ◎",          "Summer Runner ◎",
+      "Frenzied Front Runners",    "Frenzied End Closers",
+      "Hesitant Front Runners",    "Hesitant Pace Chasers",
+      "Mile Straightaways ◎",      "Tether",
+      "Murmur",                    "Sharp Gaze"
     ],
     "sparks": {
       "parent": [
@@ -108,11 +108,11 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "C", "medium": "S", "long": "B", "front": "E", "pace": "A", "late": "B", "end": "F",
     "gp1": "Grass Wonder", "gp2": "Vodka",
     "skills": [
-      "Frenzied End Closers",           "Standard Distance ◎",
-      "Frenzied Front Runners",         "Subdued Front Runners",
-      "Hesitant Front Runners",         "Tokyo Racecourse ◎",
-      "Late Surger Straightaways ◎",    "Trick (Rear)",
-      "Opening Gambit",                 "U=ma2",
+      "U=ma2",                     "Tokyo Racecourse ◎",
+      "Standard Distance ◎",       "Trick (Rear)",
+      "Frenzied Front Runners",    "Frenzied End Closers",
+      "Subdued Front Runners",     "Hesitant Front Runners",
+      "Opening Gambit",            "Late Surger Straightaways ◎",
       "Sharp Gaze"
     ],
     "sparks": {
@@ -155,12 +155,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "F",
     "gp1": "Mejiro McQueen", "gp2": "Tokai Teio",
     "skills": [
-      "Corner Adept ○",                "Sky-High Teio Step",
-      "Introduction to Physiology",    "Standard Distance ◎",
-      "Lone Wolf",                     "Straightaway Adept",
-      "Medium Corners ◎",              "Swinging Maestro",
-      "Medium Straightaways ◎",        "The Duty of Dignity Calls",
-      "Pace Chaser Corners ◎"
+      "Introduction to Physiology",    "Sky-High Teio Step",
+      "The Duty of Dignity Calls",     "Standard Distance ◎",
+      "Corner Adept ○",                "Swinging Maestro",
+      "Straightaway Adept",            "Medium Straightaways ◎",
+      "Medium Corners ◎",              "Pace Chaser Corners ◎",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -197,12 +197,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "B", "end": "F",
     "gp1": "Grass Wonder", "gp2": "Maruzensky",
     "skills": [
-      "Breath of Fresh Air",       "Sharp Gaze",
-      "Frenzied End Closers",      "Standard Distance ◎",
-      "Hesitant End Closers",      "Subdued Front Runners",
-      "Hesitant Front Runners",    "Tail Held High",
-      "Hesitant Pace Chasers",     "U=ma2",
-      "Opening Gambit",            "Wet Conditions ◎"
+      "U=ma2",                     "Standard Distance ◎",
+      "Wet Conditions ◎",          "Breath of Fresh Air",
+      "Frenzied End Closers",      "Subdued Front Runners",
+      "Hesitant Front Runners",    "Hesitant Pace Chasers",
+      "Hesitant End Closers",      "Opening Gambit",
+      "Sharp Gaze",                "Tail Held High"
     ],
     "sparks": {
       "parent": [
@@ -247,11 +247,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "S", "end": "F",
     "gp1": "Tokai Teio", "gp2": "Mejiro McQueen",
     "skills": [
-      "Beeline Burst",                 "Medium Straightaways ◎",
-      "Gourmand",                      "Professor of Curvature",
       "Introduction to Physiology",    "Standard Distance ◎",
-      "Lone Wolf",                     "Swinging Maestro",
-      "Medium Corners ◎"
+      "Professor of Curvature",        "Swinging Maestro",
+      "Beeline Burst",                 "Medium Straightaways ◎",
+      "Medium Corners ◎",              "Gourmand",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -291,12 +291,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "S", "long": "B", "front": "E", "pace": "A", "late": "B", "end": "F",
     "gp1": "Maruzensky", "gp2": "Nice Nature c",
     "skills": [
-      "Corner Recovery ○",         "Standard Distance ◎",
-      "Preferred Position",        "Straight Descent",
-      "Professor of Curvature",    "U=ma2",
-      "Ramp Up",                   "Wet Conditions ◎",
-      "Red Shift/LP1211-M",        "Where There's a Will, There's a Way",
-      "Shifting Gears"
+      "U=ma2",                                  "Red Shift/LP1211-M",
+      "Where There's a Will, There's a Way",    "Standard Distance ◎",
+      "Wet Conditions ◎",                       "Professor of Curvature",
+      "Corner Recovery ○",                      "Ramp Up",
+      "Preferred Position",                     "Shifting Gears",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -335,13 +335,13 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "B", "end": "F",
     "gp1": "Grass Wonder", "gp2": "Gold Ship",
     "skills": [
-      "Dominator",                  "Nimble Navigator",
-      "Flustered Front Runners",    "Opening Gambit",
-      "Frenzied End Closers",       "Sharp Gaze",
-      "Hesitant End Closers",       "Standard Distance ◎",
-      "Hesitant Front Runners",     "U=ma2",
-      "Hesitant Pace Chasers",      "Wet Conditions ◎",
-      "Murmur"
+      "U=ma2",                     "Standard Distance ◎",
+      "Wet Conditions ◎",          "Nimble Navigator",
+      "Frenzied End Closers",      "Flustered Front Runners",
+      "Hesitant Front Runners",    "Hesitant Pace Chasers",
+      "Hesitant End Closers",      "Opening Gambit",
+      "Dominator",                 "Murmur",
+      "Sharp Gaze"
     ],
     "sparks": {
       "parent": [
@@ -386,11 +386,11 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "F",
     "gp1": "Nice Nature c", "gp2": "Special Week",
     "skills": [
-      "Beeline Burst",                 "Professor of Curvature",
-      "Competitive Spirit ◎",          "Straightaway Acceleration",
-      "Homestretch Haste",             "Swinging Maestro",
-      "Introduction to Physiology",    "Tether",
-      "Medium Straightaways ◎"
+      "Introduction to Physiology",    "Competitive Spirit ◎",
+      "Professor of Curvature",        "Swinging Maestro",
+      "Beeline Burst",                 "Straightaway Acceleration",
+      "Homestretch Haste",             "Medium Straightaways ◎",
+      "Tether"
     ],
     "sparks": {
       "parent": [
@@ -432,12 +432,12 @@
     "turf": "A", "dirt": "G", "sprint": "C", "mile": "A", "medium": "A", "long": "E", "front": "B", "pace": "A", "late": "A", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",                  "Slick Surge",
-      "Blazing Pride",                  "Straightaway Acceleration",
-      "Breath of Fresh Air",            "Tokyo Racecourse ◎",
-      "Late Surger Corners ○",          "Triumphant Pulse",
-      "Late Surger Straightaways ◎",    "Updrafters",
-      "Mile Straightaways ◎",           "Wet Conditions ◎"
+      "Blazing Pride",                  "Triumphant Pulse",
+      "Tokyo Racecourse ◎",             "Wet Conditions ◎",
+      "Beeline Burst",                  "Straightaway Acceleration",
+      "Breath of Fresh Air",            "Slick Surge",
+      "Updrafters",                     "Mile Straightaways ◎",
+      "Late Surger Straightaways ◎",    "Late Surger Corners ○"
     ],
     "sparks": {
       "parent": [
@@ -481,11 +481,11 @@
     "turf": "A", "dirt": "G", "sprint": "C", "mile": "A", "medium": "A", "long": "E", "front": "B", "pace": "A", "late": "A", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Blazing Pride",                  "Mile Corners ◎",
-      "Breath of Fresh Air",            "Opening Gambit",
-      "Cloudy Days ◎",                  "Professor of Curvature",
-      "Late Surger Straightaways ◎",    "Straightaway Acceleration",
-      "Lay Low",                        "Triumphant Pulse"
+      "Blazing Pride",                "Triumphant Pulse",
+      "Cloudy Days ◎",                "Professor of Curvature",
+      "Straightaway Acceleration",    "Breath of Fresh Air",
+      "Lay Low",                      "Mile Corners ◎",
+      "Opening Gambit",               "Late Surger Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -524,13 +524,13 @@
     "turf": "A", "dirt": "G", "sprint": "C", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "A", "late": "A", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Blazing Pride",                  "Standard Distance ◎",
-      "Breath of Fresh Air",            "Straightaway Acceleration",
-      "Corner Adept ○",                 "Sunny Days ◎",
-      "Late Surger Corners ○",          "Triumphant Pulse",
-      "Late Surger Straightaways ◎",    "Updrafters",
-      "Ramp Up",                        "Wet Conditions ◎",
-      "Slick Surge"
+      "Blazing Pride",                "Triumphant Pulse",
+      "Standard Distance ◎",          "Wet Conditions ◎",
+      "Sunny Days ◎",                 "Corner Adept ○",
+      "Straightaway Acceleration",    "Breath of Fresh Air",
+      "Ramp Up",                      "Slick Surge",
+      "Updrafters",                   "Late Surger Straightaways ◎",
+      "Late Surger Corners ○"
     ],
     "sparks": {
       "parent": [
@@ -568,12 +568,12 @@
     "turf": "S", "dirt": "G", "sprint": "C", "mile": "A", "medium": "A", "long": "E", "front": "D", "pace": "A", "late": "A", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Special Week",
     "skills": [
-      "A Small Breather",          "Sky-High Teio Step",
-      "Blazing Pride",             "Standard Distance ◎",
-      "Breath of Fresh Air",       "Straightaway Acceleration",
-      "Go with the Flow",          "The Bigger Picture",
-      "Homestretch Haste",         "Trick (Rear)",
-      "Professor of Curvature"
+      "Blazing Pride",                "Sky-High Teio Step",
+      "Standard Distance ◎",          "Professor of Curvature",
+      "Straightaway Acceleration",    "Breath of Fresh Air",
+      "Go with the Flow",             "Homestretch Haste",
+      "Trick (Rear)",                 "A Small Breather",
+      "The Bigger Picture"
     ],
     "sparks": {
       "parent": [
@@ -615,10 +615,10 @@
     "turf": "S", "dirt": "F", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "B", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Symboli Rudolf",
     "skills": [
-      "Calm and Collected",    "Standard Distance ◎",
-      "Firm Conditions ◎",     "Swinging Maestro",
-      "Highlander",            "The Duty of Dignity Calls",
-      "Slipstream",            "∴win Q.E.D."
+      "∴win Q.E.D.",            "The Duty of Dignity Calls",
+      "Standard Distance ◎",    "Firm Conditions ◎",
+      "Swinging Maestro",       "Calm and Collected",
+      "Highlander",             "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -659,10 +659,10 @@
     "turf": "A", "dirt": "F", "sprint": "F", "mile": "C", "medium": "A", "long": "S", "front": "E", "pace": "A", "late": "B", "end": "E",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Calm and Collected",       "Swinging Maestro",
-      "Long Straightaways ◎",     "Tokyo Racecourse ◎",
-      "Sky-High Teio Step",       "Triumphant Pulse",
-      "Straightaway Recovery",    "∴win Q.E.D."
+      "∴win Q.E.D.",           "Sky-High Teio Step",
+      "Triumphant Pulse",      "Tokyo Racecourse ◎",
+      "Swinging Maestro",      "Straightaway Recovery",
+      "Calm and Collected",    "Long Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -701,11 +701,11 @@
     "turf": "A", "dirt": "F", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "A", "end": "D",
     "gp1": "Gold Ship", "gp2": "Mejiro McQueen",
     "skills": [
-      "Beeline Burst",        "Shrewd Step",
-      "Firm Conditions ◎",    "Standard Distance ◎",
-      "Hydrate",              "Swinging Maestro",
-      "Nimble Navigator",     "The Duty of Dignity Calls",
-      "Rushing Gale!",        "∴win Q.E.D."
+      "∴win Q.E.D.",            "The Duty of Dignity Calls",
+      "Standard Distance ◎",    "Firm Conditions ◎",
+      "Swinging Maestro",       "Beeline Burst",
+      "Rushing Gale!",          "Nimble Navigator",
+      "Shrewd Step",            "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -744,10 +744,10 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "D", "end": "G",
     "gp1": "Vodka c", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",     "Professor of Curvature",
-      "Competitive Spirit ◎",    "Red Ace",
-      "Firm Conditions ◎",       "Slipstream",
-      "Mile Straightaways ◎",    "Triumphant Pulse"
+      "Red Ace",                   "Triumphant Pulse",
+      "Firm Conditions ◎",         "Competitive Spirit ◎",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Mile Straightaways ◎",      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -784,12 +784,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "D", "end": "G",
     "gp1": "Tokai Teio", "gp2": "El Condor Pasa",
     "skills": [
-      "Cloudy Days ◎",           "Nakayama Racecourse ◎",
-      "Competitive Spirit ◎",    "Outer Post Proficiency ◎",
-      "Corner Connoisseur",      "Resplendent Red Ace",
-      "Focus",                   "Straight Descent",
-      "Groundwork",              "Tail Held High",
-      "Killer Tunes",            "Winter Runner ◎"
+      "Resplendent Red Ace",         "Nakayama Racecourse ◎",
+      "Winter Runner ◎",             "Cloudy Days ◎",
+      "Outer Post Proficiency ◎",    "Competitive Spirit ◎",
+      "Corner Connoisseur",          "Focus",
+      "Killer Tunes",                "Straight Descent",
+      "Groundwork",                  "Tail Held High"
     ],
     "sparks": {
       "parent": [
@@ -831,11 +831,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Vodka", "gp2": "Seiun Sky",
     "skills": [
-      "Angling and Scheming",            "Professor of Curvature",
-      "Early Lead",                      "Red Ace",
-      "Escape Artist",                   "Speed Eater",
-      "Front Runner Straightaways ◎",    "Standard Distance ◎",
-      "Groundwork",                      "Unrestrained"
+      "Red Ace",                         "Angling and Scheming",
+      "Standard Distance ◎",             "Professor of Curvature",
+      "Early Lead",                      "Escape Artist",
+      "Unrestrained",                    "Speed Eater",
+      "Front Runner Straightaways ◎",    "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -885,10 +885,10 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Vodka", "gp2": "Maruzensky",
     "skills": [
-      "Early Lead",                      "Mile Corners ◎",
-      "Escape Artist",                   "Red Ace",
-      "Front Runner Corners ◎",          "Sympathy",
-      "Front Runner Straightaways ◎",    "Unrestrained"
+      "Red Ace",                   "Early Lead",
+      "Escape Artist",             "Unrestrained",
+      "Mile Corners ◎",            "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -929,11 +929,11 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "El Condor Pasa", "gp2": "Seiun Sky",
     "skills": [
-      "Angling and Scheming",            "Red Ace",
-      "Breath of Fresh Air",             "Red Shift/LP1211-M",
-      "Front Runner Straightaways ◎",    "Speed Eater",
-      "Groundwork",                      "Victoria por plancha ☆",
-      "Professor of Curvature"
+      "Red Ace",                   "Red Shift/LP1211-M",
+      "Victoria por plancha ☆",    "Angling and Scheming",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Speed Eater",               "Front Runner Straightaways ◎",
+      "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -978,11 +978,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Vodka", "gp2": "Seiun Sky",
     "skills": [
-      "Angling and Scheming",      "Groundwork",
-      "Corner Adept ○",            "Left-Handed ◎",
-      "Early Lead",                "Red Ace",
-      "Fast-Paced",                "Tokyo Racecourse ◎",
-      "Front Runner Corners ◎",    "Unrestrained"
+      "Red Ace",                   "Angling and Scheming",
+      "Left-Handed ◎",             "Tokyo Racecourse ◎",
+      "Corner Adept ○",            "Early Lead",
+      "Fast-Paced",                "Unrestrained",
+      "Front Runner Corners ◎",    "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -1027,10 +1027,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "S", "long": "B", "front": "A", "pace": "A", "late": "D", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Killer Tunes",              "Straightaway Acceleration",
-      "Professor of Curvature",    "Swinging Maestro",
-      "Red Ace",                   "Triumphant Pulse",
-      "Sky-High Teio Step"
+      "Red Ace",             "Sky-High Teio Step",
+      "Triumphant Pulse",    "Professor of Curvature",
+      "Swinging Maestro",    "Straightaway Acceleration",
+      "Killer Tunes"
     ],
     "sparks": {
       "parent": [
@@ -1080,13 +1080,13 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "A", "medium": "A", "long": "B", "front": "S", "pace": "A", "late": "E", "end": "G",
     "gp1": "Vodka", "gp2": "Maruzensky",
     "skills": [
-      "Corner Adept ○",                  "Red Ace",
-      "Dodging Danger",                  "Shifting Gears",
-      "Early Lead",                      "Speed Eater",
-      "Fast-Paced",                      "Tokyo Racecourse ◎",
-      "Front Runner Straightaways ◎",    "Unrestrained",
-      "Leader's Pride",                  "Unyielding Spirit",
-      "Left-Handed ◎"
+      "Red Ace",                         "Left-Handed ◎",
+      "Tokyo Racecourse ◎",              "Corner Adept ○",
+      "Early Lead",                      "Fast-Paced",
+      "Unrestrained",                    "Shifting Gears",
+      "Unyielding Spirit",               "Speed Eater",
+      "Front Runner Straightaways ◎",    "Dodging Danger",
+      "Leader's Pride"
     ],
     "sparks": {
       "parent": [
@@ -1132,11 +1132,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Vodka", "gp2": "Mayano Top Gun",
     "skills": [
-      "Fast-Paced",                "Red Ace",
-      "Focus",                     "Second Wind",
-      "Leader's Pride",            "Slipstream",
-      "Left-Handed ◎",             "Unrestrained",
-      "Professor of Curvature",    "Unyielding Spirit"
+      "Red Ace",                   "Left-Handed ◎",
+      "Professor of Curvature",    "Focus",
+      "Fast-Paced",                "Unrestrained",
+      "Unyielding Spirit",         "Leader's Pride",
+      "Second Wind",               "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -1179,11 +1179,11 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Maruzensky", "gp2": "Vodka",
     "skills": [
-      "Corner Recovery ○",               "Left-Handed ◎",
-      "Early Lead",                      "Professor of Curvature",
-      "Fast-Paced",                      "Red Ace",
-      "Front Runner Corners ◎",          "Shifting Gears",
-      "Front Runner Straightaways ◎",    "Unrestrained",
+      "Red Ace",                         "Left-Handed ◎",
+      "Professor of Curvature",          "Corner Recovery ○",
+      "Early Lead",                      "Fast-Paced",
+      "Unrestrained",                    "Shifting Gears",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎",
       "Leader's Pride"
     ],
     "sparks": {
@@ -1228,12 +1228,12 @@
     "turf": "A", "dirt": "A", "sprint": "F", "mile": "A", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Corner Adept ○",                 "Stamina to Spare",
-      "Flustered Front Runners",        "Straight Descent",
-      "Focus",                          "Straightaway Acceleration",
-      "Outer Post Proficiency ◎",       "Swinging Maestro",
-      "Pace Chaser Straightaways ◎",    "Victoria por plancha ☆",
-      "Shrewd Step",                    "Wet Conditions ◎"
+      "Victoria por plancha ☆",      "Wet Conditions ◎",
+      "Outer Post Proficiency ◎",    "Corner Adept ○",
+      "Swinging Maestro",            "Straightaway Acceleration",
+      "Focus",                       "Stamina to Spare",
+      "Flustered Front Runners",     "Pace Chaser Straightaways ◎",
+      "Shrewd Step",                 "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -1282,11 +1282,11 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Maruzensky", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Angling and Scheming",            "Professor of Curvature",
-      "Fast-Paced",                      "Red Shift/LP1211-M",
-      "Focus",                           "Standard Distance ◎",
-      "Front Runner Corners ◎",          "Straightaway Recovery",
-      "Front Runner Straightaways ◎",    "Victoria por plancha ☆",
+      "Victoria por plancha ☆",          "Red Shift/LP1211-M",
+      "Angling and Scheming",            "Standard Distance ◎",
+      "Professor of Curvature",          "Straightaway Recovery",
+      "Focus",                           "Fast-Paced",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎",
       "Groundwork"
     ],
     "sparks": {
@@ -1333,12 +1333,12 @@
     "turf": "A", "dirt": "A", "sprint": "D", "mile": "A", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Maruzensky", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",            "Professor of Curvature",
-      "Competitive Spirit ◎",           "Red Shift/LP1211-M",
-      "Corner Recovery ○",              "Straightaway Acceleration",
-      "Homestretch Haste",              "Triumphant Pulse",
-      "Pace Chaser Straightaways ◎",    "Victoria por plancha ☆",
-      "Prepared to Pass"
+      "Victoria por plancha ☆",         "Red Shift/LP1211-M",
+      "Triumphant Pulse",               "Competitive Spirit ◎",
+      "Professor of Curvature",         "Corner Recovery ○",
+      "Straightaway Acceleration",      "Breath of Fresh Air",
+      "Homestretch Haste",              "Prepared to Pass",
+      "Pace Chaser Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -1378,10 +1378,10 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "A", "end": "C",
     "gp1": "Daiwa Scarlet c", "gp2": "Maruzensky",
     "skills": [
-      "Corner Adept ○",                  "Leader's Pride",
-      "Fast-Paced",                      "Left-Handed ◎",
-      "Front Runner Savvy ◎",            "Sympathy",
-      "Front Runner Straightaways ◎",    "Victoria por plancha ☆"
+      "Victoria por plancha ☆",          "Left-Handed ◎",
+      "Corner Adept ○",                  "Fast-Paced",
+      "Front Runner Straightaways ◎",    "Leader's Pride",
+      "Front Runner Savvy ◎",            "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -1417,10 +1417,10 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "S", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "B",
     "gp1": "Nice Nature c", "gp2": "Gold Ship",
     "skills": [
-      "Breath of Fresh Air",            "Prepared to Pass",
-      "Corazón ☆ Ardiente",             "Professor of Curvature",
-      "Hydrate",                        "Prudent Positioning",
-      "Pace Chaser Straightaways ◎"
+      "Corazón ☆ Ardiente",     "Professor of Curvature",
+      "Breath of Fresh Air",    "Prudent Positioning",
+      "Prepared to Pass",       "Pace Chaser Straightaways ◎",
+      "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -1458,11 +1458,11 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "S", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Vodka", "gp2": "Grass Wonder c",
     "skills": [
-      "Corner Adept ○",                 "Standard Distance ◎",
-      "Focus",                          "Straight Descent",
-      "Groundwork",                     "Victoria por plancha ☆",
-      "Left-Handed ◎",                  "Wet Conditions ◎",
-      "Pace Chaser Straightaways ◎"
+      "Victoria por plancha ☆",         "Left-Handed ◎",
+      "Standard Distance ◎",            "Wet Conditions ◎",
+      "Corner Adept ○",                 "Focus",
+      "Pace Chaser Straightaways ◎",    "Straight Descent",
+      "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -1502,9 +1502,9 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Vodka c", "gp2": "Oguri Cap",
     "skills": [
+      "Corazón ☆ Ardiente",             "Triumphant Pulse",
+      "Professor of Curvature",         "Corner Recovery ○",
       "Breath of Fresh Air",            "Prepared to Pass",
-      "Corazón ☆ Ardiente",             "Professor of Curvature",
-      "Corner Recovery ○",              "Triumphant Pulse",
       "Pace Chaser Straightaways ◎"
     ],
     "sparks": {
@@ -1547,10 +1547,10 @@
     "turf": "A", "dirt": "B", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "S", "end": "B",
     "gp1": "Tokai Teio", "gp2": "Special Week",
     "skills": [
-      "Beeline Burst",          "Pace Chaser Straightaways ◎",
-      "Breath of Fresh Air",    "Professor of Curvature",
-      "Corazón ☆ Ardiente",     "Sky-High Teio Step",
-      "Firm Conditions ◎"
+      "Corazón ☆ Ardiente",             "Sky-High Teio Step",
+      "Firm Conditions ◎",              "Professor of Curvature",
+      "Beeline Burst",                  "Breath of Fresh Air",
+      "Pace Chaser Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -1591,12 +1591,12 @@
     "turf": "A", "dirt": "F", "sprint": "B", "mile": "A", "medium": "S", "long": "D", "front": "C", "pace": "A", "late": "C", "end": "G",
     "gp1": "El Condor Pasa", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Big-Sisterly",            "Shifting Gears",
-      "Disorient",               "Straight Descent",
-      "Firm Conditions ◎",       "Straightaway Recovery",
-      "Hanshin Racecourse ◎",    "Swinging Maestro",
       "Lights of Vaudeville",    "Victoria por plancha ☆",
-      "Ramp Up"
+      "Hanshin Racecourse ◎",    "Firm Conditions ◎",
+      "Swinging Maestro",        "Straightaway Recovery",
+      "Ramp Up",                 "Shifting Gears",
+      "Big-Sisterly",            "Straight Descent",
+      "Disorient"
     ],
     "sparks": {
       "parent": [
@@ -1635,11 +1635,11 @@
     "turf": "A", "dirt": "F", "sprint": "B", "mile": "A", "medium": "A", "long": "D", "front": "C", "pace": "A", "late": "C", "end": "G",
     "gp1": "El Condor Pasa", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Big-Sisterly",                "Professor of Curvature",
-      "Breath of Fresh Air",         "Right-Handed ◎",
-      "Focus",                       "Shifting Gears",
-      "Lights of Vaudeville",        "Straight Descent",
-      "Outer Post Proficiency ◎",    "Summer Runner ◎"
+      "Lights of Vaudeville",      "Right-Handed ◎",
+      "Summer Runner ◎",           "Outer Post Proficiency ◎",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Focus",                     "Shifting Gears",
+      "Big-Sisterly",              "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -1680,12 +1680,12 @@
     "turf": "A", "dirt": "F", "sprint": "B", "mile": "A", "medium": "A", "long": "E", "front": "B", "pace": "A", "late": "B", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "El Condor Pasa",
     "skills": [
-      "Big-Sisterly",            "Prepared to Pass",
-      "Cloudy Days ◎",           "Shifting Gears",
-      "Competitive Spirit ◎",    "Straight Descent",
-      "Firm Conditions ◎",       "Swinging Maestro",
-      "Left-Handed ◎",           "Victoria por plancha ☆",
-      "Lights of Vaudeville"
+      "Lights of Vaudeville",    "Victoria por plancha ☆",
+      "Left-Handed ◎",           "Firm Conditions ◎",
+      "Cloudy Days ◎",           "Competitive Spirit ◎",
+      "Swinging Maestro",        "Prepared to Pass",
+      "Shifting Gears",          "Big-Sisterly",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -1730,11 +1730,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Narita Taishin", "gp2": "Super Creek c",
     "skills": [
-      "Anchors Aweigh!",     "Pressure",
-      "Intense Gaze",        "Straightaway Spurt",
-      "Lone Wolf",           "Swinging Maestro",
-      "Long Corners ◎",      "The Coast Is Clear!",
-      "Masterful Gambit"
+      "Anchors Aweigh!",        "Swinging Maestro",
+      "Masterful Gambit",       "Straightaway Spurt",
+      "Long Corners ◎",         "Pressure",
+      "The Coast Is Clear!",    "Intense Gaze",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -1770,10 +1770,10 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Super Creek c", "gp2": "Oguri Cap",
     "skills": [
-      "Anchors Aweigh!",                "Pressure",
-      "Beeline Burst",                  "Ramp Up",
-      "Corner Adept ○",                 "Swinging Maestro",
-      "Firm Conditions ◎",              "Triumphant Pulse",
+      "Anchors Aweigh!",                "Triumphant Pulse",
+      "Firm Conditions ◎",              "Corner Adept ○",
+      "Swinging Maestro",               "Beeline Burst",
+      "Ramp Up",                        "Pressure",
       "I Can See Right Through You"
     ],
     "sparks": {
@@ -1811,9 +1811,9 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "S", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Super Creek c", "gp2": "Nice Nature c",
     "skills": [
-      "After-School Stroll",    "Firm Conditions ◎",
-      "Anchors Aweigh!",        "Straightaway Recovery",
-      "End Closer Savvy ◎",     "Swinging Maestro"
+      "Anchors Aweigh!",        "Firm Conditions ◎",
+      "Swinging Maestro",       "Straightaway Recovery",
+      "After-School Stroll",    "End Closer Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -1847,10 +1847,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Nice Nature c", "gp2": "Oguri Cap",
     "skills": [
-      "After-School Stroll",      "Corner Recovery ○",
-      "Anchors Aweigh!",          "Pressure",
-      "Corner Acceleration ○",    "Standard Distance ◎",
-      "Corner Adept ○",           "Triumphant Pulse"
+      "Anchors Aweigh!",          "Triumphant Pulse",
+      "Standard Distance ◎",      "Corner Adept ○",
+      "Corner Acceleration ○",    "Corner Recovery ○",
+      "Pressure",                 "After-School Stroll"
     ],
     "sparks": {
       "parent": [
@@ -1893,8 +1893,8 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Special Week", "gp2": "Super Creek c",
     "skills": [
-      "After-School Stroll",    "Straightaway Spurt",
-      "Anchors Aweigh!",        "Swinging Maestro"
+      "Anchors Aweigh!",       "Swinging Maestro",
+      "Straightaway Spurt",    "After-School Stroll"
     ],
     "sparks": {
       "parent": [
@@ -1933,10 +1933,10 @@
     "gp1": "Tokai Teio", "gp2": "Biwa Hayahide",
     "skills": [
       "Anchors Aweigh!",          "Sky-High Teio Step",
-      "Focus",                    "Swinging Maestro",
-      "Hesitant Pace Chasers",    "Uma Stan",
-      "Nimble Navigator",         "∴win Q.E.D.",
-      "Pressure"
+      "∴win Q.E.D.",              "Swinging Maestro",
+      "Focus",                    "Nimble Navigator",
+      "Hesitant Pace Chasers",    "Pressure",
+      "Uma Stan"
     ],
     "sparks": {
       "parent": [
@@ -1970,9 +1970,9 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "B", "medium": "S", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "A",
     "gp1": "Tokai Teio", "gp2": "Biwa Hayahide",
     "skills": [
-      "Anchors Aweigh!",      "Ramp Up",
-      "Corner Adept ○",       "Sky-High Teio Step",
-      "Firm Conditions ◎",    "Swinging Maestro",
+      "Anchors Aweigh!",      "Sky-High Teio Step",
+      "Firm Conditions ◎",    "Corner Adept ○",
+      "Swinging Maestro",     "Ramp Up",
       "Homestretch Haste",    "Uma Stan"
     ],
     "sparks": {
@@ -2008,11 +2008,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "A",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Anchors Aweigh!",          "Sky-High Teio Step",
-      "Cloudy Days ◎",            "Swinging Maestro",
-      "Corner Acceleration ○",    "The Coast Is Clear!",
-      "Corner Adept ○",           "Triumphant Pulse",
-      "Pressure"
+      "Anchors Aweigh!",        "Sky-High Teio Step",
+      "Triumphant Pulse",       "Cloudy Days ◎",
+      "Corner Adept ○",         "Corner Acceleration ○",
+      "Swinging Maestro",       "Pressure",
+      "The Coast Is Clear!"
     ],
     "sparks": {
       "parent": [
@@ -2053,11 +2053,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "S", "front": "G", "pace": "B", "late": "B", "end": "A",
     "gp1": "Nice Nature c", "gp2": "Tokai Teio",
     "skills": [
-      "Anchors Aweigh!",           "Stamina Eater",
-      "Focus",                     "Swinging Maestro",
-      "Lone Wolf",                 "The Coast Is Clear!",
-      "Masterful Gambit",          "Triumphant Pulse",
-      "Professor of Curvature",    "Uma Stan"
+      "Anchors Aweigh!",           "Triumphant Pulse",
+      "Professor of Curvature",    "Swinging Maestro",
+      "Focus",                     "Masterful Gambit",
+      "Stamina Eater",             "The Coast Is Clear!",
+      "Uma Stan",                  "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -2096,10 +2096,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "A",
     "gp1": "Biwa Hayahide", "gp2": "Special Week",
     "skills": [
-      "Anchors Aweigh!",        "Shooting Star",
-      "Breath of Fresh Air",    "Subdued Front Runners",
-      "Firm Conditions ◎",      "Swinging Maestro",
-      "Homestretch Haste",      "∴win Q.E.D.",
+      "Anchors Aweigh!",      "Shooting Star",
+      "∴win Q.E.D.",          "Firm Conditions ◎",
+      "Swinging Maestro",     "Breath of Fresh Air",
+      "Homestretch Haste",    "Subdued Front Runners",
       "Pressure"
     ],
     "sparks": {
@@ -2138,11 +2138,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "S", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "A",
     "gp1": "Nice Nature c", "gp2": "Super Creek c",
     "skills": [
-      "Anchors Aweigh!",             "Ramp Up",
-      "Firm Conditions ◎",           "Straightaway Adept",
-      "Homestretch Haste",           "Swinging Maestro",
-      "Outer Post Proficiency ◎",    "Uma Stan",
-      "Pressure"
+      "Anchors Aweigh!",             "Firm Conditions ◎",
+      "Outer Post Proficiency ◎",    "Swinging Maestro",
+      "Straightaway Adept",          "Ramp Up",
+      "Homestretch Haste",           "Pressure",
+      "Uma Stan"
     ],
     "sparks": {
       "parent": [
@@ -2179,11 +2179,11 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "A", "medium": "B", "long": "A", "front": "F", "pace": "A", "late": "S", "end": "F",
     "gp1": "Air Groove", "gp2": "Oguri Cap",
     "skills": [
-      "Blazing Pride",             "Slick Surge",
-      "Corner Recovery ○",         "Straightaway Recovery",
-      "Fighter",                   "Tokyo Racecourse ◎",
-      "Flustered Pace Chasers",    "Triumphant Pulse",
-      "Focus",                     "Where There's a Will, There's a Way"
+      "Where There's a Will, There's a Way",    "Triumphant Pulse",
+      "Blazing Pride",                          "Tokyo Racecourse ◎",
+      "Corner Recovery ○",                      "Straightaway Recovery",
+      "Focus",                                  "Slick Surge",
+      "Flustered Pace Chasers",                 "Fighter"
     ],
     "sparks": {
       "parent": [
@@ -2226,12 +2226,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "S", "end": "F",
     "gp1": "Super Creek c", "gp2": "Mejiro McQueen",
     "skills": [
-      "Corner Recovery ○",         "Late Surger Straightaways ◎",
-      "Fighter",                   "Later Surger Corners ◎",
-      "Firm Conditions ◎",         "Slick Surge",
-      "Flustered Pace Chasers",    "Trick (Rear)",
-      "Frenzied Pace Chasers",     "Where There's a Will, There's a Way",
-      "Homestretch Haste"
+      "Where There's a Will, There's a Way",    "Firm Conditions ◎",
+      "Corner Recovery ○",                      "Homestretch Haste",
+      "Slick Surge",                            "Trick (Rear)",
+      "Frenzied Pace Chasers",                  "Flustered Pace Chasers",
+      "Late Surger Straightaways ◎",            "Late Surger Corners ◎",
+      "Fighter"
     ],
     "sparks": {
       "parent": [
@@ -2271,12 +2271,12 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "A", "end": "F",
     "gp1": "Daiwa Scarlet c", "gp2": "Vodka",
     "skills": [
-      "Cut and Drive!",                 "Slick Surge",
-      "Flustered Pace Chasers",         "Slipstream",
-      "Focus",                          "Straightaway Recovery",
-      "Frenzied Pace Chasers",          "Summer Runner ◎",
-      "Late Surger Straightaways ◎",    "Wet Conditions ◎",
-      "Outer Post Proficiency ◎",       "Where There's a Will, There's a Way"
+      "Where There's a Will, There's a Way",    "Cut and Drive!",
+      "Wet Conditions ◎",                       "Summer Runner ◎",
+      "Outer Post Proficiency ◎",               "Straightaway Recovery",
+      "Focus",                                  "Slick Surge",
+      "Frenzied Pace Chasers",                  "Flustered Pace Chasers",
+      "Late Surger Straightaways ◎",            "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -2311,11 +2311,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "A", "end": "F",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Corner Acceleration ○",     "Straightaway Acceleration",
-      "Corner Recovery ○",         "Straightaway Recovery",
-      "Later Surger Corners ◎",    "The Bigger Picture",
-      "Professor of Curvature",    "Updrafters",
-      "Slick Surge",               "Where There's a Will, There's a Way"
+      "Where There's a Will, There's a Way",    "Professor of Curvature",
+      "Corner Acceleration ○",                  "Corner Recovery ○",
+      "Straightaway Acceleration",              "Straightaway Recovery",
+      "Slick Surge",                            "Updrafters",
+      "Late Surger Corners ◎",                  "The Bigger Picture"
     ],
     "sparks": {
       "parent": [
@@ -2352,10 +2352,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "E",
     "gp1": "Tokai Teio", "gp2": "Gold Ship",
     "skills": [
-      "Beeline Burst",        "Homestretch Haste",
-      "Corner Adept ○",       "Sky-High Teio Step",
-      "Firm Conditions ◎",    "Slick Surge",
-      "Focused Mind",         "Swinging Maestro"
+      "Focused Mind",         "Sky-High Teio Step",
+      "Firm Conditions ◎",    "Corner Adept ○",
+      "Swinging Maestro",     "Beeline Burst",
+      "Homestretch Haste",    "Slick Surge"
     ],
     "sparks": {
       "parent": [
@@ -2395,12 +2395,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "F",
     "gp1": "Nice Nature", "gp2": "Agnes Tachyon",
     "skills": [
-      "Breath of Fresh Air",       "Medium Straightaways ◎",
-      "Flustered Pace Chasers",    "Mile Straightaways ◎",
-      "Frenzied End Closers",      "Murmur",
-      "Frenzied Front Runners",    "Subdued Front Runners",
-      "Frenzied Pace Chasers",     "Tether",
-      "Hesitant End Closers",      "Where There's a Will, There's a Way"
+      "Where There's a Will, There's a Way",    "Breath of Fresh Air",
+      "Frenzied Front Runners",                 "Frenzied Pace Chasers",
+      "Frenzied End Closers",                   "Subdued Front Runners",
+      "Flustered Pace Chasers",                 "Hesitant End Closers",
+      "Mile Straightaways ◎",                   "Medium Straightaways ◎",
+      "Tether",                                 "Murmur"
     ],
     "sparks": {
       "parent": [
@@ -2442,11 +2442,11 @@
     "turf": "F", "dirt": "A", "sprint": "A", "mile": "B", "medium": "F", "long": "G", "front": "F", "pace": "F", "late": "A", "end": "B",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Corner Recovery ○",              "Masterful Gambit",
-      "End Closer Straightaways ◎",     "Meticulous Measures",
-      "Gap Closer",                     "Professor of Curvature",
-      "I Can See Right Through You",    "Red Shift/LP1211-M",
-      "Intense Gaze",                   "Super-Duper Climax",
+      "Super-Duper Climax",             "Red Shift/LP1211-M",
+      "Professor of Curvature",         "Corner Recovery ○",
+      "Masterful Gambit",               "Gap Closer",
+      "Meticulous Measures",            "End Closer Straightaways ◎",
+      "I Can See Right Through You",    "Intense Gaze",
       "Lone Wolf"
     ],
     "sparks": {
@@ -2484,11 +2484,11 @@
     "turf": "F", "dirt": "A", "sprint": "A", "mile": "A", "medium": "E", "long": "G", "front": "G", "pace": "F", "late": "A", "end": "A",
     "gp1": "Super Creek c", "gp2": "Gold Ship",
     "skills": [
-      "After-School Stroll",            "Lucky Seven",
-      "Anchors Aweigh!",                "Masterful Gambit",
-      "Corner Recovery ○",              "Meticulous Measures",
-      "End Closer Corners ◎",           "Professor of Curvature",
-      "I Can See Right Through You",    "Super-Duper Climax"
+      "Super-Duper Climax",        "Anchors Aweigh!",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Masterful Gambit",          "Meticulous Measures",
+      "End Closer Corners ◎",      "I Can See Right Through You",
+      "After-School Stroll",       "Lucky Seven"
     ],
     "sparks": {
       "parent": [
@@ -2524,11 +2524,11 @@
     "turf": "D", "dirt": "A", "sprint": "A", "mile": "A", "medium": "G", "long": "G", "front": "G", "pace": "G", "late": "A", "end": "B",
     "gp1": "King Halo", "gp2": "Special Week",
     "skills": [
-      "1,500,000 CC",         "Homestretch Haste",
-      "Beeline Burst",        "Prideful King",
-      "Cloudy Days ◎",        "Super-Duper Climax",
-      "Firm Conditions ◎",    "Swinging Maestro",
-      "Focus",                "Wet Conditions ◎"
+      "Super-Duper Climax",    "Prideful King",
+      "Firm Conditions ◎",     "Wet Conditions ◎",
+      "Cloudy Days ◎",         "Swinging Maestro",
+      "Beeline Burst",         "Focus",
+      "Homestretch Haste",     "1,500,000 CC"
     ],
     "sparks": {
       "parent": [
@@ -2567,12 +2567,12 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "A", "long": "S", "front": "G", "pace": "A", "late": "A", "end": "D",
     "gp1": "Mejiro McQueen", "gp2": "Super Creek c",
     "skills": [
-      "Blinding Flash",              "Standard Distance ◎",
-      "Kyoto Racecourse ◎",          "Studious",
-      "Lucky Seven",                 "Sympathy",
-      "Outer Post Proficiency ◎",    "The Duty of Dignity Calls",
-      "Prideful King",               "Triumphant Pulse",
-      "Professor of Curvature"
+      "Prideful King",                "Triumphant Pulse",
+      "The Duty of Dignity Calls",    "Kyoto Racecourse ◎",
+      "Standard Distance ◎",          "Outer Post Proficiency ◎",
+      "Professor of Curvature",       "Blinding Flash",
+      "Studious",                     "Lucky Seven",
+      "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -2608,11 +2608,11 @@
     "turf": "S", "dirt": "G", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Taiki Shuttle", "gp2": "Vodka",
     "skills": [
-      "Blinding Flash",           "Professor of Curvature",
-      "Corner Acceleration ○",    "Sprinting Gear",
-      "Corner Recovery ○",        "Standard Distance ◎",
-      "Homestretch Haste",        "Studious",
-      "Prideful King"
+      "Prideful King",             "Standard Distance ◎",
+      "Professor of Curvature",    "Corner Acceleration ○",
+      "Corner Recovery ○",         "Homestretch Haste",
+      "Sprinting Gear",            "Blinding Flash",
+      "Studious"
     ],
     "sparks": {
       "parent": [
@@ -2653,11 +2653,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "S", "long": "C", "front": "G", "pace": "A", "late": "A", "end": "D",
     "gp1": "Grass Wonder c", "gp2": "Gold Ship",
     "skills": [
-      "Anchors Aweigh!",        "Long Shot ◎",
-      "Blinding Flash",         "Outer Post Proficiency ◎",
-      "Breath of Fresh Air",    "Pace Chaser Savvy ◎",
-      "Firm Conditions ◎",      "Prideful King",
-      "Homestretch Haste"
+      "Prideful King",          "Anchors Aweigh!",
+      "Firm Conditions ◎",      "Outer Post Proficiency ◎",
+      "Long Shot ◎",            "Breath of Fresh Air",
+      "Homestretch Haste",      "Blinding Flash",
+      "Pace Chaser Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -2695,11 +2695,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "A", "long": "A", "front": "G", "pace": "S", "late": "S", "end": "D",
     "gp1": "Super Creek c", "gp2": "Mejiro McQueen",
     "skills": [
-      "Blinding Flash",                 "Slipstream",
-      "Fighter",                        "Straightaway Acceleration",
-      "Homestretch Haste",              "Studious",
-      "Late Surger Straightaways ◎",    "The Duty of Dignity Calls",
-      "Prideful King",                  "Triumphant Pulse"
+      "Prideful King",                  "Triumphant Pulse",
+      "The Duty of Dignity Calls",      "Straightaway Acceleration",
+      "Homestretch Haste",              "Blinding Flash",
+      "Late Surger Straightaways ◎",    "Fighter",
+      "Studious",                       "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -2737,11 +2737,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "G", "pace": "B", "late": "A", "end": "D",
     "gp1": "Sakura Bakushin O", "gp2": "Nice Nature c",
     "skills": [
-      "Beeline Burst",        "Prideful King",
+      "Prideful King",        "Standard Distance ◎",
       "Firm Conditions ◎",    "Professor of Curvature",
-      "Lone Wolf",            "Slipstream",
-      "Lucky Seven",          "Standard Distance ◎",
-      "Prepared to Pass",     "Triple 7s"
+      "Beeline Burst",        "Prepared to Pass",
+      "Lucky Seven",          "Triple 7s",
+      "Lone Wolf",            "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -2776,13 +2776,13 @@
     "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "D", "late": "F", "end": "G",
     "gp1": "Sakura Bakushin O", "gp2": "Gold Ship",
     "skills": [
-      "Dodging Danger",              "Red Shift/LP1211-M",
-      "Early Lead",                  "Shooting Star",
-      "Hanshin Racecourse ◎",        "Sprinting Gear",
-      "Lone Wolf",                   "Standard Distance ◎",
-      "Lucky Seven",                 "Straightaway Adept",
-      "Outer Post Proficiency ◎",    "Straightaway Recovery",
-      "Plan X"
+      "Red Shift/LP1211-M",          "Shooting Star",
+      "Hanshin Racecourse ◎",        "Standard Distance ◎",
+      "Outer Post Proficiency ◎",    "Straightaway Adept",
+      "Straightaway Recovery",       "Early Lead",
+      "Sprinting Gear",              "Plan X",
+      "Dodging Danger",              "Lucky Seven",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -2819,12 +2819,12 @@
     "turf": "S", "dirt": "D", "sprint": "B", "mile": "A", "medium": "S", "long": "A", "front": "A", "pace": "D", "late": "G", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Chukyo Racecourse ◎",         "Sky-High Teio Step",
-      "Dodging Danger",              "Slipstream",
-      "Early Lead",                  "Standard Distance ◎",
-      "Outer Post Proficiency ◎",    "Straightaway Acceleration",
-      "Professor of Curvature",      "Straightaway Adept",
-      "Red Shift/LP1211-M"
+      "Red Shift/LP1211-M",          "Sky-High Teio Step",
+      "Chukyo Racecourse ◎",         "Standard Distance ◎",
+      "Outer Post Proficiency ◎",    "Professor of Curvature",
+      "Straightaway Adept",          "Straightaway Acceleration",
+      "Early Lead",                  "Dodging Danger",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -2865,12 +2865,12 @@
     "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "D", "late": "G", "end": "G",
     "gp1": "Tokai Teio", "gp2": "King Halo c",
     "skills": [
-      "Corner Recovery ○",        "Lucky Seven",
-      "Early Lead",               "Professor of Curvature",
-      "Fall Runner ◎",            "Red Shift/LP1211-M",
-      "Hakodate Racecourse ◎",    "Straightaway Adept",
-      "Huge Lead",                "Straightaway Recovery",
-      "Hydrate",                  "Tactical Tweak"
+      "Red Shift/LP1211-M",       "Hakodate Racecourse ◎",
+      "Fall Runner ◎",            "Professor of Curvature",
+      "Corner Recovery ○",        "Straightaway Adept",
+      "Straightaway Recovery",    "Early Lead",
+      "Huge Lead",                "Hydrate",
+      "Tactical Tweak",           "Lucky Seven"
     ],
     "sparks": {
       "parent": [
@@ -2912,10 +2912,10 @@
     "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "D", "late": "G", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Sakura Bakushin O",
     "skills": [
-      "Angling and Scheming",      "Front Runner Straightaways ◎",
-      "Early Lead",                "Professor of Curvature",
-      "Fast-Paced",                "Red Shift/LP1211-M",
-      "Front Runner Corners ◎",    "Unrestrained"
+      "Red Shift/LP1211-M",              "Angling and Scheming",
+      "Professor of Curvature",          "Early Lead",
+      "Fast-Paced",                      "Unrestrained",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -2954,11 +2954,11 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Seiun Sky", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Angling and Scheming",    "Productive Plan",
-      "Beeline Burst",           "Professor of Curvature",
-      "Changing Gears",          "Red Shift/LP1211-M",
-      "Early Lead",              "Standard Distance ◎",
-      "Firm Conditions ◎",       "Straightaway Recovery"
+      "Red Shift/LP1211-M",        "Angling and Scheming",
+      "Standard Distance ◎",       "Firm Conditions ◎",
+      "Professor of Curvature",    "Beeline Burst",
+      "Straightaway Recovery",     "Early Lead",
+      "Productive Plan",           "Changing Gears"
     ],
     "sparks": {
       "parent": [
@@ -3003,12 +3003,12 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Vodka", "gp2": "Seiun Sky",
     "skills": [
-      "Angling and Scheming",    "Front Runner Corners ◎",
-      "Changing Gears",          "Front Runner Straightaways ◎",
-      "Corner Adept ○",          "Left-Handed ◎",
-      "Early Lead",              "Ramp Up",
-      "Final Push",              "Red Shift/LP1211-M",
-      "Firm Conditions ◎",       "Standard Distance ◎"
+      "Red Shift/LP1211-M",              "Angling and Scheming",
+      "Left-Handed ◎",                   "Standard Distance ◎",
+      "Firm Conditions ◎",               "Corner Adept ○",
+      "Ramp Up",                         "Early Lead",
+      "Final Push",                      "Changing Gears",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -3055,11 +3055,11 @@
     "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "D", "late": "F", "end": "G",
     "gp1": "Gold Ship", "gp2": "Sakura Bakushin O",
     "skills": [
-      "Dodging Danger",                 "Plan X",
-      "Early Lead",                     "Red Shift/LP1211-M",
-      "Genius x Bakushin = Victory",    "Standard Distance ◎",
-      "Lone Wolf",                      "Swinging Maestro",
-      "Meticulous Measures"
+      "Red Shift/LP1211-M",     "Genius x Bakushin = Victory",
+      "Standard Distance ◎",    "Swinging Maestro",
+      "Early Lead",             "Plan X",
+      "Meticulous Measures",    "Dodging Danger",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -3095,12 +3095,12 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Vodka", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Changing Gears",                  "Left-Handed ◎",
-      "Early Lead",                      "Productive Plan",
-      "Fast-Paced",                      "Professor of Curvature",
-      "Final Push",                      "Red Shift/LP1211-M",
-      "Front Runner Corners ◎",          "Speed Eater",
-      "Front Runner Straightaways ◎"
+      "Red Shift/LP1211-M",        "Left-Handed ◎",
+      "Professor of Curvature",    "Early Lead",
+      "Fast-Paced",                "Final Push",
+      "Productive Plan",           "Changing Gears",
+      "Speed Eater",               "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -3141,11 +3141,11 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "S", "medium": "B", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "F",
     "gp1": "Grass Wonder", "gp2": "El Condor Pasa c",
     "skills": [
-      "Acceleration",           "Productive Plan",
-      "Breath of Fresh Air",    "Ramp Up",
-      "Changing Gears",         "Red Shift/LP1211-M",
-      "Early Lead",             "Straightaway Adept",
-      "Opening Gambit",         "Tokyo Racecourse ◎"
+      "Red Shift/LP1211-M",    "Tokyo Racecourse ◎",
+      "Straightaway Adept",    "Breath of Fresh Air",
+      "Ramp Up",               "Early Lead",
+      "Productive Plan",       "Changing Gears",
+      "Acceleration",          "Opening Gambit"
     ],
     "sparks": {
       "parent": [
@@ -3182,13 +3182,13 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Vodka",
     "skills": [
-      "Acceleration",                    "Mile Corners ◎",
-      "Changing Gears",                  "Nimble Navigator",
-      "Corner Adept ○",                  "Productive Plan",
-      "Early Lead",                      "Red Shift/LP1211-M",
-      "Focus",                           "Standard Distance ◎",
-      "Front Runner Corners ◎",          "Trick (Front)",
-      "Front Runner Straightaways ◎"
+      "Red Shift/LP1211-M",        "Standard Distance ◎",
+      "Corner Adept ○",            "Focus",
+      "Nimble Navigator",          "Early Lead",
+      "Productive Plan",           "Trick (Front)",
+      "Mile Corners ◎",            "Changing Gears",
+      "Acceleration",              "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -3238,11 +3238,11 @@
     "turf": "S", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Seiun Sky", "gp2": "Vodka",
     "skills": [
-      "Angling and Scheming",      "Productive Plan",
-      "Changing Gears",            "Professor of Curvature",
-      "Early Lead",                "Red Shift/LP1211-M",
-      "Front Runner Corners ◎",    "Unrestrained",
-      "Left-Handed ◎"
+      "Red Shift/LP1211-M",        "Angling and Scheming",
+      "Left-Handed ◎",             "Professor of Curvature",
+      "Early Lead",                "Unrestrained",
+      "Productive Plan",           "Changing Gears",
+      "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -3291,12 +3291,12 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "S", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Vodka",
     "skills": [
-      "Changing Gears",       "Leader's Pride",
-      "Corner Recovery ○",    "Left-Handed ◎",
-      "Dodging Danger",       "Productive Plan",
-      "Early Lead",           "Professor of Curvature",
-      "Fast-Paced",           "Red Shift/LP1211-M",
-      "Homestretch Haste",    "Unrestrained"
+      "Red Shift/LP1211-M",        "Left-Handed ◎",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Homestretch Haste",         "Early Lead",
+      "Fast-Paced",                "Unrestrained",
+      "Productive Plan",           "Changing Gears",
+      "Dodging Danger",            "Leader's Pride"
     ],
     "sparks": {
       "parent": [
@@ -3342,13 +3342,13 @@
     "turf": "A", "dirt": "C", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "D", "late": "G", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Oguri Cap",
     "skills": [
-      "Changing Gears",          "Position Pilfer",
-      "Competitive Spirit ◎",    "Red Shift/LP1211-M",
-      "Early Lead",              "Standard Distance ◎",
-      "In Body and Mind",        "Studious",
-      "Kyoto Racecourse ◎",      "Subdued Front Runners",
-      "Lone Wolf",               "Tactical Tweak",
-      "Outer Swell",             "Tokyo Racecourse ◎"
+      "Red Shift/LP1211-M",      "Tokyo Racecourse ◎",
+      "Kyoto Racecourse ◎",      "Standard Distance ◎",
+      "Competitive Spirit ◎",    "In Body and Mind",
+      "Early Lead",              "Position Pilfer",
+      "Outer Swell",             "Subdued Front Runners",
+      "Changing Gears",          "Tactical Tweak",
+      "Studious",                "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -3393,12 +3393,12 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "B", "long": "C", "front": "A", "pace": "E", "late": "G", "end": "F",
     "gp1": "El Condor Pasa c", "gp2": "Grass Wonder",
     "skills": [
-      "Acceleration",            "Ramp Up",
-      "Breath of Fresh Air",     "Red Shift/LP1211-M",
-      "Changing Gears",          "Second Wind",
-      "Mile Straightaways ◎",    "Unyielding Spirit",
-      "Nimble Navigator",        "Wet Conditions ◎",
-      "Productive Plan"
+      "Red Shift/LP1211-M",      "Wet Conditions ◎",
+      "Breath of Fresh Air",     "Ramp Up",
+      "Nimble Navigator",        "Productive Plan",
+      "Mile Straightaways ◎",    "Changing Gears",
+      "Acceleration",            "Unyielding Spirit",
+      "Second Wind"
     ],
     "sparks": {
       "parent": [
@@ -3435,9 +3435,9 @@
     "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "E", "late": "G", "end": "E",
     "gp1": "Gold Ship", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",          "Professor of Curvature",
-      "Breath of Fresh Air",    "Red Shift/LP1211-M",
-      "Corner Recovery ○",      "Triumphant Pulse",
+      "Red Shift/LP1211-M",        "Triumphant Pulse",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Beeline Burst",             "Breath of Fresh Air",
       "Productive Plan"
     ],
     "sparks": {
@@ -3473,11 +3473,11 @@
     "turf": "A", "dirt": "D", "sprint": "B", "mile": "A", "medium": "A", "long": "C", "front": "S", "pace": "C", "late": "G", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Mihono Bourbon",
     "skills": [
-      "Changing Gears",          "Front Runner Straightaways ◎",
-      "Dodging Danger",          "Left-Handed ◎",
-      "Early Lead",              "Productive Plan",
-      "Escape Artist",           "Red Shift/LP1211-M",
-      "Front Runner Savvy ◎",    "Unrestrained"
+      "Red Shift/LP1211-M",    "Left-Handed ◎",
+      "Early Lead",            "Escape Artist",
+      "Unrestrained",          "Productive Plan",
+      "Changing Gears",        "Front Runner Straightaways ◎",
+      "Dodging Danger",        "Front Runner Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -3517,11 +3517,11 @@
     "turf": "A", "dirt": "F", "sprint": "F", "mile": "A", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "F",
     "gp1": "Nice Nature c", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",            "Inside Scoop",
-      "Fighter",                        "Late Surger Straightaways ◎",
-      "Focus",                          "Swinging Maestro",
-      "Homestretch Haste",              "Triumphant Pulse",
-      "I See Victory in My Future!"
+      "I See Victory in My Future!",    "Triumphant Pulse",
+      "Swinging Maestro",               "Breath of Fresh Air",
+      "Focus",                          "Homestretch Haste",
+      "Inside Scoop",                   "Late Surger Straightaways ◎",
+      "Fighter"
     ],
     "sparks": {
       "parent": [
@@ -3564,11 +3564,11 @@
     "turf": "A", "dirt": "B", "sprint": "D", "mile": "B", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "B", "end": "B",
     "gp1": "Taiki Shuttle", "gp2": "Nice Nature c",
     "skills": [
-      "Breath of Fresh Air",             "Leader's Pride",
-      "Firm Conditions ◎",               "Nimble Navigator",
-      "Flashy☆Landing",                  "Productive Plan",
-      "Front Runner Corners ◎",          "Professor of Curvature",
-      "Front Runner Straightaways ◎"
+      "Flashy☆Landing",                  "Firm Conditions ◎",
+      "Professor of Curvature",          "Breath of Fresh Air",
+      "Nimble Navigator",                "Productive Plan",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎",
+      "Leader's Pride"
     ],
     "sparks": {
       "parent": [
@@ -3609,11 +3609,11 @@
     "turf": "A", "dirt": "B", "sprint": "D", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "B", "end": "B",
     "gp1": "Taiki Shuttle", "gp2": "Maruzensky",
     "skills": [
-      "Breath of Fresh Air",     "Professor of Curvature",
-      "Flashy☆Landing",          "Red Shift/LP1211-M",
-      "Frenzied End Closers",    "Standard Distance ◎",
-      "Homestretch Haste",       "Sympathy",
-      "Leader's Pride",          "Wet Conditions ◎"
+      "Flashy☆Landing",            "Red Shift/LP1211-M",
+      "Standard Distance ◎",       "Wet Conditions ◎",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Homestretch Haste",         "Frenzied End Closers",
+      "Leader's Pride",            "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -3655,10 +3655,10 @@
     "turf": "A", "dirt": "A", "sprint": "D", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "B", "end": "B",
     "gp1": "Taiki Shuttle", "gp2": "Nice Nature c",
     "skills": [
-      "Beeline Burst",          "Professor of Curvature",
-      "Breath of Fresh Air",    "Shifting Gears",
-      "Flashy☆Landing",         "Shooting for Victory!",
-      "Nimble Navigator",       "Straight Descent"
+      "Flashy☆Landing",            "Shooting for Victory!",
+      "Professor of Curvature",    "Beeline Burst",
+      "Breath of Fresh Air",       "Nimble Navigator",
+      "Shifting Gears",            "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -3700,11 +3700,11 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "C", "end": "F",
     "gp1": "Biwa Hayahide", "gp2": "Gold Ship",
     "skills": [
-      "Calm and Collected",          "Spring Runner ◎",
-      "Focus",                       "Straight Descent",
-      "Homestretch Haste",           "Swinging Maestro",
-      "Long Corners ◎",              "The Duty of Dignity Calls",
-      "Outer Post Proficiency ◎"
+      "The Duty of Dignity Calls",    "Spring Runner ◎",
+      "Outer Post Proficiency ◎",     "Swinging Maestro",
+      "Focus",                        "Homestretch Haste",
+      "Calm and Collected",           "Long Corners ◎",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -3749,10 +3749,10 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "D", "end": "F",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",         "Pace Chaser Corners ◎",
-      "Calm and Collected",    "Prudent Positioning",
-      "Highlander",            "Swinging Maestro",
-      "Long Corners ◎",        "The Duty of Dignity Calls"
+      "The Duty of Dignity Calls",    "Swinging Maestro",
+      "Beeline Burst",                "Prudent Positioning",
+      "Calm and Collected",           "Long Corners ◎",
+      "Pace Chaser Corners ◎",        "Highlander"
     ],
     "sparks": {
       "parent": [
@@ -3796,12 +3796,12 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "C", "end": "F",
     "gp1": "Biwa Hayahide", "gp2": "Gold Ship",
     "skills": [
-      "Calm and Collected",    "Ramp Up",
-      "Firm Conditions ◎",     "Spring Runner ◎",
-      "Focus",                 "Standard Distance ◎",
-      "Hydrate",               "Straight Descent",
-      "Long Corners ◎",        "Swinging Maestro",
-      "Nimble Navigator",      "The Duty of Dignity Calls"
+      "The Duty of Dignity Calls",    "Standard Distance ◎",
+      "Firm Conditions ◎",            "Spring Runner ◎",
+      "Swinging Maestro",             "Focus",
+      "Ramp Up",                      "Nimble Navigator",
+      "Calm and Collected",           "Long Corners ◎",
+      "Straight Descent",             "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -3841,12 +3841,12 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "C", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Gold Ship",
     "skills": [
-      "Firm Conditions ◎",           "Spring Runner ◎",
-      "Focus",                       "Swinging Maestro",
-      "Homestretch Haste",           "The Duty of Dignity Calls",
-      "Long Corners ◎",              "Triumphant Pulse",
-      "Non-Standard Distance ◎",     "Vanguard Spirit",
-      "Outer Post Proficiency ◎"
+      "The Duty of Dignity Calls",    "Triumphant Pulse",
+      "Non-Standard Distance ◎",      "Firm Conditions ◎",
+      "Spring Runner ◎",              "Outer Post Proficiency ◎",
+      "Swinging Maestro",             "Focus",
+      "Homestretch Haste",            "Long Corners ◎",
+      "Vanguard Spirit"
     ],
     "sparks": {
       "parent": [
@@ -3886,10 +3886,10 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "C", "end": "F",
     "gp1": "Daiwa Scarlet c", "gp2": "Gold Ship",
     "skills": [
-      "Early Lead",             "Swinging Maestro",
-      "Firm Conditions ◎",      "The Duty of Dignity Calls",
-      "Long Corners ◎",         "Trick (Front)",
-      "Prudent Positioning",    "Vanguard Spirit",
+      "The Duty of Dignity Calls",    "Firm Conditions ◎",
+      "Swinging Maestro",             "Prudent Positioning",
+      "Early Lead",                   "Trick (Front)",
+      "Long Corners ◎",               "Vanguard Spirit",
       "Stamina Eater"
     ],
     "sparks": {
@@ -3925,10 +3925,10 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "D", "end": "F",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Calm and Collected",          "Swinging Maestro",
-      "Long Corners ◎",              "The Duty of Dignity Calls",
-      "Outer Post Proficiency ◎",    "Triumphant Pulse",
-      "Standard Distance ◎",         "Vanguard Spirit"
+      "The Duty of Dignity Calls",    "Triumphant Pulse",
+      "Standard Distance ◎",          "Outer Post Proficiency ◎",
+      "Swinging Maestro",             "Calm and Collected",
+      "Long Corners ◎",               "Vanguard Spirit"
     ],
     "sparks": {
       "parent": [
@@ -3970,10 +3970,10 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "C", "end": "F",
     "gp1": "Tokai Teio", "gp2": "Gold Ship",
     "skills": [
-      "Calm and Collected",    "Prudent Positioning",
-      "Firm Conditions ◎",     "Swinging Maestro",
-      "Gourmand",              "The Duty of Dignity Calls",
-      "Long Corners ◎"
+      "The Duty of Dignity Calls",    "Firm Conditions ◎",
+      "Swinging Maestro",             "Prudent Positioning",
+      "Calm and Collected",           "Long Corners ◎",
+      "Gourmand"
     ],
     "sparks": {
       "parent": [
@@ -4016,12 +4016,12 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "D", "end": "E",
     "gp1": "Tokai Teio", "gp2": "Gold Ship",
     "skills": [
-      "Corner Recovery ○",         "Sky-High Teio Step",
-      "Firm Conditions ◎",         "Straight Descent",
-      "Homestretch Haste",         "Straightaway Adept",
-      "Long Corners ◎",            "Straightaway Recovery",
-      "Pressure",                  "The Duty of Dignity Calls",
-      "Professor of Curvature"
+      "The Duty of Dignity Calls",    "Sky-High Teio Step",
+      "Firm Conditions ◎",            "Professor of Curvature",
+      "Corner Recovery ○",            "Straightaway Adept",
+      "Straightaway Recovery",        "Homestretch Haste",
+      "Long Corners ◎",               "Pressure",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -4064,10 +4064,10 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "D", "end": "E",
     "gp1": "Seiun Sky", "gp2": "Gold Ship",
     "skills": [
-      "Angling and Scheming",    "Swinging Maestro",
-      "Early Lead",              "The Duty of Dignity Calls",
-      "Final Push",              "Vanguard Spirit",
-      "Long Corners ◎"
+      "The Duty of Dignity Calls",    "Angling and Scheming",
+      "Swinging Maestro",             "Early Lead",
+      "Final Push",                   "Long Corners ◎",
+      "Vanguard Spirit"
     ],
     "sparks": {
       "parent": [
@@ -4110,11 +4110,11 @@
     "turf": "S", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "S", "front": "B", "pace": "A", "late": "D", "end": "E",
     "gp1": "Oguri Cap", "gp2": "Gold Ship",
     "skills": [
-      "Beeline Burst",            "Pace Chaser Straightaways ◎",
-      "Focus",                    "Shrewd Step",
-      "Gourmand",                 "Swinging Maestro",
-      "Long Corners ◎",           "The Duty of Dignity Calls",
-      "Pace Chaser Corners ◎",    "Triumphant Pulse"
+      "The Duty of Dignity Calls",      "Triumphant Pulse",
+      "Swinging Maestro",               "Beeline Burst",
+      "Focus",                          "Long Corners ◎",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Shrewd Step",                    "Gourmand"
     ],
     "sparks": {
       "parent": [
@@ -4159,11 +4159,11 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "S", "long": "A", "front": "B", "pace": "A", "late": "B", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Gold Ship",
     "skills": [
-      "Beeline Burst",            "Pace Chaser Straightaways ◎",
-      "Firm Conditions ◎",        "Shrewd Step",
-      "Gourmand",                 "Swinging Maestro",
-      "Nimble Navigator",         "The Duty of Dignity Calls",
-      "Pace Chaser Corners ◎",    "Triumphant Pulse"
+      "The Duty of Dignity Calls",      "Triumphant Pulse",
+      "Firm Conditions ◎",              "Swinging Maestro",
+      "Beeline Burst",                  "Nimble Navigator",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Shrewd Step",                    "Gourmand"
     ],
     "sparks": {
       "parent": [
@@ -4210,12 +4210,12 @@
     "turf": "S", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "B", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Gold Ship",
     "skills": [
-      "Calm and Collected",    "Nimble Navigator",
-      "Firm Conditions ◎",     "Prudent Positioning",
-      "Focus",                 "Ramp Up",
-      "Go with the Flow",      "Swinging Maestro",
-      "Hydrate",               "The Duty of Dignity Calls",
-      "Long Corners ◎",        "Triumphant Pulse"
+      "The Duty of Dignity Calls",    "Triumphant Pulse",
+      "Firm Conditions ◎",            "Swinging Maestro",
+      "Focus",                        "Prudent Positioning",
+      "Ramp Up",                      "Nimble Navigator",
+      "Go with the Flow",             "Calm and Collected",
+      "Long Corners ◎",               "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -4255,11 +4255,11 @@
     "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "S", "long": "A", "front": "B", "pace": "A", "late": "D", "end": "D",
     "gp1": "Gold Ship", "gp2": "Seiun Sky",
     "skills": [
-      "Cooldown",                "Professor of Curvature",
-      "Focus",                   "Slipstream",
-      "Legacy of the Strong",    "Stamina to Spare",
-      "Nimble Navigator",        "Straight Descent",
-      "Pressure"
+      "Legacy of the Strong",    "Professor of Curvature",
+      "Focus",                   "Nimble Navigator",
+      "Stamina to Spare",        "Cooldown",
+      "Pressure",                "Straight Descent",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -4303,13 +4303,13 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Special Week", "gp2": "Grass Wonder c",
     "skills": [
-      "All-Seeing Eyes",           "Just a Little Farther!",
-      "Disorient",                 "Maverick ◎",
-      "Flustered Pace Chasers",    "Mystifying Murmur",
+      "Just a Little Farther!",    "Tokyo Racecourse ◎",
+      "Maverick ◎",                "Trick (Rear)",
       "Frenzied End Closers",      "Subdued Front Runners",
-      "Hesitant End Closers",      "Subdued Pace Chasers",
-      "Hesitant Late Surgers",     "Tokyo Racecourse ◎",
-      "Hesitant Pace Chasers",     "Trick (Rear)"
+      "Subdued Pace Chasers",      "Flustered Pace Chasers",
+      "Hesitant Pace Chasers",     "Hesitant Late Surgers",
+      "Hesitant End Closers",      "Mystifying Murmur",
+      "Disorient",                 "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4345,11 +4345,11 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Oguri Cap",
     "skills": [
-      "All-Seeing Eyes",          "I Can Win Sometimes, Right?",
-      "Breath of Fresh Air",      "Standard Distance ◎",
-      "Flustered End Closers",    "Subdued Pace Chasers",
-      "Hesitant Late Surgers",    "Triple 7s",
-      "Hesitant Pace Chasers",    "Triumphant Pulse"
+      "I Can Win Sometimes, Right?",    "Triumphant Pulse",
+      "Standard Distance ◎",            "Breath of Fresh Air",
+      "Subdued Pace Chasers",           "Hesitant Pace Chasers",
+      "Hesitant Late Surgers",          "Flustered End Closers",
+      "All-Seeing Eyes",                "Triple 7s"
     ],
     "sparks": {
       "parent": [
@@ -4381,8 +4381,8 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "B", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Daiwa Scarlet c", "gp2": "Vodka c",
     "skills": [
-      "Calm in a Crowd",          "I Can Win Sometimes, Right?",
-      "Flustered End Closers",    "Killer Tunes"
+      "I Can Win Sometimes, Right?",    "Calm in a Crowd",
+      "Killer Tunes",                   "Flustered End Closers"
     ],
     "sparks": {
       "parent": [
@@ -4409,9 +4409,9 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "E", "pace": "B", "late": "A", "end": "D",
     "gp1": "Vodka c", "gp2": "Agnes Tachyon c",
     "skills": [
-      "A Small Breather",               "Mystifying Murmur",
-      "Adrenaline Rush",                "Studious",
-      "I Can Win Sometimes, Right?"
+      "I Can Win Sometimes, Right?",    "Adrenaline Rush",
+      "Mystifying Murmur",              "A Small Breather",
+      "Studious"
     ],
     "sparks": {
       "parent": [
@@ -4449,11 +4449,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "S", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "C",
     "gp1": "Gold Ship c", "gp2": "Grass Wonder",
     "skills": [
-      "A Small Breather",           "Just a Little Farther!",
-      "All-Seeing Eyes",            "Maverick ◎",
-      "Flustered Front Runners",    "Opening Gambit",
-      "Hesitant Front Runners",     "Subdued Front Runners",
-      "Hesitant Pace Chasers"
+      "Just a Little Farther!",    "Maverick ◎",
+      "Subdued Front Runners",     "Flustered Front Runners",
+      "Hesitant Front Runners",    "Hesitant Pace Chasers",
+      "Opening Gambit",            "A Small Breather",
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4493,12 +4493,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Special Week", "gp2": "Grass Wonder c",
     "skills": [
-      "All-Seeing Eyes",           "Left-Handed ◎",
-      "Flustered Pace Chasers",    "Maverick ◎",
-      "Frenzied End Closers",      "Standard Distance ◎",
-      "Hesitant Front Runners",    "Subdued Front Runners",
-      "Hesitant Late Surgers",     "Subdued Pace Chasers",
-      "Just a Little Farther!"
+      "Just a Little Farther!",    "Left-Handed ◎",
+      "Standard Distance ◎",       "Maverick ◎",
+      "Frenzied End Closers",      "Subdued Front Runners",
+      "Hesitant Front Runners",    "Subdued Pace Chasers",
+      "Flustered Pace Chasers",    "Hesitant Late Surgers",
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4535,11 +4535,11 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "C", "medium": "S", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Oguri Cap",
     "skills": [
-      "A Small Breather",               "Maverick ◎",
-      "All-Seeing Eyes",                "Red Shift/LP1211-M",
-      "Hesitant Front Runners",         "Standard Distance ◎",
-      "Hesitant Late Surgers",          "Triumphant Pulse",
-      "I Can Win Sometimes, Right?"
+      "I Can Win Sometimes, Right?",    "Red Shift/LP1211-M",
+      "Triumphant Pulse",               "Standard Distance ◎",
+      "Maverick ◎",                     "Hesitant Front Runners",
+      "Hesitant Late Surgers",          "A Small Breather",
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4571,11 +4571,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Agnes Tachyon", "gp2": "Maruzensky",
     "skills": [
-      "All-Seeing Eyes",           "Mile Straightaways ◎",
-      "Hesitant Front Runners",    "Opening Gambit",
-      "Hesitant Late Surgers",     "Subdued Front Runners",
-      "Hesitant Pace Chasers",     "Trick (Rear)",
-      "Just a Little Farther!"
+      "Just a Little Farther!",    "Trick (Rear)",
+      "Subdued Front Runners",     "Hesitant Front Runners",
+      "Hesitant Pace Chasers",     "Hesitant Late Surgers",
+      "Mile Straightaways ◎",      "Opening Gambit",
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4614,11 +4614,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Agnes Tachyon", "gp2": "Grass Wonder c",
     "skills": [
-      "All-Seeing Eyes",           "Subdued Front Runners",
-      "Hesitant Front Runners",    "Tokyo Racecourse ◎",
-      "Hesitant Late Surgers",     "Trick (Rear)",
-      "Hesitant Pace Chasers",     "Wet Conditions ◎",
-      "Just a Little Farther!"
+      "Just a Little Farther!",    "Tokyo Racecourse ◎",
+      "Wet Conditions ◎",          "Trick (Rear)",
+      "Subdued Front Runners",     "Hesitant Front Runners",
+      "Hesitant Pace Chasers",     "Hesitant Late Surgers",
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4654,12 +4654,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "S", "late": "A", "end": "B",
     "gp1": "Gold Ship c", "gp2": "Oguri Cap",
     "skills": [
-      "All-Seeing Eyes",           "I Can Win Sometimes, Right?",
-      "Flustered Pace Chasers",    "Lucky Seven",
-      "Frenzied End Closers",      "Subdued Front Runners",
-      "Frenzied Pace Chasers",     "Tether",
-      "Hesitant Late Surgers",     "Trick (Rear)",
-      "Hesitant Pace Chasers"
+      "I Can Win Sometimes, Right?",    "Trick (Rear)",
+      "Frenzied Pace Chasers",          "Frenzied End Closers",
+      "Subdued Front Runners",          "Flustered Pace Chasers",
+      "Hesitant Pace Chasers",          "Hesitant Late Surgers",
+      "Tether",                         "All-Seeing Eyes",
+      "Lucky Seven"
     ],
     "sparks": {
       "parent": [
@@ -4699,8 +4699,8 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Special Week",
     "skills": [
-      "Adrenaline Rush",    "Hesitant Pace Chasers",
-      "All-Seeing Eyes",    "I Can Win Sometimes, Right?"
+      "I Can Win Sometimes, Right?",    "Adrenaline Rush",
+      "Hesitant Pace Chasers",          "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4736,9 +4736,9 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "S", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Gold Ship",
     "skills": [
-      "Adrenaline Rush",         "Hesitant Pace Chasers",
-      "All-Seeing Eyes",         "I Can Win Sometimes, Right?",
-      "Hesitant End Closers",    "Trick (Rear)"
+      "I Can Win Sometimes, Right?",    "Adrenaline Rush",
+      "Trick (Rear)",                   "Hesitant Pace Chasers",
+      "Hesitant End Closers",           "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4775,12 +4775,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Vodka",
     "skills": [
-      "A Small Breather",          "I Can Win Sometimes, Right?",
-      "All-Seeing Eyes",           "Lucky Seven",
-      "Hesitant End Closers",      "Studious",
-      "Hesitant Front Runners",    "Subdued Pace Chasers",
-      "Hesitant Late Surgers",     "Trick (Front)",
-      "Hesitant Pace Chasers"
+      "I Can Win Sometimes, Right?",    "Trick (Front)",
+      "Hesitant Front Runners",         "Subdued Pace Chasers",
+      "Hesitant Pace Chasers",          "Hesitant Late Surgers",
+      "Hesitant End Closers",           "A Small Breather",
+      "Studious",                       "All-Seeing Eyes",
+      "Lucky Seven"
     ],
     "sparks": {
       "parent": [
@@ -4816,10 +4816,10 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Oguri Cap",
     "skills": [
-      "A Small Breather",        "I Can Win Sometimes, Right?",
-      "All-Seeing Eyes",         "Standard Distance ◎",
-      "Competitive Spirit ◎",    "Trick (Rear)",
-      "Firm Conditions ◎",       "Triumphant Pulse"
+      "I Can Win Sometimes, Right?",    "Triumphant Pulse",
+      "Standard Distance ◎",            "Firm Conditions ◎",
+      "Competitive Spirit ◎",           "Trick (Rear)",
+      "A Small Breather",               "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4852,11 +4852,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "S", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Special Week", "gp2": "Grass Wonder c",
     "skills": [
-      "All-Seeing Eyes",           "Hesitant Front Runners",
-      "Disorient",                 "Hesitant Late Surgers",
-      "Flustered Pace Chasers",    "Just a Little Farther!",
-      "Frenzied End Closers",      "Mystifying Murmur",
-      "Hesitant End Closers",      "Opening Gambit"
+      "Just a Little Farther!",    "Frenzied End Closers",
+      "Hesitant Front Runners",    "Flustered Pace Chasers",
+      "Hesitant Late Surgers",     "Hesitant End Closers",
+      "Opening Gambit",            "Mystifying Murmur",
+      "Disorient",                 "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4891,12 +4891,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Agnes Tachyon", "gp2": "Maruzensky",
     "skills": [
-      "All-Seeing Eyes",           "Just a Little Farther!",
-      "Fighter",                   "Late Surger Corners ○",
-      "Frenzied End Closers",      "Late Surger Straightaways ◎",
-      "Hesitant Front Runners",    "Mystifying Murmur",
-      "Hesitant Late Surgers",     "Non-Standard Distance ◎",
-      "Hesitant Pace Chasers",     "Subdued Front Runners"
+      "Just a Little Farther!",         "Non-Standard Distance ◎",
+      "Frenzied End Closers",           "Subdued Front Runners",
+      "Hesitant Front Runners",         "Hesitant Pace Chasers",
+      "Hesitant Late Surgers",          "Mystifying Murmur",
+      "Late Surger Straightaways ◎",    "Late Surger Corners ○",
+      "Fighter",                        "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4939,11 +4939,11 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
     "gp1": "Super Creek c", "gp2": "Oguri Cap",
     "skills": [
-      "All-Seeing Eyes",                "Maverick ◎",
+      "I Can Win Sometimes, Right?",    "Maverick ◎",
+      "Trick (Rear)",                   "Subdued Pace Chasers",
+      "Hesitant Pace Chasers",          "Hesitant Late Surgers",
       "Flustered End Closers",          "Stamina Eater",
-      "Hesitant Late Surgers",          "Subdued Pace Chasers",
-      "Hesitant Pace Chasers",          "Trick (Rear)",
-      "I Can Win Sometimes, Right?"
+      "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -4978,12 +4978,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "D", "pace": "B", "late": "A", "end": "D",
     "gp1": "Agnes Tachyon", "gp2": "Gold Ship",
     "skills": [
-      "All-Seeing Eyes",           "Opening Gambit",
-      "Frenzied End Closers",      "Outer Post Proficiency ◎",
-      "Hesitant End Closers",      "Standard Distance ◎",
-      "Hesitant Late Surgers",     "Straightaway Adept",
-      "Just a Little Farther!",    "Subdued Front Runners",
-      "Mystifying Murmur",         "Tail Held High"
+      "Just a Little Farther!",      "Standard Distance ◎",
+      "Outer Post Proficiency ◎",    "Straightaway Adept",
+      "Frenzied End Closers",        "Subdued Front Runners",
+      "Hesitant Late Surgers",       "Hesitant End Closers",
+      "Opening Gambit",              "Mystifying Murmur",
+      "All-Seeing Eyes",             "Tail Held High"
     ],
     "sparks": {
       "parent": [
@@ -5027,12 +5027,12 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "S", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "D",
     "gp1": "Special Week", "gp2": "Grass Wonder c",
     "skills": [
-      "All-Seeing Eyes",           "Hesitant Late Surgers",
-      "Flustered Pace Chasers",    "Hesitant Pace Chasers",
-      "Frenzied End Closers",      "Just a Little Farther!",
-      "Frenzied Pace Chasers",     "Mystifying Murmur",
+      "Just a Little Farther!",    "Frenzied Pace Chasers",
+      "Frenzied End Closers",      "Hesitant Front Runners",
+      "Subdued Pace Chasers",      "Flustered Pace Chasers",
+      "Hesitant Pace Chasers",     "Hesitant Late Surgers",
       "Hesitant End Closers",      "Opening Gambit",
-      "Hesitant Front Runners",    "Subdued Pace Chasers"
+      "Mystifying Murmur",         "All-Seeing Eyes"
     ],
     "sparks": {
       "parent": [
@@ -5070,10 +5070,10 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "F",
     "gp1": "Gold Ship", "gp2": "Taiki Shuttle",
     "skills": [
-      "Beeline Burst",                  "Pace Chaser Corners ◎",
-      "Flustered Front Runners",        "Pace Chaser Straightaways ◎",
       "Genius x Bakushin = Victory",    "Right-Handed ◎",
-      "No Stopping Me!",                "Turbo Sprint"
+      "Beeline Burst",                  "No Stopping Me!",
+      "Turbo Sprint",                   "Flustered Front Runners",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -5116,12 +5116,12 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "F", "long": "F", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Nice Nature c", "gp2": "Agnes Tachyon",
     "skills": [
-      "Corner Recovery ○",              "Slipstream",
-      "Focus",                          "Straight Descent",
-      "Genius x Bakushin = Victory",    "Target in Sight ◎",
-      "Lucky Seven",                    "Thunderbolt Step",
-      "Right-Handed ◎",                 "Turbo Sprint",
-      "Rushing Gale!"
+      "Genius x Bakushin = Victory",    "Right-Handed ◎",
+      "Target in Sight ◎",              "Corner Recovery ○",
+      "Rushing Gale!",                  "Focus",
+      "Turbo Sprint",                   "Thunderbolt Step",
+      "Straight Descent",               "Lucky Seven",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -5160,9 +5160,9 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "F",
     "gp1": "Tokai Teio", "gp2": "Symboli Rudolf",
     "skills": [
+      "Genius x Bakushin = Victory",            "Sky-High Teio Step",
       "Behold Thine Emperor's Divine Might",    "Professor of Curvature",
-      "Breath of Fresh Air",                    "Sky-High Teio Step",
-      "Genius x Bakushin = Victory",            "Turbo Sprint",
+      "Breath of Fresh Air",                    "Turbo Sprint",
       "Plan X"
     ],
     "sparks": {
@@ -5202,12 +5202,12 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "E", "long": "F", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Mayano Top Gun",
     "skills": [
-      "Beeline Burst",                  "Nimble Navigator",
-      "Competitive Spirit ◎",           "Pace Chaser Straightaways ◎",
-      "Firm Conditions ◎",              "Prepared to Pass",
-      "Flashy☆Landing",                 "Right-Handed ◎",
       "Genius x Bakushin = Victory",    "Sky-High Teio Step",
-      "Lone Wolf",                      "Standard Distance ◎"
+      "Flashy☆Landing",                 "Right-Handed ◎",
+      "Standard Distance ◎",            "Firm Conditions ◎",
+      "Competitive Spirit ◎",           "Beeline Burst",
+      "Nimble Navigator",               "Prepared to Pass",
+      "Pace Chaser Straightaways ◎",    "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -5256,11 +5256,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "F",
     "gp1": "Gold Ship", "gp2": "Taiki Shuttle",
     "skills": [
-      "Competitive Spirit ◎",           "Left-Handed ◎",
-      "Corner Adept ○",                 "Pace Chaser Straightaways ◎",
-      "Corner Recovery ○",              "Shooting for Victory!",
-      "Flustered Front Runners",        "Tactical Tweak",
-      "Genius x Bakushin = Victory",    "Turbo Sprint"
+      "Genius x Bakushin = Victory",    "Shooting for Victory!",
+      "Left-Handed ◎",                  "Competitive Spirit ◎",
+      "Corner Adept ○",                 "Corner Recovery ○",
+      "Turbo Sprint",                   "Flustered Front Runners",
+      "Pace Chaser Straightaways ◎",    "Tactical Tweak"
     ],
     "sparks": {
       "parent": [
@@ -5302,13 +5302,13 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "G", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Daiwa Scarlet c", "gp2": "Fuji Kiseki",
     "skills": [
-      "Corner Recovery ○",              "Professor of Curvature",
-      "Dodging Danger",                 "Shooting for Victory!",
-      "Final Push",                     "Straightaway Recovery",
-      "Front Runner Corners ◎",         "Sunny Days ◎",
-      "Genius x Bakushin = Victory",    "Turbo Sprint",
-      "Lights of Vaudeville",           "Wet Conditions ◎",
-      "Outer Post Proficiency ◎"
+      "Genius x Bakushin = Victory",    "Lights of Vaudeville",
+      "Shooting for Victory!",          "Wet Conditions ◎",
+      "Sunny Days ◎",                   "Outer Post Proficiency ◎",
+      "Professor of Curvature",         "Corner Recovery ○",
+      "Straightaway Recovery",          "Final Push",
+      "Turbo Sprint",                   "Front Runner Corners ◎",
+      "Dodging Danger"
     ],
     "sparks": {
       "parent": [
@@ -5344,12 +5344,12 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "G", "long": "E", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Fuji Kiseki",
     "skills": [
-      "Competitive Spirit ◎",           "Standard Distance ◎",
-      "Genius x Bakushin = Victory",    "Straight Descent",
-      "Pace Chaser Straightaways ◎",    "Straightaway Acceleration",
-      "Professor of Curvature",         "Triple 7s",
+      "Genius x Bakushin = Victory",    "Sky-High Teio Step",
+      "Standard Distance ◎",            "Competitive Spirit ◎",
+      "Professor of Curvature",         "Straightaway Acceleration",
       "Ramp Up",                        "Turbo Sprint",
-      "Sky-High Teio Step"
+      "Pace Chaser Straightaways ◎",    "Straight Descent",
+      "Triple 7s"
     ],
     "sparks": {
       "parent": [
@@ -5387,11 +5387,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "F", "front": "A", "pace": "A", "late": "E", "end": "F",
     "gp1": "Mayano Top Gun", "gp2": "Gold Ship",
     "skills": [
-      "Beeline Burst",                  "Pace Chaser Straightaways ◎",
-      "Firm Conditions ◎",              "Plan X",
-      "Flashy☆Landing",                 "Professor of Curvature",
-      "Genius x Bakushin = Victory",    "Sprint Straightaways ◎",
-      "Pace Chaser Corners ◎",          "Straightaway Recovery"
+      "Genius x Bakushin = Victory",    "Flashy☆Landing",
+      "Firm Conditions ◎",              "Professor of Curvature",
+      "Beeline Burst",                  "Straightaway Recovery",
+      "Sprint Straightaways ◎",         "Plan X",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -5435,14 +5435,14 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "D", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Maruzensky", "gp2": "King Halo c",
     "skills": [
-      "Firm Conditions ◎",              "Prudent Positioning",
-      "Flustered Front Runners",        "Red Shift/LP1211-M",
-      "Genius x Bakushin = Victory",    "Straightaway Adept",
-      "Huge Lead",                      "Straightaway Recovery",
-      "Lone Wolf",                      "Tactical Tweak",
-      "Lucky Seven",                    "Turbo Sprint",
-      "Pace Chaser Straightaways ◎",    "U=ma2",
-      "Prepared to Pass"
+      "Genius x Bakushin = Victory",    "Red Shift/LP1211-M",
+      "U=ma2",                          "Firm Conditions ◎",
+      "Straightaway Adept",             "Straightaway Recovery",
+      "Prudent Positioning",            "Prepared to Pass",
+      "Turbo Sprint",                   "Flustered Front Runners",
+      "Huge Lead",                      "Pace Chaser Straightaways ◎",
+      "Tactical Tweak",                 "Lucky Seven",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -5480,10 +5480,10 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "G", "long": "F", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Mejiro McQueen", "gp2": "Taiki Shuttle",
     "skills": [
-      "Genius x Bakushin = Victory",    "Straightaway Adept",
-      "Huge Lead",                      "Straightaway Recovery",
-      "No Stopping Me!",                "The Duty of Dignity Calls",
-      "Pace Chaser Straightaways ◎",    "Turbo Sprint"
+      "Genius x Bakushin = Victory",    "The Duty of Dignity Calls",
+      "Straightaway Adept",             "Straightaway Recovery",
+      "No Stopping Me!",                "Turbo Sprint",
+      "Huge Lead",                      "Pace Chaser Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -5522,11 +5522,11 @@
     "turf": "S", "dirt": "G", "sprint": "A", "mile": "A", "medium": "E", "long": "F", "front": "A", "pace": "A", "late": "E", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Mayano Top Gun",
     "skills": [
-      "Beeline Burst",                  "Lone Wolf",
-      "Corner Adept ○",                 "Pace Chaser Corners ◎",
-      "Firm Conditions ◎",              "Pace Chaser Straightaways ◎",
-      "Flashy☆Landing",                 "Sky-High Teio Step",
-      "Genius x Bakushin = Victory"
+      "Genius x Bakushin = Victory",    "Sky-High Teio Step",
+      "Flashy☆Landing",                 "Firm Conditions ◎",
+      "Corner Adept ○",                 "Beeline Burst",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -5569,10 +5569,10 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "F", "long": "E", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Maruzensky", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Genius x Bakushin = Victory",    "Ramp Up",
-      "Huge Lead",                      "Red Shift/LP1211-M",
-      "Plan X",                         "Turbo Sprint",
-      "Professor of Curvature"
+      "Genius x Bakushin = Victory",    "Red Shift/LP1211-M",
+      "Professor of Curvature",         "Ramp Up",
+      "Turbo Sprint",                   "Huge Lead",
+      "Plan X"
     ],
     "sparks": {
       "parent": [
@@ -5606,10 +5606,10 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "G", "long": "F", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Mejiro McQueen", "gp2": "Taiki Shuttle",
     "skills": [
-      "Beeline Burst",                  "Pace Chaser Corners ◎",
-      "Corner Recovery ○",              "Shooting for Victory!",
-      "Genius x Bakushin = Victory",    "The Duty of Dignity Calls",
-      "No Stopping Me!",                "Turbo Sprint"
+      "Genius x Bakushin = Victory",    "Shooting for Victory!",
+      "The Duty of Dignity Calls",      "Corner Recovery ○",
+      "Beeline Burst",                  "No Stopping Me!",
+      "Turbo Sprint",                   "Pace Chaser Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -5652,11 +5652,11 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "E", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "F",
     "gp1": "Gold Ship", "gp2": "Taiki Shuttle",
     "skills": [
-      "Corner Recovery ○",              "Preferred Position",
-      "Firm Conditions ◎",              "Right-Handed ◎",
-      "Flustered Front Runners",        "Spring Runner ◎",
       "Genius x Bakushin = Victory",    "Triumphant Pulse",
-      "No Stopping Me!",                "Turbo Sprint",
+      "Right-Handed ◎",                 "Firm Conditions ◎",
+      "Spring Runner ◎",                "Corner Recovery ○",
+      "No Stopping Me!",                "Preferred Position",
+      "Turbo Sprint",                   "Flustered Front Runners",
       "Pace Chaser Straightaways ◎"
     ],
     "sparks": {
@@ -5700,9 +5700,9 @@
     "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "G", "long": "F", "front": "A", "pace": "A", "late": "F", "end": "G",
     "gp1": "Mejiro McQueen", "gp2": "Taiki Shuttle",
     "skills": [
-      "Beeline Burst",                  "Sunny Days ◎",
-      "Genius x Bakushin = Victory",    "The Duty of Dignity Calls",
-      "Iron Will",                      "Triumphant Pulse",
+      "Genius x Bakushin = Victory",    "Triumphant Pulse",
+      "The Duty of Dignity Calls",      "Sunny Days ◎",
+      "Beeline Burst",                  "Iron Will",
       "No Stopping Me!",                "Turbo Sprint",
       "Pace Chaser Straightaways ◎"
     ],
@@ -5745,12 +5745,12 @@
     "turf": "S", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
     "gp1": "El Condor Pasa", "gp2": "Vodka",
     "skills": [
-      "Angling and Scheming",     "Front Runner Straightaways ◎",
-      "Corner Acceleration ○",    "Hesitant Pace Chasers",
-      "Corner Adept ○",           "Homestretch Haste",
-      "Fast-Paced",               "Straightaway Acceleration",
-      "Firm Conditions ◎",        "Straightaway Recovery",
-      "Frenzied End Closers",     "Victoria por plancha ☆",
+      "Angling and Scheming",     "Victoria por plancha ☆",
+      "Firm Conditions ◎",        "Corner Adept ○",
+      "Corner Acceleration ○",    "Straightaway Acceleration",
+      "Straightaway Recovery",    "Homestretch Haste",
+      "Fast-Paced",               "Frenzied End Closers",
+      "Hesitant Pace Chasers",    "Front Runner Straightaways ◎",
       "Front Runner Savvy ◎"
     ],
     "sparks": {
@@ -5794,12 +5794,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "C", "end": "E",
     "gp1": "Gold Ship", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Angling and Scheming",    "Leader's Pride",
-      "Fast-Paced",              "Long Straightaways ◎",
-      "Focus",                   "Prudent Positioning",
-      "Front Runner Savvy ◎",    "Ramp Up",
-      "Highlander",              "Swinging Maestro",
-      "Homestretch Haste",       "Wet Conditions ◎"
+      "Angling and Scheming",    "Wet Conditions ◎",
+      "Swinging Maestro",        "Focus",
+      "Prudent Positioning",     "Ramp Up",
+      "Homestretch Haste",       "Fast-Paced",
+      "Long Straightaways ◎",    "Leader's Pride",
+      "Front Runner Savvy ◎",    "Highlander"
     ],
     "sparks": {
       "parent": [
@@ -5837,12 +5837,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "S", "medium": "S", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "D",
     "gp1": "Gold Ship", "gp2": "Nice Nature c",
     "skills": [
-      "Angling and Scheming",      "Front Runner Savvy ◎",
-      "Cooldown",                  "Front Runner Straightaways ◎",
-      "Early Lead",                "Keeping the Lead",
-      "Fast-Paced",                "Leader's Pride",
-      "Firm Conditions ◎",         "Unrestrained",
-      "Front Runner Corners ◎"
+      "Angling and Scheming",      "Firm Conditions ◎",
+      "Early Lead",                "Fast-Paced",
+      "Unrestrained",              "Cooldown",
+      "Keeping the Lead",          "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Leader's Pride",
+      "Front Runner Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -5886,10 +5886,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
     "gp1": "El Condor Pasa", "gp2": "Nice Nature c",
     "skills": [
-      "Angling and Scheming",      "Groundwork",
-      "Focus",                     "Mile Corners ◎",
-      "Front Runner Corners ◎",    "Victoria por plancha ☆",
-      "Front Runner Savvy ◎",      "Wet Conditions ◎"
+      "Angling and Scheming",    "Victoria por plancha ☆",
+      "Wet Conditions ◎",        "Focus",
+      "Mile Corners ◎",          "Front Runner Corners ◎",
+      "Front Runner Savvy ◎",    "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -5926,9 +5926,9 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "S", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
     "gp1": "Nice Nature c", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Angling and Scheming",    "Front Runner Savvy ◎",
-      "Fast-Paced",              "Sympathy",
-      "Focus",                   "Wet Conditions ◎"
+      "Angling and Scheming",    "Wet Conditions ◎",
+      "Focus",                   "Fast-Paced",
+      "Front Runner Savvy ◎",    "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -5964,9 +5964,9 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "S", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
     "gp1": "Nice Nature c", "gp2": "El Condor Pasa",
     "skills": [
-      "Angling and Scheming",            "Speed Eater",
-      "Front Runner Savvy ◎",            "Victoria por plancha ☆",
-      "Front Runner Straightaways ◎",    "Wet Conditions ◎"
+      "Angling and Scheming",            "Victoria por plancha ☆",
+      "Wet Conditions ◎",                "Speed Eater",
+      "Front Runner Straightaways ◎",    "Front Runner Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -6008,10 +6008,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
     "gp1": "Nice Nature c", "gp2": "El Condor Pasa",
     "skills": [
-      "Angling and Scheming",    "Front Runner Straightaways ◎",
-      "Breath of Fresh Air",     "Mile Straightaways ◎",
-      "Early Lead",              "Straightaway Acceleration",
-      "Fast-Paced",              "Swinging Maestro",
+      "Angling and Scheming",         "Swinging Maestro",
+      "Straightaway Acceleration",    "Breath of Fresh Air",
+      "Early Lead",                   "Fast-Paced",
+      "Mile Straightaways ◎",         "Front Runner Straightaways ◎",
       "Front Runner Savvy ◎"
     ],
     "sparks": {
@@ -6056,15 +6056,15 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "C",
     "gp1": "Tokai Teio", "gp2": "Grass Wonder c",
     "skills": [
-      "Cloudy Days ◎",             "Shooting Star",
-      "Firm Conditions ◎",         "Speed Eater",
-      "Flustered Pace Chasers",    "Standard Distance ◎",
-      "Gourmand",                  "Straight Descent",
-      "Kyoto Racecourse ◎",        "Straightaway Acceleration",
-      "Mile Corners ◎",            "Straightaway Adept",
-      "Nakayama Racecourse ◎",     "Swinging Maestro",
-      "Nimble Navigator",          "Wet Conditions ◎",
-      "Ramp Up"
+      "Shooting Star",             "Nakayama Racecourse ◎",
+      "Kyoto Racecourse ◎",        "Standard Distance ◎",
+      "Firm Conditions ◎",         "Wet Conditions ◎",
+      "Cloudy Days ◎",             "Swinging Maestro",
+      "Straightaway Adept",        "Straightaway Acceleration",
+      "Ramp Up",                   "Nimble Navigator",
+      "Flustered Pace Chasers",    "Mile Corners ◎",
+      "Speed Eater",               "Straight Descent",
+      "Gourmand"
     ],
     "sparks": {
       "parent": [
@@ -6104,13 +6104,13 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "C",
     "gp1": "Nice Nature", "gp2": "Agnes Tachyon",
     "skills": [
-      "Firm Conditions ◎",         "Murmur",
-      "Frenzied End Closers",      "Opening Gambit",
-      "Frenzied Front Runners",    "Shooting Star",
-      "Frenzied Pace Chasers",     "Standard Distance ◎",
-      "Hesitant End Closers",      "Subdued Front Runners",
-      "Hesitant Pace Chasers",     "Subdued Pace Chasers",
-      "Maverick ◎",                "Wet Conditions ◎"
+      "Shooting Star",            "Standard Distance ◎",
+      "Firm Conditions ◎",        "Wet Conditions ◎",
+      "Maverick ◎",               "Frenzied Front Runners",
+      "Frenzied Pace Chasers",    "Frenzied End Closers",
+      "Subdued Front Runners",    "Subdued Pace Chasers",
+      "Hesitant Pace Chasers",    "Hesitant End Closers",
+      "Opening Gambit",           "Murmur"
     ],
     "sparks": {
       "parent": [
@@ -6153,12 +6153,12 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "A", "end": "C",
     "gp1": "Daiwa Scarlet c", "gp2": "Gold Ship",
     "skills": [
-      "Firm Conditions ◎",           "Shooting Star",
-      "Focus",                       "Shrewd Step",
-      "Gourmand",                    "Standard Distance ◎",
-      "Homestretch Haste",           "Straightaway Acceleration",
-      "Outer Post Proficiency ◎",    "Wet Conditions ◎",
-      "Professor of Curvature"
+      "Shooting Star",                "Standard Distance ◎",
+      "Firm Conditions ◎",            "Wet Conditions ◎",
+      "Outer Post Proficiency ◎",     "Professor of Curvature",
+      "Straightaway Acceleration",    "Focus",
+      "Homestretch Haste",            "Shrewd Step",
+      "Gourmand"
     ],
     "sparks": {
       "parent": [
@@ -6194,11 +6194,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "F", "medium": "S", "long": "A", "front": "D", "pace": "A", "late": "B", "end": "F",
     "gp1": "Mejiro McQueen", "gp2": "Tokai Teio",
     "skills": [
-      "Beeline Burst",        "Lone Wolf",
-      "Clear Heart",          "Nimble Navigator",
-      "Corner Recovery ○",    "Pace Chaser Corners ◎",
-      "Focus",                "Sky-High Teio Step",
-      "Hydrate"
+      "Clear Heart",              "Sky-High Teio Step",
+      "Corner Recovery ○",        "Beeline Burst",
+      "Focus",                    "Nimble Navigator",
+      "Pace Chaser Corners ◎",    "Hydrate",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -6241,11 +6241,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "G", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "S", "end": "G",
     "gp1": "Agnes Tachyon c", "gp2": "Special Week",
     "skills": [
-      "Clear Heart",          "Passing Pro",
-      "Corner Recovery ○",    "Professor of Curvature",
-      "Disorient",            "Shooting Star",
-      "Extra Tank",           "Stamina Eater",
-      "Homestretch Haste"
+      "Clear Heart",               "Shooting Star",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Homestretch Haste",         "Extra Tank",
+      "Passing Pro",               "Stamina Eater",
+      "Disorient"
     ],
     "sparks": {
       "parent": [
@@ -6282,12 +6282,12 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Symboli Rudolf",
     "skills": [
-      "Behold Thine Emperor's Divine Might",    "Slipstream",
-      "Lone Wolf",                              "Standard Distance ◎",
-      "Nimble Navigator",                       "Straight Descent",
-      "Professor of Curvature",                 "Swinging Maestro",
-      "Ramp Up",                                "Technician",
-      "Sky-High Teio Step"
+      "Sky-High Teio Step",     "Behold Thine Emperor's Divine Might",
+      "Standard Distance ◎",    "Professor of Curvature",
+      "Swinging Maestro",       "Ramp Up",
+      "Nimble Navigator",       "Technician",
+      "Straight Descent",       "Lone Wolf",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -6324,11 +6324,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Agnes Tachyon", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Beeline Burst",           "Professor of Curvature",
-      "Corner Recovery ○",       "Sky-High Teio Step",
-      "Focus",                   "Standard Distance ◎",
-      "Hanshin Racecourse ◎",    "Straightaway Recovery",
-      "Nimble Navigator",        "Technician",
+      "Sky-High Teio Step",       "Hanshin Racecourse ◎",
+      "Standard Distance ◎",      "Professor of Curvature",
+      "Corner Recovery ○",        "Beeline Burst",
+      "Straightaway Recovery",    "Focus",
+      "Nimble Navigator",         "Technician",
       "Pace Chaser Savvy ◎"
     ],
     "sparks": {
@@ -6374,11 +6374,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Corner Adept ○",         "Slipstream",
-      "Killer Tunes",           "Straight Descent",
-      "Nimble Navigator",       "Technician",
-      "Pace Chaser Savvy ◎",    "Triumphant Pulse",
-      "Sky-High Teio Step"
+      "Sky-High Teio Step",    "Triumphant Pulse",
+      "Corner Adept ○",        "Nimble Navigator",
+      "Killer Tunes",          "Technician",
+      "Straight Descent",      "Pace Chaser Savvy ◎",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -6418,10 +6418,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "S", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Mejiro McQueen", "gp2": "Gold Ship",
     "skills": [
-      "Nimble Navigator",            "Red Shift/LP1211-M",
-      "Outer Post Proficiency ◎",    "Sky-High Teio Step",
-      "Pace Chaser Savvy ◎",         "Swinging Maestro",
-      "Professor of Curvature",      "Technician"
+      "Sky-High Teio Step",          "Red Shift/LP1211-M",
+      "Outer Post Proficiency ◎",    "Professor of Curvature",
+      "Swinging Maestro",            "Nimble Navigator",
+      "Technician",                  "Pace Chaser Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -6458,13 +6458,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "C", "pace": "S", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Fuji Kiseki",
     "skills": [
-      "Beeline Burst",                   "Nimble Navigator",
-      "Breath of Fresh Air",             "Prudent Positioning",
-      "Corner Adept ○",                  "Sky-High Teio Step",
-      "Front Runner Straightaways ◎",    "Straight Descent",
-      "Go with the Flow",                "Technician",
-      "Late Surger Corners ○",           "Tokyo Racecourse ◎",
-      "Lights of Vaudeville"
+      "Sky-High Teio Step",       "Lights of Vaudeville",
+      "Tokyo Racecourse ◎",       "Corner Adept ○",
+      "Beeline Burst",            "Breath of Fresh Air",
+      "Prudent Positioning",      "Nimble Navigator",
+      "Go with the Flow",         "Front Runner Straightaways ◎",
+      "Technician",               "Straight Descent",
+      "Late Surger Corners ○"
     ],
     "sparks": {
       "parent": [
@@ -6504,12 +6504,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Mejiro McQueen", "gp2": "Vodka",
     "skills": [
-      "Corner Recovery ○",        "Sky-High Teio Step",
-      "Cut and Drive!",           "Standard Distance ◎",
-      "Go with the Flow",         "Straight Descent",
-      "Nimble Navigator",         "Technician",
-      "Pace Chaser Corners ◎",    "The Duty of Dignity Calls",
-      "Prudent Positioning",      "Thunderbolt Step"
+      "Sky-High Teio Step",           "Cut and Drive!",
+      "The Duty of Dignity Calls",    "Standard Distance ◎",
+      "Corner Recovery ○",            "Prudent Positioning",
+      "Nimble Navigator",             "Go with the Flow",
+      "Thunderbolt Step",             "Pace Chaser Corners ◎",
+      "Technician",                   "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -6546,10 +6546,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Oguri Cap", "gp2": "Vodka",
     "skills": [
-      "Beeline Burst",          "Sky-High Teio Step",
-      "Breath of Fresh Air",    "Straight Descent",
-      "Firm Conditions ◎",      "Technician",
-      "Killer Tunes",           "Triumphant Pulse"
+      "Sky-High Teio Step",     "Triumphant Pulse",
+      "Firm Conditions ◎",      "Beeline Burst",
+      "Breath of Fresh Air",    "Killer Tunes",
+      "Technician",             "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -6592,11 +6592,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",          "Medium Straightaways ◎",
-      "Breath of Fresh Air",    "Pace Chaser Corners ◎",
-      "Corner Adept ○",         "Shrewd Step",
-      "Focus",                  "Sky-High Teio Step",
-      "Killer Tunes"
+      "Sky-High Teio Step",        "Corner Adept ○",
+      "Beeline Burst",             "Breath of Fresh Air",
+      "Focus",                     "Killer Tunes",
+      "Medium Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Shrewd Step"
     ],
     "sparks": {
       "parent": [
@@ -6640,10 +6640,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "S", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Beeline Burst",          "Red Shift/LP1211-M",
-      "Breath of Fresh Air",    "Sky-High Teio Step",
-      "Killer Tunes",           "Technician",
-      "Nimble Navigator"
+      "Sky-High Teio Step",    "Red Shift/LP1211-M",
+      "Beeline Burst",         "Breath of Fresh Air",
+      "Nimble Navigator",      "Killer Tunes",
+      "Technician"
     ],
     "sparks": {
       "parent": [
@@ -6678,13 +6678,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Fuji Kiseki",
     "skills": [
-      "Breath of Fresh Air",         "Prudent Positioning",
-      "Focus",                       "Sky-High Teio Step",
-      "Go with the Flow",            "Spring Runner ◎",
-      "Homestretch Haste",           "Straight Descent",
-      "Left-Handed ◎",               "Straightaway Acceleration",
-      "Outer Post Proficiency ◎",    "Technician",
-      "Professor of Curvature"
+      "Sky-High Teio Step",        "Left-Handed ◎",
+      "Spring Runner ◎",           "Outer Post Proficiency ◎",
+      "Professor of Curvature",    "Straightaway Acceleration",
+      "Breath of Fresh Air",       "Focus",
+      "Prudent Positioning",       "Go with the Flow",
+      "Homestretch Haste",         "Technician",
+      "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -6725,10 +6725,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "B", "end": "D",
     "gp1": "Gold Ship", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",            "Killer Tunes",
-      "Breath of Fresh Air",      "Lucky Seven",
-      "Corner Acceleration ○",    "Sky-High Teio Step",
-      "Corner Recovery ○",        "Triumphant Pulse"
+      "Sky-High Teio Step",       "Triumphant Pulse",
+      "Corner Acceleration ○",    "Corner Recovery ○",
+      "Beeline Burst",            "Breath of Fresh Air",
+      "Killer Tunes",             "Lucky Seven"
     ],
     "sparks": {
       "parent": [
@@ -6771,12 +6771,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "B", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Beeline Burst",          "Nimble Navigator",
-      "Breath of Fresh Air",    "Sky-High Teio Step",
-      "Corner Recovery ○",      "Straight Descent",
-      "Firm Conditions ◎",      "Technician",
+      "Sky-High Teio Step",     "Triumphant Pulse",
+      "Firm Conditions ◎",      "Long Shot ◎",
+      "Corner Recovery ○",      "Beeline Burst",
+      "Breath of Fresh Air",    "Nimble Navigator",
       "Killer Tunes",           "Thunderbolt Step",
-      "Long Shot ◎",            "Triumphant Pulse"
+      "Technician",             "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -6818,11 +6818,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "B", "end": "E",
     "gp1": "Gold Ship", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",             "Sky-High Teio Step",
-      "Corner Adept ○",                  "Straightaway Adept",
-      "Front Runner Straightaways ◎",    "Sunny Days ◎",
-      "Homestretch Haste",               "Triumphant Pulse",
-      "Killer Tunes"
+      "Sky-High Teio Step",              "Triumphant Pulse",
+      "Sunny Days ◎",                    "Corner Adept ○",
+      "Straightaway Adept",              "Breath of Fresh Air",
+      "Homestretch Haste",               "Killer Tunes",
+      "Front Runner Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -6865,11 +6865,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Vodka",
     "skills": [
-      "Corner Adept ○",            "Nimble Navigator",
-      "Firm Conditions ◎",         "Pace Chaser Corners ◎",
-      "Hydrate",                   "Sky-High Teio Step",
-      "Killer Tunes",              "Swinging Maestro",
-      "Medium Straightaways ◎",    "Technician"
+      "Sky-High Teio Step",        "Firm Conditions ◎",
+      "Corner Adept ○",            "Swinging Maestro",
+      "Nimble Navigator",          "Killer Tunes",
+      "Medium Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Technician",                "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -6907,11 +6907,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",    "Standard Distance ◎",
-      "Corner Adept ○",         "Straight Descent",
-      "Killer Tunes",           "Straightaway Adept",
-      "Prepared to Pass",       "Technician",
-      "Sky-High Teio Step",     "Triumphant Pulse"
+      "Sky-High Teio Step",     "Triumphant Pulse",
+      "Standard Distance ◎",    "Corner Adept ○",
+      "Straightaway Adept",     "Breath of Fresh Air",
+      "Prepared to Pass",       "Killer Tunes",
+      "Technician",             "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -6954,13 +6954,13 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "B", "front": "C", "pace": "S", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "El Condor Pasa",
     "skills": [
-      "Corner Recovery ○",         "Playtime's Over!",
-      "Dodging Danger",            "Professor of Curvature",
-      "Fighter",                   "Prudent Positioning",
-      "Focus",                     "Sky-High Teio Step",
-      "Go with the Flow",          "Straight Descent",
-      "Medium Straightaways ◎",    "Technician",
-      "Nimble Navigator",          "Victoria por plancha ☆"
+      "Sky-High Teio Step",        "Victoria por plancha ☆",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Focus",                     "Prudent Positioning",
+      "Nimble Navigator",          "Go with the Flow",
+      "Medium Straightaways ◎",    "Dodging Danger",
+      "Technician",                "Straight Descent",
+      "Fighter",                   "Playtime's Over!"
     ],
     "sparks": {
       "parent": [
@@ -7004,12 +7004,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Mejiro McQueen",
     "skills": [
-      "Breath of Fresh Air",    "Pace Chaser Corners ◎",
-      "Corner Adept ○",         "Sky-High Teio Step",
-      "Corner Recovery ○",      "Straight Descent",
-      "Hydrate",                "Technician",
-      "Killer Tunes",           "The Duty of Dignity Calls",
-      "Nimble Navigator"
+      "Sky-High Teio Step",     "The Duty of Dignity Calls",
+      "Corner Adept ○",         "Corner Recovery ○",
+      "Breath of Fresh Air",    "Nimble Navigator",
+      "Killer Tunes",           "Pace Chaser Corners ◎",
+      "Technician",             "Straight Descent",
+      "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -7048,12 +7048,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Oguri Cap", "gp2": "Vodka",
     "skills": [
-      "Breath of Fresh Air",       "Slipstream",
-      "Killer Tunes",              "Straight Descent",
-      "Medium Straightaways ◎",    "Technician",
-      "Nimble Navigator",          "Tokyo Racecourse ◎",
-      "Pace Chaser Corners ◎",     "Triumphant Pulse",
-      "Sky-High Teio Step"
+      "Sky-High Teio Step",        "Triumphant Pulse",
+      "Tokyo Racecourse ◎",        "Breath of Fresh Air",
+      "Nimble Navigator",          "Killer Tunes",
+      "Medium Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Technician",                "Straight Descent",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -7093,13 +7093,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Fuji Kiseki",
     "skills": [
-      "Breath of Fresh Air",         "Prudent Positioning",
-      "Corner Recovery ○",           "Sky-High Teio Step",
-      "Focus",                       "Spring Runner ◎",
-      "Go with the Flow",            "Standard Distance ◎",
-      "Medium Straightaways ◎",      "Straight Descent",
-      "Nimble Navigator",            "Straightaway Acceleration",
-      "Outer Post Proficiency ◎",    "Technician"
+      "Sky-High Teio Step",     "Standard Distance ◎",
+      "Spring Runner ◎",        "Outer Post Proficiency ◎",
+      "Corner Recovery ○",      "Straightaway Acceleration",
+      "Breath of Fresh Air",    "Focus",
+      "Prudent Positioning",    "Nimble Navigator",
+      "Go with the Flow",       "Medium Straightaways ◎",
+      "Technician",             "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -7138,13 +7138,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "B", "pace": "A", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Fuji Kiseki",
     "skills": [
-      "Breath of Fresh Air",       "Stamina to Spare",
-      "Focus",                     "Standard Distance ◎",
-      "Go with the Flow",          "Steadfast",
-      "Nimble Navigator",          "Straight Descent",
-      "Professor of Curvature",    "Sunny Days ◎",
-      "Prudent Positioning",       "Sympathy",
-      "Sky-High Teio Step",        "Technician"
+      "Sky-High Teio Step",     "Standard Distance ◎",
+      "Sunny Days ◎",           "Professor of Curvature",
+      "Breath of Fresh Air",    "Focus",
+      "Prudent Positioning",    "Nimble Navigator",
+      "Go with the Flow",       "Stamina to Spare",
+      "Steadfast",              "Technician",
+      "Straight Descent",       "Sympathy"
     ],
     "sparks": {
       "parent": [
@@ -7185,13 +7185,13 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "B", "front": "C", "pace": "S", "late": "C", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "El Condor Pasa",
     "skills": [
-      "Breath of Fresh Air",             "Nimble Navigator",
-      "Competitive Spirit ◎",            "Prepared to Pass",
-      "Dodging Danger",                  "Prudent Positioning",
-      "Front Runner Corners ◎",          "Sky-High Teio Step",
-      "Front Runner Straightaways ◎",    "Standard Distance ◎",
-      "Go with the Flow",                "Straight Descent",
-      "Mile Corners ◎",                  "Technician"
+      "Sky-High Teio Step",        "Standard Distance ◎",
+      "Competitive Spirit ◎",      "Breath of Fresh Air",
+      "Prudent Positioning",       "Nimble Navigator",
+      "Go with the Flow",          "Prepared to Pass",
+      "Mile Corners ◎",            "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Dodging Danger",
+      "Technician",                "Straight Descent"
     ],
     "sparks": {
       "parent": [
@@ -7236,14 +7236,14 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "B", "front": "C", "pace": "A", "late": "B", "end": "E",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",             "Ramp Up",
-      "Corner Adept ○",                  "Sky-High Teio Step",
-      "Front Runner Straightaways ◎",    "Speed Eater",
-      "Go with the Flow",                "Straight Descent",
-      "Late Surger Corners ○",           "Sunny Days ◎",
-      "Mile Corners ◎",                  "Technician",
-      "Nimble Navigator",                "Winter Runner ◎",
-      "Prudent Positioning"
+      "Sky-High Teio Step",       "Winter Runner ◎",
+      "Sunny Days ◎",             "Corner Adept ○",
+      "Breath of Fresh Air",      "Prudent Positioning",
+      "Ramp Up",                  "Nimble Navigator",
+      "Go with the Flow",         "Mile Corners ◎",
+      "Speed Eater",              "Front Runner Straightaways ◎",
+      "Technician",               "Straight Descent",
+      "Late Surger Corners ○"
     ],
     "sparks": {
       "parent": [
@@ -7287,10 +7287,10 @@
     "turf": "A", "dirt": "G", "sprint": "E", "mile": "C", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Sakura Bakushin O", "gp2": "Nice Nature c",
     "skills": [
-      "Firm Conditions ◎",    "Prudent Positioning",
-      "Hydrate",              "Shrewd Step",
-      "Mile Corners ◎",       "Sky-High Teio Step",
-      "Prepared to Pass"
+      "Sky-High Teio Step",     "Firm Conditions ◎",
+      "Prudent Positioning",    "Prepared to Pass",
+      "Mile Corners ◎",         "Shrewd Step",
+      "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -7322,9 +7322,9 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "B", "end": "E",
     "gp1": "Vodka", "gp2": "Mejiro McQueen",
     "skills": [
-      "Behold Thine Emperor's Divine Might",    "Sky-High Teio Step",
-      "Corner Acceleration ○",                  "Technician",
-      "Hawkeye",                                "The Duty of Dignity Calls",
+      "Sky-High Teio Step",                     "The Duty of Dignity Calls",
+      "Behold Thine Emperor's Divine Might",    "Corner Acceleration ○",
+      "Hawkeye",                                "Technician",
       "Pace Chaser Savvy ◎"
     ],
     "sparks": {
@@ -7361,11 +7361,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "S", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Symboli Rudolf",
     "skills": [
-      "Behold Thine Emperor's Divine Might",    "Sky-High Teio Step",
-      "Firm Conditions ◎",                      "Straight Descent",
-      "Lone Wolf",                              "Straightaway Adept",
-      "Professor of Curvature",                 "Swinging Maestro",
-      "Shrewd Step"
+      "Sky-High Teio Step",    "Behold Thine Emperor's Divine Might",
+      "Firm Conditions ◎",     "Professor of Curvature",
+      "Swinging Maestro",      "Straightaway Adept",
+      "Shrewd Step",           "Straight Descent",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -7403,11 +7403,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Symboli Rudolf",
     "skills": [
-      "Beeline Burst",                          "Sky-High Teio Step",
-      "Behold Thine Emperor's Divine Might",    "Slipstream",
-      "Corner Adept ○",                         "Straightaway Recovery",
-      "Firm Conditions ◎",                      "Technician",
-      "Lone Wolf",                              "Up-Tempo"
+      "Sky-High Teio Step",    "Behold Thine Emperor's Divine Might",
+      "Firm Conditions ◎",     "Corner Adept ○",
+      "Beeline Burst",         "Straightaway Recovery",
+      "Up-Tempo",              "Technician",
+      "Lone Wolf",             "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -7446,10 +7446,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",      "Standard Distance ◎",
-      "Corner Adept ○",           "Straight Descent",
-      "Pace Chaser Corners ◎",    "Technician",
-      "Sky-High Teio Step",       "Triumphant Pulse",
+      "Sky-High Teio Step",     "Triumphant Pulse",
+      "Standard Distance ◎",    "Corner Adept ○",
+      "Breath of Fresh Air",    "Pace Chaser Corners ◎",
+      "Technician",             "Straight Descent",
       "Slipstream"
     ],
     "sparks": {
@@ -7490,11 +7490,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "D",
     "gp1": "Gold Ship", "gp2": "Symboli Rudolf",
     "skills": [
-      "Behold Thine Emperor's Divine Might",    "Sky-High Teio Step",
-      "Go with the Flow",                       "Straightaway Adept",
-      "Nimble Navigator",                       "Swinging Maestro",
-      "Prepared to Pass",                       "Technician",
-      "Prudent Positioning"
+      "Sky-High Teio Step",     "Behold Thine Emperor's Divine Might",
+      "Swinging Maestro",       "Straightaway Adept",
+      "Prudent Positioning",    "Nimble Navigator",
+      "Go with the Flow",       "Prepared to Pass",
+      "Technician"
     ],
     "sparks": {
       "parent": [
@@ -7535,11 +7535,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Maruzensky", "gp2": "Symboli Rudolf",
     "skills": [
-      "Beeline Burst",                          "Pace Chaser Corners ◎",
-      "Behold Thine Emperor's Divine Might",    "Red Shift/LP1211-M",
-      "Left-Handed ◎",                          "Sky-High Teio Step",
-      "Medium Corners ◎",                       "Straightaway Acceleration",
-      "Medium Straightaways ◎",                 "Swinging Maestro"
+      "Sky-High Teio Step",                     "Red Shift/LP1211-M",
+      "Behold Thine Emperor's Divine Might",    "Left-Handed ◎",
+      "Swinging Maestro",                       "Beeline Burst",
+      "Straightaway Acceleration",              "Medium Straightaways ◎",
+      "Medium Corners ◎",                       "Pace Chaser Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -7581,11 +7581,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "S", "long": "B", "front": "D", "pace": "A", "late": "B", "end": "E",
     "gp1": "Vodka", "gp2": "Mejiro McQueen",
     "skills": [
-      "Corner Adept ○",                 "Sky-High Teio Step",
-      "Cut and Drive!",                 "Straightaway Acceleration",
-      "Medium Straightaways ◎",         "Swinging Maestro",
-      "Pace Chaser Corners ◎",          "Technician",
-      "Pace Chaser Straightaways ◎"
+      "Sky-High Teio Step",             "Cut and Drive!",
+      "Corner Adept ○",                 "Swinging Maestro",
+      "Straightaway Acceleration",      "Medium Straightaways ◎",
+      "Pace Chaser Straightaways ◎",    "Pace Chaser Corners ◎",
+      "Technician"
     ],
     "sparks": {
       "parent": [
@@ -7625,10 +7625,10 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "S", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Mejiro McQueen", "gp2": "Gold Ship",
     "skills": [
-      "Hydrate",                "Standard Distance ◎",
-      "Nimble Navigator",       "Swinging Maestro",
-      "Prudent Positioning",    "Technician",
-      "Sky-High Teio Step",     "The Duty of Dignity Calls"
+      "Sky-High Teio Step",     "The Duty of Dignity Calls",
+      "Standard Distance ◎",    "Swinging Maestro",
+      "Prudent Positioning",    "Nimble Navigator",
+      "Technician",             "Hydrate"
     ],
     "sparks": {
       "parent": [
@@ -7669,12 +7669,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "C", "medium": "S", "long": "B", "front": "D", "pace": "A", "late": "C", "end": "E",
     "gp1": "Nice Nature c", "gp2": "Oguri Cap",
     "skills": [
-      "Fighter",                    "Preferred Position",
-      "Go with the Flow",           "Sky-High Teio Step",
-      "Gourmand",                   "Slipstream",
-      "Kyoto Racecourse ◎",         "Standard Distance ◎",
-      "Lucky Seven",                "Technician",
-      "Non-Standard Distance ◎",    "Wet Conditions ◎"
+      "Sky-High Teio Step",     "Kyoto Racecourse ◎",
+      "Standard Distance ◎",    "Non-Standard Distance ◎",
+      "Wet Conditions ◎",       "Go with the Flow",
+      "Preferred Position",     "Technician",
+      "Gourmand",               "Fighter",
+      "Lucky Seven",            "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -7712,11 +7712,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "E", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "C", "end": "E",
     "gp1": "Gold Ship", "gp2": "Mayano Top Gun",
     "skills": [
-      "Firm Conditions ◎",      "Ramp Up",
-      "Homestretch Haste",      "Sky-High Teio Step",
-      "Long Shot ◎",            "Swinging Maestro",
-      "Nimble Navigator",       "Technician",
-      "Prudent Positioning",    "The Duty of Dignity Calls"
+      "Sky-High Teio Step",    "The Duty of Dignity Calls",
+      "Firm Conditions ◎",     "Long Shot ◎",
+      "Swinging Maestro",      "Prudent Positioning",
+      "Ramp Up",               "Nimble Navigator",
+      "Homestretch Haste",     "Technician"
     ],
     "sparks": {
       "parent": [
@@ -7755,11 +7755,11 @@
     "turf": "A", "dirt": "G", "sprint": "D", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Winning Ticket", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",    "Outer Post Proficiency ◎",
-      "Corner Adept ○",         "Ramp Up",
-      "Cut and Drive!",         "Slick Surge",
-      "Fighter",                "Triumphant Pulse",
-      "Firm Conditions ◎",      "Updrafters",
+      "Cut and Drive!",       "Triumphant Pulse",
+      "Firm Conditions ◎",    "Outer Post Proficiency ◎",
+      "Corner Adept ○",       "Breath of Fresh Air",
+      "Ramp Up",              "Slick Surge",
+      "Updrafters",           "Fighter",
       "Lone Wolf"
     ],
     "sparks": {
@@ -7799,11 +7799,11 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Gold Ship", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",      "Homestretch Haste",
-      "Corner Acceleration ○",    "Ramp Up",
-      "Corner Adept ○",           "Slick Surge",
-      "Cut and Drive!",           "Slipstream",
-      "Fighter",                  "Triumphant Pulse"
+      "Cut and Drive!",         "Triumphant Pulse",
+      "Corner Adept ○",         "Corner Acceleration ○",
+      "Breath of Fresh Air",    "Ramp Up",
+      "Homestretch Haste",      "Slick Surge",
+      "Fighter",                "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -7844,12 +7844,12 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Gold Ship", "gp2": "Matikanefukukitaru c",
     "skills": [
-      "Breath of Fresh Air",      "Lucky Seven",
-      "Cut and Drive!",           "Mile Straightaways ◎",
-      "Fighter",                  "Outer Post Proficiency ◎",
-      "Firm Conditions ◎",        "Professor of Curvature",
-      "Late Surger Corners ○",    "Slick Surge",
-      "Lone Wolf",                "Straightaway Acceleration"
+      "Cut and Drive!",               "Firm Conditions ◎",
+      "Outer Post Proficiency ◎",     "Professor of Curvature",
+      "Straightaway Acceleration",    "Breath of Fresh Air",
+      "Slick Surge",                  "Mile Straightaways ◎",
+      "Late Surger Corners ○",        "Fighter",
+      "Lucky Seven",                  "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -7888,12 +7888,12 @@
     "turf": "A", "dirt": "G", "sprint": "D", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "S", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Nice Nature c",
     "skills": [
-      "Breath of Fresh Air",         "Professor of Curvature",
-      "Cut and Drive!",              "Ramp Up",
-      "Late Surger Corners ○",       "Slick Surge",
-      "Lone Wolf",                   "Slipstream",
-      "Mile Straightaways ◎",        "Triumphant Pulse",
-      "Outer Post Proficiency ◎"
+      "Cut and Drive!",              "Triumphant Pulse",
+      "Outer Post Proficiency ◎",    "Professor of Curvature",
+      "Breath of Fresh Air",         "Ramp Up",
+      "Slick Surge",                 "Mile Straightaways ◎",
+      "Late Surger Corners ○",       "Lone Wolf",
+      "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -7933,10 +7933,10 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "A", "pace": "B", "late": "A", "end": "F",
     "gp1": "Maruzensky", "gp2": "Tokai Teio",
     "skills": [
-      "Corner Recovery ○",         "Nimble Navigator",
-      "Cut and Drive!",            "Professor of Curvature",
-      "Fast-Paced",                "Standard Distance ◎",
-      "Front Runner Corners ◎",    "Unrestrained"
+      "Cut and Drive!",            "Standard Distance ◎",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Nimble Navigator",          "Fast-Paced",
+      "Unrestrained",              "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -7980,12 +7980,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "El Condor Pasa", "gp2": "Seiun Sky",
     "skills": [
+      "Cut and Drive!",          "Victoria por plancha ☆",
       "Angling and Scheming",    "Left-Handed ◎",
-      "Breath of Fresh Air",     "Mile Straightaways ◎",
-      "Corner Adept ○",          "Nimble Navigator",
-      "Cut and Drive!",          "Outer Post Proficiency ◎",
-      "Early Lead",              "Summer Runner ◎",
-      "Focus",                   "Victoria por plancha ☆"
+      "Summer Runner ◎",         "Outer Post Proficiency ◎",
+      "Corner Adept ○",          "Breath of Fresh Air",
+      "Focus",                   "Nimble Navigator",
+      "Early Lead",              "Mile Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -8029,11 +8029,11 @@
     "turf": "S", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "A", "pace": "S", "late": "A", "end": "F",
     "gp1": "Maruzensky", "gp2": "Daiwa Scarlet c",
     "skills": [
-      "Breath of Fresh Air",       "Front Runner Savvy ◎",
-      "Cut and Drive!",            "Professor of Curvature",
-      "Fast-Paced",                "Red Shift/LP1211-M",
-      "Final Push",                "Shifting Gears",
-      "Front Runner Corners ◎"
+      "Cut and Drive!",            "Red Shift/LP1211-M",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Fast-Paced",                "Final Push",
+      "Shifting Gears",            "Front Runner Corners ◎",
+      "Front Runner Savvy ◎"
     ],
     "sparks": {
       "parent": [
@@ -8076,11 +8076,11 @@
     "turf": "A", "dirt": "G", "sprint": "D", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Oguri Cap", "gp2": "Nice Nature c",
     "skills": [
-      "Breath of Fresh Air",            "Mile Straightaways ◎",
-      "Cut and Drive!",                 "Professor of Curvature",
-      "Firm Conditions ◎",              "Ramp Up",
-      "Late Surger Straightaways ◎",    "Slipstream",
-      "Lone Wolf",                      "Triumphant Pulse"
+      "Cut and Drive!",          "Triumphant Pulse",
+      "Firm Conditions ◎",       "Professor of Curvature",
+      "Breath of Fresh Air",     "Ramp Up",
+      "Mile Straightaways ◎",    "Late Surger Straightaways ◎",
+      "Lone Wolf",               "Slipstream"
     ],
     "sparks": {
       "parent": [
@@ -8118,9 +8118,9 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Gold Ship", "gp2": "Matikanefukukitaru c",
     "skills": [
-      "Breath of Fresh Air",    "Professor of Curvature",
-      "Cut and Drive!",         "Slick Surge",
-      "Firm Conditions ◎",      "Swinging Maestro",
+      "Cut and Drive!",            "Firm Conditions ◎",
+      "Professor of Curvature",    "Swinging Maestro",
+      "Breath of Fresh Air",       "Slick Surge",
       "Lone Wolf"
     ],
     "sparks": {
@@ -8160,13 +8160,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "S", "medium": "A", "long": "F", "front": "C", "pace": "B", "late": "A", "end": "E",
     "gp1": "El Condor Pasa", "gp2": "Seiun Sky",
     "skills": [
-      "Angling and Scheming",            "Mile Straightaways ◎",
-      "Cut and Drive!",                  "Nimble Navigator",
-      "Early Lead",                      "Red Shift/LP1211-M",
-      "Fast-Paced",                      "Shifting Gears",
-      "Focus",                           "Unrestrained",
-      "Front Runner Straightaways ◎",    "Victoria por plancha ☆",
-      "Mile Corners ◎"
+      "Cut and Drive!",                  "Red Shift/LP1211-M",
+      "Victoria por plancha ☆",          "Angling and Scheming",
+      "Focus",                           "Nimble Navigator",
+      "Early Lead",                      "Fast-Paced",
+      "Unrestrained",                    "Mile Straightaways ◎",
+      "Mile Corners ◎",                  "Shifting Gears",
+      "Front Runner Straightaways ◎"
     ],
     "sparks": {
       "parent": [
@@ -8211,9 +8211,9 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "B", "late": "A", "end": "F",
     "gp1": "Daiwa Scarlet c", "gp2": "Oguri Cap",
     "skills": [
-      "Breath of Fresh Air",       "Straightaway Acceleration",
-      "Nimble Navigator",          "Triumphant Pulse",
-      "Professor of Curvature",    "Xceleration",
+      "Xceleration",               "Triumphant Pulse",
+      "Professor of Curvature",    "Straightaway Acceleration",
+      "Breath of Fresh Air",       "Nimble Navigator",
       "Slick Surge"
     ],
     "sparks": {
@@ -8253,13 +8253,13 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "A", "pace": "A", "late": "A", "end": "F",
     "gp1": "Seiun Sky", "gp2": "El Condor Pasa",
     "skills": [
-      "Angling and Scheming",            "Groundwork",
-      "Cut and Drive!",                  "Leader's Pride",
-      "Fast-Paced",                      "Mile Straightaways ◎",
-      "Firm Conditions ◎",               "Nimble Navigator",
-      "Front Runner Corners ◎",          "Professor of Curvature",
-      "Front Runner Savvy ◎",            "Standard Distance ◎",
-      "Front Runner Straightaways ◎",    "Unrestrained"
+      "Cut and Drive!",            "Angling and Scheming",
+      "Standard Distance ◎",       "Firm Conditions ◎",
+      "Professor of Curvature",    "Nimble Navigator",
+      "Fast-Paced",                "Unrestrained",
+      "Mile Straightaways ◎",      "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Leader's Pride",
+      "Front Runner Savvy ◎",      "Groundwork"
     ],
     "sparks": {
       "parent": [
@@ -8303,12 +8303,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "A", "pace": "A", "late": "A", "end": "F",
     "gp1": "Seiun Sky", "gp2": "El Condor Pasa",
     "skills": [
-      "Angling and Scheming",            "Mile Corners ◎",
-      "Cut and Drive!",                  "Mile Straightaways ◎",
-      "Early Lead",                      "Nimble Navigator",
-      "Fast-Paced",                      "Professor of Curvature",
-      "Front Runner Corners ◎",          "Ramp Up",
-      "Front Runner Straightaways ◎",    "Unrestrained"
+      "Cut and Drive!",                  "Angling and Scheming",
+      "Professor of Curvature",          "Ramp Up",
+      "Nimble Navigator",                "Early Lead",
+      "Fast-Paced",                      "Unrestrained",
+      "Mile Straightaways ◎",            "Mile Corners ◎",
+      "Front Runner Straightaways ◎",    "Front Runner Corners ◎"
     ],
     "sparks": {
       "parent": [
@@ -8348,12 +8348,12 @@
     "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "C", "pace": "B", "late": "A", "end": "D",
     "gp1": "Seiun Sky", "gp2": "Maruzensky",
     "skills": [
-      "Angling and Scheming",            "Nimble Navigator",
-      "Cut and Drive!",                  "Professor of Curvature",
-      "Dodging Danger",                  "Shifting Gears",
-      "Front Runner Corners ◎",          "Speed Eater",
-      "Front Runner Straightaways ◎",    "Unrestrained",
-      "Mile Straightaways ◎",            "Unyielding Spirit"
+      "Cut and Drive!",            "Angling and Scheming",
+      "Professor of Curvature",    "Nimble Navigator",
+      "Unrestrained",              "Mile Straightaways ◎",
+      "Shifting Gears",            "Unyielding Spirit",
+      "Speed Eater",               "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Dodging Danger"
     ],
     "sparks": {
       "parent": [
@@ -8402,12 +8402,12 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "D", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "G",
     "gp1": "Tokai Teio", "gp2": "Agnes Tachyon c",
     "skills": [
-      "Hard Worker",               "Sky-High Teio Step",
-      "Lone Wolf",                 "Standard Distance ◎",
-      "Medium Straightaways ◎",    "Straightaway Recovery",
-      "Nimble Navigator",          "Swinging Maestro",
-      "Our Ticket to Win!",        "Triumphant Pulse",
-      "Professor of Curvature"
+      "Our Ticket to Win!",        "Sky-High Teio Step",
+      "Triumphant Pulse",          "Standard Distance ◎",
+      "Professor of Curvature",    "Swinging Maestro",
+      "Straightaway Recovery",     "Nimble Navigator",
+      "Medium Straightaways ◎",    "Hard Worker",
+      "Lone Wolf"
     ],
     "sparks": {
       "parent": [
@@ -8447,10 +8447,10 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "F", "medium": "A", "long": "A", "front": "G", "pace": "B", "late": "A", "end": "F",
     "gp1": "Gold Ship", "gp2": "Nice Nature c",
     "skills": [
+      "Our Ticket to Win!",    "Standard Distance ◎",
+      "Firm Conditions ◎",     "Swinging Maestro",
       "Beeline Burst",         "Position Pilfer",
-      "Firm Conditions ◎",     "Standard Distance ◎",
-      "Hard Worker",           "Swinging Maestro",
-      "Our Ticket to Win!"
+      "Hard Worker"
     ],
     "sparks": {
       "parent": [
@@ -8489,11 +8489,11 @@
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "D", "medium": "A", "long": "A", "front": "E", "pace": "A", "late": "A", "end": "G",
     "gp1": "Nice Nature c", "gp2": "Gold Ship c",
     "skills": [
-      "Breath of Fresh Air",    "Professor of Curvature",
-      "Firm Conditions ◎",      "Standard Distance ◎",
-      "Hard Worker",            "Straightaway Acceleration",
-      "Homestretch Haste",      "Straightaway Adept",
-      "Our Ticket to Win!"
+      "Our Ticket to Win!",     "Standard Distance ◎",
+      "Firm Conditions ◎",      "Professor of Curvature",
+      "Straightaway Adept",     "Straightaway Acceleration",
+      "Breath of Fresh Air",    "Homestretch Haste",
+      "Hard Worker"
     ],
     "sparks": {
       "parent": [
