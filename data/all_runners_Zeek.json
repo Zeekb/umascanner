@@ -536,6 +536,7 @@
       "parent": [
         {"color": "blue", "spark_name": "Wit", "count": 1},
         {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Blazing Pride", "count": 1},
         {"color": "white", "spark_name": "Sunny Days ○", "count": 1},
         {"color": "white", "spark_name": "Late Surger Corners ○", "count": 1},
         {"color": "white", "spark_name": "Japanese Oaks", "count": 2},
@@ -579,6 +580,7 @@
       "parent": [
         {"color": "blue", "spark_name": "Power", "count": 1},
         {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
+        {"color": "green", "spark_name": "Blazing Pride", "count": 1},
         {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
         {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
         {"color": "white", "spark_name": "Trick (Rear)", "count": 1},
