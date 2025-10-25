@@ -1,27 +1,43 @@
+/* --- Base Theme (from uma_analyzer_themed.py) --- */
 :root {
-  --bg-dark: #2f3129;
-  --bg-medium: #3a3d34;
-  --bg-light: #444135;
-  --border-color: #5c594a;
-  --text-primary: #e4d5a3;
-  --text-secondary: #a9a080;
-  --accent-green: #4de64d;
+  --uma-light-bg: #FEFEFE;
+  --uma-medium-bg: #FFFFFF;
+  --uma-dark-accent: #71d71c;
+  --uma-accent-pink: #FF80AB;
+  --uma-accent-blue: #82B1FF;
+  --uma-text-dark: #8C4410; /* Dark brown text */
+  --uma-text-light: #FFFFFF;
+  --uma-border-color: var(--uma-dark-accent);
+  --uma-alt-row-bg: #f0f0f0;
+  --uma-selection-bg: var(--uma-accent-blue);
+  --uma-header-bg: var(--uma-dark-accent);
+  --uma-header-text: var(--uma-text-light);
+
+  --profile-frame-color: #FFFFFF;
+  --profile-frame-shadow: #F0D050;
+  --rank-ribbon-pink: #D46487;
+  /* This should be the background color of your modal's content area */
+  --modal-content-bg: var(--uma-light-bg, #fefefe);
 
   /* Aptitude Colors */
-  --apt-s: #ffb3ba;
-  --apt-a: #ffdfba;
-  --apt-b: #ffffba;
-  --apt-c: #baffc9;
-  --apt-d: #bae1ff;
-  --apt-default-bg: #4e5048;
+  --apt-ss: #f0bd1a; /* Using S color for SS for now */
+  --apt-s:  #f0bd1a;
+  --apt-a:  #f48337;
+  --apt-b:  #e56487;
+  --apt-c:  #61c340;
+  --apt-d:  #49ace2;
+  --apt-e:  #d477f2;
+  --apt-f:  #766ad6;
+  --apt-g:  #b3b2b3;
+  --apt-n-a:#ddd;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: var(--text-primary);
-  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: var(--uma-medium-bg);
+  color: var(--uma-text-dark);
+  font-family: 'Segoe UI';
   margin: 0;
-  padding: 15px;
+  padding: 10px;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -29,128 +45,781 @@ body {
 .app-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 30px);
+  height: calc(100vh - 20px);
+  background-color: var(--uma-light-bg);
+  border: 1px solid var(--uma-border-color);
+  border-radius: 5px;
 }
 
-/* Tabs */
+/* --- Tabs --- */
 .tab-buttons {
   display: flex;
+  padding-left: 5px;
+  background-color: var(--uma-light-bg);
+  border-bottom: 1px solid var(--uma-border-color);
 }
 .tab-button {
-  padding: 10px 20px;
+  padding: 5px 10px;
+  min-width: 8ex;
   cursor: pointer;
-  background-color: var(--bg-light);
-  color: var(--text-secondary);
-  border: 1px solid var(--border-color);
+  background-color: var(--uma-medium-bg);
+  color: var(--uma-text-dark);
+  border: 1px solid var(--uma-border-color);
   border-bottom: none;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  margin-bottom: -1px;
+  margin-right: 2px;
+}
+.tab-button:hover {
+  background-color: var(--uma-accent-pink);
+  color: var(--uma-text-light);
 }
 .tab-button.active {
-  background-color: var(--bg-medium);
-  color: var(--text-primary);
+  background-color: var(--uma-accent-pink);
+  color: var(--uma-text-light);
+  border-color: var(--uma-accent-pink);
   font-weight: bold;
 }
 
-/* Filter Panel */
+/* --- Filter Panel --- */
 .filter-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 15px;
-  background-color: var(--bg-medium);
-  border: 1px solid var(--border-color);
+  gap: 12px;
+  padding: 10px;
+  background-color: var(--uma-light-bg);
+  border: 1px solid var(--uma-border-color);
   border-top: none;
-  border-radius: 0 0 8px 8px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+.filter-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
 }
 .filter-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 15px 25px;
+  gap: 10px 20px;
   align-items: center;
 }
 .filter-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-.filter-group label {
-  font-weight: bold;
-  color: var(--text-secondary);
-}
-select, input {
-  background-color: var(--bg-light);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 5px 8px;
-}
-input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-}
-
-/* Sliders */
-.slider-container {
-  display: flex;
-  align-items: center;
   gap: 5px;
 }
-.slider-container label {
-  font-size: 0.9em;
-  width: 60px;
-  text-align: right;
+.filter-group label {
+  color: var(--uma-text-dark);
+  font-weight: normal;
+  white-space: nowrap;
 }
-input[type="range"] {
-  width: 150px;
+.spark-select-long {
+    width: 160px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+select, input[type="text"], input[type="range"] {
+  background-color: var(--uma-text-light);
+  border: 1px solid var(--uma-border-color);
+  padding: 3px 5px;
+  color: var(--uma-text-dark);
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+select { min-width: 80px; }
+input[type="checkbox"] { margin-left: 0; }
+#reset-filters-button {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+#reset-filters-button:hover { background-color: var(--uma-accent-pink); }
+
+/* --- START: NEW STYLES FOR DYNAMIC FILTERS --- */
+#spark-filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+    padding: 10px 0;
+}
+.spark-filters {
+    padding-right: 34px; /* Make space for remove button */
+    position: relative;
+}
+.remove-spark-filter-button {
+    background-color: #f44336;
+    color: white;
+    border: 1px solid #d32f2f;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    line-height: 22px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+.remove-spark-filter-button:hover {
+    background-color: #c62828;
+}
+.add-filter-container {
+    display: flex;
+}
+#add-spark-filter-button {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #388E3C;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+#add-spark-filter-button:hover {
+    background-color: #388E3C;
+}
+/* --- END: NEW STYLES --- */
+
+
+/* --- Sliders --- */
+.slider-container { 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
 }
 
-/* Table */
+.slider-container label { 
+    font-size: 0.9em; 
+    width: 65px; 
+    text-align: right; 
+    color: var(--uma-text-dark); 
+}
+
+/* 1. Style the main input element as a container */
+input[type="range"] {
+  -webkit-appearance: none; /* REQUIRED to remove default styling */
+  appearance: none;
+  width: 120px; 
+  height: 18px; /* Match the thumb's height for better vertical alignment */
+  background: transparent; /* The track will be styled separately */
+  
+  border: 0px solid var(--uma-border-color);
+  cursor: pointer;
+}
+
+/* --- 2. Style the Slider Thumb (your original code was good) --- */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--uma-accent-pink);
+  border: 1px solid var(--uma-border-color);
+  border-radius: 9px;
+  /* This is a key part: vertically center the thumb on the track */
+  margin-top: -5px; 
+}
+
+input[type="range"]::-moz-range-thumb {
+   width: 18px; 
+   height: 18px;
+  background: var(--uma-accent-pink);
+  border: 1px solid var(--uma-border-color);
+  border-radius: 9px;
+}
+
+/* --- 3. Style the Slider Track (THIS IS THE FIX) --- */
+/* This targets the track in Chrome, Safari, Edge */
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 8px;
+  background: var(--uma-medium-bg);
+  border-radius: 4px;
+  border: 1px solid var(--uma-border-color);
+}
+
+/* This targets the track in Firefox */
+input[type="range"]::-moz-range-track {
+  width: 100%;
+  height: 8px;
+  background: var(--uma-medium-bg);
+  border-radius: 4px;
+  border: 1px solid var(--uma-border-color);
+}
+
+/* Optional: remove the blue focus outline on the slider */
+input[type="range"]:focus {
+    outline: none;
+}
+
+/* --- Table --- */
 .table-container {
   flex-grow: 1;
   overflow: hidden;
-  position: relative;
+  background-color: var(--uma-light-bg);
+  border: 1px solid var(--uma-border-color);
+  border-top: none;
 }
 .tab-content {
   display: none;
   height: 100%;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #f0f0f0;
 }
-.tab-content.active {
-  display: block;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+.tab-content::-webkit-scrollbar { width: 6px; }
+.tab-content::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 5px; }
+.tab-content::-webkit-scrollbar-thumb { background-color: #c0c0c0; border-radius: 5px; }
+.tab-content.active { display: block; }
+table { width: 100%; border-collapse: collapse; background-color: var(--uma-light-bg); }
 th, td {
-  padding: 8px 12px;
+  padding: 4px 8px;
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--uma-border-color);
   white-space: nowrap;
+  font-size: 0.9em;
+  color: var(--uma-text-dark);
 }
 th {
-  background-color: var(--bg-light);
-  position: sticky;
-  top: 0;
-  z-index: 1;
+  background-color: var(--uma-header-bg);
+  color: var(--uma-header-text);
+  padding: 4px;
+  border: 1px solid var(--uma-border-color);
+  position: sticky; top: 0; z-index: 1;
 }
-td.stats, td.aptitude {
-    font-weight: bold;
-}
-.aptitude-S { background-color: var(--apt-s); color: #5e282e; }
-.aptitude-A { background-color: var(--apt-a); color: #664f2a; }
-.aptitude-B { background-color: var(--apt-b); color: #69692c; }
-.aptitude-C { background-color: var(--apt-c); color: #2a6136; }
-.aptitude-D { background-color: var(--apt-d); color: #284b65; }
-td.left-align {
-    text-align: left;
-    white-space: normal;
-}
+tbody tr:nth-child(even) { background-color: var(--uma-alt-row-bg); }
+tbody tr:hover { background-color: #dbeaff; }
 
+td.stats { font-family: monospace; font-size: 0.9em; min-width: 100px; }
+td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
+
+/* --- FIXED: Added SS+ grade, Adjusted SS color --- */
+.aptitude-SS\+ { background-color: var(--apt-ss); } /* Same as SS for now */
+.aptitude-SS { background-color: var(--apt-ss); }
+.aptitude-S\+ { background-color: var(--apt-s); }
+.aptitude-S { background-color: var(--apt-s); }
+.aptitude-A\+ { background-color: var(--apt-a); }
+.aptitude-A { background-color: var(--apt-a); }
+.aptitude-B\+ { background-color: var(--apt-b); }
+.aptitude-B { background-color: var(--apt-b); }
+.aptitude-C\+ { background-color: var(--apt-c); }
+.aptitude-C { background-color: var(--apt-c); }
+.aptitude-D\+ { background-color: var(--apt-d); }
+.aptitude-D { background-color: var(--apt-d); }
+.aptitude-E\+ { background-color: var(--apt-e); }
+.aptitude-E { background-color: var(--apt-e); }
+.aptitude-F\+ { background-color: var(--apt-f); }
+.aptitude-F { background-color: var(--apt-f); }
+.aptitude-G { background-color: var(--apt-g); }
+.aptitude-N\/A { background-color: var(--apt-n-a); color: #777; }
+
+
+td.left-align { text-align: left; white-space: normal; }
+
+/* --- Outline Label (for Table) --- */
 .outline-label {
   font-weight: bold;
+  font-size: 1em;
+  color: var(--uma-text-dark);
+  text-shadow:
+   -1px -1px 0 var(--uma-light-bg),
+    1px -1px 0 var(--uma-light-bg),
+    -1px 1px 0 var(--uma-light-bg),
+     1px 1px 0 var(--uma-light-bg);
+}
+
+td.spark-cell { text-align: left; white-space: normal; font-size: 0.85em; min-width: 150px; }
+td.spark-cell b { color: black; }
+.aptitude-filters:not(.active) { display: none; }
+
+
+/* --- MODAL STYLES --- */
+#detail-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+#detail-modal {
+  position: fixed;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 620px;
+  max-height: 90vh; /* Allow modal to shrink if content is short */
+  background-color: var(--uma-light-bg, #fefefe);
+  border: 2px solid var(--uma-border-color, #71d71c);
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 15px;
+}
+/* --- SCROLLING FIX --- */
+#detail-modal-content {
+  overflow-y: hidden; /* Prevent scrolling on the main content area */
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* padding-right: 5px; */ /* Removed padding */
+  flex-grow: 1; /* Allow content to take available space */
+  min-height: 0; /* Necessary for flex-grow in column layout */
+}
+
+/* --- Modal Header --- */
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 20px;
+  flex-shrink: 0;
+}
+
+.modal-header-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+/* --- The Profile Frame (CSS Horseshoe Effect) --- */
+.modal-profile-frame {
+  position: relative;
+  width: 100px;
+  height: 120px;
+  margin-top: -20px;
+  
+  border-radius: 120px 120px 200px 200px ;
+  
+  overflow: hidden
+
+}
+
+.modal-profile-frame-outline {
+  width: 100px;
+  height: 100px;
+  margin-top: 20px;
+  border-radius: 50%;
+  border: 6px solid #F0D050; 
+  box-sizing: border-box;
+  box-shadow: 0 4px 4px rgba(0,0,0,0.2), inset 0 0 5px #C0A040;
+  
+  background-color: #FFFDE7; 
+}
+  
+/* This styles the final image itself */
+.modal-profile-img {
+  position: relative; 
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%; 
+  border-radius: 0;   
+  transform: none;
+  background: none;
+}
+.modal-profile-img::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 86%;
+  height: 70%;
+  border-radius: 50%; 
+  border-top-right-radius: 70%;
+  border-bottom-right-radius: 50 70%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center 30%; 
+
+  background-image: inherit;
+  
+  transform: scale(1.8) translateY(4px) translateX(4px);
+}
+/* --- Score Box --- */
+.modal-score {
+  background-color: #FFFFFF;
+  border: 2px solid #C0C0C0;
+  border-radius: 12px; /* More pill-shaped */
+  padding: 2px 12px;
+  font-size: 14pt;
+  font-weight: bold;
+  color: var(--uma-text-dark);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* --- Right Column Layout --- */
+.modal-header-right {
+  flex-grow: 1;
+}
+.modal-identity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* --- Rank Badge --- */
+.modal-rank-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px; /* Space between badge and epithet */
+  flex-shrink: 0;
+}
+
+.modal-rank-badge {
+  position: relative; /* For positioning the ribbon and highlight */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  background-image: radial-gradient(
+    circle,
+    var(--rank-top-color, #999999), /* Lighter center from JS */
+    var(--rank-base-color, #666666) 70%      /* Edge color from JS */
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* The glossy highlight effect */
+.modal-rank-badge::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 10%;
+  width: 80%;
+  height: 30%;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50% / 100%; /* Creates an oval shape */
+  filter: blur(2px);
+  z-index: 1;
+}
+
+.modal-rank-grade {
+  font-size: 32pt;
+  font-weight: bold;
+  color: white;
+  /* This creates the inner shadow effect on the letter */
+  text-shadow: 0 -2px 0 rgba(0,0,0,0.2);
+  z-index: 2; /* Ensure grade is above the highlight */
+  line-height: 1;
+  position: relative; /* This makes the sup positioning work */
+  display: inline-block;
+}
+.modal-rank-grade sup {
+    font-size: 0.7em;
+    font-weight: bold;
+    position: absolute;
+}
+
+/* The RANK ribbon */
+.modal-rank-text {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--rank-ribbon-color, #555555);
+  color: white;
+  font-weight: bold;
+  font-size: 11pt;
+  padding: 2px 15px;
+  border-radius: 3px;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+  z-index: 3;
+}
+
+
+/* --- Runner Name with White Outline --- */
+.modal-runner-name {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 24pt;
+  font-weight: 700; /* Bolder */
+  color: var(--uma-text-dark); /* The inner brown color */
+  line-height: 1.1;
+  /* This is the key: multiple shadows create a solid outline */
+  text-shadow: 
+    2px 2px 0 #FFF, -2px -2px 0 #FFF, 
+    2px -2px 0 #FFF, -2px 2px 0 #FFF,
+    2px 0 0 #FFF, -2px 0 0 #FFF,
+    0 2px 0 #FFF, 0 -2px 0 #FFF;
+}
+
+/* --- Modal Stat Bar --- */
+.modal-stats-bar {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid var(--uma-dark-accent);
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0; /* Prevent stats bar from shrinking */
+  margin-top: -2px;
+}
+.modal-stat-column {
+  flex-grow: 1;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+}
+.modal-stat-header {
+  background-color: var(--uma-dark-accent);
+  color: var(--uma-header-text);
+  font-size: 14pt;
+  padding: 3px;
+  letter-spacing: 1px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.stat-icon {
+  width: 24px;        
+  height: 24px;       
+  object-fit: contain;
+  background-color: transparent;
+}
+.stat-text {
+  color: var(--uma-header-text);                
+  text-shadow: 1px 1px 2px var(--uma-text-dark);
+}
+.modal-stat-content {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  min-height: 50px;
+  border-right: 2px dashed #A5D6A7;
+}
+.modal-stat-column:last-child .modal-stat-content { border-right: none; }
+.modal-stat-grade {
+  font-weight: bold;
+  font-size: 28pt;
+  letter-spacing: -4px;
+  padding: 3px;
+  width: 56px;
+  text-align: center;
+  flex-shrink: 0;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  line-height: 1.2; /* Adjust line height slightly */
+}
+/* --- SUPERSCRIPT FIX --- */
+.modal-stat-grade sup {
+  font-size: 0.72em; /* Smaller font size for '+' */
+  vertical-align: super; /* Align '+' as superscript */
+  margin-left: -3px; /* Adjust spacing slightly */
+  line-height: 0; /* Prevent affecting line height */
+}
+.modal-stat-value {
+  font-weight: bold;
+  font-size: 17pt;
+  letter-spacing: 1px;
+  padding-right: 5px;
+  text-align: right;
+  flex-grow: 1;
+  align-self: center;
+  color: var(--uma-text-dark);
+}
+.stat-input {
+  width: 44px; 
+  text-align: left;
+  appearance: range;
+  -moz-appearance: textfield;
+}
+.stat-outline {
+  -webkit-text-stroke-width: 1px;
+  -webkit-text-stroke-color: var(--stat-outline-color);
+}
+
+
+/* --- Modal Aptitudes --- */
+.modal-aptitudes {
+  display: grid;
+  grid-template-columns: 70px repeat(4, 1fr);
+  gap: 15px 10px;
+  padding: 0 10px;
+  flex-shrink: 0; /* Prevent aptitudes from shrinking */
+}
+.modal-apt-label {
+  font-weight: bold;
+  text-align: right;
+  align-self: center;
   font-size: 1.1em;
-  text-shadow: 1px 1px 1px #000, -1px -1px 1px #000, 1px -1px 1px #000, -1px 1px 1px #000;
+  color: var(--uma-text-dark);
+}
+.modal-apt-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 12pt;
+  background-color: #FFFFFF;
+  border: 2px solid #D0D0D0;
+  border-radius: 10px;
+  padding: 5px 8px;
+  gap: 5px;
+}
+.modal-apt-name {
+  font-size: 14pt;
+  color: var(--uma-text-dark);
+  text-shadow: 1px 1px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white;
+  flex-grow: 1;
+  text-align: center;
+}
+.modal-apt-grade {
+  font-weight: bold;
+  font-size: 21pt;
+  padding: 3px 0;
+  min-width: 30px;
+  text-align: center;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  line-height: 1.2;
+}
+/* --- SUPERSCRIPT FIX --- */
+.modal-apt-grade sup {
+  font-size: 0.6em;
+  vertical-align: super;
+  margin-left: -3px;
+  line-height: 0;
+}
+.apt-outline {
+   -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: var(--apt-outline-color);
+}
+
+
+/* --- Modal Skills --- */
+.modal-skills-section {
+  display: flex; /* Changed to flex */
+  flex-direction: column;
+  border: 2px solid var(--uma-dark-accent);
+  border-radius: 5px;
+  background-color: transparent;
+  min-height: 150px; /* Give it some base height */
+  flex-grow: 1; /* Allow skills section to grow */
+  flex-shrink: 1; /* Allow skills section to shrink if needed */
+  overflow: hidden; /* Hide internal overflow */
+}
+.modal-skills-title {
+  font-weight: bold;
+  font-size: 16pt;
+  background-color: var(--uma-dark-accent);
+  color: var(--uma-header-text);
+  text-shadow: 1px 1px 0 var(--uma-text-dark), -1px -1px 0 var(--uma-text-dark), 1px -1px 0 var(--uma-text-dark), -1px 1px 0 var(--uma-text-dark);
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  padding: 3px;
+  letter-spacing: 1px;
+  text-align: center;
+  flex-shrink: 0; /* Prevent title from shrinking */
+}
+.modal-skills-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: var(--uma-medium-bg);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  overflow-y: auto; /* Enable vertical scrolling ONLY here */
+  flex-grow: 1; /* Allow list to take available space */
+
+  /* Add Firefox scrollbar styles */
+  scrollbar-width: thin;
+  scrollbar-color: #BCBCBC #EAEAEA;
+}
+
+/* --- NEW: Custom Webkit Scrollbar for Modal --- */
+.modal-skills-list::-webkit-scrollbar {
+  width: 6px; /* Sets the width of the scrollbar */
+}
+
+.modal-skills-list::-webkit-scrollbar-track {
+  background: #EAEAEA; /* Light grey background for the track */
+  border-radius: 3px;
+}
+
+.modal-skills-list::-webkit-scrollbar-thumb {
+  background-color: #BCBCBC; /* A medium grey for the draggable part */
+  border-radius: 3px;
+  border: 1px solid #9E9E9E; /* A slightly darker border for depth */
+}
+.modal-skill-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  height: 46px;
+  box-sizing: border-box;
+  background-color: #F5F5F5;
+  border: 2px solid #C0C0C0;
+  border-radius: 10px;
+}
+.modal-skill-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.modal-skill-name {
+  font-weight: bold;
+  color: var(--uma-text-dark);
+  line-height: 1.2;
+  word-wrap: break-word; /* Allow wrapping */
+  overflow-wrap: break-word; /* Better wrapping */
+  word-break: break-word; /* Force breaks if needed */
+  flex-grow: 1; /* Allow name to take space */
+}
+.modal-skill-item.gold {
+  background: linear-gradient(to right, #FFEA8A, #FFC24A);
+  border-color: #E6A245;
+}
+.modal-skill-item.unique {
+  background: linear-gradient(to right, #F9E08B, #C4FFC8, #B8ECFF, #F6BFFF);
+  border-color: #A0A0A0;
+}
+
+
+/* --- Modal Footer --- */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 5px;
+  border-top: 1px solid #ddd;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+}
+#modal-close-button {
+  background-color: var(--uma-accent-pink);
+  color: var(--uma-text-light);
+  border: 1px solid var(--uma-border-color);
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+}
+#modal-close-button:hover {
+  background-color: var(--uma-accent-blue);
 }

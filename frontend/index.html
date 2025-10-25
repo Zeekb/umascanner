@@ -3,111 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <title>UMA Analyzer</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="styles.css"> </head>
 <body>
-
     <div class="app-container">
-        <!-- Tab Buttons -->
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
             <button class="tab-button" data-tab="aptitude-summary">Aptitude Summary</button>
-        </div>
+            <button class="tab-button" data-tab="white-sparks">White Sparks</button> <button class="tab-button" data-tab="skills-summary">Skills Summary</button> </div>
 
-        <!-- Filter Panel -->
         <div class="filter-panel">
-            <div class="filter-section">
-                <div class="filter-group">
-                    <label for="filter-runner">Runner:</label>
-                    <select id="filter-runner"></select>
+            <div class="filter-top-row">
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label for="filter-runner">Runner:</label>
+                        <select id="filter-runner"></select> </div>
+                    <div class="filter-group">
+                        <label for="filter-sort">Sort By:</label>
+                        <select id="filter-sort"></select> </div>
+                    <div class="filter-group">
+                        <label for="filter-sort-direction">Direction:</label>
+                        <select id="filter-sort-direction">
+                            <option value="asc">Ascending</option>
+                            <option value="desc">Descending</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="filter-sort">Sort By:</label>
-                    <select id="filter-sort"></select>
-                    <select id="filter-sort-direction">
-                        <option value="desc">Descending</option>
-                        <option value="asc">Ascending</option>
-                    </select>
-                </div>
-                 <div class="filter-group">
-                    <label for="filter-rep">Parent Sparks Only:</label>
-                    <input type="checkbox" id="filter-rep">
-                </div>
+                <button id="reset-filters-button">Reset Filters</button>
             </div>
+
             <div class="filter-section sliders">
-                <div class="slider-container">
-                    <label>Spd: <span id="val-speed">0</span></label>
-                    <input type="range" id="filter-speed" min="0" max="1800" value="0">
+                 <div class="slider-container">
+                    <label for ="filter-speed">Speed</label>
+                    <input type="number" id="val-speed" class="stat-input" min="0" max="1200" value="0">
+                    <input type="range" id="filter-speed" min="0" max="1200" value="0">
                 </div>
-                <div class="slider-container">
-                    <label>Stm: <span id="val-stamina">0</span></label>
-                    <input type="range" id="filter-stamina" min="0" max="1800" value="0">
+                 <div class="slider-container">
+                    <label for ="filter-stamina">Stamina</label>
+                    <input type="number" id="val-stamina" class="stat-input" min="0" max="1200" value="0">
+                    <input type="range" id="filter-stamina" min="0" max="1200" value="0">
                 </div>
-                <div class="slider-container">
-                    <label>Pow: <span id="val-power">0</span></label>
-                    <input type="range" id="filter-power" min="0" max="1800" value="0">
+                 <div class="slider-container">
+                    <label for ="filter-power">Power</label>
+                    <input type="number" id="val-power" class="stat-input" min="0" max="1200" value="0">
+                    <input type="range" id="filter-power" min="0" max="1200" value="0">
                 </div>
-                <div class="slider-container">
-                    <label>Gts: <span id="val-guts">0</span></label>
-                    <input type="range" id="filter-guts" min="0" max="1800" value="0">
+                 <div class="slider-container">
+                    <label for ="filter-guts">Guts</label>
+                    <input type="number" id="val-guts" class="stat-input" min="0" max="1200" value="0">
+                    <input type="range" id="filter-guts" min="0" max="1200" value="0">
                 </div>
-                <div class="slider-container">
-                    <label>Wit: <span id="val-wit">0</span></label>
-                    <input type="range" id="filter-wit" min="0" max="1800" value="0">
+                 <div class="slider-container">
+                    <label for ="filter-wit">Wit</label>
+                    <input type="number" id="val-wit" class="stat-input" min="0" max="1200" value="0">
+                    <input type="range" id="filter-wit" min="0" max="1200" value="0">
                 </div>
             </div>
-             <div class="filter-section">
-                <div class="filter-group">
-                    <label for="filter-blue-spark">Blue Spark:</label>
-                    <select id="filter-blue-spark"></select>
-                    <label for="min-blue">Min:</label>
-                    <select id="min-blue"></select>
+            <div class="filter-group">
+                <label for="filter-rep">Parent Sparks Only:</label>
+                <input type="checkbox" id="filter-rep">
+            </div>
+
+            <!-- START: MODIFIED SPARK FILTER SECTION -->
+            <div id="spark-filters-container">
+                <div class="filter-section spark-filters">
+                    <div class="filter-group">
+                        <label for="filter-blue-spark">Blue Spark:</label>
+                        <select id="filter-blue-spark"></select>
+                        <label for="min-blue">Min:</label>
+                        <select id="min-blue"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-green-spark">Green Spark:</label>
+                        <select id="filter-green-spark" class="spark-select-long"></select>
+                        <label for="min-green">Min:</label>
+                        <select id="min-green"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-pink-spark">Pink Spark:</label>
+                        <select id="filter-pink-spark"></select>
+                        <label for="min-pink">Min:</label>
+                        <select id="min-pink"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-white-spark">White Spark:</label>
+                        <select id="filter-white-spark" class="spark-select-long"></select>
+                        <label for="min-white">Min:</label>
+                        <select id="min-white"></select>
+                    </div>
+                    <!-- A remove button will be added here by JS for new rows -->
+                </div>
+            </div>
+
+            <div class="add-filter-container">
+                <button id="add-spark-filter-button">+ Add Spark Filter Row</button>
+            </div>
+            <!-- END: MODIFIED SPARK FILTER SECTION -->
+
+             <div class="filter-section aptitude-filters" id="aptitude-filters" style="display: none;"> <div class="filter-group">
+                    <label>Min Track:</label>
+                    <select id="apt-min-turf"><option value="">Turf</option></select>
+                    <select id="apt-min-dirt"><option value="">Dirt</option></select>
                 </div>
                  <div class="filter-group">
-                    <label for="filter-pink-spark">Pink Spark:</label>
-                    <select id="filter-pink-spark"></select>
-                    <label for="min-pink">Min:</label>
-                    <select id="min-pink"></select>
+                     <label>Min Distance:</label>
+                    <select id="apt-min-sprint"><option value="">Sprint</option></select>
+                    <select id="apt-min-mile"><option value="">Mile</option></select>
+                    <select id="apt-min-medium"><option value="">Med.</option></select>
+                    <select id="apt-min-long"><option value="">Long</option></select>
                 </div>
-            </div>
-             <div class="filter-section" id="aptitude-filters">
                 <div class="filter-group">
-                    <label>Aptitudes:</label>
-                    <select id="apt-turf"><option value="">Turf</option></select>
-                    <select id="apt-dirt"><option value="">Dirt</option></select>
-                    <select id="apt-mile"><option value="">Mile</option></select>
-                    <select id="apt-long"><option value="">Long</option></select>
+                     <label>Min Style:</label>
+                    <select id="apt-min-front"><option value="">Front</option></select>
+                    <select id="apt-min-pace"><option value="">Pace</option></select>
+                    <select id="apt-min-late"><option value="">Late</option></select>
+                    <select id="apt-min-end"><option value="">End</option></select>
                 </div>
             </div>
         </div>
 
-        <!-- Table Content Area -->
         <div class="table-container">
-            <!-- Parent Summary Tab -->
             <div class="tab-content active" id="parent-summary">
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Entry Id</th> <th>Name</th>
                             <th>Score</th>
-                            <th>Stats</th>
+                            <th>Speed</th>
+                            <th>Stamina</th>
+                            <th>Power</th>
+                            <th>Guts</th>
+                            <th>Wit</th>
                             <th>Blue Sparks</th>
+                            <th>Green Sparks</th>
                             <th>Pink Sparks</th>
-                            <th>White Sparks</th>
-                            <th>Grandparents</th>
+                            <th>Whites</th>
+                            <th>GP1</th>
+                            <th>GP2</th>
                         </tr>
                     </thead>
                     <tbody id="parent-summary-body"></tbody>
                 </table>
             </div>
-            <!-- Aptitude Summary Tab -->
             <div class="tab-content" id="aptitude-summary">
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Entry Id</th> <th>Name</th>
                             <th>Score</th>
-                            <th>Stats</th>
+                            <th>Speed</th>
+                            <th>Stamina</th>
+                            <th>Power</th>
+                            <th>Guts</th>
+                            <th>Wit</th>
                             <th>Turf</th>
                             <th>Dirt</th>
                             <th>Sprint</th>
@@ -123,7 +170,32 @@
                     <tbody id="aptitude-summary-body"></tbody>
                 </table>
             </div>
-        </div>
+             <div class="tab-content" id="white-sparks">
+                 <table>
+                     <thead>
+                         <tr>
+                            <th>Entry Id</th> <th>Name</th>
+                            <th>Score</th>
+                            <th>Whites (Parent)</th>
+                            <th>Whites (Total)</th>
+                            </tr>
+                     </thead>
+                     <tbody id="white-sparks-body"></tbody>
+                 </table>
+             </div>
+              <div class="tab-content" id="skills-summary">
+                 <table>
+                     <thead>
+                         <tr>
+                            <th>Entry Id</th> <th>Name</th>
+                            <th>Score</th>
+                            <th>Skills</th>
+                         </tr>
+                     </thead>
+                     <tbody id="skills-summary-body"></tbody>
+                 </table>
+             </div>
+             </div>
     </div>
 
     <script src="renderer.js"></script>

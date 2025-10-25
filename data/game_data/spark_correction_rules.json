@@ -48,5 +48,10 @@
         "keywords": ["goo", "ist", "feo"],
         "color": "green",
         "spark_name": "G00 1st. F\u221e;"
+    },
+    {
+        "keywords": ["blazing", "pride"],
+        "color": "green",
+        "spark_name": "Blazing Pride"
     }
 ]
