@@ -7,63 +7,79 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def format_json_with_custom_layout(all_runners_data: list) -> str:
     """
     Custom JSON formatter that creates a highly readable, grouped, and semi-compact output.
+    - Sorts skills canonically with the unique skill first.
     - Groups related keys onto single lines.
     - Formats the 'skills' array into a two-column layout.
     - Keeps the 'sparks' objects compact.
     """
+    try:
+        with open(os.path.join(BASE_DIR, 'data', 'game_data', 'skills_ordered.json'), 'r', encoding='utf-8') as f:
+            ordered_skills = json.load(f)
+        with open(os.path.join(BASE_DIR, 'data', 'game_data', 'runner_skills.json'), 'r', encoding='utf-8') as f:
+            runner_unique_skills = json.load(f)
+        skill_order_map = {skill: i for i, skill in enumerate(ordered_skills)}
+    except FileNotFoundError:
+        print("Warning: Skill ordering files not found. Skills will not be sorted.")
+        skill_order_map = {}
+        runner_unique_skills = {}
+
 
     def build_line(runner_dict, keys):
-        """Helper to build a single formatted line for a set of keys."""
         parts = []
         for key in keys:
             if key in runner_dict:
                 value_str = json.dumps(runner_dict[key], ensure_ascii=False)
-                if 'apt_' in key:   parts.append(f'"{key.split("_")[1]}": {value_str}')
-                else:               parts.append(f'"{key}": {value_str}')
+                parts.append(f'"{key}": {value_str}')
         return ", ".join(parts)
 
     output_parts = []
     for runner_index, runner_dict in enumerate(all_runners_data):
-        # This list will hold all the formatted string blocks for the current entry.
         content_blocks = []
 
-        # --- Define Key Groupings ---
         id_keys = ["entry_id", "last_updated", "entry_hash"]
         name_key = ["name"]
         score_key = ["score"]
         stat_keys = ["speed", "stamina", "power", "guts", "wit"]
-        apt_keys = ["apt_turf", "apt_dirt", "apt_sprint", "apt_mile", "apt_medium", "apt_long", "apt_front", "apt_pace", "apt_late", "apt_end"]
+        apt_keys = ["turf", "dirt", "sprint", "mile", "medium", "long", "front", "pace", "late", "end"]
         gp_keys = ["gp1", "gp2"]
 
-        # --- Build Content Blocks for Each Group ---
         for keys in [id_keys, name_key, score_key, stat_keys, apt_keys, gp_keys]:
             line = build_line(runner_dict, keys)
             if line:
                 content_blocks.append(f'    {line}')
         
-        # --- Custom Formatting for Skills (Two-Column Layout) ---
+        if 'skills' in runner_dict and runner_dict['skills'] and skill_order_map:
+            current_skills = runner_dict['skills']
+            runner_name = runner_dict.get('name')
+            possible_uniques = runner_unique_skills.get(runner_name, [])
+            
+            unique_skill = next((s for s in current_skills if s in possible_uniques), None)
+            
+            other_skills = [s for s in current_skills if s != unique_skill]
+            other_skills.sort(key=lambda s: skill_order_map.get(s, float('inf')))
+            
+            sorted_skills = ([unique_skill] if unique_skill else []) + other_skills
+            runner_dict['skills'] = sorted_skills
+
         if 'skills' in runner_dict and runner_dict['skills']:
             skills_list = runner_dict['skills']
             
-            # Split skills into two columns
-            midpoint = (len(skills_list) + 1) // 2
-            left_col = skills_list[:midpoint]
-            right_col = skills_list[midpoint:]
-            
-            # Calculate max length for alignment padding
-            # We use json.dumps to get the true length including quotes
+            # Calculate the maximum length of skills that will appear in the first column for alignment
             max_len = 0
-            if left_col:
-                max_len = max(len(json.dumps(s, ensure_ascii=False)) for s in left_col)
+            if skills_list:
+                max_len = max(len(json.dumps(s, ensure_ascii=False)) for i, s in enumerate(skills_list) if i % 2 == 0)
 
             formatted_skill_lines = []
-            for i in range(len(left_col)):
-                left_skill_str = json.dumps(left_col[i], ensure_ascii=False)
+            # Iterate through the skills list, taking two items at a time (left and right)
+            for i in range(0, len(skills_list), 2):
+                # The left skill is always the current item
+                left_skill_str = json.dumps(skills_list[i], ensure_ascii=False)
                 line = f'      {left_skill_str}'
                 
-                if i < len(right_col):
-                    right_skill_str = json.dumps(right_col[i], ensure_ascii=False)
-                    # Add comma and padding for the second column
+                # Check if a corresponding right skill exists
+                if i + 1 < len(skills_list):
+                    right_skill_str = json.dumps(skills_list[i + 1], ensure_ascii=False)
+                    # Calculate padding based on the length of the left skill string
                     padding = ' ' * (max_len - len(left_skill_str) + 4)
                     line += f',{padding}{right_skill_str}'
                 
@@ -72,7 +88,6 @@ def format_json_with_custom_layout(all_runners_data: list) -> str:
             skills_block = '"skills": [\n' + ",\n".join(formatted_skill_lines) + '\n    ]'
             content_blocks.append(f'    {skills_block}')
         
-        # --- Custom Formatting for Sparks (remains the same) ---
         if 'sparks' in runner_dict and runner_dict['sparks']:
             sparks_data = runner_dict['sparks']
             spark_parts = []
@@ -84,13 +99,11 @@ def format_json_with_custom_layout(all_runners_data: list) -> str:
             sparks_block = '"sparks": {\n' + ",\n".join(spark_parts) + '\n    }'
             content_blocks.append(f'    {sparks_block}')
 
-        # --- Assemble the final entry ---
         runner_content = ",\n".join(content_blocks)
         output_parts.append("  {\n" + runner_content + "\n  }")
 
-    # Join all runner entries and wrap in the main array brackets
     return "[\n" + ",\n".join(output_parts) + "\n]\n"
-
+    
 
 def update_all_runners(new_runners_df: pd.DataFrame):
     """
