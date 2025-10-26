@@ -6,22 +6,25 @@
     <link rel="stylesheet" href="styles.css"> </head>
 <body>
     <div class="app-container">
+        <!-- START: MODIFIED TAB BUTTONS -->
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
-            <button class="tab-button" data-tab="aptitude-summary">Aptitude Summary</button>
-            <button class="tab-button" data-tab="white-sparks">White Sparks</button> <button class="tab-button" data-tab="skills-summary">Skills Summary</button> </div>
+            <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
+        </div>
+        <!-- END: MODIFIED TAB BUTTONS -->
 
         <div class="filter-panel">
+            <!-- Filter panel content remains unchanged... -->
             <div class="filter-top-row">
                 <div class="filter-section">
                     <div class="filter-group">
-                        <label for="filter-runner">Runner:</label>
+                        <label for="filter-runner">Runner</label>
                         <select id="filter-runner"></select> </div>
                     <div class="filter-group">
-                        <label for="filter-sort">Sort By:</label>
+                        <label for="filter-sort">Sort By</label>
                         <select id="filter-sort"></select> </div>
                     <div class="filter-group">
-                        <label for="filter-sort-direction">Direction:</label>
+                        <label for="filter-sort-direction">Direction</label>
                         <select id="filter-sort-direction">
                             <option value="asc">Ascending</option>
                             <option value="desc">Descending</option>
@@ -30,93 +33,104 @@
                 </div>
                 <button id="reset-filters-button">Reset Filters</button>
             </div>
-
-            <div class="filter-section sliders">
-                 <div class="slider-container">
-                    <label for ="filter-speed">Speed</label>
-                    <input type="number" id="val-speed" class="stat-input" min="0" max="1200" value="0">
-                    <input type="range" id="filter-speed" min="0" max="1200" value="0">
-                </div>
-                 <div class="slider-container">
-                    <label for ="filter-stamina">Stamina</label>
-                    <input type="number" id="val-stamina" class="stat-input" min="0" max="1200" value="0">
-                    <input type="range" id="filter-stamina" min="0" max="1200" value="0">
-                </div>
-                 <div class="slider-container">
-                    <label for ="filter-power">Power</label>
-                    <input type="number" id="val-power" class="stat-input" min="0" max="1200" value="0">
-                    <input type="range" id="filter-power" min="0" max="1200" value="0">
-                </div>
-                 <div class="slider-container">
-                    <label for ="filter-guts">Guts</label>
-                    <input type="number" id="val-guts" class="stat-input" min="0" max="1200" value="0">
-                    <input type="range" id="filter-guts" min="0" max="1200" value="0">
-                </div>
-                 <div class="slider-container">
-                    <label for ="filter-wit">Wit</label>
-                    <input type="number" id="val-wit" class="stat-input" min="0" max="1200" value="0">
-                    <input type="range" id="filter-wit" min="0" max="1200" value="0">
+            <div id="stat-filters-container" class="filter-group-container">
+                <div class="filter-section sliders">
+                    <div class="slider-container">
+                        <label for ="filter-speed">Speed</label>
+                        <input type="number" id="val-speed" class="stat-input" min="0" max="1200" value="0">
+                        <input type="range" id="filter-speed" min="0" max="1200" value="0">
+                    </div>
+                    <div class="slider-container">
+                        <label for ="filter-stamina">Stamina</label>
+                        <input type="number" id="val-stamina" class="stat-input" min="0" max="1200" value="0">
+                        <input type="range" id="filter-stamina" min="0" max="1200" value="0">
+                    </div>
+                    <div class="slider-container">
+                        <label for ="filter-power">Power</label>
+                        <input type="number" id="val-power" class="stat-input" min="0" max="1200" value="0">
+                        <input type="range" id="filter-power" min="0" max="1200" value="0">
+                    </div>
+                    <div class="slider-container">
+                        <label for ="filter-guts">Guts</label>
+                        <input type="number" id="val-guts" class="stat-input" min="0" max="1200" value="0">
+                        <input type="range" id="filter-guts" min="0" max="1200" value="0">
+                    </div>
+                    <div class="slider-container">
+                        <label for ="filter-wit">Wit</label>
+                        <input type="number" id="val-wit" class="stat-input" min="0" max="1200" value="0">
+                        <input type="range" id="filter-wit" min="0" max="1200" value="0">
+                    </div>
                 </div>
             </div>
-            <div class="filter-group">
-                <label for="filter-rep">Parent Sparks Only:</label>
-                <input type="checkbox" id="filter-rep">
+            <div id="aptitude-filters-container" class="filter-group-container">
+                <div class="filter-section aptitude-filters" id="aptitude-filters" style="display: none;"> <div class="filter-group">
+                        <label>Track</label>
+                        <select id="apt-min-turf"><option value="">Turf</option></select>
+                        <select id="apt-min-dirt"><option value="">Dirt</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Distance</label>
+                        <select id="apt-min-sprint"><option value="">Sprint</option></select>
+                        <select id="apt-min-mile"><option value="">Mile</option></select>
+                        <select id="apt-min-medium"><option value="">Med.</option></select>
+                        <select id="apt-min-long"><option value="">Long</option></select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Style</label>
+                        <select id="apt-min-front"><option value="">Front</option></select>
+                        <select id="apt-min-pace"><option value="">Pace</option></select>
+                        <select id="apt-min-late"><option value="">Late</option></select>
+                        <select id="apt-min-end"><option value="">End</option></select>
+                    </div>
+                </div>
             </div>
-
-            <!-- START: MODIFIED SPARK FILTER SECTION -->
-            <div id="spark-filters-container">
+            <div id="spark-filters-container" class="filter-group-container">
+                <div class="filter-group">
+                    <label for="filter-rep">Parent Sparks Only</label>
+                    <input type="checkbox" id="filter-rep">
+                </div>
                 <div class="filter-section spark-filters">
                     <div class="filter-group">
-                        <label for="filter-blue-spark">Blue Spark:</label>
-                        <select id="filter-blue-spark"></select>
-                        <label for="min-blue">Min:</label>
-                        <select id="min-blue"></select>
+                        <label for="filter-blue-spark">Blue Sparks</label>
+                        <div class="searchable-select-container">
+                            <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-short" autocomplete="off">
+                            <div class="options-container"></div>
+                        </div>
+                        <label for="min-blue"></label>
+                        <select id="min-blue" class="min-spark-select"></select>
                     </div>
                     <div class="filter-group">
-                        <label for="filter-green-spark">Green Spark:</label>
-                        <select id="filter-green-spark" class="spark-select-long"></select>
-                        <label for="min-green">Min:</label>
-                        <select id="min-green"></select>
+                        <label for="filter-green-spark">Green Sparks</label>
+                        <div class="searchable-select-container">
+                            <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
+                            <div class="options-container"></div>
+                        </div>
+                        <label for="min-green"></label>
+                        <select id="min-green" class="min-spark-select"></select>
                     </div>
                     <div class="filter-group">
-                        <label for="filter-pink-spark">Pink Spark:</label>
-                        <select id="filter-pink-spark"></select>
-                        <label for="min-pink">Min:</label>
-                        <select id="min-pink"></select>
+                        <label for="filter-pink-spark">Pink Sparks</label>
+                        <div class="searchable-select-container">
+                            <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
+                            <div class="options-container"></div>
+                        </div>
+                        <label for="min-pink"></label>
+                        <select id="min-pink" class="min-spark-select"></select>
                     </div>
                     <div class="filter-group">
-                        <label for="filter-white-spark">White Spark:</label>
-                        <select id="filter-white-spark" class="spark-select-long"></select>
-                        <label for="min-white">Min:</label>
-                        <select id="min-white"></select>
+                        <label for="filter-white-spark">White Sparks</label>
+                        <div class="searchable-select-container">
+                            <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
+                            <div class="options-container"></div>
+                        </div>
+                        <label for="min-white">Total Whites</label>
+                        <select id="min-white" class="min-spark-select"></select>
                     </div>
-                    <!-- A remove button will be added here by JS for new rows -->
                 </div>
             </div>
-
-            <div class="add-filter-container">
-                <button id="add-spark-filter-button">+ Add Spark Filter Row</button>
-            </div>
-            <!-- END: MODIFIED SPARK FILTER SECTION -->
-
-             <div class="filter-section aptitude-filters" id="aptitude-filters" style="display: none;"> <div class="filter-group">
-                    <label>Min Track:</label>
-                    <select id="apt-min-turf"><option value="">Turf</option></select>
-                    <select id="apt-min-dirt"><option value="">Dirt</option></select>
-                </div>
-                 <div class="filter-group">
-                     <label>Min Distance:</label>
-                    <select id="apt-min-sprint"><option value="">Sprint</option></select>
-                    <select id="apt-min-mile"><option value="">Mile</option></select>
-                    <select id="apt-min-medium"><option value="">Med.</option></select>
-                    <select id="apt-min-long"><option value="">Long</option></select>
-                </div>
-                <div class="filter-group">
-                     <label>Min Style:</label>
-                    <select id="apt-min-front"><option value="">Front</option></select>
-                    <select id="apt-min-pace"><option value="">Pace</option></select>
-                    <select id="apt-min-late"><option value="">Late</option></select>
-                    <select id="apt-min-end"><option value="">End</option></select>
+            <div id="add-filters-container" class="filter-group-container">
+                <div class="add-filter-container">
+                    <button id="add-spark-filter-button">+ Add Spark Filter Row</button>
                 </div>
             </div>
         </div>
@@ -126,7 +140,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Entry Id</th> <th>Name</th>
+                            <th>Entry Id</th> 
+                            <th>Name</th>
                             <th>Score</th>
                             <th>Speed</th>
                             <th>Stamina</th>
@@ -144,60 +159,26 @@
                     <tbody id="parent-summary-body"></tbody>
                 </table>
             </div>
-            <div class="tab-content" id="aptitude-summary">
+            <div class="tab-content" id="white-sparks">
                 <table>
                     <thead>
                         <tr>
-                            <th>Entry Id</th> <th>Name</th>
-                            <th>Score</th>
-                            <th>Speed</th>
-                            <th>Stamina</th>
-                            <th>Power</th>
-                            <th>Guts</th>
-                            <th>Wit</th>
-                            <th>Turf</th>
-                            <th>Dirt</th>
-                            <th>Sprint</th>
-                            <th>Mile</th>
-                            <th>Medium</th>
-                            <th>Long</th>
-                            <th>Front</th>
-                            <th>Pace</th>
-                            <th>Late</th>
-                            <th>End</th>
+                           <th>Entry Id</th>
+                           <th>Name</th>
+                           <th>Score</th>
+                           <th>Whites (Parent)</th>
+                           <th>GP1</th>
+                           <th>Whites (GP1)</th>
+                           <th>GP2</th>
+                           <th>Whites (GP2)</th>
                         </tr>
                     </thead>
-                    <tbody id="aptitude-summary-body"></tbody>
+                    <tbody id="white-sparks-body"></tbody>
                 </table>
             </div>
-             <div class="tab-content" id="white-sparks">
-                 <table>
-                     <thead>
-                         <tr>
-                            <th>Entry Id</th> <th>Name</th>
-                            <th>Score</th>
-                            <th>Whites (Parent)</th>
-                            <th>Whites (Total)</th>
-                            </tr>
-                     </thead>
-                     <tbody id="white-sparks-body"></tbody>
-                 </table>
-             </div>
-              <div class="tab-content" id="skills-summary">
-                 <table>
-                     <thead>
-                         <tr>
-                            <th>Entry Id</th> <th>Name</th>
-                            <th>Score</th>
-                            <th>Skills</th>
-                         </tr>
-                     </thead>
-                     <tbody id="skills-summary-body"></tbody>
-                 </table>
-             </div>
-             </div>
+            <!-- The skills-summary div has been completely removed -->
+        </div>
     </div>
-
     <script src="renderer.js"></script>
 </body>
 </html>

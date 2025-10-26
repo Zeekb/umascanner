@@ -1,4 +1,4 @@
-/* --- Base Theme (from uma_analyzer_themed.py) --- */
+/* --- Base Theme --- */
 :root {
   --uma-light-bg: #FEFEFE;
   --uma-medium-bg: #FFFFFF;
@@ -16,11 +16,10 @@
   --profile-frame-color: #FFFFFF;
   --profile-frame-shadow: #F0D050;
   --rank-ribbon-pink: #D46487;
-  /* This should be the background color of your modal's content area */
   --modal-content-bg: var(--uma-light-bg, #fefefe);
 
   /* Aptitude Colors */
-  --apt-ss: #f0bd1a; /* Using S color for SS for now */
+  --apt-ss: #f0bd1a;
   --apt-s:  #f0bd1a;
   --apt-a:  #f48337;
   --apt-b:  #e56487;
@@ -86,7 +85,7 @@ body {
 .filter-panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 5px;
   padding: 10px;
   background-color: var(--uma-light-bg);
   border: 1px solid var(--uma-border-color);
@@ -95,7 +94,7 @@ body {
 }
 .filter-top-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* This aligns it to the left like the other rows */
   align-items: center;
   gap: 20px;
 }
@@ -115,23 +114,37 @@ body {
   font-weight: normal;
   white-space: nowrap;
 }
+
+/* --- MODIFIED: Changed from ID to Class --- */
+.spark-select-short {
+    width: 100px; 
+}
 .spark-select-long {
     width: 160px; 
-    white-space: nowrap;
-    overflow: hidden;
     text-overflow: ellipsis;
 }
-select, input[type="text"], input[type="range"] {
+
+.min-spark-select {
+  margin-top: 1px;
+}
+
+select, input[type="text"], input[type="number"], input[type="range"] {
   background-color: var(--uma-text-light);
   border: 1px solid var(--uma-border-color);
   padding: 3px 5px;
   color: var(--uma-text-dark);
   border-radius: 3px;
   font-size: 0.9em;
+  box-sizing: border-box; /* Important for consistent sizing */
+}
+.spark-search-input::placeholder {
+  color: var(--uma-text-dark); /* Sets the color to match the labels */
+  opacity: 1; /* This is crucial to remove the browser's default transparency */
 }
 select { min-width: 80px; }
 input[type="checkbox"] { margin-left: 0; }
 #reset-filters-button {
+    margin-left: auto; 
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -141,17 +154,14 @@ input[type="checkbox"] { margin-left: 0; }
 }
 #reset-filters-button:hover { background-color: var(--uma-accent-pink); }
 
-/* --- START: NEW STYLES FOR DYNAMIC FILTERS --- */
-#spark-filters-container {
+.filter-group-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     border-top: 1px dashed #ccc;
-    border-bottom: 1px dashed #ccc;
-    padding: 10px 0;
+    padding-top: 5px;
 }
 .spark-filters {
-    padding-right: 34px; /* Make space for remove button */
+    padding-right: 34px;
     position: relative;
 }
 .remove-spark-filter-button {
@@ -171,12 +181,8 @@ input[type="checkbox"] { margin-left: 0; }
     right: 0;
     transform: translateY(-50%);
 }
-.remove-spark-filter-button:hover {
-    background-color: #c62828;
-}
-.add-filter-container {
-    display: flex;
-}
+.remove-spark-filter-button:hover { background-color: #c62828; }
+.add-filter-container { display: flex; }
 #add-spark-filter-button {
     background-color: #4CAF50;
     color: white;
@@ -186,90 +192,105 @@ input[type="checkbox"] { margin-left: 0; }
     cursor: pointer;
     font-size: 0.9em;
 }
-#add-spark-filter-button:hover {
-    background-color: #388E3C;
+#add-spark-filter-button:hover { background-color: #388E3C; }
+
+/* --- START: NEW SEARCHABLE SELECT STYLES --- */
+.searchable-select-container {
+    position: relative;
+    min-width: 60px;
 }
-/* --- END: NEW STYLES --- */
+.options-container {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 100%; 
+    box-sizing: border-box; 
+    max-height: 70vh;
+    overflow-y: auto;
+    background-color: var(--uma-light-bg);
+    border: 1px solid var(--uma-border-color);
+    margin-top: 1px;
+    border-radius: 3px 3px 3px 3px;
+    z-index: 10; /* Ensure it appears on top */
+    scrollbar-width: thin;
+    scrollbar-color: #c0c0c0 #f0f0f0;
+}
+.options-container::-webkit-scrollbar { width: 6px; }
+.options-container::-webkit-scrollbar-track { background: #f0f0f0; }
+.options-container::-webkit-scrollbar-thumb { background-color: #c0c0c0; border-radius: 3px; }
+
+.option-item {
+    padding: 5px 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.option-item:hover, .option-item.highlighted {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+}
+/* --- END: NEW SEARCHABLE SELECT STYLES --- */
 
 
 /* --- Sliders --- */
 .slider-container { 
-    display: flex; 
-    align-items: center; 
-    gap: 5px; 
+  display: flex; 
+  align-items: center; 
+  gap: 5px; 
 }
-
 .slider-container label { 
-    font-size: 0.9em; 
-    width: 65px; 
-    text-align: right; 
-    color: var(--uma-text-dark); 
+  font-size: 1em; 
+  min-width: 40px; 
+  text-align: left; 
+  color: var(--uma-text-dark); 
 }
-
-/* 1. Style the main input element as a container */
 input[type="range"] {
-  -webkit-appearance: none; /* REQUIRED to remove default styling */
-  appearance: none;
-  width: 120px; 
-  height: 18px; /* Match the thumb's height for better vertical alignment */
-  background: transparent; /* The track will be styled separately */
-  
-  border: 0px solid var(--uma-border-color);
+  -webkit-appearance: none; appearance: none;
+  width: 120px; height: 18px;
+  background: transparent;
+  border: none;
   cursor: pointer;
 }
-
-/* --- 2. Style the Slider Thumb (your original code was good) --- */
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
+  -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px;
   background: var(--uma-accent-pink);
   border: 1px solid var(--uma-border-color);
   border-radius: 9px;
-  /* This is a key part: vertically center the thumb on the track */
   margin-top: -5px; 
 }
-
 input[type="range"]::-moz-range-thumb {
-   width: 18px; 
-   height: 18px;
+  width: 18px; height: 18px;
   background: var(--uma-accent-pink);
   border: 1px solid var(--uma-border-color);
   border-radius: 9px;
 }
-
-/* --- 3. Style the Slider Track (THIS IS THE FIX) --- */
-/* This targets the track in Chrome, Safari, Edge */
 input[type="range"]::-webkit-slider-runnable-track {
-  width: 100%;
-  height: 8px;
+  width: 100%; height: 8px;
   background: var(--uma-medium-bg);
   border-radius: 4px;
   border: 1px solid var(--uma-border-color);
 }
-
-/* This targets the track in Firefox */
 input[type="range"]::-moz-range-track {
-  width: 100%;
-  height: 8px;
+  width: 100%; height: 8px;
   background: var(--uma-medium-bg);
   border-radius: 4px;
   border: 1px solid var(--uma-border-color);
 }
+input[type="range"]:focus { outline: none; }
 
-/* Optional: remove the blue focus outline on the slider */
-input[type="range"]:focus {
-    outline: none;
-}
+/* Table and Modal Styles remain the same... */
+/* (omitted for brevity, they are unchanged from the previous version) */
 
 /* --- Table --- */
 .table-container {
   flex-grow: 1;
-  overflow: hidden;
   background-color: var(--uma-light-bg);
   border: 1px solid var(--uma-border-color);
   border-top: none;
+  min-height: 0;
 }
 .tab-content {
   display: none;
@@ -302,6 +323,10 @@ tbody tr:nth-child(even) { background-color: var(--uma-alt-row-bg); }
 tbody tr:hover { background-color: #dbeaff; }
 
 td.stats { font-family: monospace; font-size: 0.9em; min-width: 100px; }
+.stat-cell {
+  min-width: 40px; /* Ensures all stat columns have the same minimum width */
+  text-align: center; /* Keeps the numbers centered */
+}
 td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
 
 /* --- FIXED: Added SS+ grade, Adjusted SS color --- */
@@ -341,7 +366,6 @@ td.left-align { text-align: left; white-space: normal; }
 
 td.spark-cell { text-align: left; white-space: normal; font-size: 0.85em; min-width: 150px; }
 td.spark-cell b { color: black; }
-.aptitude-filters:not(.active) { display: none; }
 
 
 /* --- MODAL STYLES --- */
@@ -822,4 +846,32 @@ td.spark-cell b { color: black; }
 }
 #modal-close-button:hover {
   background-color: var(--uma-accent-blue);
+}
+.gp-link {
+    cursor: pointer;
+}
+.gp-skills-link {
+    cursor: pointer;
+}
+.gp-skills-link:hover {
+    background-color: #e9ecef; /* A light grey hover effect */
+}
+.gp-borrowed {
+    color: #6c757d; /* A muted grey color */
+}
+
+/* Styles for the timed message popup */
+#timed-message-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 15px 25px;
+    background-color: rgba(40, 40, 40, 0.85);
+    color: white;
+    font-size: 1.1em;
+    border-radius: 8px;
+    z-index: 2000; /* Ensures it's on top of everything */
+    opacity: 1;
+    transition: opacity 0.5s ease-out; /* For the fade-out effect */
 }

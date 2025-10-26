@@ -1,11 +1,13 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises; // For async loadSkillTypes
+const fsSync = require('fs'); // For sync loadRunners
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 1600,
     height: 900,
+    icon: path.join(__dirname, '../assets/icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -19,6 +21,39 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('load-runners', loadRunners);
+  ipcMain.handle('load-skill-types', loadSkillTypes);
+  ipcMain.handle('load-ordered-skills', async () => {
+    try {
+      const filePath = path.join(__dirname, '../data', 'game_data', 'skills_ordered.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Failed to load skills_ordered.json:', error);
+      return null; // Return null on error
+    }
+  });
+  ipcMain.handle('load-runner-skills', async () => {
+    try {
+      const filePath = path.join(__dirname, '../data', 'game_data', 'runner_skills.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Failed to load runner_skills.json:', error);
+      return null; // Return null on error
+    }
+  });
+  ipcMain.handle('load-ordered-sparks', async () => {
+    try {
+      const filePath = path.join(__dirname, '../data', 'game_data', 'sparks.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Failed to load sparks.json:', error);
+      return null; // Return null on error
+    }
+  });
+  
   createWindow();
 
   app.on('activate', () => {
@@ -34,16 +69,28 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Securely reads the all_runners.json file when the front-end requests it.
-ipcMain.handle('load-runners', () => {
-  // Assumes your JSON is in a 'data' folder at the root of your project
+// --- Function Definitions ---
+
+// This is your original 'load-runners' handler, now as a named function
+function loadRunners() {
   const jsonPath = path.join(__dirname, '../data', 'all_runners.json');
   try {
-    const data = fs.readFileSync(jsonPath, 'utf-8');
+    const data = fsSync.readFileSync(jsonPath, 'utf-8');
     return JSON.parse(data);
   } catch (err) {
     console.error("Failed to read or parse all_runners.json:", err);
-    // Return an empty array or send an error message to the front-end
     return [];
   }
-});
+}
+
+// This is your 'loadSkillTypes' function
+async function loadSkillTypes() {
+  const skillTypesPath = path.join(__dirname, '..', 'data', 'game_data', 'skill_types.json');
+  try {
+    const data = await fs.readFile(skillTypesPath, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading skill_types.json:', err);
+    return {}; // Return empty object on error
+  }
+}
