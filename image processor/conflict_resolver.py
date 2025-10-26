@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import json
 import os
+from data_updater import format_json_with_custom_layout
 from PyQt5.QtWidgets import (
     QApplication, QDialog, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QGroupBox, 
     QGridLayout, QSizePolicy, QButtonGroup, QWidget, QScrollArea, QRadioButton
@@ -9,48 +10,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-# --- Re-use the custom formatter from data_updater.py ---
-def format_json_with_compact_sparks(all_runners_data: list) -> str:
-    # [This is the exact same function from data_updater.py]
-    output_parts = []
-    for runner_index, runner_dict in enumerate(all_runners_data):
-        lines = []
-        lines.append("  {")
-        simple_keys = [k for k in runner_dict.keys() if k not in ['sparks', 'skills']]
-        for key_index, key in enumerate(simple_keys):
-            value = runner_dict[key]
-            value_str = json.dumps(value, ensure_ascii=False)
-            is_last_simple_key = (key_index == len(simple_keys) - 1)
-            comma = ""
-            if not is_last_simple_key or 'skills' in runner_dict or 'sparks' in runner_dict:
-                comma = ","
-            lines.append(f'    "{key}": {value_str}{comma}')
-        if 'skills' in runner_dict and runner_dict['skills']:
-            lines.append('    "skills": [')
-            skill_lines = [f'      {json.dumps(s, ensure_ascii=False)}' for s in runner_dict['skills']]
-            lines.append(",\n".join(skill_lines))
-            comma = "," if 'sparks' in runner_dict else ""
-            lines.append(f'    ]{comma}')
-        if 'sparks' in runner_dict:
-            lines.append('    "sparks": {')
-            sparks_data = runner_dict.get('sparks', {})
-            for spark_type_index, (spark_type, spark_list) in enumerate(sparks_data.items()):
-                compact_spark_lines = [f"        {json.dumps(s, ensure_ascii=False)}" for s in spark_list]
-                spark_block = ",\n".join(compact_spark_lines)
-                lines.append(f'      "{spark_type}": [\n{spark_block}\n      ]')
-                if spark_type_index < len(sparks_data) - 1:
-                    lines[-1] += ","
-            lines.append('    }')
-        lines.append("  }")
-        if runner_index < len(all_runners_data) - 1:
-            lines[-1] += ","
-        output_parts.append("\n".join(lines))
-    return "[\n" + "\n".join(output_parts) + "\n]\n"
-
 # --- Path Configuration ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# --- (Your QSS and Color definitions would go here) ---
 
 def clear_layout(layout):
     if layout is not None:
@@ -181,7 +142,7 @@ class ConflictResolutionDialog(QDialog):
 
         # Define key categories
         stat_keys = ['speed', 'stamina', 'power', 'guts', 'wit']
-        apt_keys = sorted([k for k in new if k.startswith('apt_')])
+        apt_keys = ["turf", "dirt", "sprint", "mile", "medium", "long", "front", "pace", "late", "end"]
         basic_keys = ['name', 'score', 'gp1', 'gp2']
         complex_keys = ['skills', 'sparks']
 
@@ -310,7 +271,7 @@ class ConflictResolutionDialog(QDialog):
                 break
         
         with open(all_runners_file, 'w', encoding='utf-8') as f:
-            f.write(format_json_with_compact_sparks(all_data))
+            f.write(format_json_with_custom_layout(all_data))
 
         # --- Update conflicts file ---
         self.conflicts.pop(self.current_conflict_index)

@@ -41,7 +41,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FOLDER = os.path.join(BASE_DIR, "data")
 INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
 COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
-LOG_FILE = os.path.join(BASE_DIR, "app.log")
+LOG_FILE = os.path.join(BASE_DIR, "data", "app.log")
 DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
 DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
 
@@ -428,7 +428,7 @@ def _create_new_runners_dataframe(final_results):
 
         for stat_name, value in character_data.stats.__dict__.items(): row[stat_name] = value
         for category, sub in character_data.rankings.__dict__.items():
-            for subcat, grade in sub.items(): row[f"apt_{subcat}"] = grade
+            for subcat, grade in sub.items(): row[f"{subcat}"] = grade
         row["gp1"] = character_data.gp1
         row["gp2"] = character_data.gp2
         row["skills"] = character_data.skills
@@ -437,7 +437,7 @@ def _create_new_runners_dataframe(final_results):
 
     return pd.DataFrame(new_runners_rows)
 
-def _group_loose_images():
+def _group_loose_images(reader):
     """
     Organizes individual image files in the input directory into subfolders. Images are
     grouped based on the character's name, score, and a hash of their stats to ensure
@@ -566,7 +566,7 @@ def main():
     reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"])
 
     # Step 0: Organize loose images into folders.
-    _group_loose_images()
+    _group_loose_images(reader)
 
     # Initialize multithreading for parallel folder processing.
     processing_q = queue.Queue()
