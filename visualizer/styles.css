@@ -955,7 +955,15 @@ body.dark-mode .modal-skills-list::-webkit-scrollbar-thumb { background-color: #
 body.dark-mode .modal-skill-item {
     border-color: var(--uma-border-color);
 }
-
+.modal-skill-icon {
+  width: 32px;
+  height: 32px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  flex-shrink: 0; 
+  margin-left: -4px; 
+}
 .modal-skill-name {
   font-weight: bold;
   color: var(--uma-text-dark);
