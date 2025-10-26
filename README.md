@@ -124,7 +124,9 @@ This will install all other libraries, including `EasyOCR`, needed to run the sc
 2.  This opens a graphical interface where you can see all your runners' data in a sortable and filterable table.
    
 3.  You can double-click on any runner in the "Stats Summary" tab to see a detailed view of their stats, skills, and aptitudes.
-    *   Here's an image at `assets/ExampleAnalyzerView.png` as a reference for how the ui looks and what you can do with it.
-    <img src="assets/ExampleAnalyzerView.png" alt="SparkAreaExample.PNG" width="1800"/>
+    *   Here's an image at the `assets/ExampleAnalyzerView.png`s as a reference for how the ui looks and what you can do with it.
+    <img src="assets/ExampleAnalyzerView.png" alt="SparkAreaExample.png" width="1800"/>
+    <img src="assets/ExampleAnalyzerView1.5.png" alt="SparkAreaExample1.5.png" width="1800"/>
+    <img src="assets/ExampleAnalyzerView2.png" alt="SparkAreaExample2.png" width="1800"/>
 
 ---

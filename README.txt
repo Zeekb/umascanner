@@ -127,6 +127,6 @@ Step 4: View Your Results
 2.  This opens a graphical interface where you can see all your runners' data in a sortable and filterable table.
    
 3.  You can double-click on any runner in the "Stats Summary" tab to see a detailed view of their stats, skills, and aptitudes.
-    *   Here's an image at `assets/ExampleAnalyzerView.png` as a reference for how the ui looks and what you can do with it.
+    *   There's images in the `assets/` folder as a reference for how the ui looks and what you can do with it.
 
 ---
