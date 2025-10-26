@@ -25,12 +25,12 @@ import torch
 import warnings
 
 from schema import init_schema, CharacterData
-from main_parser import parse_umamusume
+from umamusume_parser import parse_umamusume
 from spark_parser import parse_sparks
-from sparks_handler import get_entries, combine_images_horizontally
+from roi_selector_gui import get_entries, combine_images_horizontally
 from roi_detector import detect_spark_zones
 from tabs import detect_active_tab
-from post_processing import update_all_runners
+from data_updater import update_all_runners
 from ocr_utils import normalize_name
 from image_utils import select_layout, crop_rois, load_image
 
@@ -605,7 +605,7 @@ def main():
             try:
                 if json.load(f):
                     logger.info("Found conflicts. Launching conflict resolver.")
-                    subprocess.run([sys.executable, os.path.join(BASE_DIR, 'src', 'conflict_resolver.py')])
+                    subprocess.run([sys.executable, os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')])
             except (json.JSONDecodeError, FileNotFoundError):
                 pass
 

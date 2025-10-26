@@ -15,7 +15,7 @@ from typing import Optional # New import
 
 # --- Path Configuration ---
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOG_FILE = os.path.join(BASE_DIR, "app.log")
+LOG_FILE = os.path.join(BASE_DIR, "data", "app.log")
 
 # --- Load Configuration ---
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:

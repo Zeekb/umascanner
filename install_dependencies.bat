@@ -10,21 +10,14 @@ if %errorlevel% neq 0 (
 
 echo Python is installed.
 
-echo Installing application dependencies from app_requirements.txt...
-pip install -r app_requirements.txt
+echo Installing application dependencies from data/app_requirements.txt...
+pip install -r data/app_requirements.txt
 if %errorlevel% neq 0 (
     echo Failed to install application dependencies.
     pause
     exit /b 1
 )
 
-echo Installing EasyOCR...
-pip install easyocr
-if %errorlevel% neq 0 (
-    echo Failed to install EasyOCR.
-    pause
-    exit /b 1
-)
 
 echo Dependencies installed successfully.
 pause

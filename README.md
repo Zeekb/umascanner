@@ -10,32 +10,35 @@ Running this for myself takes about 15 minutes for 200 entries, so go grab somet
 
 ## Step -1: [Optional] Add my data for the program before running your own
 
-If you want to play with my runner data in your program to see what you can dowith it, before doing anything, change the `all-runners_Zeek.csv` file in the `data` folder to `all-runners.csv`.
+If you want to play with my runner data in your program to see what you can dowith it, before doing anything, change the `all-runners_Zeek.json` file in the `data` folder to `all-runners.json`.
 I kept it in so people can play with the **Analyzer** (Described below) without putting in their own screenshots or needing to complete steps 1a, 2 or 3.
-Skip to step 4 after completing step 1b.
+Skip to step 4 after completing step 1c.
 
 
 ---
 
 
-## Step 0: Download and Install Python
+## Step 0: Download and Install Python & Node.js
 
-First, you need to install Python on your computer.
+First, you need to install Python and Node.js on your computer.
 
 1.  Go to the [official Python website](https://www.python.org/downloads/).
 2.  Download the latest version of Python.
 3.  When you install Python, make sure to check the box that says **"Add Python to PATH"**. This is very important.
-4.  To check if Python is installed correctly, open a program called **Terminal** or **Command Prompt** and type this command, then press Enter:
+4.  Go to the [official Node.js website](https://nodejs.org/en/download/).
+5.  Download and install the latest LTS version of Node.js.
+6.  To check if Python and Node.js are installed correctly, open a program called **Terminal** or **Command Prompt** and type these commands, then press Enter:
 
     ```bash
     python --version
+    node --version
     ```
 
 ---
 
 ## Step 1: Install Dependencies
 
-The installation is a two-step process. First, you will install the main deep learning library (PyTorch), then you will install the remaining application dependencies.
+The installation is a three-step process. First, you will install the main deep learning library (PyTorch), then you will install the remaining backend and frontend dependencies.
 
 ### Step 1a: Choose and Install PyTorch
 
@@ -75,9 +78,9 @@ This option requires a compatible NVIDIA GPU and provides a ~6x speed improvemen
 
 ---
 
-### Step 1b: Install Application Dependencies
+### Step 1b: Install Backend Dependencies
 
-After you have installed PyTorch using one of the options above, you can install the rest of the required libraries.
+After you have installed PyTorch using one of the options above, you can install the rest of the required libraries for the backend.
 
 *   **Action:** Double-click and run the `install_dependencies.bat` script.
 
@@ -85,10 +88,22 @@ This will install all other libraries, including `EasyOCR`, needed to run the sc
 
 ---
 
+### Step 1c: Install Frontend Dependencies
+
+Next, you need to install the dependencies for the user interface.
+
+*   **Action:** Open a **Terminal** or **Command Prompt**, navigate to the `visualizer` directory, and run the following command:
+    ```bash
+    cd visualizer
+    npm install
+    ```
+
+---
+
 
 ## Step 2: Prepare Your Screenshots
 
-1.  Put all your loose game screenshots into the `data/input_images` folder. The system will automatically organize them when you run `image_processor.py` in step 3.
+1.  Put all your loose game screenshots into the `data/input_images` folder. The system will automatically organize them when you run `"image processor/main.py"` in step 3.
 
 **A quick note:**
 
@@ -101,7 +116,7 @@ This will install all other libraries, including `EasyOCR`, needed to run the sc
 1.  Run the main processing script from your **Terminal** or **Command Prompt**. Make sure you are in the project's root folder.
 
     ```bash
-    python src/image_processor.py
+    python "image processor/main.py"
     ```
 
 2.  The script will perform the following steps automatically:
@@ -109,16 +124,17 @@ This will install all other libraries, including `EasyOCR`, needed to run the sc
     *   **Detects ROIs:** The script automatically detects the spark information regions from your screenshots.
     *   **Processes Data:** It then extracts all stats, ranks, skills, and sparks for each character.
     *   **Handles Conflicts:** If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a **Conflict Resolution** window will appear. This allows you to choose which data to keep.
-    *   **Saves Results:** The extracted data is saved in `data/all_runners.csv`, and the processed character folders are moved from `data/input_images` to `data/processed_images`.
+    *   **Saves Results:** The extracted data is saved in `data/all_runners.json`, and the processed character folders are moved from `data/input_images` to `data/processed_images`.
 
 ---
 
 ## Step 4: View Your Results
 
-1.  To view the collected data, run the analyzer application from your **Terminal** or **Command Prompt**:
+1.  To view the collected data, run the analyzer application from your **Terminal** or **Command Prompt**. Make sure you are in the `visualizer` directory.
 
     ```bash
-    python src/uma_analyzer_themed.py
+    cd visualizer
+    npm start
     ```
 
 2.  This opens a graphical interface where you can see all your runners' data in a sortable and filterable table.

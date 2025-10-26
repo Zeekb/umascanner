@@ -9,9 +9,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-# --- Re-use the custom formatter from post_processing.py ---
+# --- Re-use the custom formatter from data_updater.py ---
 def format_json_with_compact_sparks(all_runners_data: list) -> str:
-    # [This is the exact same function from post_processing.py]
+    # [This is the exact same function from data_updater.py]
     output_parts = []
     for runner_index, runner_dict in enumerate(all_runners_data):
         lines = []
