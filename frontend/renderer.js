@@ -59,6 +59,46 @@ const STAT_ICONS = {
     'guts': 'guts.png', 'wit': 'wit.png'
 };
 
+function isDarkModeActive() {
+    return document.body.classList.contains('dark-mode');
+}
+
+function setupDarkMode() {
+    const isDarkMode = localStorage.getItem('darkMode') === 'true';
+    const body = document.body;
+    const toggleButton = document.getElementById('dark-mode-toggle');
+    const iconSpan = document.getElementById('dark-mode-icon');
+    
+    // Apply initial state
+    if (isDarkMode) {
+        body.classList.add('dark-mode');
+        if (iconSpan) iconSpan.textContent = '🌙';
+        if (toggleButton) toggleButton.title = 'Toggle Light Mode';
+    } else {
+        body.classList.remove('dark-mode');
+        if (iconSpan) iconSpan.textContent = '☀️';
+        if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
+    }
+
+    // Add event listener
+    if (toggleButton) {
+        toggleButton.addEventListener('click', () => {
+            const currentlyDark = body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', currentlyDark);
+            
+            if (currentlyDark) {
+                if (iconSpan) iconSpan.textContent = '☀️';
+                if (toggleButton) toggleButton.title = 'Toggle Light Mode';
+            } else {
+                if (iconSpan) iconSpan.textContent = '🌙';
+                if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
+            }
+            filterAndRender();
+        });
+
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         [allRunners, skillTypes, orderedSkills, runnerUniqueSkills, orderedSparks] = await Promise.all([
@@ -89,6 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         extractSparkNames();
         populateFilters();
         setupEventListeners();
+        setupDarkMode(); 
         handleTabChange('parent-summary');
     } catch (error) {
         console.error("Initialization failed:", error);
@@ -353,7 +394,7 @@ function renderParentSummary(runners, allSparkCriteria, isRepOnly) {
         return `
         <tr data-entry-id="${r.entry_id || ''}">
             <td>${r.entry_id || 'N/A'}</td>
-            <td class="left-align"><span class="outline-label">${r.name || 'N/A'}</span></td>
+            <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
             <td>${(r.score || 0).toLocaleString()}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.speed)}">${r.speed || 0}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.stamina)}">${r.stamina || 0}</td>
@@ -403,6 +444,10 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
         // --- START: NEW HIGHLIGHTING LOGIC ---
 
         const formatWhiteSparkDisplay = (sourceTotal, sourceDetails) => {
+            // FIX: Use the explicit brown color for dark mode highlighting with bold weight.
+            const highlightColor = '#e08b3e'; // Your preferred brown/orange color
+            const highlightStyle = isDarkModeActive() ? ` style="color: ${highlightColor}; font-weight: bold;"` : '';
+            
             let shouldHighlightTotal = false;
             for (const criteria of allSparkCriteria) {
                 if (criteria.minWhite > 0 && sourceTotal >= criteria.minWhite) {
@@ -411,10 +456,14 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                 }
             }
 
-            const totalDisplay = shouldHighlightTotal ? `(<b>${sourceTotal}</b>)` : `(<b>${sourceTotal}</b>)`;
+            // MODIFIED: Apply inline style to total if highlighted
+            // Note: The total is always wrapped in <b> based on your original code's intent for white spark totals
+            const totalDisplay = shouldHighlightTotal 
+                ? `<b${highlightStyle}>${sourceTotal}</b>` 
+                : `<b>${sourceTotal}</b>`; 
 
             const detailsStr = Object.entries(sourceDetails)
-                .map(([name, value]) => { // 'value' holds the count you just summed
+                .map(([name, value]) => { 
                     let shouldHighlightName = false;
                     for (const criteria of allSparkCriteria) {
                         if (criteria.whiteSpark && name === criteria.whiteSpark) {
@@ -422,15 +471,15 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                             break;
                         }
                     }
-                    // --- BUG FIX ---
-                    // Changed 'count' to 'value' to correctly display the summed total
+                    
                     const formattedText = `${name} ${value}`; 
-                    // --- BUG FIX END ---
-                    return shouldHighlightName ? `<b>${formattedText}</b>` : formattedText;
+                    // MODIFIED: Apply inline style to name if highlighted
+                    return shouldHighlightName ? `<b${highlightStyle}>${formattedText}</b>` : formattedText;
                 })
                 .join(', ');
 
-            return totalDisplay + (detailsStr ? ` ${detailsStr}` : '');
+            // FIX: This structure was corrected in your previous example to match the output format (Total)(Details)
+            return `(${totalDisplay})${detailsStr ? ` ${detailsStr}` : ''}`;
         };
 
         const parentDisplay = formatWhiteSparkDisplay(totalCounts.parent, individualCounts.parent);
@@ -451,8 +500,8 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
        return `
        <tr data-entry-id="${r.entry_id || ''}">
            <td>${r.entry_id || 'N/A'}</td>
-           <td class="left-align gp-link"><span class="outline-label">${r.name || 'N/A'}</span></td>
-           <td class="gp-link">${(r.score || 0).toLocaleString()}</td>
+           <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
+           <td >${(r.score || 0).toLocaleString()}</td>
            <td class="left-align spark-cell gp-skills-link">${parentDisplay}</td>
            <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
            <td class="left-align spark-cell ${gp1SkillsClass}" data-gp-name="${r.gp1 || ''}">${gp1Display}</td>
@@ -470,41 +519,74 @@ function handleDetailView(event) {
     const clickedCell = event.target.closest('td');
     if (!clickedCell) return;
 
-    let runnerNameToFindRaw = null;
+    let runnerNameForLookup = null; // The name we use to find the runner in allRunners
+    let sparksToFind = null;
     let isClickable = false;
 
+    const tableRow = event.target.closest('tr');
+    const mainRunner = allRunners.find(r => String(r.entry_id) === tableRow?.dataset.entryId);
+    if (!mainRunner) {
+        return;
+    }
+
+    // FIX 2: Check for the main runner's name link in the white-sparks tab.
+    // If it is the main runner, open the modal directly and exit.
+    if (tableRow.closest('#white-sparks') && clickedCell.classList.contains('gp-link') && clickedCell.textContent.trim() === cleanName(mainRunner.name)) {
+        showDetailModal(mainRunner);
+        return;
+    }
+
+
     if (clickedCell.classList.contains('gp-skills-link')) {
-        runnerNameToFindRaw = clickedCell.dataset.gpName;
+        // Gets raw name from data-gp-name (e.g., "Daiwa Scarlet c")
+        runnerNameForLookup = clickedCell.dataset.gpName; 
         isClickable = true;
     } else if (clickedCell.classList.contains('gp-link')) {
-        runnerNameToFindRaw = clickedCell.textContent.trim();
+        const clickedNameClean = clickedCell.textContent.trim(); // Clean name from cell text (e.g., "Daiwa Scarlet")
         isClickable = true;
+        
+        // FIX 1B: Determine if it's GP1 or GP2 and get the RAW name from the main runner record.
+        // This is crucial to pass the " c" suffix to findRunnerByDetails for the correct image/entry.
+        if (cleanName(mainRunner.gp1) === clickedNameClean) {
+             runnerNameForLookup = mainRunner.gp1; // e.g., "Daiwa Scarlet c"
+        } else if (cleanName(mainRunner.gp2) === clickedNameClean) {
+             runnerNameForLookup = mainRunner.gp2; // e.g., "Daiwa Scarlet"
+        }
     }
     else if (clickedCell.classList.contains('gp-borrowed')) {
         showTimedMessage("Borrowed or not in data");
         return;
     }
 
-    if (isClickable && runnerNameToFindRaw && runnerNameToFindRaw !== 'N/A') {
-        const tableRow = event.target.closest('tr');
-        const mainRunner = allRunners.find(r => String(r.entry_id) === tableRow.dataset.entryId);
-        if (!mainRunner) return;
-
-        // Determine if we're looking for gp1 or gp2 based on the cell content
-        const sparksToFind = cleanName(mainRunner.gp1) === runnerNameToFindRaw ? mainRunner.sparks?.gp1 : mainRunner.sparks?.gp2;
+    if (isClickable && runnerNameForLookup && runnerNameForLookup !== 'N/A') {
         
-        const targetRunner = findRunnerByDetails(runnerNameToFindRaw, sparksToFind);
+        const nameToCompare = cleanName(runnerNameForLookup); // Clean name for sparks comparison
+        
+        // Logic to find sparks:
+        if (cleanName(mainRunner.gp1) === nameToCompare) {
+             sparksToFind = mainRunner.sparks?.gp1;
+        } else if (cleanName(mainRunner.gp2) === nameToCompare) {
+             sparksToFind = mainRunner.sparks?.gp2;
+        }
+
+        if (!sparksToFind) {
+             showTimedMessage("Could not find entry");
+             return;
+        }
+
+        // findRunnerByDetails will use the raw/intended name for the lookup now.
+        const targetRunner = findRunnerByDetails(runnerNameForLookup, sparksToFind); 
         
         if (targetRunner) {
             showDetailModal(targetRunner);
         } else {
-            console.warn(`Runner named "${runnerNameToFindRaw}" not found despite being marked as a link.`);
+            console.warn(`Runner named "${runnerNameForLookup}" not found in allRunners with matching sparks.`);
             showTimedMessage("Could not find entry");
         }
         return;
     }
 
-    const tableRow = event.target.closest('tr');
+    // Generic row double-click fallback
     if (tableRow && tableRow.dataset.entryId && !clickedCell.dataset.gpName && !clickedCell.classList.contains('gp-link') && !clickedCell.classList.contains('gp-borrowed')) {
         const entryId = tableRow.dataset.entryId;
         const runner = allRunners.find(r => String(r.entry_id) === String(entryId));
@@ -512,6 +594,7 @@ function handleDetailView(event) {
             showDetailModal(runner);
         } else {
             console.warn(`Runner with entry ID "${entryId}" not found.`);
+            showTimedMessage("Could not find entry"); 
         }
     }
 }
@@ -712,6 +795,7 @@ function sortData(data, sortBy, sortDir) {
 
 function formatSparks(runner, color, allSparkCriteria, repOnly) {
     const sparks = {}, parentSparks = {};
+    const highlightStyle = isDarkModeActive() ? ` style="color: #e08b3e; font-weight: bold;"` : '';
     ['parent', 'gp1', 'gp2'].forEach(source => {
         if (Array.isArray(runner.sparks?.[source])) {
             runner.sparks[source].forEach(spark => {
@@ -754,7 +838,7 @@ function formatSparks(runner, color, allSparkCriteria, repOnly) {
                     }
                 }
             }
-            return shouldHighlight ? `<b>${displayPart}</b>` : displayPart;
+            return shouldHighlight ? `<b${highlightStyle}>${displayPart}</b>` : displayPart;
         });
 
     return parts.join(', ') || '<span style="color: #888;">N/A</span>';
@@ -872,19 +956,13 @@ function showDetailModal(runner) {
     let skillsHtml = '';
     const runnerSkills = runner.skills || [];
     if (runnerSkills.length > 0) {
-        const sortedSkills = [...runnerSkills].sort((a, b) => {
-            const indexA = orderedSkills.indexOf(a);
-            const indexB = orderedSkills.indexOf(b);
-            if (indexA === -1) return 1;
-            if (indexB === -1) return -1;
-            return indexA - indexB;
-        });
+        const sortedSkills = [...runnerSkills];
         sortedSkills.forEach((skillName, index) => {
             const skillType = skillTypes[skillName] || null;
             let itemClass = 'modal-skill-item';
             if (skillType) {
                 const uniqueSkillName = runnerUniqueSkills[runner.name];
-                if (skillType.startsWith('unique') || (uniqueSkillName && uniqueSkillName === skillName)) {
+                if (skillType.startsWith('unique') && index === 0) {
                     itemClass += ' unique';
                 } else if (skillType.endsWith('g')) {
                     itemClass += ' gold';
@@ -1096,9 +1174,8 @@ function findRunnerByDetails(name, gpSparksArray) {
         return null;
     }
 
-    const cleanedName = cleanName(name);
-    // Use a composite key for the cache to handle multiple versions of the same character
-    const cacheKey = `${cleanedName}-${JSON.stringify(gpSparksArray)}`;
+    // Use the raw name for the cache key for maximum specificity
+    const cacheKey = `${name}-${JSON.stringify(gpSparksArray)}`; 
     if (gpExistenceCache.has(cacheKey)) {
         return gpExistenceCache.get(cacheKey);
     }
@@ -1106,9 +1183,7 @@ function findRunnerByDetails(name, gpSparksArray) {
     // Helper to create a sorted, comparable string from a sparks array
     const createComparableString = (arr) => {
         if (!arr) return null;
-        // Create a copy to avoid modifying original data
         const sortedArr = [...arr].sort((a, b) => {
-            // Sort primarily by spark_name, then by count as a tie-breaker
             if (a.spark_name < b.spark_name) return -1;
             if (a.spark_name > b.spark_name) return 1;
             return (a.count || 0) - (b.count || 0);
@@ -1121,14 +1196,27 @@ function findRunnerByDetails(name, gpSparksArray) {
         gpExistenceCache.set(cacheKey, null);
         return null;
     }
-
-    const foundRunner = allRunners.find(runner => {
-        if (cleanName(runner.name) !== cleanedName) return false;
-        if (!runner.sparks?.parent) return false;
-
-        const parentSparksString = createComparableString(runner.sparks.parent);
-        return parentSparksString === gpSparksString;
+    
+    // FIX 1A: 1. Try to find an EXACT name and spark match first.
+    let foundRunner = allRunners.find(runner => {
+        if (runner.name === name) { // e.g., "Daiwa Scarlet c" === "Daiwa Scarlet c"
+            if (!runner.sparks?.parent) return false;
+            const parentSparksString = createComparableString(runner.sparks.parent);
+            return parentSparksString === gpSparksString;
+        }
+        return false;
     });
+
+    // 2. If no exact name match, fall back to a clean name match (original logic).
+    if (!foundRunner) {
+        const cleanedName = cleanName(name);
+        foundRunner = allRunners.find(runner => {
+            if (cleanName(runner.name) !== cleanedName) return false;
+            if (!runner.sparks?.parent) return false;
+            const parentSparksString = createComparableString(runner.sparks.parent);
+            return parentSparksString === gpSparksString;
+        });
+    }
 
     const result = foundRunner || null;
     gpExistenceCache.set(cacheKey, result);

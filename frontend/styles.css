@@ -1,15 +1,16 @@
 /* --- Base Theme --- */
 :root {
+  /* Light Mode Base Colors */
   --uma-light-bg: #FEFEFE;
   --uma-medium-bg: #FFFFFF;
   --uma-dark-accent: #71d71c;
   --uma-accent-pink: #FF80AB;
   --uma-accent-blue: #82B1FF;
   --uma-text-dark: #8C4410; /* Dark brown text */
-  --uma-text-light: #FFFFFF;
+  --uma-text-light: #FFFFFF; /* Used for inputs/selects background in light mode */
   --uma-border-color: var(--uma-dark-accent);
   --uma-alt-row-bg: #f0f0f0;
-  --uma-selection-bg: var(--uma-accent-blue);
+  --uma-selection-bg: #dbeaff; /* Light hover */
   --uma-header-bg: var(--uma-dark-accent);
   --uma-header-text: var(--uma-text-light);
 
@@ -18,17 +19,82 @@
   --rank-ribbon-pink: #D46487;
   --modal-content-bg: var(--uma-light-bg, #fefefe);
 
-  /* Aptitude Colors */
-  --apt-ss: #f0bd1a;
-  --apt-s:  #f0bd1a;
-  --apt-a:  #f48337;
-  --apt-b:  #e56487;
-  --apt-c:  #61c340;
-  --apt-d:  #49ace2;
-  --apt-e:  #d477f2;
-  --apt-f:  #766ad6;
-  --apt-g:  #b3b2b3;
-  --apt-n-a:#ddd;
+  /* Light Aptitude Colors */
+  --apt-s-base: #f0bd1a; 
+  --apt-a-base: #f48337; 
+  --apt-b-base: #e56487;
+  --apt-c-base: #61c340; 
+  --apt-d-base: #49ace2; 
+  --apt-e-base: #d477f2;
+  --apt-f-base: #766ad6; 
+  --apt-g-base: #b3b2b3; 
+  --apt-n-a-base: #ddd;
+
+  --apt-ss: var(--apt-s-base); --apt-s: var(--apt-s-base);
+  --apt-a: var(--apt-a-base); --apt-b: var(--apt-b-base); --apt-c: var(--apt-c-base);
+  --apt-d: var(--apt-d-base); --apt-e: var(--apt-e-base); --apt-f: var(--apt-f-base);
+  --apt-g: var(--apt-g-base); --apt-n-a: var(--apt-n-a-base);
+
+
+  /* Dark Mode Definitions */
+  --dark-bg-body: #222222;       /* Very Dark Gray for body (empty space, Rule 3) */
+  --dark-bg-element: #3c3c3c;    /* Dark Gray for filter panel/cards/light-bg (Rule 5: All White -> Darker Gray) */
+  --dark-bg-alt-row: #353535;    /* Slightly Lighter Dark Gray for alternate rows (Rule 4) */
+  --dark-text-color: #f0f0f0;    /* Light text color (Rule 2) */
+  
+  --dark-uma-dark-accent: #385628; /* Darker Green Accent */
+  --dark-uma-accent-pink: #914d69; /* Muted Dark Pink */
+  --dark-uma-accent-blue: #4a6a8c; /* Muted Dark Blue */
+  --dark-uma-border-color: #555555;
+  --dark-uma-selection-bg: #4c6d93;
+
+  /* Dark Aptitude Colors (Rule 4: Darker Shades) */
+  --dark-apt-s-base: #a88514; 
+  --dark-apt-a-base: #b66324;
+  --dark-apt-b-base: #b04b6d;
+  --dark-apt-c-base: #448b2d;
+  --dark-apt-d-base: #3476a8;
+  --dark-apt-e-base: #864797;
+  --dark-apt-f-base: #4a4094;
+  --dark-apt-g-base: #777777; 
+  --dark-apt-n-a-base: #555555; 
+}
+
+/* Dark Mode Overrides */
+body.dark-mode {
+  /* Rule 5: All White -> Darker Gray */
+  --uma-light-bg: var(--dark-bg-element); 
+  --uma-medium-bg: var(--dark-bg-element); 
+  --uma-text-light: var(--dark-bg-element); 
+  
+  --uma-dark-accent: var(--dark-uma-dark-accent);
+  --uma-accent-pink: var(--dark-uma-accent-pink);
+  --uma-accent-blue: var(--dark-uma-accent-blue);
+  --uma-border-color: var(--dark-uma-border-color);
+  --uma-header-bg: var(--dark-uma-dark-accent);
+  
+  --uma-text-dark: var(--dark-text-color);
+  --uma-alt-row-bg: var(--dark-bg-alt-row); 
+  --uma-selection-bg: var(--dark-uma-selection-bg);
+  --uma-header-text: var(--dark-text-color);
+  
+  --profile-frame-color: var(--dark-bg-element);
+  --profile-frame-shadow: #8d7630; 
+  --rank-ribbon-pink: #7d485a; 
+  --modal-content-bg: var(--dark-bg-element);
+
+  --apt-ss: var(--dark-apt-s-base); --apt-s: var(--dark-apt-s-base);
+  --apt-a: var(--dark-apt-a-base);
+  --apt-b: var(--dark-apt-b-base);
+  --apt-c: var(--dark-apt-c-base);
+  --apt-d: var(--dark-apt-d-base);
+  --apt-e: var(--dark-apt-e-base);
+  --apt-f: var(--dark-apt-f-base);
+  --apt-g: var(--dark-apt-g-base);
+  --apt-n-a: var(--dark-apt-n-a-base);
+
+  color: var(--uma-text-dark); 
+  background-color: var(--dark-bg-body);
 }
 
 body {
@@ -94,7 +160,7 @@ body {
 }
 .filter-top-row {
   display: flex;
-  justify-content: flex-start; /* This aligns it to the left like the other rows */
+  justify-content: flex-start;
   align-items: center;
   gap: 20px;
 }
@@ -115,7 +181,7 @@ body {
   white-space: nowrap;
 }
 
-/* --- MODIFIED: Changed from ID to Class --- */
+/* --- Spark Selects --- */
 .spark-select-short {
     width: 100px; 
 }
@@ -123,11 +189,11 @@ body {
     width: 160px; 
     text-overflow: ellipsis;
 }
-
 .min-spark-select {
   margin-top: 1px;
 }
 
+/* Rule 5: Inputs and Selects background */
 select, input[type="text"], input[type="number"], input[type="range"] {
   background-color: var(--uma-text-light);
   border: 1px solid var(--uma-border-color);
@@ -135,16 +201,40 @@ select, input[type="text"], input[type="number"], input[type="range"] {
   color: var(--uma-text-dark);
   border-radius: 3px;
   font-size: 0.9em;
-  box-sizing: border-box; /* Important for consistent sizing */
+  box-sizing: border-box;
 }
 .spark-search-input::placeholder {
-  color: var(--uma-text-dark); /* Sets the color to match the labels */
-  opacity: 1; /* This is crucial to remove the browser's default transparency */
+  color: var(--uma-text-dark);
+  opacity: 1;
 }
 select { min-width: 80px; }
 input[type="checkbox"] { margin-left: 0; }
-#reset-filters-button {
+
+/* Dark Mode Toggle Button Styles */
+#dark-mode-toggle {
     margin-left: auto; 
+    margin-right: 10px; 
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+#dark-mode-toggle:hover { 
+    background-color: var(--uma-accent-pink); 
+}
+#dark-mode-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
+#reset-filters-button {
+    margin-left: 10px; 
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -160,6 +250,10 @@ input[type="checkbox"] { margin-left: 0; }
     border-top: 1px dashed #ccc;
     padding-top: 5px;
 }
+body.dark-mode .filter-group-container {
+    border-top: 1px dashed var(--dark-uma-border-color);
+}
+
 .spark-filters {
     padding-right: 34px;
     position: relative;
@@ -194,13 +288,13 @@ input[type="checkbox"] { margin-left: 0; }
 }
 #add-spark-filter-button:hover { background-color: #388E3C; }
 
-/* --- START: NEW SEARCHABLE SELECT STYLES --- */
+/* --- Searchable Select Styles --- */
 .searchable-select-container {
     position: relative;
     min-width: 60px;
 }
 .options-container {
-    display: none; /* Hidden by default */
+    display: none; 
     position: absolute;
     top: 100%;
     left: 0;
@@ -212,13 +306,15 @@ input[type="checkbox"] { margin-left: 0; }
     border: 1px solid var(--uma-border-color);
     margin-top: 1px;
     border-radius: 3px 3px 3px 3px;
-    z-index: 10; /* Ensure it appears on top */
+    z-index: 10;
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #f0f0f0;
 }
 .options-container::-webkit-scrollbar { width: 6px; }
 .options-container::-webkit-scrollbar-track { background: #f0f0f0; }
+body.dark-mode .options-container::-webkit-scrollbar-track { background: #555; }
 .options-container::-webkit-scrollbar-thumb { background-color: #c0c0c0; border-radius: 3px; }
+body.dark-mode .options-container::-webkit-scrollbar-thumb { background-color: #888; }
 
 .option-item {
     padding: 5px 8px;
@@ -231,7 +327,7 @@ input[type="checkbox"] { margin-left: 0; }
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
 }
-/* --- END: NEW SEARCHABLE SELECT STYLES --- */
+/* --- End Searchable Select Styles --- */
 
 
 /* --- Sliders --- */
@@ -281,9 +377,6 @@ input[type="range"]::-moz-range-track {
 }
 input[type="range"]:focus { outline: none; }
 
-/* Table and Modal Styles remain the same... */
-/* (omitted for brevity, they are unchanged from the previous version) */
-
 /* --- Table --- */
 .table-container {
   flex-grow: 1;
@@ -292,17 +385,34 @@ input[type="range"]:focus { outline: none; }
   border-top: none;
   min-height: 0;
 }
+
+/* Rule 3: Repeating background for empty space only */
 .tab-content {
   display: none;
   height: 100%;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c0c0c0 #f0f0f0;
+  /* Light mode pattern */
+  background-color: #999;
+  background-image: repeating-linear-gradient(-35deg, #888 5px, transparent 10px, transparent 20px);
 }
+/* Dark mode pattern override */
+body.dark-mode .tab-content {
+  background-color: var(--dark-bg-body);
+  background-image: repeating-linear-gradient(-35deg, #333 5px, transparent 10px, transparent 20px);
+}
+
 .tab-content::-webkit-scrollbar { width: 6px; }
 .tab-content::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 5px; }
+body.dark-mode .tab-content::-webkit-scrollbar-track { background: #555; }
+
 .tab-content::-webkit-scrollbar-thumb { background-color: #c0c0c0; border-radius: 5px; }
+body.dark-mode .tab-content::-webkit-scrollbar-thumb { background-color: #888; }
+
 .tab-content.active { display: block; }
+
+/* Rule 5: Table solid background */
 table { width: 100%; border-collapse: collapse; background-color: var(--uma-light-bg); }
 th, td {
   padding: 4px 8px;
@@ -319,18 +429,27 @@ th {
   border: 1px solid var(--uma-border-color);
   position: sticky; top: 0; z-index: 1;
 }
+body.dark-mode th {
+  background-color: #71d71c; /* Original --uma-dark-accent light mode value */
+  color: #FFFFFF; /* Original --uma-header-text light mode value */
+  border-color: var(--dark-uma-border-color); /* Keep dark mode border for contrast */
+}
+/* Rule 4: Alternating rows */
 tbody tr:nth-child(even) { background-color: var(--uma-alt-row-bg); }
-tbody tr:hover { background-color: #dbeaff; }
+tbody tr:hover { background-color: var(--uma-selection-bg); }
 
 td.stats { font-family: monospace; font-size: 0.9em; min-width: 100px; }
 .stat-cell {
-  min-width: 40px; /* Ensures all stat columns have the same minimum width */
-  text-align: center; /* Keeps the numbers centered */
+  min-width: 40px;
+  text-align: center;
 }
 td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
+/* Rule 2: Ensure dark text on stat backgrounds is light in dark mode */
+body.dark-mode td.aptitude { color: var(--uma-text-dark); }
 
-/* --- FIXED: Added SS+ grade, Adjusted SS color --- */
-.aptitude-SS\+ { background-color: var(--apt-ss); } /* Same as SS for now */
+
+/* Aptitude Grades (Uses dynamic dark/light variables from :root) */
+.aptitude-SS\+ { background-color: var(--apt-ss); } 
 .aptitude-SS { background-color: var(--apt-ss); }
 .aptitude-S\+ { background-color: var(--apt-s); }
 .aptitude-S { background-color: var(--apt-s); }
@@ -348,6 +467,7 @@ td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
 .aptitude-F { background-color: var(--apt-f); }
 .aptitude-G { background-color: var(--apt-g); }
 .aptitude-N\/A { background-color: var(--apt-n-a); color: #777; }
+body.dark-mode .aptitude-N\/A { color: var(--uma-text-dark); } 
 
 
 td.left-align { text-align: left; white-space: normal; }
@@ -357,6 +477,7 @@ td.left-align { text-align: left; white-space: normal; }
   font-weight: bold;
   font-size: 1em;
   color: var(--uma-text-dark);
+  /* Rule 5: Outline uses light-bg color which becomes dark gray in dark mode */
   text-shadow:
    -1px -1px 0 var(--uma-light-bg),
     1px -1px 0 var(--uma-light-bg),
@@ -366,6 +487,8 @@ td.left-align { text-align: left; white-space: normal; }
 
 td.spark-cell { text-align: left; white-space: normal; font-size: 0.85em; min-width: 150px; }
 td.spark-cell b { color: black; }
+/* Rule 2: Spark highlights text must be light in dark mode */
+body.dark-mode td.spark-cell b { color: var(--uma-text-dark); } 
 
 
 /* --- MODAL STYLES --- */
@@ -376,13 +499,14 @@ td.spark-cell b { color: black; }
   z-index: 999;
 }
 #detail-modal {
+  /* Rule 5: Modal background */
+  background-color: var(--uma-light-bg, #fefefe);
   position: fixed;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
   width: 90%;
   max-width: 620px;
-  max-height: 90vh; /* Allow modal to shrink if content is short */
-  background-color: var(--uma-light-bg, #fefefe);
+  max-height: 90vh;
   border: 2px solid var(--uma-border-color, #71d71c);
   border-radius: 8px;
   z-index: 1000;
@@ -394,13 +518,12 @@ td.spark-cell b { color: black; }
 }
 /* --- SCROLLING FIX --- */
 #detail-modal-content {
-  overflow-y: hidden; /* Prevent scrolling on the main content area */
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
   gap: 15px;
-  /* padding-right: 5px; */ /* Removed padding */
-  flex-grow: 1; /* Allow content to take available space */
-  min-height: 0; /* Necessary for flex-grow in column layout */
+  flex-grow: 1;
+  min-height: 0;
 }
 
 /* --- Modal Header --- */
@@ -419,17 +542,14 @@ td.spark-cell b { color: black; }
   gap: 5px;
 }
 
-/* --- The Profile Frame (CSS Horseshoe Effect) --- */
+/* --- The Profile Frame --- */
 .modal-profile-frame {
   position: relative;
   width: 100px;
   height: 120px;
   margin-top: -20px;
-  
   border-radius: 120px 120px 200px 200px ;
-  
   overflow: hidden
-
 }
 
 .modal-profile-frame-outline {
@@ -441,7 +561,13 @@ td.spark-cell b { color: black; }
   box-sizing: border-box;
   box-shadow: 0 4px 4px rgba(0,0,0,0.2), inset 0 0 5px #C0A040;
   
-  background-color: #FFFDE7; 
+  /* Rule 5: White background color */
+  background-color: var(--uma-medium-bg); 
+}
+body.dark-mode .modal-profile-frame-outline {
+  border-color: var(--profile-frame-shadow);
+  background-color: var(--profile-frame-color); 
+  box-shadow: 0 4px 4px rgba(0,0,0,0.2), inset 0 0 5px #7d6023;
 }
   
 /* This styles the final image itself */
@@ -474,9 +600,10 @@ td.spark-cell b { color: black; }
 }
 /* --- Score Box --- */
 .modal-score {
-  background-color: #FFFFFF;
+  /* Rule 5: White background */
+  background-color: var(--uma-medium-bg);
   border: 2px solid #C0C0C0;
-  border-radius: 12px; /* More pill-shaped */
+  border-radius: 12px;
   padding: 2px 12px;
   font-size: 14pt;
   font-weight: bold;
@@ -499,12 +626,12 @@ td.spark-cell b { color: black; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px; /* Space between badge and epithet */
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .modal-rank-badge {
-  position: relative; /* For positioning the ribbon and highlight */
+  position: relative;
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -512,8 +639,8 @@ td.spark-cell b { color: black; }
   box-shadow: 0 3px 6px rgba(0,0,0,0.25);
   background-image: radial-gradient(
     circle,
-    var(--rank-top-color, #999999), /* Lighter center from JS */
-    var(--rank-base-color, #666666) 70%      /* Edge color from JS */
+    var(--rank-top-color, #999999),
+    var(--rank-base-color, #666666) 70%
   );
   display: flex;
   align-items: center;
@@ -529,7 +656,7 @@ td.spark-cell b { color: black; }
   width: 80%;
   height: 30%;
   background: rgba(255, 255, 255, 0.6);
-  border-radius: 50% / 100%; /* Creates an oval shape */
+  border-radius: 50% / 100%;
   filter: blur(2px);
   z-index: 1;
 }
@@ -538,11 +665,10 @@ td.spark-cell b { color: black; }
   font-size: 32pt;
   font-weight: bold;
   color: white;
-  /* This creates the inner shadow effect on the letter */
   text-shadow: 0 -2px 0 rgba(0,0,0,0.2);
-  z-index: 2; /* Ensure grade is above the highlight */
+  z-index: 2;
   line-height: 1;
-  position: relative; /* This makes the sup positioning work */
+  position: relative;
   display: inline-block;
 }
 .modal-rank-grade sup {
@@ -568,20 +694,20 @@ td.spark-cell b { color: black; }
 }
 
 
-/* --- Runner Name with White Outline --- */
+/* --- Runner Name with White Outline (Rule 5) --- */
 .modal-runner-name {
   flex-grow: 1;
   text-align: center;
   font-size: 24pt;
-  font-weight: 700; /* Bolder */
-  color: var(--uma-text-dark); /* The inner brown color */
+  font-weight: 700;
+  color: var(--uma-text-dark);
   line-height: 1.1;
-  /* This is the key: multiple shadows create a solid outline */
+  /* Outline uses uma-medium-bg (white/dark-gray) */
   text-shadow: 
-    2px 2px 0 #FFF, -2px -2px 0 #FFF, 
-    2px -2px 0 #FFF, -2px 2px 0 #FFF,
-    2px 0 0 #FFF, -2px 0 0 #FFF,
-    0 2px 0 #FFF, 0 -2px 0 #FFF;
+    2px 2px 0 var(--uma-medium-bg), -2px -2px 0 var(--uma-medium-bg), 
+    2px -2px 0 var(--uma-medium-bg), -2px 2px 0 var(--uma-medium-bg),
+    2px 0 0 var(--uma-medium-bg), -2px 0 0 var(--uma-medium-bg),
+    0 2px 0 var(--uma-medium-bg), 0 -2px 0 var(--uma-medium-bg);
 }
 
 /* --- Modal Stat Bar --- */
@@ -591,7 +717,7 @@ td.spark-cell b { color: black; }
   border: 2px solid var(--uma-dark-accent);
   border-radius: 12px;
   overflow: hidden;
-  flex-shrink: 0; /* Prevent stats bar from shrinking */
+  flex-shrink: 0;
   margin-top: -2px;
 }
 .modal-stat-column {
@@ -622,13 +748,26 @@ td.spark-cell b { color: black; }
   color: var(--uma-header-text);                
   text-shadow: 1px 1px 2px var(--uma-text-dark);
 }
+body.dark-mode .stat-text {
+  color: var(--uma-header-text);                
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
 .modal-stat-content {
   display: flex;
   flex-direction: row;
-  background-color: white;
+  /* Rule 5: White background */
+  background-color: var(--uma-medium-bg);
   min-height: 50px;
   border-right: 2px dashed #A5D6A7;
 }
+body.dark-mode .modal-stat-header {
+    background-color: #71d71c; /* Original light mode color */
+    color: var(--uma-header-text);
+}
+body.dark-mode .modal-stat-content {
+    border-right-color: #71d71c;
+}
+
 .modal-stat-column:last-child .modal-stat-content { border-right: none; }
 .modal-stat-grade {
   font-weight: bold;
@@ -641,14 +780,14 @@ td.spark-cell b { color: black; }
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-  line-height: 1.2; /* Adjust line height slightly */
+  line-height: 1.2;
 }
 /* --- SUPERSCRIPT FIX --- */
 .modal-stat-grade sup {
-  font-size: 0.72em; /* Smaller font size for '+' */
-  vertical-align: super; /* Align '+' as superscript */
-  margin-left: -3px; /* Adjust spacing slightly */
-  line-height: 0; /* Prevent affecting line height */
+  font-size: 0.72em;
+  vertical-align: super;
+  margin-left: -3px;
+  line-height: 0;
 }
 .modal-stat-value {
   font-weight: bold;
@@ -678,7 +817,7 @@ td.spark-cell b { color: black; }
   grid-template-columns: 70px repeat(4, 1fr);
   gap: 15px 10px;
   padding: 0 10px;
-  flex-shrink: 0; /* Prevent aptitudes from shrinking */
+  flex-shrink: 0;
 }
 .modal-apt-label {
   font-weight: bold;
@@ -694,16 +833,21 @@ td.spark-cell b { color: black; }
   align-items: center;
   font-weight: bold;
   font-size: 12pt;
-  background-color: #FFFFFF;
+  /* Rule 5: White background */
+  background-color: var(--uma-medium-bg);
   border: 2px solid #D0D0D0;
   border-radius: 10px;
   padding: 5px 8px;
   gap: 5px;
 }
+body.dark-mode .modal-apt-button {
+    border-color: var(--uma-border-color);
+}
 .modal-apt-name {
   font-size: 14pt;
   color: var(--uma-text-dark);
-  text-shadow: 1px 1px 0 white, -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white;
+  /* Outline uses uma-medium-bg (white/dark-gray) */
+  text-shadow: 1px 1px 0 var(--uma-medium-bg), -1px -1px 0 var(--uma-medium-bg), 1px -1px 0 var(--uma-medium-bg), -1px 1px 0 var(--uma-medium-bg);
   flex-grow: 1;
   text-align: center;
 }
@@ -733,15 +877,15 @@ td.spark-cell b { color: black; }
 
 /* --- Modal Skills --- */
 .modal-skills-section {
-  display: flex; /* Changed to flex */
+  display: flex;
   flex-direction: column;
   border: 2px solid var(--uma-dark-accent);
   border-radius: 5px;
   background-color: transparent;
-  min-height: 150px; /* Give it some base height */
-  flex-grow: 1; /* Allow skills section to grow */
-  flex-shrink: 1; /* Allow skills section to shrink if needed */
-  overflow: hidden; /* Hide internal overflow */
+  min-height: 150px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow: hidden;
 }
 .modal-skills-title {
   font-weight: bold;
@@ -754,39 +898,47 @@ td.spark-cell b { color: black; }
   padding: 3px;
   letter-spacing: 1px;
   text-align: center;
-  flex-shrink: 0; /* Prevent title from shrinking */
+  flex-shrink: 0;
+}
+body.dark-mode .modal-skills-title {
+  background-color: #71d71c; /* Original --uma-dark-accent light mode value */
+  color: #FFFFFF; /* Original --uma-header-text light mode value */
+  /* Re-apply the original text shadow as it works better with a white text color */
+  text-shadow: 1px 1px 0 #8C4410, -1px -1px 0 #8C4410, 1px -1px 0 #8C4410, -1px 1px 0 #8C4410;
 }
 .modal-skills-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   padding: 10px 15px;
+  /* Rule 5: White background */
   background-color: var(--uma-medium-bg);
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
-  overflow-y: auto; /* Enable vertical scrolling ONLY here */
-  flex-grow: 1; /* Allow list to take available space */
+  overflow-y: auto;
+  flex-grow: 1;
 
-  /* Add Firefox scrollbar styles */
   scrollbar-width: thin;
   scrollbar-color: #BCBCBC #EAEAEA;
 }
 
-/* --- NEW: Custom Webkit Scrollbar for Modal --- */
+/* --- Custom Webkit Scrollbar for Modal --- */
 .modal-skills-list::-webkit-scrollbar {
-  width: 6px; /* Sets the width of the scrollbar */
+  width: 6px;
 }
-
 .modal-skills-list::-webkit-scrollbar-track {
-  background: #EAEAEA; /* Light grey background for the track */
+  background: #EAEAEA;
   border-radius: 3px;
 }
+body.dark-mode .modal-skills-list::-webkit-scrollbar-track { background: #555; }
 
 .modal-skills-list::-webkit-scrollbar-thumb {
-  background-color: #BCBCBC; /* A medium grey for the draggable part */
+  background-color: #BCBCBC;
   border-radius: 3px;
-  border: 1px solid #9E9E9E; /* A slightly darker border for depth */
+  border: 1px solid #9E9E9E;
 }
+body.dark-mode .modal-skills-list::-webkit-scrollbar-thumb { background-color: #888; border-color: #666;}
+
 .modal-skill-item {
   display: flex;
   flex-direction: row;
@@ -795,34 +947,40 @@ td.spark-cell b { color: black; }
   padding: 5px 8px;
   height: 46px;
   box-sizing: border-box;
-  background-color: #F5F5F5;
+  /* Rule 5: White background */
+  background-color: var(--uma-light-bg);
   border: 2px solid #C0C0C0;
   border-radius: 10px;
 }
-.modal-skill-icon {
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+body.dark-mode .modal-skill-item {
+    border-color: var(--uma-border-color);
 }
+
 .modal-skill-name {
   font-weight: bold;
   color: var(--uma-text-dark);
   line-height: 1.2;
-  word-wrap: break-word; /* Allow wrapping */
-  overflow-wrap: break-word; /* Better wrapping */
-  word-break: break-word; /* Force breaks if needed */
-  flex-grow: 1; /* Allow name to take space */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  flex-grow: 1;
 }
+
+body.dark-mode .modal-skill-item.gold .modal-skill-name,
+body.dark-mode .modal-skill-item.unique .modal-skill-name {
+    /* Use the original dark brown color value explicitly */
+    text-shadow: 1px 1px 0 #8C4410, -1px -1px 0 #8C4410, 1px -1px 0 #8C4410, -1px 1px 0 #8C4410;
+}
+
 .modal-skill-item.gold {
   background: linear-gradient(to right, #FFEA8A, #FFC24A);
   border-color: #E6A245;
+  color:var(--uma-text-dark);
 }
 .modal-skill-item.unique {
   background: linear-gradient(to right, #F9E08B, #C4FFC8, #B8ECFF, #F6BFFF);
   border-color: #A0A0A0;
+  color:var(--uma-text-dark);
 }
 
 
@@ -832,8 +990,12 @@ td.spark-cell b { color: black; }
   justify-content: flex-end;
   padding-top: 5px;
   border-top: 1px solid #ddd;
-  flex-shrink: 0; /* Prevent footer from shrinking */
+  flex-shrink: 0;
 }
+body.dark-mode .modal-footer {
+    border-top-color: var(--uma-border-color);
+}
+
 #modal-close-button {
   background-color: var(--uma-accent-pink);
   color: var(--uma-text-light);
@@ -854,10 +1016,13 @@ td.spark-cell b { color: black; }
     cursor: pointer;
 }
 .gp-skills-link:hover {
-    background-color: #e9ecef; /* A light grey hover effect */
+    background-color: var(--uma-selection-bg);
 }
 .gp-borrowed {
-    color: #6c757d; /* A muted grey color */
+    color: #6c757d;
+}
+body.dark-mode .gp-borrowed {
+    color: #999;
 }
 
 /* Styles for the timed message popup */
@@ -871,7 +1036,7 @@ td.spark-cell b { color: black; }
     color: white;
     font-size: 1.1em;
     border-radius: 8px;
-    z-index: 2000; /* Ensures it's on top of everything */
+    z-index: 2000;
     opacity: 1;
-    transition: opacity 0.5s ease-out; /* For the fade-out effect */
+    transition: opacity 0.5s ease-out;
 }
