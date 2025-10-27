@@ -39,6 +39,7 @@ const tabButtons = document.querySelectorAll('.tab-button');
 const tabContents = document.querySelectorAll('.tab-content');
 const parentSummaryBody = document.getElementById('parent-summary-body');
 const whiteSparksBody = document.getElementById('white-sparks-body');
+const skillsSummaryBody = document.getElementById('skills-summary-body');
 
 const aptitudeFiltersContainer = document.getElementById('aptitude-filters');
 const resetFiltersButton = document.getElementById('reset-filters-button');
@@ -108,7 +109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!allRunners || allRunners.length === 0) {
             console.warn("No runner data loaded.");
             const noDataMsg = '<tr><td colspan="18">No runner data found.</td></tr>';
-            [parentSummaryBody, whiteSparksBody].forEach(body => body.innerHTML = noDataMsg);
+            [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => body.innerHTML = noDataMsg);
             return;
         }
         
@@ -142,7 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
         console.error("Initialization failed:", error);
         const errorMsg = `<tr><td colspan="18">Error: ${error.message}.</td></tr>`;
-        [parentSummaryBody, whiteSparksBody].forEach(body => body.innerHTML = errorMsg);
+        [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => body.innerHTML = errorMsg);
     }
 });
 
@@ -355,6 +356,7 @@ function populateFilters() {
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-blue'), 9);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-green'), 9);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-pink'), 9);
+    updateSparkCountDropdown(firstSparkRow.querySelector('#min-white'), 9);
     
     let maxWhiteSparks = allRunners.reduce((max, runner) => {
         let count = 0;
@@ -368,9 +370,9 @@ function populateFilters() {
         return Math.max(max, count);
     }, 0);
 
-    let whiteSparkOptions = '';
-    for (let i = 1; i <= maxWhiteSparks; i++) { whiteSparkOptions += `<option value="${i}">${i}</option>`; }
-    firstSparkRow.querySelector('#min-white').innerHTML = '<option value="0"></option>' + whiteSparkOptions;
+    let totalWhiteSparkOptions = '';
+    for (let i = 1; i <= maxWhiteSparks; i++) { totalWhiteSparkOptions += `<option value="${i}">${i}</option>`; }
+    firstSparkRow.querySelector('#min-total-white').innerHTML = '<option value="0"></option>' + totalWhiteSparkOptions;
 
     if (firstSparkRow) {
         if (!firstSparkRow.querySelector('.disable-spark-filter-button')) {
@@ -431,6 +433,7 @@ function setupEventListeners() {
                 updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), maxStars);
                 updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), maxStars);
                 updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), maxStars);
+                updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), maxStars);
             }
         }
         filterAndRender();
@@ -485,7 +488,7 @@ function setupEventListeners() {
 
     setupAffinityCalculatorListeners(); 
 
-    [parentSummaryBody, whiteSparksBody].forEach(body => {
+    [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => {
         body.addEventListener('dblclick', handleDetailView);
     });
     
@@ -535,7 +538,8 @@ function addSparkFilterRow() {
     updateSparkCountDropdown(newRow.querySelector('[id^="min-blue"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-green"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-pink"]'), 9);
-    
+    updateSparkCountDropdown(newRow.querySelector('[id^="min-white"]'), 9);
+
     sparkFiltersContainer.appendChild(newRow);
     updateRemoveButtonVisibility(); 
 }
@@ -550,6 +554,7 @@ function handleTabChange(activeTabId) {
     const sortOptions = {
         'parent-summary': ['score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 'whites (parent)', 'whites (total)'],
         'white-sparks': ['score', 'name', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)'],
+        'skills-summary': ['score', 'name'],
         'affinity-calculator': []
     };
     const options = sortOptions[activeTabId] || []; 
@@ -566,6 +571,7 @@ function handleTabChange(activeTabId) {
     } else {
          parentSummaryBody.innerHTML = '';
          whiteSparksBody.innerHTML = '';
+         skillsSummaryBody.innerHTML = '';
     }
 }
 
@@ -621,6 +627,95 @@ function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
     console.log("finalAffinity", baseAffinityScore)
     return baseAffinityScore + g1RaceBonus;
 }
+
+function renderSkillsSummary(runners) {
+    if (!runners.length) {
+        skillsSummaryBody.innerHTML = '<tr><td colspan="8">No runners match filters.</td></tr>';
+        return;
+    }
+
+    const formatSkillCell = (skillsArray, category) => {
+        if (!skillsArray || skillsArray.length === 0) {
+            return '<span style="color: #888;">N/A</span>';
+        }
+        
+        skillsArray.sort((a, b) => {
+            const aType = skillTypes[a] || '';
+            const bType = skillTypes[b] || '';
+            const aIsSpecial = aType.endsWith('g') || aType.startsWith('unique');
+            const bIsSpecial = bType.endsWith('g') || bType.startsWith('unique');
+
+            if (aIsSpecial && !bIsSpecial) return -1;
+            if (!aIsSpecial && bIsSpecial) return 1;
+            return a.localeCompare(b);
+        });
+
+        // MODIFICATION: Each skill is now wrapped in a span with a category-specific class
+        return skillsArray.map(skillName => {
+            const skillType = skillTypes[skillName] || '';
+            let content = formatSkillName(skillName);
+            const className = `skill-${category}`;
+            
+            if (skillType.endsWith('g') || skillType.startsWith('unique')) {
+                // The <b> tag goes inside the colored span
+                content = `<b style="color: #e08b3e">${content}</b>`;
+            }
+
+            return `<span class="${className}">${content}</span>`;
+        }).join(', ');
+    };
+
+    const html = runners.map(r => {
+        const categorizedSkills = {
+            recovery: [],
+            passive: [],
+            speed: [],
+            debuff: [],
+            detrimental: []
+        };
+
+        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange'];
+
+        if (r.skills) {
+            r.skills.forEach(skillName => {
+                const originalSkillType = skillTypes[skillName];
+                const skillType = originalSkillType.startsWith('a') ? originalSkillType.substring(1) : originalSkillType;
+
+                if (skillType.endsWith('purple')) {
+                    categorizedSkills.detrimental.push(skillName);
+                } 
+                else if ((skillType.endsWith('d') || skillType.endsWith('dg')) && skillType !== 'speed' && skillType !== 'allRounder' && skillType !== 'speedg') {
+                    categorizedSkills.debuff.push(skillName);
+                } 
+                else if (skillType.includes('recovery') || skillType === 'uniquer') {
+                    categorizedSkills.recovery.push(skillName);
+                } 
+                else if (skillType.endsWith('p') || skillType.includes('allRounder')) {
+                    categorizedSkills.passive.push(skillName);
+                } 
+                else if (speedCats.some(cat => skillType.startsWith(cat)) || skillType === 'uniques' || skillType === 'uniquea') {
+                    categorizedSkills.speed.push(skillName);
+                }
+            });
+        }
+
+        return `
+            <tr data-entry-id="${r.entry_id || ''}">
+                <td>${r.entry_id || 'N/A'}</td>
+                <td><span class="outline-label">${r.name || 'N/A'}</span></td>
+                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.recovery, 'recovery')}</td>
+                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.passive, 'passive')}</td>
+                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.speed, 'speed')}</td>
+                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.debuff, 'debuff')}</td>
+                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}</td>
+            </tr>
+        `;
+    }).join('');
+
+    skillsSummaryBody.innerHTML = html;
+    hideEntryIdColumn('skills-summary');
+}
+
 
 function renderParentSummary(runners, allSparkCriteria) {
     if (!runners.length) {
@@ -683,7 +778,6 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                    r.sparks[source].forEach(spark => {
                        if (spark?.color === 'white' && spark.spark_name) {
                             const sparkCount = parseInt(spark.count, 10) || 1; 
-                            
                             totalCounts[source] += sparkCount;
                             const name = spark.spark_name;
                             individualCounts[source][name] = (individualCounts[source][name] || 0) + sparkCount;
@@ -693,13 +787,14 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
             });
         }
         
-        const formatWhiteSparkDisplay = (sourceTotal, sourceDetails) => {
+        // MODIFICATION: This helper now accepts the runner object 'r' to access the tag
+        const formatWhiteSparkDisplay = (sourceTotal, sourceDetails, runner) => {
             const highlightColor = '#e08b3e';
             const highlightStyle = isDarkModeActive() ? ` style="color: ${highlightColor}; font-weight: bold;"` : '';
             
             let shouldHighlightTotal = false;
             for (const criteria of allSparkCriteria) {
-                if (criteria.minWhite > 0 && sourceTotal >= criteria.minWhite) {
+                if (criteria.minTotalWhite > 0 && sourceTotal >= criteria.minTotalWhite) {
                     shouldHighlightTotal = true;
                     break;
                 }
@@ -711,12 +806,11 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
 
             const detailsStr = Object.entries(sourceDetails)
                 .map(([name, value]) => { 
+                    // MODIFICATION: Highlighting logic now uses the _passingWhiteSparks tag
                     let shouldHighlightName = false;
-                    for (const criteria of allSparkCriteria) {
-                        if (criteria.whiteSpark && name === criteria.whiteSpark) {
-                            shouldHighlightName = true;
-                            break;
-                        }
+                    // Highlight if the runner was tagged with this spark name
+                    if (runner._passingWhiteSparks && runner._passingWhiteSparks.has(name)) {
+                        shouldHighlightName = true;
                     }
                     
                     const formattedText = `${name} ${value}`; 
@@ -727,9 +821,10 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
             return `(${totalDisplay})${detailsStr ? ` ${detailsStr}` : ''}`;
         };
 
-        const parentDisplay = formatWhiteSparkDisplay(totalCounts.parent, individualCounts.parent);
-        const gp1Display = formatWhiteSparkDisplay(totalCounts.gp1, individualCounts.gp1);
-        const gp2Display = formatWhiteSparkDisplay(totalCounts.gp2, individualCounts.gp2);
+        // MODIFICATION: Pass the runner object 'r' into the helper
+        const parentDisplay = formatWhiteSparkDisplay(totalCounts.parent, individualCounts.parent, r);
+        const gp1Display = formatWhiteSparkDisplay(totalCounts.gp1, individualCounts.gp1, r);
+        const gp2Display = formatWhiteSparkDisplay(totalCounts.gp2, individualCounts.gp2, r);
 
         const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
         const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
@@ -829,7 +924,11 @@ function handleDetailView(event) {
     }
 }
 
+// Replace your entire filterAndRender function with this new version
 function filterAndRender() {
+    // At the start of every filter, clear any old highlighting tags from the runners
+    allRunners.forEach(r => delete r._passingWhiteSparks);
+
     const baseFilters = {};
     for (const key in filterElements) {
         const el = filterElements[key];
@@ -861,13 +960,39 @@ function filterAndRender() {
             blue: { name: row.querySelector('[id^="filter-blue-spark"]').value, min: Number(row.querySelector('[id^="min-blue"]').value) },
             green: { name: row.querySelector('[id^="filter-green-spark"]').value, min: Number(row.querySelector('[id^="min-green"]').value) },
             pink: { name: row.querySelector('[id^="filter-pink-spark"]').value, min: Number(row.querySelector('[id^="min-pink"]').value) },
-            white: { name: row.querySelector('[id^="filter-white-spark"]').value, min: Number(row.querySelector('[id^="min-white"]').value) }
+            white: { name: row.querySelector('[id^="filter-white-spark"]').value, min: Number(row.querySelector('[id^="min-white"]').value) },
+            minTotalWhite: Number(row.querySelector('[id^="min-total-white"]').value)
         };
 
         if (rowCriteria.blue.name || rowCriteria.blue.min > 0) filteredData = filteredData.filter(r => checkSpark(r, 'blue', rowCriteria.blue.name, rowCriteria.blue.min, isRepOnly));
         if (rowCriteria.green.name || rowCriteria.green.min > 0) filteredData = filteredData.filter(r => checkSpark(r, 'green', rowCriteria.green.name, rowCriteria.green.min, isRepOnly));
         if (rowCriteria.pink.name || rowCriteria.pink.min > 0) filteredData = filteredData.filter(r => checkSpark(r, 'pink', rowCriteria.pink.name, rowCriteria.pink.min, isRepOnly));
-        if (rowCriteria.white.name || rowCriteria.white.min > 0) filteredData = filteredData.filter(r => checkWhiteSpark(r, rowCriteria.white.name, rowCriteria.white.min, isRepOnly));
+        
+        // MODIFICATION: Handle the new return object from checkWhiteSpark
+        if (rowCriteria.white.name || rowCriteria.white.min > 0) {
+            filteredData = filteredData.filter(r => {
+                const result = checkWhiteSpark(r, rowCriteria.white.name, rowCriteria.white.min, isRepOnly);
+                if (result.pass) {
+                    // Tag the runner with the sparks that passed. Merge with any existing tags.
+                    if (!r._passingWhiteSparks) r._passingWhiteSparks = new Set();
+                    result.passingSparks.forEach(sparkName => r._passingWhiteSparks.add(sparkName));
+                }
+                return result.pass;
+            });
+        }
+        
+        if (rowCriteria.minTotalWhite > 0) {
+            filteredData = filteredData.filter(r => {
+                const sparkSources = isRepOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+                let totalWhiteCount = 0;
+                sparkSources.forEach(source => {
+                    if (Array.isArray(r.sparks?.[source])) {
+                        totalWhiteCount += r.sparks[source].filter(s => s?.color === 'white').length;
+                    }
+                });
+                return totalWhiteCount >= rowCriteria.minTotalWhite;
+            });
+        }
     });
 
     const aptFiltersToCheck = {
@@ -889,6 +1014,7 @@ function filterAndRender() {
     const activeTabId = document.querySelector('.tab-content.active')?.id;
     parentSummaryBody.innerHTML = '';
     whiteSparksBody.innerHTML = '';
+    skillsSummaryBody.innerHTML = '';
     
     const allSparkCriteria = getAllSparkFilterCriteria();
 
@@ -896,7 +1022,11 @@ function filterAndRender() {
         renderParentSummary(filteredData, allSparkCriteria);
     } 
     else if (activeTabId === 'white-sparks') {
+        // Pass the entire filteredData array to the renderer
         renderWhiteSparksSummary(filteredData, allSparkCriteria);
+    }
+    else if (activeTabId === 'skills-summary') {
+        renderSkillsSummary(filteredData);
     }
 }
 
@@ -918,6 +1048,7 @@ function getAllSparkFilterCriteria() {
             minPink: Number(row.querySelector('[id^="min-pink"]').value),
             whiteSpark: row.querySelector('[id^="filter-white-spark"]').value,
             minWhite: Number(row.querySelector('[id^="min-white"]').value),
+            minTotalWhite: Number(row.querySelector('[id^="min-total-white"]').value),
             isRepOnly: isRepOnly 
         };
         if (Object.values(rowCriteria).some(val => val)) {
@@ -966,32 +1097,42 @@ function checkSpark(runner, color, nameFilter, minStars, repOnly) {
 }
 
 function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
+    const result = { pass: false, passingSparks: new Set() };
+    if (!nameFilter && minCount === 0) {
+        result.pass = true;
+        return result;
+    }
+    
     const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
-    let matchingSparksCount = 0;
-    let foundSpecificSpark = false;
-    const countedSparks = new Set();
+
+    const sparkTotals = {};
     for (const source of sparkSources) {
-         if (Array.isArray(runner.sparks?.[source])) {
+        if (Array.isArray(runner.sparks?.[source])) {
             for (const spark of runner.sparks[source]) {
-                 if (spark?.color === 'white') {
-                    if (!nameFilter) {
-                        const sparkIdentifier = repOnly ? spark.spark_name : `${source}-${spark.spark_name}`;
-                        if (spark.spark_name && !countedSparks.has(sparkIdentifier)) {
-                            matchingSparksCount++;
-                            countedSparks.add(sparkIdentifier);
-                        }
-                    } else if (spark.spark_name === nameFilter) {
-                         matchingSparksCount++;
-                         foundSpecificSpark = true;
-                    }
+                if (spark?.color === 'white' && spark.spark_name) {
+                    const name = spark.spark_name;
+                    const count = parseInt(spark.count, 10) || 1;
+                    sparkTotals[name] = (sparkTotals[name] || 0) + count;
                 }
             }
         }
     }
-     if (!nameFilter && minCount === 0) return true;
-     if (nameFilter) return foundSpecificSpark && matchingSparksCount >= minCount;
-     if (!nameFilter) return matchingSparksCount >= minCount;
-    return false;
+
+    if (nameFilter) {
+        const effectiveMinCount = minCount === 0 ? 1 : minCount;
+        if ((sparkTotals[nameFilter] || 0) >= effectiveMinCount) {
+            result.pass = true;
+            result.passingSparks.add(nameFilter);
+        }
+    } else {
+        for (const [name, total] of Object.entries(sparkTotals)) {
+            if (total >= minCount) {
+                result.pass = true; // At least one spark type passed, so the runner passes overall
+                result.passingSparks.add(name); // Add this specific spark name to the set
+            }
+        }
+    }
+    return result;
 }
 
 function sortData(data, sortBy, sortDir) {
@@ -1270,6 +1411,7 @@ function resetFilters() {
             updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), 9);
             updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), 9);
             updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), 9);
+            updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), 9);
         }
     });
 
@@ -1288,7 +1430,6 @@ function updateSparkCountDropdown(selectElement, maxStars) {
     }
     selectElement.innerHTML = optionsHtml;
 
-    // If the old value is still valid in the new range, keep it. Otherwise, reset.
     if (parseInt(currentValue, 10) <= maxStars) {
         selectElement.value = currentValue;
     } else {

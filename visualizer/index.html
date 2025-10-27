@@ -10,6 +10,7 @@
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
             <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
+            <button class="tab-button" data-tab="skills-summary">Skills Summary</button>
             <button class="tab-button" data-tab="affinity-calculator">Affinity Calc</button>
         </div>
 
@@ -129,8 +130,12 @@
                                 <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
                                 <div class="options-container"></div>
                             </div>
-                            <label for="min-white">Total Whites</label>
+                            <label for="min-white"></label>
                             <select id="min-white" class="min-spark-select"></select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="min-total-white">Total Whites</label>
+                            <select id="min-total-white" class="min-spark-select"></select>
                         </div>
                     </div>
                 </div>
@@ -181,6 +186,23 @@
                         </tr>
                     </thead>
                     <tbody id="white-sparks-body"></tbody>
+                </table>
+            </div>
+            <!-- MODIFICATION: Add the new Skills Summary tab content and table -->
+            <div class="tab-content" id="skills-summary">
+                <table>
+                    <thead>
+                        <tr>
+                           <th>Entry Id</th>
+                           <th>Name</th>
+                           <th>Recovery</th>
+                           <th>Passive</th>
+                           <th>Speed/Accel</th>
+                           <th>Debuff</th>
+                           <th>Detrimental</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skills-summary-body"></tbody>
                 </table>
             </div>
             <div class="tab-content" id="affinity-calculator">

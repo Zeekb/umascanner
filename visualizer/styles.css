@@ -33,6 +33,13 @@
   --apt-d: var(--apt-d-base); --apt-e: var(--apt-e-base); --apt-f: var(--apt-f-base);
   --apt-g: var(--apt-g-base); --apt-n-a: var(--apt-n-a-base);
 
+  /* Skill Color Variables for Light Mode */
+  --skill-color-recovery: #0091ea;    /* Vivid Blue */
+  --skill-color-passive: #4caf50;     /* Vivid Green */
+  --skill-color-speed: #f57c00;       /* Vivid Orange */
+  --skill-color-debuff: #e53935;      /* Vivid Red */
+  --skill-color-detrimental: #aa00ff; /* Vivid Purple */
+
   /* Dark Mode Definitions */
   --dark-bg-body: #222222;
   --dark-bg-element: #3c3c3c;
@@ -84,6 +91,13 @@
   --apt-f: var(--dark-apt-f-base);
   --apt-g: var(--dark-apt-g-base);
   --apt-n-a: var(--dark-apt-n-a-base);
+
+  /* Skill Color Variables for Dark Mode */
+  --skill-color-recovery: #40c4ff;    /* Bright Cyan-Blue */
+  --skill-color-passive: #76ff03;     /* Bright Lime Green */
+  --skill-color-speed: #ffb74d;       /* Bright Orange */
+  --skill-color-debuff: #ff5252;      /* Bright Red */
+  --skill-color-detrimental: #e040fb; /* Bright Purple */
 
   color: var(--uma-text-dark); 
   background-color: var(--dark-bg-body);
@@ -1093,6 +1107,16 @@ td.spark-cell b { color: black; }
     transition: opacity 0.5s ease-out;
 }
 
+.skill-recovery { color: var(--skill-color-recovery); }
+.skill-passive { color: var(--skill-color-passive); }
+.skill-speed { color: var(--skill-color-speed); }
+.skill-debuff { color: var(--skill-color-debuff); }
+.skill-detrimental { color: var(--skill-color-detrimental); }
+.skill-unsorted { color: var(--skill-color-unsorted); }
+
+.spark-cell span b {
+    color: inherit;
+}
 
 /* --- Affinity Calculator --- */
 .affinity-calculator-controls {
