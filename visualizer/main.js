@@ -53,7 +53,16 @@ app.whenReady().then(() => {
       return null; // Return null on error
     }
   });
-  
+  ipcMain.handle('load-affinity-data', async () => {
+    try {
+      const filePath = path.join(__dirname, '../data', 'game_data', 'runner_affinity.json');
+      const data = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (error) {
+      console.error('Failed to load runner_affinity.json:', error);
+      return null; // Return null on error
+    }
+  });
   createWindow();
 
   app.on('activate', () => {

@@ -7,6 +7,8 @@ let skillTypes = {};
 let orderedSkills = [];
 let runnerUniqueSkills = {};
 let orderedSparks = {};
+let affinityData = [];
+let affinityMap = new Map();
 let allRunnerNamesSet = new Set();
 let sparkFilterCounter = 1;
 const gpExistenceCache = new Map();
@@ -17,7 +19,6 @@ const filterElements = {
     runner: document.getElementById('filter-runner'),
     sort: document.getElementById('filter-sort'),
     sortDir: document.getElementById('filter-sort-direction'),
-    repOnly: document.getElementById('filter-rep'),
     speed: document.getElementById('filter-speed'),
     stamina: document.getElementById('filter-stamina'),
     power: document.getElementById('filter-power'),
@@ -101,12 +102,13 @@ function setupDarkMode() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        [allRunners, skillTypes, orderedSkills, runnerUniqueSkills, orderedSparks] = await Promise.all([
+        [allRunners, skillTypes, orderedSkills, runnerUniqueSkills, orderedSparks, affinityData] = await Promise.all([
             window.api.loadRunners(),
             window.api.loadSkillTypes(),
             window.api.loadOrderedSkills(),
             window.api.loadRunnerSkills(),
-            window.api.loadOrderedSparks()
+            window.api.loadOrderedSparks(),
+            window.api.loadAffinityData()
         ]);
 
         if (!allRunners || allRunners.length === 0) {
@@ -122,12 +124,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         allRunners.forEach(runner => {
+            if (runner.name) allRunnerNamesSet.add(runner.name);
             runner.sparks = (typeof runner.sparks === 'string') ? JSON.parse(runner.sparks) : runner.sparks || {};
             runner.skills = (typeof runner.skills === 'string') ? runner.skills.split('|').map(s => s.trim()).filter(s => s) : runner.skills || [];
         });
 
+        if (affinityData) {
+            affinityData.forEach(pair => {
+                // *** FIX: Explicitly clean names from the raw affinity data before creating map keys ***
+                const cleanC1 = cleanName(pair.chara1_name);
+                const cleanC2 = cleanName(pair.chara2_name);
+                
+                // Store score for both A->B and B->A for easier lookup
+                affinityMap.set(`${cleanC1}-${cleanC2}`, pair.affinity_score);
+                affinityMap.set(`${cleanC2}-${cleanC1}`, pair.affinity_score);
+            });
+        }
+
         extractSparkNames();
         populateFilters();
+        populateAffinityDropdowns();
         setupEventListeners();
         setupDarkMode(); 
         handleTabChange('parent-summary');
@@ -137,6 +153,159 @@ document.addEventListener('DOMContentLoaded', async () => {
         [parentSummaryBody, whiteSparksBody].forEach(body => body.innerHTML = errorMsg);
     }
 });
+
+function populateAffinityDropdowns() {
+    const parentSelect = document.getElementById('affinity-parent');
+    const gp1Select = document.getElementById('affinity-gp1');
+    const gp2Select = document.getElementById('affinity-gp2');
+
+    if (!parentSelect || !gp1Select || !gp2Select) {
+        console.warn('Affinity dropdown elements not found in index.html');
+        return;
+    }
+
+    // --- MODIFIED SECTION ---
+    // 1. Trainee (affinity-parent): Populated from the names (keys) in runner_skills.json
+    // The runnerUniqueSkills object is loaded at the start of the script.
+    const traineeNames = runnerUniqueSkills ? Object.keys(runnerUniqueSkills).sort() : [];
+    const parentOptionsHtml = '<option value="">Select Trainee</option>' +
+                       traineeNames.map(name => `<option value="${name}">${name}</option>`).join('');
+    parentSelect.innerHTML = parentOptionsHtml;
+    // --- END MODIFIED SECTION ---
+
+
+    // 2. Parents (affinity-gp1, affinity-gp2): Runner entries with full details (This remains unchanged)
+    const gpOptionsHtml = '<option value="">Select Parent</option>' +
+        allRunners
+            .filter(r => r.entry_id && r.name) 
+            .map(r => {
+                const runnerName = cleanName(r.name);
+                const runnerSparkDisplay = getBlueSparkDisplay(r.sparks.parent);
+                
+                const gp1Name = cleanName(r.gp1);
+                const gp1SparkDisplay = getBlueSparkDisplay(r.sparks.gp1);
+
+                const gp2Name = cleanName(r.gp2);
+                const gp2SparkDisplay = getBlueSparkDisplay(r.sparks.gp2);
+                
+                const label = `${runnerName} (${runnerSparkDisplay}) ` +
+                              `(GP1: ${gp1Name || 'N/A'} (${gp1SparkDisplay}), ` +
+                              `GP2: ${gp2Name || 'N/A'} (${gp2SparkDisplay}))`;
+                return `<option value="${r.entry_id}">${label}</option>`;
+            })
+            .join('');
+
+    gp1Select.innerHTML = gpOptionsHtml;
+    gp2Select.innerHTML = gpOptionsHtml;
+}
+
+
+function getBlueSparkDisplay(sparkArray) {
+    if (!Array.isArray(sparkArray)) {
+        return 'N/A Blue';
+    }
+
+    const blueSparks = sparkArray.filter(s => s?.color === 'blue' && s.spark_name);
+    if (blueSparks.length === 0) {
+        return 'N/A Blue';
+    }
+
+    let totalStars = 0;
+    const sparkDetails = {};
+
+    blueSparks.forEach(spark => {
+        // Use the count property, default to 1 if not available
+        const count = parseInt(spark.count, 10) || 1; 
+        totalStars += count;
+        sparkDetails[spark.spark_name] = (sparkDetails[spark.spark_name] || 0) + count;
+    });
+
+    const uniqueSparkNames = Object.keys(sparkDetails);
+
+    if (uniqueSparkNames.length === 1) {
+        // Only one type of blue spark, display name and total stars
+        const name = uniqueSparkNames[0];
+        // Only show the spark name if the count is > 0, otherwise just the stars
+        return `${name} ${totalStars}★`; 
+    } else if (uniqueSparkNames.length > 0) {
+        // Multiple blue sparks, display total stars and the number of unique types
+        return `Blue ${totalStars}★ (${uniqueSparkNames.length} types)`;
+    }
+    
+    return 'N/A Blue'; 
+}
+
+// --- NEW Helper Function for Affinity Calculation ---
+// Helper to get the full runner object by its entry_id
+function getRunnerByEntryId(entryId) {
+    if (!entryId) return null;
+    return allRunners.find(r => String(r.entry_id) === String(entryId));
+}
+
+function getRunnerNameByEntryId(entryId) {
+    if (!entryId) return null;
+    // Find the runner object by its entry_id
+    const runner = allRunners.find(r => String(r.entry_id) === String(entryId));
+    // Return the CLEANED runner's name property
+    return runner ? cleanName(runner.name) : null;
+}
+
+function getSharedG1Count(runnerA, runnerB) {
+    // This would normally check shared G1 wins.
+    return 0; 
+}
+
+// --- New Function: Setup Affinity Listeners ---
+function setupAffinityCalculatorListeners() {
+// ... (omitted for brevity, this function is mostly correct)
+    const parentSelect = document.getElementById('affinity-parent');
+    const gp1Select = document.getElementById('affinity-gp1');
+    const gp2Select = document.getElementById('affinity-gp2');
+    const scoreDisplay = document.getElementById('affinity-score');
+    const ratingDisplay = document.getElementById('affinity-rating'); // Assuming an element for the rating exists
+
+    if (!parentSelect || !gp1Select || !gp2Select || !scoreDisplay || !ratingDisplay) {
+         console.warn('Affinity calculator elements not found, listeners not added.');
+         return;
+    }
+
+    const calculateAndDisplay = () => {
+        // Trainee name is the select value (which is a clean name from allRunnerNamesSet)
+        const traineeName = parentSelect.value;
+        
+        // Parents use entry_id as the select value
+        const gp1EntryId = gp1Select.value;
+        const gp2EntryId = gp2Select.value;
+
+        // The calculation requires the Trainee and AT LEAST ONE parent.
+        if (traineeName && (gp1EntryId || gp2EntryId)) {
+            const score = calculateAffinity(traineeName, gp1EntryId, gp2EntryId);
+            scoreDisplay.textContent = score;
+
+            // Determine Rating
+            let rating = 'N/A';
+            if (score >= 150) {
+                rating = '◎';
+            } else if (score >= 50) {
+                rating = '〇';
+            } else if (score > 0) {
+                rating = '△';
+            }
+            ratingDisplay.textContent = rating;
+
+        } else {
+            scoreDisplay.textContent = '0';
+            ratingDisplay.textContent = '';
+        }
+    };
+
+    [parentSelect, gp1Select, gp2Select].forEach(select => {
+        select.addEventListener('change', calculateAndDisplay);
+    });
+    
+    // Add an initial calculation call in case of pre-selected values
+    calculateAndDisplay();
+}
 
 function createSearchableSelect(inputElement, optionsArray) {
     const container = inputElement.parentElement;
@@ -203,7 +372,7 @@ function extractSparkNames() {
 }
 
 function populateFilters() {
-    const runnerNames = [...new Set(allRunners.map(r => r.name))].filter(Boolean).sort();
+    const runnerNames = [...allRunnerNamesSet].sort();
     filterElements.runner.innerHTML = '<option value="">All Runners</option>' + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
 
     const firstSparkRow = document.querySelector('.spark-filters');
@@ -234,6 +403,27 @@ function populateFilters() {
     for (let i = 1; i <= maxWhiteSparks; i++) { whiteSparkOptions += `<option value="${i}">${i}</option>`; }
     firstSparkRow.querySelector('#min-white').innerHTML = '<option value="0"></option>' + whiteSparkOptions;
 
+    // Add control buttons to the first filter row
+    if (firstSparkRow) {
+        if (!firstSparkRow.querySelector('.disable-spark-filter-button')) {
+            const disableButton = document.createElement('button');
+            disableButton.type = 'button';
+            disableButton.className = 'disable-spark-filter-button';
+            disableButton.textContent = '✓'; 
+            disableButton.title = 'Disable this filter row';
+            firstSparkRow.appendChild(disableButton);
+        }
+        if (!firstSparkRow.querySelector('.remove-spark-filter-button')) {
+            const removeButton = document.createElement('button');
+            removeButton.type = 'button';
+            removeButton.className = 'remove-spark-filter-button';
+            removeButton.textContent = 'X';
+            removeButton.title = 'Remove this filter row';
+            firstSparkRow.appendChild(removeButton);
+        }
+    }
+
+
     const aptGrades = ['S', 'A', 'B'];
     const aptGradeOptions = aptGrades.map(g => `<option value="${g}">${g !== 'S' ? g + '+' : g}</option>`).join('');
     Object.values(filterElements)
@@ -263,6 +453,8 @@ function setupEventListeners() {
         if (el.type !== 'range') el.addEventListener('change', filterAndRender);
     });
 
+    sparkFiltersContainer.addEventListener('change', filterAndRender);
+
     document.querySelectorAll('.spark-filters select').forEach(el => {
         el.addEventListener('change', filterAndRender);
     });
@@ -285,18 +477,23 @@ function setupEventListeners() {
         }
     });
 
-    filterElements.repOnly.addEventListener('change', () => {
-        updateSparkDropdowns(filterElements.repOnly.checked);
-        filterAndRender(); 
-    });
-
     tabButtons.forEach(button => button.addEventListener('click', () => handleTabChange(button.dataset.tab)));
     resetFiltersButton.addEventListener('click', resetFilters);
     addSparkFilterButton.addEventListener('click', addSparkFilterRow);
 
     sparkFiltersContainer.addEventListener('click', (event) => {
-        if (event.target.classList.contains('remove-spark-filter-button')) {
-            event.target.closest('.spark-filters').remove();
+        const target = event.target;
+        const row = target.closest('.spark-filters');
+        if (!row) return;
+
+        if (target.classList.contains('remove-spark-filter-button')) {
+            row.remove();
+            updateRemoveButtonVisibility();
+            filterAndRender();
+        } else if (target.classList.contains('disable-spark-filter-button')) {
+            const isDisabled = row.classList.toggle('disabled');
+            target.textContent = isDisabled ? '-' : '✓';
+            target.title = isDisabled ? 'Enable this filter row' : 'Disable this filter row';
             filterAndRender();
         }
     });
@@ -309,9 +506,15 @@ function setupEventListeners() {
         });
     });
 
+    // Call this ONCE, after the main event listeners are set up
+    setupAffinityCalculatorListeners(); // MOVED HERE
+
     [parentSummaryBody, whiteSparksBody].forEach(body => {
         body.addEventListener('dblclick', handleDetailView);
+        // setupAffinityCalculatorListeners(); // REMOVED FROM HERE
     });
+    
+    updateRemoveButtonVisibility();
 }
 
 function addSparkFilterRow() {
@@ -319,6 +522,14 @@ function addSparkFilterRow() {
     if (!firstRow) return;
     const newRow = firstRow.cloneNode(true);
     sparkFilterCounter++;
+
+    newRow.classList.remove('disabled');
+    const disableBtn = newRow.querySelector('.disable-spark-filter-button');
+    if (disableBtn) {
+        disableBtn.textContent = '✓';
+        disableBtn.title = 'Disable this filter row';
+    }
+
     newRow.querySelectorAll('input[type="text"]').forEach(input => {
         input.value = '';
         input.id += `-${sparkFilterCounter}`;
@@ -327,6 +538,7 @@ function addSparkFilterRow() {
         select.selectedIndex = 0;
         select.id += `-${sparkFilterCounter}`;
     });
+    newRow.querySelector('.rep-only-checkbox').checked = false;
     newRow.querySelectorAll('label').forEach(label => {
         if (label.htmlFor) label.htmlFor += `-${sparkFilterCounter}`;
     });
@@ -335,39 +547,126 @@ function addSparkFilterRow() {
     createSearchableSelect(newRow.querySelector('[id^="filter-pink-spark"]'), pinkSparkNames);
     createSearchableSelect(newRow.querySelector('[id^="filter-white-spark"]'), whiteSparkNames);
     newRow.querySelectorAll('select').forEach(el => el.addEventListener('change', filterAndRender));
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'remove-spark-filter-button';
-    removeButton.textContent = 'X';
-    removeButton.title = 'Remove this filter row';
-    newRow.appendChild(removeButton);
+    
+    newRow.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        const newId = `${cb.id}-${sparkFilterCounter}`;
+        const label = newRow.querySelector(`label[for="${cb.id}"]`);
+        if (label) {
+            label.htmlFor = newId;
+        }
+        cb.id = newId;
+    });
+
     sparkFiltersContainer.appendChild(newRow);
-    updateSparkDropdowns(filterElements.repOnly.checked);
+    updateRemoveButtonVisibility(); // Update visibility after adding
 }
 
 function handleTabChange(activeTabId) {
+    // Make sure these selectors find your new elements
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
     tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTabId));
     tabContents.forEach(c => c.classList.toggle('active', c.id === activeTabId));
 
+    // Update sort options based on the active tab (keep or modify as needed)
     const sortOptions = {
         'parent-summary': ['score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 'whites (parent)', 'whites (total)'],
-        'white-sparks': ['score', 'name', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)']
+        'white-sparks': ['score', 'name', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)'],
+        'affinity-calculator': []
     };
-    const options = sortOptions[activeTabId] || ['score', 'name'];
+    const options = sortOptions[activeTabId] || []; // Default to empty if tab not found
 
-    const currentSort = filterElements.sort.value;
-    filterElements.sort.innerHTML = options.map(o => `<option value="${o}" ${o === currentSort ? 'selected' : ''}>${o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`).join('');
-    if (!options.includes(currentSort)) {
-         filterElements.sort.value = options[0];
+    // Show/Hide filters or specific UI elements if needed for the affinity tab
+    aptitudeFiltersContainer.style.display = (activeTabId === 'affinity-calculator') ? 'none' : 'flex';
+
+    // Only filter/render if it's not the affinity tab (or handle differently)
+    if (activeTabId !== 'affinity-calculator') {
+         // Update sort dropdown if necessary (similar to your existing code)
+        const currentSort = filterElements.sort.value;
+        filterElements.sort.innerHTML = options.map(o => `<option value="${o}" ${o === currentSort ? 'selected' : ''}>${o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`).join('');
+        if (!options.includes(currentSort)) {
+             filterElements.sort.value = options[0] || 'score'; // Default sort
+        }
+        filterAndRender(); // Render table tabs
+    } else {
+        // Potentially clear or reset table displays if switching away from them
+         parentSummaryBody.innerHTML = '';
+         whiteSparksBody.innerHTML = '';
+         // No table rendering needed for the calculator itself
+    }
+}
+
+// --- NEW Affinity Calculation Functions ---
+
+function getPairAffinity(name1, name2) {
+    if (!name1 || !name2 || name1 === name2) {
+        return 0; // No affinity if names are missing or the same
+    }
+    // Use the existing cleanName function (line 13) to remove " c"
+    const cleanN1 = cleanName(name1);
+    const cleanN2 = cleanName(name2);
+
+    // Check both A->B and B->A just in case
+    // FIX: The second lookup had a typo. Corrected to use cleanN1/cleanN2.
+    return affinityMap.get(`${cleanN1}-${cleanN2}`) || affinityMap.get(`${cleanN2}-${cleanN1}`) || 0;
+}
+
+function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
+    const parent1Runner = getRunnerByEntryId(parent1EntryId);
+    const parent2Runner = getRunnerByEntryId(parent2EntryId);
+
+    // MODIFIED: Cannot calculate if trainee is missing OR if BOTH parents are missing.
+    if (!traineeName || (!parent1Runner && !parent2Runner)) {
+        return 0;
     }
 
-    aptitudeFiltersContainer.style.display = 'flex';
-    filterAndRender();
+    let baseAffinityScore = 0;
+    const ancestors = [];
+
+    // --- 1. GATHER ALL AVAILABLE ANCESTRAL NAMES ---
+    if (parent1Runner) {
+        const pAName = cleanName(parent1Runner.name);
+        const gpA1Name = cleanName(parent1Runner.gp1);
+        const gpA2Name = cleanName(parent1Runner.gp2);
+        ancestors.push(pAName, gpA1Name, gpA2Name);
+    }
+
+    if (parent2Runner) {
+        const pBName = cleanName(parent2Runner.name);
+        const gpB1Name = cleanName(parent2Runner.gp1);
+        const gpB2Name = cleanName(parent2Runner.gp2);
+        ancestors.push(pBName, gpB1Name, gpB2Name);
+    }
+    
+    // --- 2. BASE AFFINITY SCORE CALCULATION ---
+
+    // A. Parent-Parent Relationship (only if BOTH exist)
+    if (parent1Runner && parent2Runner) {
+        const pAName = cleanName(parent1Runner.name);
+        const pBName = cleanName(parent2Runner.name);
+        console.log("parent-parent", pAName, pBName, getPairAffinity(pAName, pBName))
+        baseAffinityScore += getPairAffinity(pAName, pBName);
+    }
+
+    // B. Trainee-Ancestor Relationships (for all available ancestors)
+    for (const ancestorName of ancestors) {
+        console.log("trainee-ancestor", traineeName, ancestorName, getPairAffinity(traineeName, ancestorName))
+        baseAffinityScore += getPairAffinity(traineeName, ancestorName);
+    }
+    
+    // --- 3. G1 RACE BONUS (Placeholder) ---
+    let g1RaceBonus = 0;
+    // Note: This logic would also need to check if both parents exist before running.
+    
+    // --- 4. FINAL RESULT ---
+    console.log("finalAffinity", baseAffinityScore)
+    return baseAffinityScore + g1RaceBonus;
 }
 
 // --- MODIFIED: RENDER FUNCTIONS NOW ADD .gp-link CLASS ---
 
-function renderParentSummary(runners, allSparkCriteria, isRepOnly) {
+function renderParentSummary(runners, allSparkCriteria) {
     if (!runners.length) {
         parentSummaryBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>';
         return;
@@ -401,9 +700,9 @@ function renderParentSummary(runners, allSparkCriteria, isRepOnly) {
             <td class="stat-cell aptitude-${getStatGrade(r.power)}">${r.power || 0}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.guts)}">${r.guts || 0}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.wit)}">${r.wit || 0}</td>
-            <td class="spark-cell">${formatSparks(r, 'blue', allSparkCriteria, isRepOnly)}</td>
-            <td class="spark-cell">${formatSparks(r, 'green', allSparkCriteria, isRepOnly)}</td>
-            <td class="spark-cell">${formatSparks(r, 'pink', allSparkCriteria, isRepOnly)}</td>
+            <td class="spark-cell">${formatSparks(r, 'blue', allSparkCriteria)}</td>
+            <td class="spark-cell">${formatSparks(r, 'green', allSparkCriteria)}</td>
+            <td class="spark-cell">${formatSparks(r, 'pink', allSparkCriteria)}</td>
             <td>${whiteDisplay}</td>
             <td class="${gp1Class}">${cleanName(r.gp1 || 'N/A')}</td>
             <td class="${gp2Class}">${cleanName(r.gp2 || 'N/A')}</td>
@@ -599,9 +898,6 @@ function handleDetailView(event) {
     }
 }
 
-
-// --- All other functions from here on are unchanged ---
-// (filterAndRender, sortData, modal logic, etc., omitted for brevity)
 function filterAndRender() {
     const baseFilters = {};
     for (const key in filterElements) {
@@ -622,9 +918,15 @@ function filterAndRender() {
     );
 
     const sparkFilterRows = document.querySelectorAll('#spark-filters-container .spark-filters');
-    const isRepOnly = baseFilters.repOnly;
 
     sparkFilterRows.forEach(row => {
+        // If the row is disabled, skip it entirely
+        if (row.classList.contains('disabled')) {
+            return; 
+        }
+
+        const isRepOnly = row.querySelector('.rep-only-checkbox').checked;
+
         const rowCriteria = {
             blue: { name: row.querySelector('[id^="filter-blue-spark"]').value, min: Number(row.querySelector('[id^="min-blue"]').value) },
             green: { name: row.querySelector('[id^="filter-green-spark"]').value, min: Number(row.querySelector('[id^="min-green"]').value) },
@@ -662,7 +964,7 @@ function filterAndRender() {
 
     // CORRECTED FUNCTION CALLS
     if (activeTabId === 'parent-summary') {
-        renderParentSummary(filteredData, allSparkCriteria, isRepOnly);
+        renderParentSummary(filteredData, allSparkCriteria);
     } 
     else if (activeTabId === 'white-sparks') {
         renderWhiteSparksSummary(filteredData, allSparkCriteria);
@@ -672,6 +974,12 @@ function filterAndRender() {
 function getAllSparkFilterCriteria() {
     const criteria = [];
     document.querySelectorAll('#spark-filters-container .spark-filters').forEach(row => {
+        if (row.classList.contains('disabled')) {
+            return;
+        }
+
+        const isRepOnly = row.querySelector('.rep-only-checkbox').checked;
+
         const rowCriteria = {
             blueSpark: row.querySelector('[id^="filter-blue-spark"]').value,
             minBlue: Number(row.querySelector('[id^="min-blue"]').value),
@@ -680,7 +988,8 @@ function getAllSparkFilterCriteria() {
             pinkSpark: row.querySelector('[id^="filter-pink-spark"]').value,
             minPink: Number(row.querySelector('[id^="min-pink"]').value),
             whiteSpark: row.querySelector('[id^="filter-white-spark"]').value,
-            minWhite: Number(row.querySelector('[id^="min-white"]').value)
+            minWhite: Number(row.querySelector('[id^="min-white"]').value),
+            isRepOnly: isRepOnly 
         };
         if (Object.values(rowCriteria).some(val => val)) {
             criteria.push(rowCriteria);
@@ -688,6 +997,7 @@ function getAllSparkFilterCriteria() {
     });
     return criteria;
 }
+
 function checkSpark(runner, color, nameFilter, minStars, repOnly) {
     if (!nameFilter && minStars === 0) return true;
     const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
@@ -793,7 +1103,7 @@ function sortData(data, sortBy, sortDir) {
     });
 }
 
-function formatSparks(runner, color, allSparkCriteria, repOnly) {
+function formatSparks(runner, color, allSparkCriteria) {
     const sparks = {}, parentSparks = {};
     const highlightStyle = isDarkModeActive() ? ` style="color: #e08b3e; font-weight: bold;"` : '';
     ['parent', 'gp1', 'gp2'].forEach(source => {
@@ -819,10 +1129,10 @@ function formatSparks(runner, color, allSparkCriteria, repOnly) {
             if (parentCount > 0) displayPart += `(${parentCount})`;
 
             let shouldHighlight = false;
-            const countToCheck = repOnly ? parentCount : grandparentsCount;
 
             // This loop requires allSparkCriteria to be a valid array
             for (const criteria of allSparkCriteria) {
+                const countToCheck = criteria.isRepOnly ? parentCount : grandparentsCount;
                 const nameFilter = criteria[`${color}Spark`];
                 const minCount = criteria[`min${color.charAt(0).toUpperCase() + color.slice(1)}`];
 
@@ -994,21 +1304,8 @@ function showDetailModal(runner) {
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 }
-function updateSparkDropdowns(isRepOnly) {
-    const maxStars = isRepOnly ? 3 : 9;
-    const allMinDropdowns = document.querySelectorAll('[id^="min-blue"], [id^="min-green"], [id^="min-pink"]');
-    allMinDropdowns.forEach(dropdown => {
-        const currentValue = parseInt(dropdown.value, 10);
-        let newOptions = '<option value="0"></option>';
-        for (let i = 1; i <= maxStars; i++) {
-            newOptions += `<option value="${i}">${i}★</option>`;
-        }
-        dropdown.innerHTML = newOptions;
-        dropdown.value = Math.min(currentValue, maxStars);
-    });
-}
+
 function resetFilters() {
-    // --- Step 1: Reset all the main filters (this part is correct) ---
     for (const key in filterElements) {
         const el = filterElements[key];
         if (el.type === 'checkbox') {
@@ -1024,26 +1321,39 @@ function resetFilters() {
         }
     }
 
-    // --- Step 2: Clear all spark filter rows without deleting them ---
-    // MODIFIED SECTION
     const allSparkRows = sparkFiltersContainer.querySelectorAll('.spark-filters');
     allSparkRows.forEach((row, index) => {
-        // For every row AFTER the first one, remove it.
         if (index > 0) {
             row.remove();
         } 
-        // For the very first row, just clear its values.
         else {
             row.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
             row.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            row.querySelector('.rep-only-checkbox').checked = false;
+            row.classList.remove('disabled');
+            const disableBtn = row.querySelector('.disable-spark-filter-button');
+            if(disableBtn) {
+                disableBtn.textContent = '✓';
+                disableBtn.title = 'Disable this filter row';
+            }
         }
     });
-    // END MODIFIED SECTION
 
-    // --- Step 3: Finalize the reset (this part is also correct) ---
-    updateSparkDropdowns(false); // Reset star dropdowns to max 9
-    filterElements.sortDir.value = 'desc'; // Set sort direction to default
-    filterAndRender(); // Re-render the table with cleared filters
+    updateRemoveButtonVisibility(); // Update visibility after resetting
+    filterElements.sortDir.value = 'desc';
+    filterAndRender();
+}
+
+function updateRemoveButtonVisibility() {
+    const allSparkRows = sparkFiltersContainer.querySelectorAll('.spark-filters');
+    const shouldShowRemove = allSparkRows.length > 1;
+    allSparkRows.forEach(row => {
+        const removeBtn = row.querySelector('.remove-spark-filter-button');
+        if (removeBtn) {
+            // Use 'display' for hiding/showing
+            removeBtn.style.display = shouldShowRemove ? 'block' : 'none';
+        }
+    });
 }
 
 function escapeRegExp(string) {

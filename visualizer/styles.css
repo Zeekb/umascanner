@@ -255,8 +255,43 @@ body.dark-mode .filter-group-container {
 }
 
 .spark-filters {
-    padding-right: 34px;
+    padding-right: 65px; 
     position: relative;
+    /* This ensures the new container and the buttons are laid out correctly */
+}
+
+/* NEW: Style the new wrapper */
+.strikethrough-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 0px; /* Moves the gap from .filter-section here */
+    align-items: center;
+    flex-grow: 1; /* Allows the container to fill the available space */
+    position: relative; /* Needed for the pseudo-element */
+}
+.strikethrough-container .filter-group {
+    position: relative;
+}
+.spark-filters.disabled > *:not(.disable-spark-filter-button):not(.remove-spark-filter-button) {
+    opacity: 0.5;
+    pointer-events: none;
+}
+.parent-only-group {
+    padding: 0px 10px 0px 0px;
+}
+
+/* MODIFIED: The old .spark-filters.disabled::after rule is replaced by this */
+.spark-filters.disabled .strikethrough-container .filter-group::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    width: 101%; /* Span the full width of the individual filter group */
+    height: 2px;
+    background-color: #aaa;
+    z-index: 2;
+    transform: translateY(-50%);
+    pointer-events: none; /* Prevents the line from interfering with clicks */
 }
 .remove-spark-filter-button {
     background-color: #f44336;
@@ -272,10 +307,33 @@ body.dark-mode .filter-group-container {
     text-align: center;
     position: absolute;
     top: 50%;
-    right: 0;
+    right: 5px; /* MODIFIED: Adjusted position */
     transform: translateY(-50%);
 }
 .remove-spark-filter-button:hover { background-color: #c62828; }
+
+.disable-spark-filter-button {
+    background-color: #aaaaaa; /* Amber color */
+    color: white;
+    border: 1px solid #bbbbbb;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    line-height: 22px;
+    font-size: 14px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    right: 35px; /* Positioned to the left of the remove button */
+    transform: translateY(-50%);
+}
+.disable-spark-filter-button:hover {
+    background-color: #bbbbbb;
+}
+
 .add-filter-container { display: flex; }
 #add-spark-filter-button {
     background-color: #4CAF50;
@@ -291,6 +349,9 @@ body.dark-mode .filter-group-container {
 /* --- Searchable Select Styles --- */
 .searchable-select-container {
     position: relative;
+    /* Define fixed width for the input box and its container */
+    max-width: 160px; 
+    width: 100%;
     min-width: 60px;
 }
 .options-container {
@@ -298,7 +359,12 @@ body.dark-mode .filter-group-container {
     position: absolute;
     top: 100%;
     left: 0;
-    min-width: 100%; 
+    
+    /* MODIFIED: Allow dropdown to expand beyond input box width */
+    width: auto;         /* Allow content to determine width */
+    min-width: 100%;     /* Minimum width is the size of the input box (160px) */
+    max-width: 550px;    /* Max width for the dropdown (adjust as needed) */
+    
     box-sizing: border-box; 
     max-height: 70vh;
     overflow-y: auto;
@@ -401,6 +467,17 @@ input[type="range"]:focus { outline: none; }
 body.dark-mode .tab-content {
   background-color: var(--dark-bg-body);
   background-image: repeating-linear-gradient(-35deg, #333 5px, transparent 10px, transparent 20px);
+}
+
+/* NEW: Override background for the affinity calculator tab only */
+#affinity-calculator.tab-content {
+    /* Use the same solid background as the rest of the application body */
+    background-color: var(--uma-medium-bg);
+    background-image: none; /* Remove the diagonal pattern */
+}
+body.dark-mode #affinity-calculator.tab-content {
+    background-color: var(--dark-bg-body);
+    background-image: none;
 }
 
 .tab-content::-webkit-scrollbar { width: 6px; }
@@ -800,10 +877,8 @@ body.dark-mode .modal-stat-content {
   color: var(--uma-text-dark);
 }
 .stat-input {
-  width: 44px; 
+  width: 60px; 
   text-align: left;
-  appearance: range;
-  -moz-appearance: textfield;
 }
 .stat-outline {
   -webkit-text-stroke-width: 1px;
@@ -815,7 +890,7 @@ body.dark-mode .modal-stat-content {
 .modal-aptitudes {
   display: grid;
   grid-template-columns: 70px repeat(4, 1fr);
-  gap: 15px 10px;
+  gap: 8px 10px; /* MODIFIED: Reduced vertical gap */
   padding: 0 10px;
   flex-shrink: 0;
 }
@@ -837,14 +912,14 @@ body.dark-mode .modal-stat-content {
   background-color: var(--uma-medium-bg);
   border: 2px solid #D0D0D0;
   border-radius: 10px;
-  padding: 5px 8px;
+  padding: 2px 8px; /* MODIFIED: Reduced vertical padding */
   gap: 5px;
 }
 body.dark-mode .modal-apt-button {
     border-color: var(--uma-border-color);
 }
 .modal-apt-name {
-  font-size: 14pt;
+  font-size: 13pt; /* MODIFIED: Reduced font size */
   color: var(--uma-text-dark);
   /* Outline uses uma-medium-bg (white/dark-gray) */
   text-shadow: 1px 1px 0 var(--uma-medium-bg), -1px -1px 0 var(--uma-medium-bg), 1px -1px 0 var(--uma-medium-bg), -1px 1px 0 var(--uma-medium-bg);
@@ -853,14 +928,14 @@ body.dark-mode .modal-apt-button {
 }
 .modal-apt-grade {
   font-weight: bold;
-  font-size: 21pt;
-  padding: 3px 0;
+  font-size: 20pt; /* MODIFIED: Reduced font size */
+  padding: 1px 0; /* MODIFIED: Reduced padding */
   min-width: 30px;
   text-align: center;
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
-  line-height: 1.2;
+  line-height: 1.1; /* MODIFIED: Reduced line height */
 }
 /* --- SUPERSCRIPT FIX --- */
 .modal-apt-grade sup {
@@ -1047,4 +1122,71 @@ body.dark-mode .gp-borrowed {
     z-index: 2000;
     opacity: 1;
     transition: opacity 0.5s ease-out;
+}
+/* ... at the end of the file ... */
+
+.affinity-calculator-controls {
+    display: flex;
+    flex-wrap: wrap;
+    /* Use gap for spacing instead of manual padding/margin for items */
+    gap: 15px 20px; 
+    padding: 15px;
+    /* Use standard theme variables */
+    background-color: var(--uma-light-bg); 
+    border-radius: 8px;
+    margin: 10px;
+    /* Allow controls to expand and use available horizontal space */
+    width: calc(100% - 20px); 
+    box-sizing: border-box;
+}
+
+.affinity-calculator-controls .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    /* Flex-grow allows P1 and P2 to expand */
+    flex-grow: 1; 
+    min-width: 200px; /* Minimum width for flex items */
+}
+
+/* Trainee select (Parent 1) - FIXED WIDTH */
+#affinity-parent {
+    min-width: 150px; /* Fixed minimal width for Trainee dropdown */
+    max-width: 200px; /* Fixed maximal width for Trainee dropdown */
+    flex-grow: 0; /* Prevents Trainee dropdown from expanding */
+    box-sizing: border-box;
+}
+
+/* Parent 1 and Parent 2 select - EXPAND TO FILL */
+#affinity-gp1,
+#affinity-gp2 {
+    flex-grow: 1; /* Allows them to fill the remaining space */
+    min-width: 200px; 
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.affinity-calculator-controls .filter-group select {
+    /* Set width to 100% so the select box fills its flex-parent (the .filter-group) */
+    width: 100%; 
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid var(--uma-border-color);
+    background-color: var(--uma-text-light); /* White/Dark Gray background */
+    color: var(--uma-text-dark);
+    box-sizing: border-box;
+}
+/* ... (unchanged) ... */
+.affinity-score-display {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--uma-text-dark);
+    /* Keep it fixed position within the flex container */
+    flex-grow: 0; 
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-right: 20px;
+    white-space: nowrap; /* Prevent wrapping */
 }

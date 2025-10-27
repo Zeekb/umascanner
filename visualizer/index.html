@@ -10,6 +10,7 @@
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
             <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
+            <button class="tab-button" data-tab="affinity-calculator">Affinity Calc</button>
         </div>
         <!-- END: MODIFIED TAB BUTTONS -->
 
@@ -88,46 +89,48 @@
                 </div>
             </div>
             <div id="spark-filters-container" class="filter-group-container">
-                <div class="filter-group">
-                    <label for="filter-rep">Parent Sparks Only</label>
-                    <input type="checkbox" id="filter-rep">
-                </div>
                 <div class="filter-section spark-filters">
-                    <div class="filter-group">
-                        <label for="filter-blue-spark">Blue Sparks</label>
-                        <div class="searchable-select-container">
-                            <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-short" autocomplete="off">
-                            <div class="options-container"></div>
+                    <div class="strikethrough-container">
+                        <div class="filter-group parent-only-group">
+                            <label for="filter-rep">Parent?</label>
+                            <input type="checkbox" id="filter-rep" class="rep-only-checkbox">
                         </div>
-                        <label for="min-blue"></label>
-                        <select id="min-blue" class="min-spark-select"></select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-green-spark">Green Sparks</label>
-                        <div class="searchable-select-container">
-                            <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
-                            <div class="options-container"></div>
+                        <div class="filter-group">
+                            <label for="filter-blue-spark">Blue Sparks</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-short" autocomplete="off">
+                                <div class="options-container"></div>
+                            </div>
+                            <label for="min-blue"></label>
+                            <select id="min-blue" class="min-spark-select"></select>
                         </div>
-                        <label for="min-green"></label>
-                        <select id="min-green" class="min-spark-select"></select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-pink-spark">Pink Sparks</label>
-                        <div class="searchable-select-container">
-                            <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
-                            <div class="options-container"></div>
+                        <div class="filter-group">
+                            <label for="filter-green-spark">Green Sparks</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
+                                <div class="options-container"></div>
+                            </div>
+                            <label for="min-green"></label>
+                            <select id="min-green" class="min-spark-select"></select>
                         </div>
-                        <label for="min-pink"></label>
-                        <select id="min-pink" class="min-spark-select"></select>
-                    </div>
-                    <div class="filter-group">
-                        <label for="filter-white-spark">White Sparks</label>
-                        <div class="searchable-select-container">
-                            <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
-                            <div class="options-container"></div>
+                        <div class="filter-group">
+                            <label for="filter-pink-spark">Pink Sparks</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
+                                <div class="options-container"></div>
+                            </div>
+                            <label for="min-pink"></label>
+                            <select id="min-pink" class="min-spark-select"></select>
                         </div>
-                        <label for="min-white">Total Whites</label>
-                        <select id="min-white" class="min-spark-select"></select>
+                        <div class="filter-group">
+                            <label for="filter-white-spark">White Sparks</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
+                                <div class="options-container"></div>
+                            </div>
+                            <label for="min-white">Total Whites</label>
+                            <select id="min-white" class="min-spark-select"></select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -179,7 +182,26 @@
                     <tbody id="white-sparks-body"></tbody>
                 </table>
             </div>
-            <!-- The skills-summary div has been completely removed -->
+            <div class="tab-content" id="affinity-calculator">
+                <div class="affinity-calculator-controls">
+                    <div class="filter-group">
+                        <label for="affinity-parent">Trainee:</label>
+                        <select id="affinity-parent"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="affinity-gp1">Parent 1:</label>
+                        <select id="affinity-gp1"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="affinity-gp2">Parent 2:</label>
+                        <select id="affinity-gp2"></select>
+                    </div>
+                    <div class="affinity-score-display">
+                        Affinity: <span id="affinity-score">0</span>~
+                        <span id="affinity-rating"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script src="renderer.js"></script>
