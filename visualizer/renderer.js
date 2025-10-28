@@ -11,6 +11,7 @@ let orderedSparks = {};
 // let affinityMap = new Map(); // Affinity calculator
 let allRunnerNamesSet = new Set();
 let sparkFilterCounter = 1;
+let skillFilterCounter = 1;
 const gpExistenceCache = new Map();
 let maxTotalWhiteSparks = 0;
 let maxParentWhiteSparks = 0;
@@ -47,6 +48,9 @@ const aptitudeFiltersContainer = document.getElementById('aptitude-filters');
 const resetFiltersButton = document.getElementById('reset-filters-button');
 const addSparkFilterButton = document.getElementById('add-spark-filter-button');
 const sparkFiltersContainer = document.getElementById('spark-filters-container');
+
+const skillFiltersContainer = document.getElementById('skill-filters-container');
+const addSkillFilterButton = document.getElementById('add-skill-filter-button');
 
 const APTITUDE_RANK_MAP = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100};
 const UMA_TEXT_DARK = '#8C4410';
@@ -169,6 +173,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         extractSparkNames();
         populateFilters();
         // populateAffinityDropdowns(); // Affinity calculator
+        const firstSkillRow = document.querySelector('.skill-filters');
+        if (firstSkillRow) {
+            createSearchableSelect(firstSkillRow.querySelector('.skill-name-input'), orderedSkills);
+        }
         setupEventListeners();
         setupDarkMode(); 
         handleTabChange('parent-summary');
@@ -473,6 +481,12 @@ function setupEventListeners() {
         if (el.type !== 'range') el.addEventListener('change', filterAndRender);
     });
 
+        skillFiltersContainer.addEventListener('input', (event) => {
+        if (event.target.classList.contains('skill-name-input')) {
+            debouncedFilterAndRender();
+        }
+    });
+
     sparkFiltersContainer.addEventListener('change', (event) => {
         if (event.target.classList.contains('rep-only-checkbox')) {
             const row = event.target.closest('.spark-filters');
@@ -488,6 +502,14 @@ function setupEventListeners() {
             }
         }
         filterAndRender();
+    });
+
+    skillFiltersContainer.addEventListener('click', (event) => {
+        if (event.target.classList.contains('remove-skill-filter-button')) {
+            event.target.closest('.skill-filters').remove();
+            updateRemoveSkillButtonVisibility();
+            filterAndRender();
+        }
     });
 
     ['speed', 'stamina', 'power', 'guts', 'wit'].forEach(stat => {
@@ -511,6 +533,8 @@ function setupEventListeners() {
     tabButtons.forEach(button => button.addEventListener('click', () => handleTabChange(button.dataset.tab)));
     resetFiltersButton.addEventListener('click', resetFilters);
     addSparkFilterButton.addEventListener('click', addSparkFilterRow);
+
+    addSkillFilterButton.addEventListener('click', addSkillFilterRow);
 
     sparkFiltersContainer.addEventListener('click', (event) => {
         const target = event.target;
@@ -546,6 +570,7 @@ function setupEventListeners() {
     });
     
     updateRemoveButtonVisibility();
+    updateRemoveSkillButtonVisibility();
 }
 
 function addSparkFilterRow() {
@@ -598,19 +623,52 @@ function addSparkFilterRow() {
     updateRemoveButtonVisibility(); 
 }
 
+// MODIFICATION: New function to add a skill filter row
+function addSkillFilterRow() {
+    const firstRow = document.querySelector('#skill-filters-container .skill-filters');
+    if (!firstRow) return;
+
+    skillFilterCounter++;
+    const newRow = firstRow.cloneNode(true);
+    
+    const input = newRow.querySelector('.skill-name-input');
+    const label = newRow.querySelector('label');
+
+    const newId = `filter-skill-name-${skillFilterCounter}`;
+    input.id = newId;
+    input.value = '';
+    if (label) {
+        label.htmlFor = newId;
+    }
+    
+    createSearchableSelect(input, orderedSkills);
+    
+    const addButton = document.getElementById('add-skill-filter-button');
+    skillFiltersContainer.insertBefore(newRow, addButton);
+
+    updateRemoveSkillButtonVisibility();
+}
+
+// MODIFICATION: New function to manage visibility of the remove button for skill filters
+function updateRemoveSkillButtonVisibility() {
+    const allSkillRows = skillFiltersContainer.querySelectorAll('.skill-filters');
+    const shouldShowRemove = allSkillRows.length > 1;
+    allSkillRows.forEach(row => {
+        const removeBtn = row.querySelector('.remove-skill-filter-button');
+        if (removeBtn) {
+            removeBtn.style.display = shouldShowRemove ? 'inline-block' : 'none';
+        }
+    });
+}
+
 function handleTabChange(activeTabId) {
     tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTabId));
     tabContents.forEach(c => c.classList.toggle('active', c.id === activeTabId));
 
-    aptitudeFiltersContainer.style.display = (activeTabId === 'affinity-calculator') ? 'none' : 'flex';
+//    aptitudeFiltersContainer.style.display = (activeTabId === 'affinity-calculator') ? 'none' : 'flex';
 
-    if (activeTabId !== 'affinity-calculator') {
-        filterAndRender(); 
-    } else {
-        parentSummaryBody.innerHTML = '';
-        whiteSparksBody.innerHTML = '';
-        skillsSummaryBody.innerHTML = '';
-    }
+    filterAndRender();
+
 }
 
 /* // Affinity calculator
@@ -1079,6 +1137,22 @@ function filterAndRender() {
         (parseInt(r.wit || 0)) >= parseInt(baseFilters.wit)
     );
 
+    const activeTabId = document.querySelector('.tab-content.active')?.id;
+    const skillNameFilters = Array.from(document.querySelectorAll('.skill-name-input'))
+        .map(input => input.value.toLowerCase().trim())
+        .filter(val => val);
+
+    if (skillNameFilters.length > 0) {
+        filteredData = filteredData.filter(runner => {
+            // Runner must have ALL skills from the filters
+            return skillNameFilters.every(filterText => 
+                (runner.skills || []).some(runnerSkill => 
+                    runnerSkill.toLowerCase().includes(filterText)
+                )
+            );
+        });
+    }
+
     const sparkFilterRows = document.querySelectorAll('#spark-filters-container .spark-filters');
 
     sparkFilterRows.forEach(row => {
@@ -1143,7 +1217,6 @@ function filterAndRender() {
 
     sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
 
-    const activeTabId = document.querySelector('.tab-content.active')?.id;
     parentSummaryBody.innerHTML = '';
     whiteSparksBody.innerHTML = '';
     skillsSummaryBody.innerHTML = '';
@@ -1523,6 +1596,16 @@ function resetFilters() {
             el.value = '';
         }
     }
+
+    const allSkillRows = skillFiltersContainer.querySelectorAll('.skill-filters');
+    allSkillRows.forEach((row, index) => {
+        if (index > 0) {
+            row.remove();
+        } else {
+            row.querySelector('.skill-name-input').value = '';
+        }
+    });
+    updateRemoveSkillButtonVisibility();
 
     const allSparkRows = sparkFiltersContainer.querySelectorAll('.spark-filters');
     allSparkRows.forEach((row, index) => {

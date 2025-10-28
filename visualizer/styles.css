@@ -338,6 +338,60 @@ input[type="range"]:focus { outline: none; }
 }
 #reset-filters-button:hover { background-color: var(--uma-accent-pink); }
 
+#skill-filters-container {
+    display: flex !important;
+    flex-direction: row !important; /* Force the direction to be a row */
+    flex-wrap: wrap;                /* Allow items to wrap to the next line */
+    align-items: center;            /* Vertically align inputs and the button */
+    gap: 15px;                      /* Cleanly space all items (rows and the button) */
+}
+
+/* A single skill filter row */
+#skill-filters-container .skill-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.skill-name-input {
+    width: 150px;
+    text-overflow: ellipsis;
+}
+
+/* Style for the "+ Add Skill Filter" button */
+#add-skill-filter-button {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #388E3C;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-top: 0; /* Remove any previous margin */
+}
+#add-skill-filter-button:hover { 
+    background-color: #388E3C; 
+}
+
+/* Style for the 'X' remove button */
+.remove-skill-filter-button {
+    background-color: #706c6c;
+    color: white;
+    border: 1px solid #646060;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    margin-left: -28px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0;
+    text-align: center;
+    flex-shrink: 0;
+    z-index: 5;
+}
+.remove-skill-filter-button:hover { 
+    background-color: #646060; 
+}
 
 /* --- Spark Filters --- */
 .filter-group-container {
