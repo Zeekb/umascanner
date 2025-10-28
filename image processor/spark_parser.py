@@ -153,7 +153,42 @@ def parse_sparks(img, reader, debug_prefix=""):
                     is_right_col = (i == 1)
                     sparks[color].append({"name": spark_name, "count": stars, "y_pos": y_pos_abs, "is_right_col": is_right_col})
 
-        logger.debug(f"parse_sparks returning: {sparks}")
+        try:
+            log_lines = ["parse_sparks returning:"]
+            
+            # Define a consistent order for the colors in the log
+            color_order = ["blue", "pink", "green", "white"]
+
+            for color in color_order:
+                # Skip any color that wasn't found in the results
+                if color not in sparks:
+                    continue
+
+                sparks_list = sparks[color]
+
+                # Create a clean version of the list for logging (without y_pos)
+                cleaned_list = [
+                    {k: v for k, v in spark.items() if k != 'y_pos'}
+                    for spark in sparks_list
+                ]
+
+                # Handle the special multi-line formatting for 'white'
+                if color == 'white' and cleaned_list:
+                    log_lines.append(f"                                            {color}:")
+                    for spark_dict in cleaned_list:
+                        # Each white spark gets its own indented line
+                        log_lines.append(f"                                              - {spark_dict}")
+                else:
+                    # For blue, pink, green, or an empty white list, log on a single line
+                    log_lines.append(f"                                            {color}: {cleaned_list}")
+
+            # Join all the prepared lines into a single string and log it
+            logger.debug("\n".join(log_lines))
+
+        except Exception:
+            # Fallback to the old raw logging in case of any formatting error
+            logger.debug(f"parse_sparks returning (raw): {sparks}")
+            
         return sparks
     except Exception as e:
         logger.error(f"Error in parse_sparks: {e}")

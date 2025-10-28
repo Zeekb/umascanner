@@ -13,7 +13,7 @@ from PIL import Image, ImageOps
 import queue
 import threading
 import logging
-import re
+import io
 from typing import Optional
 import json
 from multiprocessing import cpu_count
@@ -41,7 +41,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FOLDER = os.path.join(BASE_DIR, "data")
 INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
 COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
-LOG_FILE = os.path.join(BASE_DIR, "data", "app.log")
 DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
 DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
 
@@ -260,7 +259,7 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
     Main processing function for a single character folder. It orchestrates OCR parsing for
     stats and skills, identifies grandparents, and extracts spark data.
     """
-    logger.info(f"Processing folder: {folder_name}...")
+    logger.info(f"--- Starting to process folder: {folder_name} ---")
     folder_path = os.path.join(INPUT_FOLDER, folder_name)
     if not os.path.isdir(folder_path):
         return None
@@ -268,6 +267,7 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
     character_data = init_schema()
     image_paths = sorted([os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.lower().endswith((".png", ".jpg", ".jpeg"))])
 
+    logger.info("--- Parser 1: Extracting Main Stats & Skills ---")
     # --- Parser 1: Extract Main Stats and Skills ---
     # Iterates through all images in the folder to parse and aggregate character stats,
     # rankings, and skills using the `parse_umamusume` function.
@@ -282,10 +282,13 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
                 for key_, val in sub.items():
                     if val: character_data.rankings.__dict__.setdefault(category, {})[key_] = val
             for skill in result.skills:
-                if skill not in character_data.skills: character_data.skills.append(skill)
+                if skill not in character_data.skills: 
+                    logger.debug(f"Found new skill for {character_data.name or folder_name}: '{skill}'")
+                    character_data.skills.append(skill)
         except Exception as e:
             logger.error(f"[ERROR] Parser 1 failed on {img_path}: {e}")
 
+    logger.info("--- Parser 2: Extracting Sparks & Grandparents ---")
     # --- Parser 2: Extract Sparks and Identify Grandparents ---
     rois_list = all_rois.get(folder_name, [])
     if not rois_list: return folder_name, character_data
@@ -316,6 +319,7 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
             sparks_result = parse_sparks(roi_cv_crop, reader)
             for color, sparks_list_data in sparks_result.items():
                 for spark in sparks_list_data:
+                    logger.debug(f"Detected spark for {folder_name} ({current_roi_type}): Color='{color}', Name='{spark['name']}', Stars='{spark['count']}'")
                     final_sparks_list.append({ "type": current_roi_type, "color": color, "spark_name": spark['name'], "count": spark['count'] })
 
             # Step 2: Attempt identification only for grandparents.
@@ -358,6 +362,7 @@ def process_folder(folder_name, all_rois, reader) -> Optional[tuple[str, Charact
 
     # Assign the newly structured dictionary to character_data.
     character_data.sparks = grouped_sparks
+    logger.info(f"--- Finished processing folder: {folder_name} ---")
     return folder_name, character_data
 
 def processing_worker(q, final_results, lock, reader):
@@ -465,7 +470,7 @@ def _group_loose_images(reader):
             rois, _ = crop_rois(img, layout)
             ocr_rois = [rois["name"], rois["score"]] + [rois[k] for k in stat_keys]
             stacked_text = [" ".join(reader.readtext(roi, detail=0, paragraph=False)) for roi in ocr_rois]
-
+            logger.debug(f"Raw OCR text for {os.path.basename(img_path)}: Name='{stacked_text[0]}', Score='{stacked_text[1]}', Stats='{stacked_text[2:]}'")
             name = normalize_name(stacked_text[0]).strip().replace(" ", "_") if len(stacked_text) > 0 else None
             score = re.sub(r"[^0-9]", "", str(stacked_text[1])) if len(stacked_text) > 1 else ""
             if not name or not score:
@@ -514,6 +519,7 @@ def _run_roi_detection_automatically(processing_q, reader):
         logger.error(f"No subfolders with inspiration images found in {INPUT_FOLDER}.")
         return []
 
+    # The 'file' argument is the only change in this loop
     for folder_name in tqdm(entries.keys(), desc="Detecting Umas", ncols=120):
         image_paths = entries[folder_name]
         logger.info(f"Detecting ROIs for {folder_name}...")
@@ -534,27 +540,38 @@ def main():
     """
     Main execution function that orchestrates the entire scanning and processing pipeline.
     """
-    # Configure logging.
+    logs_folder = os.path.join(DATA_FOLDER, "logs")
+
+    os.makedirs(logs_folder, exist_ok=True)
+
+    timestamp = datetime.now().strftime("%d%m%Y_%H.%M.%S")
+    log_filename = f"app_{timestamp}.log"
+    log_filepath = os.path.join(logs_folder, log_filename)
+
     logger = logging.getLogger()
     logger.setLevel(getattr(logging, LOG_LEVEL))
-
-    formatter = logging.Formatter(LOG_FORMAT)
+    formatter = logging.Formatter(LOG_FORMAT, datefmt="%H:%M:%S")
 
     # Create a handler to write to the log file (as before)
-    file_handler = logging.FileHandler(LOG_FILE, mode='w', encoding='utf-8')
+    file_handler = logging.FileHandler(log_filepath, mode='w', encoding='utf-8')
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
-
-    # --- CONSOLE HANDLER DISABLED ---
-    # By commenting out the lines below, logs will no longer be sent to the console.
+    logging.getLogger("PIL").setLevel(logging.WARNING)
+    # --- CONSOLE HANDLER REMOVED ---
+    # The following handler is responsible for printing logs to the console.
+    # By removing it, only the tqdm progress bar will be visible there.
+    # All log messages will now go exclusively to the app.log file.
+    # 
     # tqdm_handler = TqdmLoggingHandler()
     # tqdm_handler.setFormatter(formatter)
     # logger.addHandler(tqdm_handler)
-    logger = logging.getLogger(__name__)
+    
+    logger = logging.getLogger(__name__) # This line can remain
 
     # Warn if GPU is configured but not available.
     if OCR_READER_CONFIG.get("gpu") and not torch.cuda.is_available():
-        warnings.warn("\n\nGPU acceleration is enabled, but a compatible GPU/PyTorch was not found. \nFalling back to CPU (slower).\n")
+        # This warning will now only appear in the log file, not the console.
+        warnings.warn("\n\GPU acceleration is enabled, but a compatible GPU/PyTorch was not found. \nFalling back to CPU (slower).\n")
 
     logger.info("Starting Umamusume Scanner...")
     # Clear any previous conflict resolution files.
@@ -562,7 +579,6 @@ def main():
     if os.path.exists(conflicts_file):
         with open(conflicts_file, 'w') as f: json.dump([], f)
 
-    
     reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"])
 
     # Step 0: Organize loose images into folders.
@@ -573,6 +589,7 @@ def main():
     final_results = {}
     results_lock = threading.Lock()
     num_workers = max(1, cpu_count() - DEFAULT_NUM_PROCESSES_OFFSET)
+    logger.info(f"Initializing {num_workers} worker threads for processing.")
     workers = []
     for _ in range(num_workers):
         worker = threading.Thread(target=processing_worker, args=(processing_q, final_results, results_lock, reader))
@@ -583,14 +600,19 @@ def main():
     try:
         # Step 1: Detect ROIs and populate the processing queue.
         processed_folder_names = _run_roi_detection_automatically(processing_q, reader)
+
         # Wait for all folders in the queue to be processed.
+        logger.info(f"All {len(processed_folder_names)} folders have been queued. Waiting for workers to complete...")
         processing_q.join()
+        logger.info("All tasks in the processing queue have been completed.")
+
     finally:
         # Stop worker threads.
+        logger.info("Stopping worker threads...")
         for _ in range(num_workers): processing_q.put((None, None))
         for worker in workers: worker.join()
 
-    logger.info("All background processing complete.")
+    logger.info(f"All background processing complete. Collected {len(final_results)} results.")
     # Step 3: Move processed folders to the completed directory.
     _move_processed_folders(processed_folder_names)
     # Step 4: Create a DataFrame from the results and update the main data file.
@@ -604,10 +626,12 @@ def main():
         with open(conflicts_file, 'r') as f:
             try:
                 if json.load(f):
-                    logger.info("Found conflicts. Launching conflict resolver.")
+                    logger.info("Conflicts detected. Launching conflict resolver GUI...")
                     subprocess.run([sys.executable, os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')])
+                else:
+                    logger.info("No conflicts to resolve.")
             except (json.JSONDecodeError, FileNotFoundError):
-                pass
+                logger.info("No conflicts file found or it is empty. Skipping resolver.")
 
     logger.info("Processing finished successfully!")
 

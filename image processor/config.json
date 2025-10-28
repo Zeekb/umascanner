@@ -42,7 +42,7 @@
   "MOBILE_ROI_SHIFT": 18,
   "DEFAULT_NUM_PROCESSES_OFFSET": 1,
   "LOG_LEVEL": "INFO",
-  "LOG_FORMAT": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+  "LOG_FORMAT": "%(asctime)s - %(levelname)-8s - %(module)-18s - %(message)s",
   "DEFAULT_COLUMN_ORDER": [
     "entry_id", "name", "score", "entry_hash", "last_updated",
     "speed", "stamina", "power", "guts", "wit",
