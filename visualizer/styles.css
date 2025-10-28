@@ -203,6 +203,12 @@ body {
   margin-bottom: 10px;
 }
 
+#filter-sort {
+  width: 150px;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+}
+
 .filter-top-row {
   display: flex;
   justify-content: flex-start;
@@ -519,12 +525,22 @@ th, td {
   color: var(--uma-text-dark);
 }
 
+th:not(:last-child),
+td:not(:last-child) {
+  border-right: 1px solid var(--uma-border-color);
+}
+
+thead {
+  z-index: 2; 
+}
+
 th {
   background-color: var(--uma-header-bg);
   color: var(--uma-header-text);
   padding: 4px;
-  border: 1px solid var(--uma-border-color);
-  position: sticky; top: 0; z-index: 1;
+  position: sticky; 
+  top: 0; 
+  z-index: 1;
 }
 
 .dark-mode th {
@@ -535,7 +551,9 @@ th {
 
 tbody tr:nth-child(even) { background-color: var(--uma-alt-row-bg); }
 tbody tr:hover { background-color: var(--uma-selection-bg); }
-
+tbody td:nth-child(2) {
+    cursor: pointer;
+}
 td.stats { font-family: monospace; font-size: 0.9em; min-width: 100px; }
 .stat-cell { min-width: 40px; text-align: center; }
 td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
@@ -1075,8 +1093,7 @@ td.spark-cell b { color: black; }
 
 
 /* --- Utility & Helper Classes --- */
-.gp-link,
-.gp-skills-link {
+.gp-link {
     cursor: pointer;
 }
 

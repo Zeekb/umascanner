@@ -11,7 +11,7 @@
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
             <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
             <button class="tab-button" data-tab="skills-summary">Skills Summary</button>
-            <button class="tab-button" data-tab="affinity-calculator">Affinity Calc</button>
+            <!--- <button class="tab-button" data-tab="affinity-calculator">Affinity Calc</button> --->
         </div>
 
         <div class="filter-panel">
@@ -178,6 +178,7 @@
                            <th>Entry Id</th>
                            <th>Name</th>
                            <th>Score</th>
+                           <th>Whites</th>
                            <th>Whites (Parent)</th>
                            <th>GP1</th>
                            <th>Whites (GP1)</th>
@@ -188,13 +189,13 @@
                     <tbody id="white-sparks-body"></tbody>
                 </table>
             </div>
-            <!-- MODIFICATION: Add the new Skills Summary tab content and table -->
             <div class="tab-content" id="skills-summary">
                 <table>
                     <thead>
                         <tr>
                            <th>Entry Id</th>
                            <th>Name</th>
+                           <th>Score</th>
                            <th>Recovery</th>
                            <th>Passive</th>
                            <th>Speed/Accel</th>
@@ -205,6 +206,7 @@
                     <tbody id="skills-summary-body"></tbody>
                 </table>
             </div>
+        <!---
             <div class="tab-content" id="affinity-calculator">
                 <div class="affinity-calculator-controls">
                     <div class="filter-group">
@@ -220,11 +222,12 @@
                         <select id="affinity-gp2"></select>
                     </div>
                     <div class="affinity-score-display">
-                        Affinity: <span id="affinity-score">0</span>~
+                        (Not Accurate Raw Gamefile Data) Affinity: <span id="affinity-score">0</span>~
                         <span id="affinity-rating"></span>
                     </div>
                 </div>
             </div>
+        --->
         </div>
     </div>
     <script src="renderer.js"></script>

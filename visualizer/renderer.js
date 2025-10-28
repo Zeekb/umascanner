@@ -7,11 +7,13 @@ let skillTypes = {};
 let orderedSkills = [];
 let runnerUniqueSkills = {};
 let orderedSparks = {};
-let affinityData = [];
-let affinityMap = new Map();
+// let affinityData = []; // Affinity calculator
+// let affinityMap = new Map(); // Affinity calculator
 let allRunnerNamesSet = new Set();
 let sparkFilterCounter = 1;
 const gpExistenceCache = new Map();
+let maxTotalWhiteSparks = 0;
+let maxParentWhiteSparks = 0;
 const cleanName = (name) => name ? name.replace(/ c$/, '').trim() : '';
 
 const filterElements = {
@@ -97,14 +99,21 @@ function setupDarkMode() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        [allRunners, skillTypes, orderedSkills, runnerUniqueSkills, orderedSparks, affinityData] = await Promise.all([
+        // MODIFICATION: Removed affinityData from destructuring and the API call
+        const [allRunnersData, skillTypesData, orderedSkillsData, runnerUniqueSkillsData, orderedSparksData] = await Promise.all([
             window.api.loadRunners(),
             window.api.loadSkillTypes(),
             window.api.loadOrderedSkills(),
             window.api.loadRunnerSkills(),
             window.api.loadOrderedSparks(),
-            window.api.loadAffinityData()
+            // window.api.loadAffinityData() // Affinity calculator
         ]);
+        allRunners = allRunnersData;
+        skillTypes = skillTypesData;
+        orderedSkills = orderedSkillsData;
+        runnerUniqueSkills = runnerUniqueSkillsData;
+        orderedSparks = orderedSparksData;
+        // affinityData = affinityDataResult; // Affinity calculator - This line is removed
 
         if (!allRunners || allRunners.length === 0) {
             console.warn("No runner data loaded.");
@@ -124,6 +133,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             runner.skills = (typeof runner.skills === 'string') ? runner.skills.split('|').map(s => s.trim()).filter(s => s) : runner.skills || [];
         });
 
+        allRunners.forEach(runner => {
+            let totalCount = 0;
+            let parentCount = 0;
+            if (runner.sparks && typeof runner.sparks === 'object') {
+                if (Array.isArray(runner.sparks.parent)) {
+                    parentCount = runner.sparks.parent.filter(s => s?.color === 'white').length;
+                }
+                ['parent', 'gp1', 'gp2'].forEach(source => {
+                    if (Array.isArray(runner.sparks[source])) {
+                        totalCount += runner.sparks[source].filter(s => s?.color === 'white').length;
+                    }
+                });
+            }
+            if (parentCount > maxParentWhiteSparks) {
+                maxParentWhiteSparks = parentCount;
+            }
+            if (totalCount > maxTotalWhiteSparks) {
+                maxTotalWhiteSparks = totalCount;
+            }
+        });
+
+        /* // Affinity calculator
         if (affinityData) {
             affinityData.forEach(pair => {
                 const cleanC1 = cleanName(pair.chara1_name);
@@ -133,10 +164,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 affinityMap.set(`${cleanC2}-${cleanC1}`, pair.affinity_score);
             });
         }
+        */
 
         extractSparkNames();
         populateFilters();
-        populateAffinityDropdowns();
+        // populateAffinityDropdowns(); // Affinity calculator
         setupEventListeners();
         setupDarkMode(); 
         handleTabChange('parent-summary');
@@ -147,6 +179,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
+/* // Affinity calculator
 function populateAffinityDropdowns() {
     const parentSelect = document.getElementById('affinity-parent');
     const gp1Select = document.getElementById('affinity-gp1');
@@ -168,6 +201,7 @@ function populateAffinityDropdowns() {
             .filter(r => r.entry_id && r.name) 
             .map(r => {
                 const runnerName = cleanName(r.name);
+                const runnerScore = (r.score || 0).toLocaleString()
                 const runnerSparkDisplay = getBlueSparkDisplay(r.sparks.parent);
                 
                 const gp1Name = cleanName(r.gp1);
@@ -176,7 +210,7 @@ function populateAffinityDropdowns() {
                 const gp2Name = cleanName(r.gp2);
                 const gp2SparkDisplay = getBlueSparkDisplay(r.sparks.gp2);
                 
-                const label = `${runnerName} (${runnerSparkDisplay}) ` +
+                const label = `${runnerName} ${runnerScore} (${runnerSparkDisplay}) ` +
                               `(GP1: ${gp1Name || 'N/A'} (${gp1SparkDisplay}), ` +
                               `GP2: ${gp2Name || 'N/A'} (${gp2SparkDisplay}))`;
                 return `<option value="${r.entry_id}">${label}</option>`;
@@ -186,7 +220,7 @@ function populateAffinityDropdowns() {
     gp1Select.innerHTML = gpOptionsHtml;
     gp2Select.innerHTML = gpOptionsHtml;
 }
-
+*/
 
 function getBlueSparkDisplay(sparkArray) {
     if (!Array.isArray(sparkArray)) {
@@ -234,6 +268,7 @@ function getSharedG1Count(runnerA, runnerB) {
     return 0; 
 }
 
+/* // Affinity calculator
 function setupAffinityCalculatorListeners() {
     const parentSelect = document.getElementById('affinity-parent');
     const gp1Select = document.getElementById('affinity-gp1');
@@ -278,6 +313,7 @@ function setupAffinityCalculatorListeners() {
     
     calculateAndDisplay();
 }
+*/
 
 function createSearchableSelect(inputElement, optionsArray) {
     const container = inputElement.parentElement;
@@ -347,6 +383,19 @@ function populateFilters() {
     const runnerNames = [...allRunnerNamesSet].sort();
     filterElements.runner.innerHTML = '<option value="">All Runners</option>' + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
 
+    const currentSort = filterElements.sort.value || 'score';
+    const allSortOptions = [
+        'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
+        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)'
+    ];
+
+    filterElements.sort.innerHTML = allSortOptions.map(o => {
+        const label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        return `<option value="${o}">${label}</option>`;
+    }).join('');
+    
+    filterElements.sort.value = allSortOptions.includes(currentSort) ? currentSort : 'score';
+
     const firstSparkRow = document.querySelector('.spark-filters');
     createSearchableSelect(firstSparkRow.querySelector('#filter-blue-spark'), blueSparkNames);
     createSearchableSelect(firstSparkRow.querySelector('#filter-green-spark'), greenSparkNames);
@@ -357,6 +406,7 @@ function populateFilters() {
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-green'), 9);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-pink'), 9);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-white'), 9);
+    updateTotalWhiteDropdown(firstSparkRow, false);
     
     let maxWhiteSparks = allRunners.reduce((max, runner) => {
         let count = 0;
@@ -434,6 +484,7 @@ function setupEventListeners() {
                 updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), maxStars);
                 updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), maxStars);
                 updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), maxStars);
+                updateTotalWhiteDropdown(row, isParentOnly);
             }
         }
         filterAndRender();
@@ -486,7 +537,7 @@ function setupEventListeners() {
         });
     });
 
-    setupAffinityCalculatorListeners(); 
+    // setupAffinityCalculatorListeners(); // Affinity calculator
 
     [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => {
         body.addEventListener('dblclick', handleDetailView);
@@ -539,41 +590,31 @@ function addSparkFilterRow() {
     updateSparkCountDropdown(newRow.querySelector('[id^="min-green"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-pink"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-white"]'), 9);
+    updateTotalWhiteDropdown(newRow, false);
 
     sparkFiltersContainer.appendChild(newRow);
     updateRemoveButtonVisibility(); 
 }
 
 function handleTabChange(activeTabId) {
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
     tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTabId));
     tabContents.forEach(c => c.classList.toggle('active', c.id === activeTabId));
-
-    const sortOptions = {
-        'parent-summary': ['score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 'whites (parent)', 'whites (total)'],
-        'white-sparks': ['score', 'name', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)'],
-        'skills-summary': ['score', 'name'],
-        'affinity-calculator': []
-    };
-    const options = sortOptions[activeTabId] || []; 
 
     aptitudeFiltersContainer.style.display = (activeTabId === 'affinity-calculator') ? 'none' : 'flex';
 
     if (activeTabId !== 'affinity-calculator') {
-        const currentSort = filterElements.sort.value;
-        filterElements.sort.innerHTML = options.map(o => `<option value="${o}" ${o === currentSort ? 'selected' : ''}>${o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>`).join('');
-        if (!options.includes(currentSort)) {
-             filterElements.sort.value = options[0] || 'score'; 
-        }
         filterAndRender(); 
     } else {
-         parentSummaryBody.innerHTML = '';
-         whiteSparksBody.innerHTML = '';
-         skillsSummaryBody.innerHTML = '';
+        parentSummaryBody.innerHTML = '';
+        whiteSparksBody.innerHTML = '';
+        skillsSummaryBody.innerHTML = '';
     }
 }
+
+/* // Affinity calculator
+// --- Synergy & Roofing Configuration ---
+const SYNERGY_THRESHOLD = 15; 
+const SYNERGY_PENALTY_POINTS = 5; // Adjust this value to match game results
 
 function getPairAffinity(name1, name2) {
     if (!name1 || !name2 || name1 === name2) {
@@ -585,6 +626,23 @@ function getPairAffinity(name1, name2) {
     return affinityMap.get(`${cleanN1}-${cleanN2}`) || affinityMap.get(`${cleanN2}-${cleanN1}`) || 0;
 }
 
+function calculateSubLegacyLineScore(traineeName, parentName, grandparentName, capScore) {
+    const traineeToGrandparent = getPairAffinity(traineeName, grandparentName);
+    const parentToGrandparent = getPairAffinity(parentName, grandparentName);
+
+    let lineScore = traineeToGrandparent + parentToGrandparent;
+
+    // 1. Apply Synergy Penalty if the condition is NOT met.
+    if (traineeToGrandparent < SYNERGY_THRESHOLD || parentToGrandparent < SYNERGY_THRESHOLD) {
+        lineScore = Math.max(0, lineScore - SYNERGY_PENALTY_POINTS);
+    }
+
+    // 2. Apply the Roof. The line score cannot exceed the parent-trainee affinity.
+    const finalScore = Math.min(lineScore, capScore);
+    
+    return finalScore;
+}
+
 function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
     const parent1Runner = getRunnerByEntryId(parent1EntryId);
     const parent2Runner = getRunnerByEntryId(parent2EntryId);
@@ -593,40 +651,49 @@ function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
         return 0;
     }
 
-    let baseAffinityScore = 0;
-    const ancestors = [];
+    let totalAffinityScore = 0;
+    const trainee = cleanName(traineeName);
 
+    // --- Calculate score from Parent 1's Line ---
     if (parent1Runner) {
-        const pAName = cleanName(parent1Runner.name);
-        const gpA1Name = cleanName(parent1Runner.gp1);
-        const gpA2Name = cleanName(parent1Runner.gp2);
-        ancestors.push(pAName, gpA1Name, gpA2Name);
+        const p1 = cleanName(parent1Runner.name);
+        const gp1_1 = cleanName(parent1Runner.gp1);
+        const gp1_2 = cleanName(parent1Runner.gp2);
+
+        const parent1Cap = getPairAffinity(trainee, p1);
+        totalAffinityScore += parent1Cap;
+
+        totalAffinityScore += calculateSubLegacyLineScore(trainee, p1, gp1_1, parent1Cap);
+        totalAffinityScore += calculateSubLegacyLineScore(trainee, p1, gp1_2, parent1Cap);
     }
 
+    // --- Calculate score from Parent 2's Line ---
     if (parent2Runner) {
-        const pBName = cleanName(parent2Runner.name);
-        const gpB1Name = cleanName(parent2Runner.gp1);
-        const gpB2Name = cleanName(parent2Runner.gp2);
-        ancestors.push(pBName, gpB1Name, gpB2Name);
-    }
-    
-    if (parent1Runner && parent2Runner) {
-        const pAName = cleanName(parent1Runner.name);
-        const pBName = cleanName(parent2Runner.name);
-        console.log("parent-parent", pAName, pBName, getPairAffinity(pAName, pBName))
-        baseAffinityScore += getPairAffinity(pAName, pBName);
+        const p2 = cleanName(parent2Runner.name);
+        const gp2_1 = cleanName(parent2Runner.gp1);
+        const gp2_2 = cleanName(parent2Runner.gp2);
+
+        const parent2Cap = getPairAffinity(trainee, p2);
+        totalAffinityScore += parent2Cap;
+        
+        totalAffinityScore += calculateSubLegacyLineScore(trainee, p2, gp2_1, parent2Cap);
+        totalAffinityScore += calculateSubLegacyLineScore(trainee, p2, gp2_2, parent2Cap);
     }
 
-    for (const ancestorName of ancestors) {
-        console.log("trainee-ancestor", traineeName, ancestorName, getPairAffinity(traineeName, ancestorName))
-        baseAffinityScore += getPairAffinity(traineeName, ancestorName);
+    // --- Calculate score between the two parent branches ---
+    if (parent1Runner && parent2Runner) {
+        const p1 = cleanName(parent1Runner.name);
+        const p2 = cleanName(parent2Runner.name);
+        
+        totalAffinityScore += getPairAffinity(p1, p2);
     }
     
     let g1RaceBonus = 0;
     
-    console.log("finalAffinity", baseAffinityScore)
-    return baseAffinityScore + g1RaceBonus;
+    console.log("Final Affinity Score:", totalAffinityScore + g1RaceBonus);
+    return totalAffinityScore + g1RaceBonus;
 }
+*/
 
 function renderSkillsSummary(runners) {
     if (!runners.length) {
@@ -636,7 +703,7 @@ function renderSkillsSummary(runners) {
 
     const formatSkillCell = (skillsArray, category) => {
         if (!skillsArray || skillsArray.length === 0) {
-            return '<span style="color: #888;">N/A</span>';
+            return '';
         }
         
         skillsArray.sort((a, b) => {
@@ -658,7 +725,7 @@ function renderSkillsSummary(runners) {
             
             if (skillType.endsWith('g') || skillType.startsWith('unique')) {
                 // The <b> tag goes inside the colored span
-                content = `<b style="color: #e08b3e">${content}</b>`;
+                content = `<b style="color: #bd7736ff">${content}</b>`;
             }
 
             return `<span class="${className}">${content}</span>`;
@@ -699,15 +766,22 @@ function renderSkillsSummary(runners) {
             });
         }
 
+        const recoveryCell = categorizedSkills.recovery.length > 0 ? `(<b>${categorizedSkills.recovery.length}</b>) ${formatSkillCell(categorizedSkills.recovery, 'recovery')}` : '';
+        const passiveCell = categorizedSkills.passive.length > 0 ? `(<b>${categorizedSkills.passive.length}</b>) ${formatSkillCell(categorizedSkills.passive, 'passive')}` : '';
+        const speedCell = categorizedSkills.speed.length > 0 ? `(<b>${categorizedSkills.speed.length}</b>) ${formatSkillCell(categorizedSkills.speed, 'speed')}` : '';
+        const debuffCell = categorizedSkills.debuff.length > 0 ? `(<b>${categorizedSkills.debuff.length}</b>) ${formatSkillCell(categorizedSkills.debuff, 'debuff')}` : '';
+        const detrimentalCell = categorizedSkills.detrimental.length > 0 ? `(<b>${categorizedSkills.detrimental.length}</b>) ${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}` : '';
+
         return `
             <tr data-entry-id="${r.entry_id || ''}">
                 <td>${r.entry_id || 'N/A'}</td>
                 <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.recovery, 'recovery')}</td>
-                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.passive, 'passive')}</td>
-                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.speed, 'speed')}</td>
-                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.debuff, 'debuff')}</td>
-                <td class="left-align spark-cell">${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}</td>
+                <td >${(r.score || 0).toLocaleString()}</td>
+                <td class="left-align spark-cell">${recoveryCell}</td>
+                <td class="left-align spark-cell">${passiveCell}</td>
+                <td class="left-align spark-cell">${speedCell}</td>
+                <td class="left-align spark-cell">${debuffCell}</td>
+                <td class="left-align spark-cell">${detrimentalCell}</td>
             </tr>
         `;
     }).join('');
@@ -765,7 +839,7 @@ function renderParentSummary(runners, allSparkCriteria) {
 
 function renderWhiteSparksSummary(runners, allSparkCriteria) {
     if (!runners.length) {
-       whiteSparksBody.innerHTML = '<tr><td colspan="8">No runners match filters.</td></tr>';
+       whiteSparksBody.innerHTML = '<tr><td colspan="9">No runners match filters.</td></tr>';
        return;
     }
     const html = runners.map(r => {
@@ -778,7 +852,7 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                    r.sparks[source].forEach(spark => {
                        if (spark?.color === 'white' && spark.spark_name) {
                             const sparkCount = parseInt(spark.count, 10) || 1; 
-                            totalCounts[source] += sparkCount;
+                            totalCounts[source] += 1;
                             const name = spark.spark_name;
                             individualCounts[source][name] = (individualCounts[source][name] || 0) + sparkCount;
                        }
@@ -786,9 +860,15 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                 }
             });
         }
+
+        const totalWhiteSparks = totalCounts.parent + totalCounts.gp1 + totalCounts.gp2;
         
-        // MODIFICATION: This helper now accepts the runner object 'r' to access the tag
         const formatWhiteSparkDisplay = (sourceTotal, sourceDetails, runner) => {
+            
+            if (sourceTotal === 0) {
+                return '';
+            }
+
             const highlightColor = '#e08b3e';
             const highlightStyle = isDarkModeActive() ? ` style="color: ${highlightColor}; font-weight: bold;"` : '';
             
@@ -806,9 +886,7 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
 
             const detailsStr = Object.entries(sourceDetails)
                 .map(([name, value]) => { 
-                    // MODIFICATION: Highlighting logic now uses the _passingWhiteSparks tag
                     let shouldHighlightName = false;
-                    // Highlight if the runner was tagged with this spark name
                     if (runner._passingWhiteSparks && runner._passingWhiteSparks.has(name)) {
                         shouldHighlightName = true;
                     }
@@ -821,7 +899,6 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
             return `(${totalDisplay})${detailsStr ? ` ${detailsStr}` : ''}`;
         };
 
-        // MODIFICATION: Pass the runner object 'r' into the helper
         const parentDisplay = formatWhiteSparkDisplay(totalCounts.parent, individualCounts.parent, r);
         const gp1Display = formatWhiteSparkDisplay(totalCounts.gp1, individualCounts.gp1, r);
         const gp2Display = formatWhiteSparkDisplay(totalCounts.gp2, individualCounts.gp2, r);
@@ -831,14 +908,15 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
 
         const gp1NameClass = gp1Exists ? 'gp-link' : 'gp-borrowed';
         const gp2NameClass = gp2Exists ? 'gp-link' : 'gp-borrowed';
-        const gp1SkillsClass = gp1Exists ? 'gp-skills-link' : 'gp-borrowed';
-        const gp2SkillsClass = gp2Exists ? 'gp-skills-link' : 'gp-borrowed';
+        const gp1SkillsClass = gp1Exists ? '' : 'gp-borrowed';
+        const gp2SkillsClass = gp2Exists ? '' : 'gp-borrowed';
 
        return `
        <tr data-entry-id="${r.entry_id || ''}">
            <td>${r.entry_id || 'N/A'}</td>
            <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
            <td >${(r.score || 0).toLocaleString()}</td>
+           <td>${totalWhiteSparks}</td>
            <td class="left-align spark-cell gp-skills-link">${parentDisplay}</td>
            <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
            <td class="left-align spark-cell ${gp1SkillsClass}" data-gp-name="${r.gp1 || ''}">${gp1Display}</td>
@@ -1222,7 +1300,7 @@ function formatSparks(runner, color, allSparkCriteria) {
             return shouldHighlight ? `<b${highlightStyle}>${displayPart}</b>` : displayPart;
         });
 
-    return parts.join(', ') || '<span style="color: #888;">N/A</span>';
+    return parts.join(', ') || '';
 }
 
 function showDetailModal(runner) {
@@ -1412,6 +1490,7 @@ function resetFilters() {
             updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), 9);
             updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), 9);
             updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), 9);
+            updateTotalWhiteDropdown(row, false);
         }
     });
 
@@ -1432,8 +1511,31 @@ function updateSparkCountDropdown(selectElement, maxStars) {
 
     if (parseInt(currentValue, 10) <= maxStars) {
         selectElement.value = currentValue;
+    } 
+    else if (parseInt(currentValue, 10) > 3) {
+        selectElement.value = "3";
     } else {
         selectElement.value = "0";
+    }
+}
+
+function updateTotalWhiteDropdown(rowElement, isParentOnly) {
+    const select = rowElement.querySelector('[id^="min-total-white"]');
+    if (!select) return;
+
+    const currentValue = select.value;
+    const max = isParentOnly ? maxParentWhiteSparks : maxTotalWhiteSparks;
+
+    let optionsHtml = '<option value="0"></option>';
+    for (let i = 1; i <= max; i++) {
+        optionsHtml += `<option value="${i}">${i}</option>`;
+    }
+    select.innerHTML = optionsHtml;
+
+    if (currentValue > max) {
+        select.value = max.toString();
+    } else {
+        select.value = currentValue.toString();
     }
 }
 
