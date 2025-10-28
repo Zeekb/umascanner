@@ -393,6 +393,13 @@ input[type="range"]:focus { outline: none; }
 }
 
 .spark-select-short { width: 100px; }
+.spark-select-shorter { width: 90px; }
+.spark-count-select {
+  width: 54px; 
+  min-width: 54px;
+  box-sizing: border-box; 
+}
+.spark-select-shortest { max-width: 30px; box-sizing: border-box; }
 .spark-select-long { width: 160px; text-overflow: ellipsis; }
 .min-spark-select { margin-top: 1px; }
 
@@ -519,7 +526,7 @@ table {
 th, td {
   padding: 4px 8px;
   text-align: center;
-  border-bottom: 1px solid var(--uma-border-color);
+  border-bottom: 1px solid var(--dark-uma-border-color);
   white-space: nowrap;
   font-size: 0.9em;
   color: var(--uma-text-dark);
@@ -527,7 +534,7 @@ th, td {
 
 th:not(:last-child),
 td:not(:last-child) {
-  border-right: 1px solid var(--uma-border-color);
+  border-right: 1px solid var(--dark-uma-border-color);
 }
 
 thead {
@@ -544,9 +551,10 @@ th {
 }
 
 .dark-mode th {
-  background-color: #71d71c;
+  background-color: #539e16;
   color: #FFFFFF;
-  border-color: var(--dark-uma-border-color);
+  border-color: #539e16;
+
 }
 
 tbody tr:nth-child(even) { background-color: var(--uma-alt-row-bg); }
@@ -1131,8 +1139,11 @@ td.spark-cell b { color: black; }
 .skill-detrimental { color: var(--skill-color-detrimental); }
 .skill-unsorted { color: var(--skill-color-unsorted); }
 
-.spark-cell span b {
+.spark-cell {
     color: inherit;
+}
+.skill-unique {
+  font-weight: bold;
 }
 
 /* --- Affinity Calculator --- */

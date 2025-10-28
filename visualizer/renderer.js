@@ -220,7 +220,6 @@ function populateAffinityDropdowns() {
     gp1Select.innerHTML = gpOptionsHtml;
     gp2Select.innerHTML = gpOptionsHtml;
 }
-*/
 
 function getBlueSparkDisplay(sparkArray) {
     if (!Array.isArray(sparkArray)) {
@@ -253,6 +252,7 @@ function getBlueSparkDisplay(sparkArray) {
     return 'N/A Blue'; 
 }
 
+
 function getRunnerByEntryId(entryId) {
     if (!entryId) return null;
     return allRunners.find(r => String(r.entry_id) === String(entryId));
@@ -268,7 +268,7 @@ function getSharedG1Count(runnerA, runnerB) {
     return 0; 
 }
 
-/* // Affinity calculator
+// Affinity calculator
 function setupAffinityCalculatorListeners() {
     const parentSelect = document.getElementById('affinity-parent');
     const gp1Select = document.getElementById('affinity-gp1');
@@ -403,7 +403,7 @@ function populateFilters() {
     createSearchableSelect(firstSparkRow.querySelector('#filter-white-spark'), whiteSparkNames);
 
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-blue'), 9);
-    updateSparkCountDropdown(firstSparkRow.querySelector('#min-green'), 9);
+    updateSparkCountDropdown(firstSparkRow.querySelector('#min-green'), 3);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-pink'), 9);
     updateSparkCountDropdown(firstSparkRow.querySelector('#min-white'), 9);
     updateTotalWhiteDropdown(firstSparkRow, false);
@@ -587,7 +587,7 @@ function addSparkFilterRow() {
     });
 
     updateSparkCountDropdown(newRow.querySelector('[id^="min-blue"]'), 9);
-    updateSparkCountDropdown(newRow.querySelector('[id^="min-green"]'), 9);
+    updateSparkCountDropdown(newRow.querySelector('[id^="min-green"]'), 3);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-pink"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-white"]'), 9);
     updateTotalWhiteDropdown(newRow, false);
@@ -707,25 +707,32 @@ function renderSkillsSummary(runners) {
         }
         
         skillsArray.sort((a, b) => {
-            const aType = skillTypes[a] || '';
-            const bType = skillTypes[b] || '';
-            const aIsSpecial = aType.endsWith('g') || aType.startsWith('unique');
-            const bIsSpecial = bType.endsWith('g') || bType.startsWith('unique');
+            const getPriority = (skillName) => {
+                const type = skillTypes[skillName] || '';
+                if (type.endsWith('g')) return 0;       // Priority 0 for Gold
+                if (type.startsWith('unique')) return 1; // Priority 1 for Unique
+                return 2;                               // Priority 2 for everything else
+            };
 
-            if (aIsSpecial && !bIsSpecial) return -1;
-            if (!aIsSpecial && bIsSpecial) return 1;
+            const priorityA = getPriority(a);
+            const priorityB = getPriority(b);
+
+            if (priorityA !== priorityB) {
+                return priorityA - priorityB;
+            }
+            
             return a.localeCompare(b);
         });
 
-        // MODIFICATION: Each skill is now wrapped in a span with a category-specific class
         return skillsArray.map(skillName => {
             const skillType = skillTypes[skillName] || '';
             let content = formatSkillName(skillName);
             const className = `skill-${category}`;
             
-            if (skillType.endsWith('g') || skillType.startsWith('unique')) {
-                // The <b> tag goes inside the colored span
-                content = `<b style="color: #bd7736ff">${content}</b>`;
+            if (skillType.endsWith('g')) {
+                content = `<b style="color: #daa034ff">${content}</b>`;
+            } else if (skillType.startsWith('unique')) {
+                content = `<span class="skill-unique">${content}</span>`;
             }
 
             return `<span class="${className}">${content}</span>`;
@@ -746,7 +753,7 @@ function renderSkillsSummary(runners) {
         if (r.skills) {
             r.skills.forEach(skillName => {
                 const originalSkillType = skillTypes[skillName];
-                const skillType = originalSkillType.startsWith('a') ? originalSkillType.substring(1) : originalSkillType;
+                const skillType = (originalSkillType && originalSkillType.startsWith('a')) ? originalSkillType.substring(1) : originalSkillType || '';
 
                 if (skillType.endsWith('purple')) {
                     categorizedSkills.detrimental.push(skillName);
@@ -789,7 +796,6 @@ function renderSkillsSummary(runners) {
     skillsSummaryBody.innerHTML = html;
     hideEntryIdColumn('skills-summary');
 }
-
 
 function renderParentSummary(runners, allSparkCriteria) {
     if (!runners.length) {
@@ -1300,7 +1306,7 @@ function formatSparks(runner, color, allSparkCriteria) {
             return shouldHighlight ? `<b${highlightStyle}>${displayPart}</b>` : displayPart;
         });
 
-    return parts.join(', ') || '';
+    return parts.join(' ') || '';
 }
 
 function showDetailModal(runner) {
@@ -1487,7 +1493,7 @@ function resetFilters() {
             }
 
             updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), 9);
-            updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), 9);
+            updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), 3);
             updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), 9);
             updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), 9);
             updateTotalWhiteDropdown(row, false);
