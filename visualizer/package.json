@@ -5,10 +5,12 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "win": {
-      "icon": "../assets/icon.png"
+    "icon": "../assets/icon.png"
   },
   "repository": {
     "type": "git",
@@ -23,6 +25,51 @@
   },
   "homepage": "https://github.com/Zeekb/umascanner#readme",
   "dependencies": {
-    "electron": "^38.4.0"
+  },
+  "devDependencies": {
+    "electron": "^38.4.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.example.umaanalyzer",
+    "productName": "UmaScanner",
+    "files": [
+      "**/*",
+      "!../image processor/",     
+      "!../data/input_images/",   
+      "!../data/processed_images/",
+      "!../debug_*"              
+    ],
+    "extraResources": [
+      {
+        "from": "../data/",
+        "to": "data/",
+        "filter": ["!all_runners.json", "**/*", "!input_images/", "!processed_images/"]
+      },
+      {
+        "from": "../assets/",
+        "to": "assets/"
+      },
+      {
+        "from": "../image processor/save_formatted_json.py",
+        "to": "python_scripts/save_formatted_json.py"
+      },
+      {
+        "from": "../image processor/data_updater.py",
+        "to": "python_scripts/data_updater.py"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "../assets/icon.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "../assets/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "../assets/icon.png"
+    }
   }
 }

@@ -4,6 +4,10 @@ const fs = require('fs').promises;
 const fsSync = require('fs');
 const { spawn } = require('child_process');
 
+const isPackaged = app.isPackaged;
+const basePath = isPackaged ? path.dirname(app.getPath('exe')) : path.join(__dirname, '..', '..');
+const dataFilePath = path.join(basePath, 'all_runners.json');
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1600,
@@ -24,12 +28,12 @@ function createWindow() {
 app.whenReady().then(() => {
   ipcMain.handle('load-runners', async () => {
     try {
-    const filePath = path.join(__dirname, '../data', 'all_runners.json');
-    const data = fsSync.readFileSync(filePath, 'utf-8');
+    const data = fsSync.readFileSync(dataFilePath, 'utf-8');
+    console.log(`Loading runners from: ${dataFilePath}`); // Optional: for debugging
     return JSON.parse(data);
   } catch (err) {
-    console.error("Failed to read or parse all_runners.json:", err);
-    return null;
+    console.error(`Failed to read or parse runners file at ${dataFilePath}:`, err);
+    return [];
   }
   });
   ipcMain.handle('load-skills', async () => {
@@ -77,22 +81,25 @@ app.whenReady().then(() => {
   // You may need to change 'python' to 'python3' depending on your system.
   const pythonExecutable = 'python'; 
 
-  // Path to the new helper script
-  const scriptPath = path.join(__dirname, '..', 'image processor', 'save_formatted_json.py');
+  const resourcesPath = isPackaged
+      ? path.join(process.resourcesPath, 'python_scripts') // Path when packaged
+      : path.join(__dirname, '..', 'image processor');    // Path during development
+  
+  const scriptPath = path.join(resourcesPath, 'save_formatted_json.py');
+  const dataUpdaterPath = path.join(resourcesPath, 'data_updater.py'); // Needed by save_formatted_json
 
-  // Convert the runner data from a JS object to a JSON string
+  if (!fsSync.existsSync(scriptPath) || !fsSync.existsSync(dataUpdaterPath)) {
+    console.error(`Error: Python save scripts not found at expected location: ${resourcesPath}`);
+    return Promise.reject(new Error('Required Python save script(s) not found.'));
+  }
+
   const dataString = JSON.stringify(runnersData);
 
-  // Return a Promise that resolves/rejects based on the Python script's exit
   return new Promise((resolve, reject) => {
-
-    // Spawn the python process
-    const pyProcess = spawn(pythonExecutable, [scriptPath], {
-        // Set the Current Working Directory to the script's location
-        // so it can correctly import 'data_updater'
-        cwd: path.join(__dirname, '..', 'image processor'),
-        stdio: ['pipe', 'pipe', 'pipe'], // stdin, stdout, stderr
-        env: { ...process.env, PYTHONIOENCODING: 'UTF-8' }
+    const pyProcess = spawn(pythonExecutable, [scriptPath, dataFilePath], { // <-- Pass dataFilePath here
+      cwd: resourcesPath, // Keep CWD so it can import data_updater
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env, PYTHONIOENCODING: 'UTF-8' }
     });
 
     let stdout = '';
@@ -124,7 +131,12 @@ app.whenReady().then(() => {
     // Handle errors in spawning the process itself
     pyProcess.on('error', (err) => {
         console.error('Failed to start Python process:', err);
-        reject(new Error(`Failed to start Python process: ${err.message}`));
+        // Provide a more user-friendly error if Python isn't found
+        if (err.code === 'ENOENT') {
+            reject(new Error(`Failed to save: Python executable ('${pythonExecutable}') not found in PATH. Please ensure Python is installed and accessible.`));
+        } else {
+            reject(new Error(`Failed to start Python process: ${err.message}`));
+        }
     });
 
     // Write the JSON data string to the Python script's standard input
