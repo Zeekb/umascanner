@@ -1204,3 +1204,77 @@ td.spark-cell b { color: black; }
     padding-right: 20px;
     white-space: nowrap;
 }
+
+/* help hover tips */
+.tab-help {
+    position: relative; /* This is the anchor for the tooltip */
+    white-space: pre-line;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #bbbbbb; /* Medium gray */
+    color: white;
+    border-radius: 50%;
+    cursor: help;
+    
+    /* Pulls it closer to the tab button */
+    margin-left: -14px; 
+    margin-top: -2px;
+    /* Ensures it renders on top of the button's margin/border */
+    z-index: 2; 
+}
+
+.dark-mode .tab-help {
+    background-color: #777777; /* Darker gray for dark mode */
+}
+
+/* This is the tooltip box that appears on hover */
+.tab-help::before {
+    content: attr(data-tooltip); /* Gets text from the 'data-tooltip' attribute */
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px; /* Space between icon and tooltip */
+    
+    /* Styling the box */
+    width: 280px; /* Set a width so text wraps */
+    background-color: var(--uma-medium-bg);
+    color: var(--uma-text-dark);
+    border: 1px solid var(--uma-border-color);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    
+    /* Make sure text wraps and is aligned left */
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9em;
+    line-height: 1.4;
+
+    /* Hide it by default */
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 100; /* Must be on top of everything */
+}
+
+/* Show the tooltip on hover */
+.tab-help:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tab-help::before {
+    left: 0;
+    transform: translateX(0);
+}
+
+.filter-help {
+    margin-left:0px;
+    white-space: pre-line;
+}

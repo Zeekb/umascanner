@@ -9,14 +9,20 @@
     <div class="app-container">
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
+            <span class="tab-help" data-tooltip="Main overview for finding runners. &#10;&#10;&bull;  Use the filters to find runners with high stats or specific sparks (Blue, Green, Pink, White). &#10;&bull;  Sparks matching your filters will be highlighted. &#10;&bull;  Double-click any row for full details, or double-click a grandparent's name (if not grayed out) to jump to their entry.">?</span>
+
             <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
+            <span class="tab-help" data-tooltip="Focuses on White Sparks to trace their lineage. &#10;&#10;&bull;  It shows the total count, then breaks down the specific sparks for the runner (Parent), their first grandparent (GP1), and their second grandparent (GP2). &#10;&bull;  Sparks that match your White Spark filters will be highlighted.">?</span>
+
             <button class="tab-button" data-tab="skills-summary">Skills Summary</button>
+            <span class="tab-help" data-tooltip="Summarizes all of a runner's skills. &#10;&#10;&bull;  Skills are categorized into types like Recovery, Passive, and Speed. &#10;&bull;  Important skills are highlighted: Gold skills have a gold color, and Unique skills are bold.">?</span>
             <!--- <button class="tab-button" data-tab="affinity-calculator">Affinity Calc</button> --->
         </div>
 
         <div class="filter-panel">
             <div class="filter-top-row">
                 <div class="filter-section">
+                    <span class="tab-help filter-help" data-tooltip="This panel filters all runners shown in the tabs below.&#10;&#10;1.  Sorting: &#10;Filter by a specific runner or change the sort order.&#10;&#10;2.  Stats: &#10;Use the sliders to set minimum required stats.&#10;&#10;3.  Aptitudes: &#10;Set minimum required aptitude grades (e.g., 'A' or 'B').&#10;&#10;4.  Sparks: &#10;Search for runners with specific sparks.&#10;    &bull;  'Parent?': &#10;Checks only the runner's parent sparks (not grandparents).&#10;&#10;    '+ Add Filter Row': &#10;Adds another set of spark filters. Runners will be shown if they match any of the filter rows (OR logic).&#10;&#10;    'Disabled Filter Row': &#10;The Check at the right of the spark filter row can be toggled on/off to remove specific filters during advanced searches">?</span>
                     <div class="filter-group">
                         <label for="filter-runner">Runner</label>
                         <select id="filter-runner"></select>
