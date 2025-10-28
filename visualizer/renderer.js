@@ -755,23 +755,39 @@ function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
 }
 */
 
+/**
+ * Renders a summary table of skills for a list of runners.
+ * Assumes skillTypes object uses the 'category_type_tier' or 'category_type_subtype_tier' naming convention.
+ * e.g., "speed_active_gold", "stamina_detrimental_passive_normal", "unique_recovery_normal"
+ */
 function renderSkillsSummary(runners) {
     if (!runners.length) {
         skillsSummaryBody.innerHTML = '<tr><td colspan="8">No runners match filters.</td></tr>';
         return;
     }
 
+    /**
+     * Sorts and formats an array of skill names into an HTML string for a table cell.
+     * @param {string[]} skillsArray - The array of skill names.
+     * @param {string} category - The CSS class category for the skill spans.
+     * @returns {string} - The formatted HTML string.
+     */
     const formatSkillCell = (skillsArray, category) => {
         if (!skillsArray || skillsArray.length === 0) {
             return '';
         }
         
+        // Sort skills: Gold > Unique > Normal. Alphabetical within each tier.
         skillsArray.sort((a, b) => {
             const getPriority = (skillName) => {
                 const type = skillTypes[skillName] || '';
-                if (type.endsWith('g')) return 0;       // Priority 0 for Gold
-                if (type.startsWith('unique')) return 1; // Priority 1 for Unique
-                return 2;                               // Priority 2 for everything else
+                const parts = type.split('_');
+                const skillCategory = parts[0];
+                const skillTier = parts[parts.length - 1];
+
+                if (skillTier === 'gold') return 0;      // Highest priority
+                if (skillCategory === 'unique') return 1; // Second priority
+                return 2;                                // Default priority
             };
 
             const priorityA = getPriority(a);
@@ -781,17 +797,23 @@ function renderSkillsSummary(runners) {
                 return priorityA - priorityB;
             }
             
+            // Fallback to alphabetical sort if priorities are the same
             return a.localeCompare(b);
         });
 
+        // Map sorted skills to their HTML representation
         return skillsArray.map(skillName => {
             const skillType = skillTypes[skillName] || '';
-            let content = formatSkillName(skillName);
+            const parts = skillType.split('_');
+            const skillCategory = parts[0];
+            const skillTier = parts[parts.length - 1];
+            
+            let content = formatSkillName(skillName); // Assumes formatSkillName() exists
             const className = `skill-${category}`;
             
-            if (skillType.endsWith('g')) {
-                content = `<b style="color: #daa034ff">${content}</b>`;
-            } else if (skillType.startsWith('unique')) {
+            if (skillTier === 'gold') {
+                content = `<b class="skill-gold">${content}</b>`;
+            } else if (skillCategory === 'unique') {
                 content = `<span class="skill-unique">${content}</span>`;
             }
 
@@ -800,6 +822,7 @@ function renderSkillsSummary(runners) {
     };
 
     const html = runners.map(r => {
+        // Initialize categories for each runner
         const categorizedSkills = {
             recovery: [],
             passive: [],
@@ -808,42 +831,49 @@ function renderSkillsSummary(runners) {
             detrimental: []
         };
 
-        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange'];
+        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique'];
 
         if (r.skills) {
             r.skills.forEach(skillName => {
-                const originalSkillType = skillTypes[skillName];
-                const skillType = (originalSkillType && originalSkillType.startsWith('a')) ? originalSkillType.substring(1) : originalSkillType || '';
+                const skillType = skillTypes[skillName];
+                if (!skillType) return; // Skip if skill is not in our definition object
 
-                if (skillType.endsWith('purple')) {
+                const parts = skillType.split('_');
+                const category = parts[0];
+                const type = parts[1];
+
+                // Categorize skills based on the parsed type string
+                if (type === 'detrimental') {
                     categorizedSkills.detrimental.push(skillName);
                 } 
-                else if ((skillType.endsWith('d') || skillType.endsWith('dg')) && skillType !== 'speed' && skillType !== 'allRounder' && skillType !== 'speedg') {
+                else if (type === 'debuff') {
                     categorizedSkills.debuff.push(skillName);
                 } 
-                else if (skillType.includes('recovery') || skillType === 'uniquer') {
+                else if (category === 'recovery' || (category === 'unique' && type === 'recovery')) {
                     categorizedSkills.recovery.push(skillName);
                 } 
-                else if (skillType.endsWith('p') || skillType.includes('allRounder')) {
+                else if (type === 'passive') {
                     categorizedSkills.passive.push(skillName);
                 } 
-                else if (speedCats.some(cat => skillType.startsWith(cat)) || skillType === 'uniques' || skillType === 'uniquea') {
+                else if (speedCats.includes(category)) {
                     categorizedSkills.speed.push(skillName);
                 }
             });
         }
-
+        
+        // Format each category cell with a count and the list of skills
         const recoveryCell = categorizedSkills.recovery.length > 0 ? `(<b>${categorizedSkills.recovery.length}</b>) ${formatSkillCell(categorizedSkills.recovery, 'recovery')}` : '';
         const passiveCell = categorizedSkills.passive.length > 0 ? `(<b>${categorizedSkills.passive.length}</b>) ${formatSkillCell(categorizedSkills.passive, 'passive')}` : '';
         const speedCell = categorizedSkills.speed.length > 0 ? `(<b>${categorizedSkills.speed.length}</b>) ${formatSkillCell(categorizedSkills.speed, 'speed')}` : '';
         const debuffCell = categorizedSkills.debuff.length > 0 ? `(<b>${categorizedSkills.debuff.length}</b>) ${formatSkillCell(categorizedSkills.debuff, 'debuff')}` : '';
         const detrimentalCell = categorizedSkills.detrimental.length > 0 ? `(<b>${categorizedSkills.detrimental.length}</b>) ${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}` : '';
 
+        // Return the complete HTML row for the runner
         return `
             <tr data-entry-id="${r.entry_id || ''}">
                 <td>${r.entry_id || 'N/A'}</td>
                 <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-                <td >${(r.score || 0).toLocaleString()}</td>
+                <td>${(r.score || 0).toLocaleString()}</td>
                 <td class="left-align spark-cell">${recoveryCell}</td>
                 <td class="left-align spark-cell">${passiveCell}</td>
                 <td class="left-align spark-cell">${speedCell}</td>
