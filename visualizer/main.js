@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const fs = require('fs').promises; // For async loadSkillTypes
-const fsSync = require('fs'); // For sync loadRunners
+const fs = require('fs').promises;
+const fsSync = require('fs');
 const { spawn } = require('child_process');
 
 function createWindow() {
@@ -22,16 +22,24 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('load-runners', loadRunners);
-  ipcMain.handle('load-skill-types', loadSkillTypes);
-  ipcMain.handle('load-ordered-skills', async () => {
+  ipcMain.handle('load-runners', async () => {
     try {
-      const filePath = path.join(__dirname, '../data', 'game_data', 'skills_ordered.json');
+    const filePath = path.join(__dirname, '../data', 'all_runners.json');
+    const data = fsSync.readFileSync(filePath, 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error("Failed to read or parse all_runners.json:", err);
+    return null;
+  }
+  });
+  ipcMain.handle('load-skills', async () => {
+    try {
+      const filePath = path.join(__dirname, '../data', 'game_data', 'skills.json');
       const data = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
       console.error('Failed to load skills_ordered.json:', error);
-      return null; // Return null on error
+      return null;
     }
   });
   ipcMain.handle('load-runner-skills', async () => {
@@ -144,24 +152,6 @@ app.on('window-all-closed', () => {
 
 // This is your original 'load-runners' handler, now as a named function
 function loadRunners() {
-  const jsonPath = path.join(__dirname, '../data', 'all_runners.json');
-  try {
-    const data = fsSync.readFileSync(jsonPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Failed to read or parse all_runners.json:", err);
-    return [];
-  }
-}
-
-// This is your 'loadSkillTypes' function
-async function loadSkillTypes() {
-  const skillTypesPath = path.join(__dirname, '..', 'data', 'game_data', 'skill_types.json');
-  try {
-    const data = await fs.readFile(skillTypesPath, 'utf-8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error('Error reading skill_types.json:', err);
-    return {}; // Return empty object on error
-  }
+  
+  
 }

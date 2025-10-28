@@ -912,6 +912,23 @@ td.spark-cell b { color: black; }
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
 }
 
+td.spark-cell .skill-unique b {
+    color: inherit;
+    font-weight: 600;
+}
+
+/* For GOLD skills in LIGHT mode, we set a specific dark gold for readability. */
+td.spark-cell .skill-gold b {
+    color: #FFC107; /* A darker, readable gold for light backgrounds */
+    font-weight: 600;
+}
+
+/* For GOLD skills in DARK mode, we override with a brighter gold. */
+.dark-mode td.spark-cell .skill-gold b {
+    color: #FFC107; /* A bright, vibrant gold for dark backgrounds */
+    font-weight: 600;
+}
+
 .modal-stat-content {
   display: flex;
   flex-direction: row;

@@ -613,25 +613,102 @@ def main():
         for worker in workers: worker.join()
 
     logger.info(f"All background processing complete. Collected {len(final_results)} results.")
+
+    # Load skill data needed for formatting BEFORE calling update_all_runners
+    skill_order_map: Dict[str, int] = {}
+    runner_unique_skills: Dict[str, list] = {}
+    try:
+        skills_path = os.path.join(BASE_DIR, 'data', 'game_data', 'skills.json')
+        runner_skills_path = os.path.join(BASE_DIR, 'data', 'game_data', 'runner_skills.json')
+
+        with open(skills_path, 'r', encoding='utf-8') as f:
+            skills_data = json.load(f) # skills_data is a dict {"Skill Name": "type"}
+        with open(runner_skills_path, 'r', encoding='utf-8') as f:
+            runner_unique_skills = json.load(f)
+        
+        # Build the order map from the keys of the skills dict
+        skill_order_map = {skill_name: i for i, skill_name in enumerate(skills_data.keys())}
+        logger.info("Successfully loaded skills data for formatting.")
+
+    except FileNotFoundError:
+        logger.warning("Skill ordering files (skills.json/runner_skills.json) not found. Skills will not be sorted during update.")
+    except Exception as e:
+        logger.error(f"Failed to load skill data for formatting: {e}")
+        
     # Step 3: Move processed folders to the completed directory.
     _move_processed_folders(processed_folder_names)
     # Step 4: Create a DataFrame from the results and update the main data file.
     new_runners_df = _create_new_runners_dataframe(final_results)
     if not new_runners_df.empty:
-        update_all_runners(new_runners_df)
+        update_all_runners(new_runners_df, runner_unique_skills, skill_order_map)
 
     # If conflicts were detected during data updates, launch the conflict resolver tool.
     conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
-    if os.path.exists(conflicts_file):
-        with open(conflicts_file, 'r') as f:
+
+    run_resolver = False
+    try:
+        # Check if the file exists AND is not empty "[]"
+        if os.path.exists(conflicts_file) and os.path.getsize(conflicts_file) > 2: # Check size > 2
+             with open(conflicts_file, 'r', encoding='utf-8') as f:
+                 content = f.read().strip()
+                 # Check content is not just empty brackets
+                 if content and content != '[]':
+                     try:
+                         # Verify it's valid JSON and contains data
+                         if json.loads(content):
+                              run_resolver = True
+                     except json.JSONDecodeError:
+                          logger.error(f"{os.path.basename(conflicts_file)} is corrupted.")
+                          run_resolver = False # Don't run if corrupted
+
+    except IOError as e:
+         logger.error(f"Error checking conflicts file: {e}")
+    except Exception as e:
+         logger.error(f"Unexpected error checking conflicts file status: {e}")
+
+
+    if run_resolver:
+        logger.info("Conflicts detected. Launching conflict resolver GUI...")
+        try:
+            resolver_script_path = os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')
+            subprocess.run([sys.executable, resolver_script_path], check=True) # Added check=True
+            logger.info("Conflict resolver finished.")
+
+            # --- ADDED: Clean up conflicts.json IF resolver emptied it ---
             try:
-                if json.load(f):
-                    logger.info("Conflicts detected. Launching conflict resolver GUI...")
-                    subprocess.run([sys.executable, os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')])
-                else:
-                    logger.info("No conflicts to resolve.")
-            except (json.JSONDecodeError, FileNotFoundError):
-                logger.info("No conflicts file found or it is empty. Skipping resolver.")
+                if os.path.exists(conflicts_file):
+                    with open(conflicts_file, 'r', encoding='utf-8') as f:
+                        content_after = f.read().strip()
+                    # If resolver left it empty, remove it
+                    if content_after == '[]':
+                        os.remove(conflicts_file)
+                        logger.info(f"Removed empty {os.path.basename(conflicts_file)} after resolution.")
+            except (IOError, OSError, json.JSONDecodeError) as e:
+                 logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
+            # --- END ADDED ---
+
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Conflict resolver script failed with exit code {e.returncode}.")
+        except FileNotFoundError:
+             logger.error("Conflict resolver script not found.")
+        except Exception as e:
+             logger.error(f"Error running conflict resolver: {e}")
+    else:
+        # --- This 'else' block runs if no resolver was needed ---
+        logger.info("No unresolved conflicts found.")
+        # --- ADDED: Ensure empty file is removed if no resolver was needed ---
+        try:
+             # Check if the file exists (it might not if data_updater found no conflicts)
+             if os.path.exists(conflicts_file):
+                 with open(conflicts_file, 'r', encoding='utf-8') as f:
+                      content = f.read().strip()
+                 # If it exists but is empty, remove it
+                 if content == '[]':
+                      os.remove(conflicts_file)
+                      logger.info(f"Removed empty {os.path.basename(conflicts_file)} as no conflicts were found.")
+        except (IOError, OSError, json.JSONDecodeError) as e:
+             logger.warning(f"Could not check or remove empty conflicts file when no conflicts were found: {e}")
+        # --- END ADDED ---
 
     logger.info("Processing finished successfully!")
 

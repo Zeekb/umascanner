@@ -1,10 +1,15 @@
 import pandas as pd
 import os
 import json
+from typing import Dict, List
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-def format_json_with_custom_layout(all_runners_data: list) -> str:
+def format_json_with_custom_layout(
+    all_runners_data: List[dict], 
+    runner_unique_skills: Dict[str, list], 
+    skill_order_map: Dict[str, int]
+) -> str:
     """
     Custom JSON formatter that creates a highly readable, grouped, and semi-compact output.
     - Sorts skills canonically with the unique skill first.
@@ -12,17 +17,6 @@ def format_json_with_custom_layout(all_runners_data: list) -> str:
     - Formats the 'skills' array into a two-column layout.
     - Keeps the 'sparks' objects compact.
     """
-    try:
-        with open(os.path.join(BASE_DIR, 'data', 'game_data', 'skills_ordered.json'), 'r', encoding='utf-8') as f:
-            ordered_skills = json.load(f)
-        with open(os.path.join(BASE_DIR, 'data', 'game_data', 'runner_skills.json'), 'r', encoding='utf-8') as f:
-            runner_unique_skills = json.load(f)
-        skill_order_map = {skill: i for i, skill in enumerate(ordered_skills)}
-    except FileNotFoundError:
-        print("Warning: Skill ordering files not found. Skills will not be sorted.")
-        skill_order_map = {}
-        runner_unique_skills = {}
-
 
     def build_line(runner_dict, keys):
         parts = []
@@ -105,7 +99,11 @@ def format_json_with_custom_layout(all_runners_data: list) -> str:
     return "[\n" + ",\n".join(output_parts) + "\n]\n"
     
 
-def update_all_runners(new_runners_df: pd.DataFrame):
+def update_all_runners(
+    new_runners_df: pd.DataFrame,
+    runner_unique_skills: Dict[str, list], # Add parameter
+    skill_order_map: Dict[str, int]        # Add parameter
+):
     """
     Reads existing all_runners.json, detects conflicts, and updates the file
     with only non-conflicting new entries using a custom layout.
@@ -152,22 +150,40 @@ def update_all_runners(new_runners_df: pd.DataFrame):
         if new_runners_df.empty:
             print("All new entries have conflicts. 'all_runners.json' will not be updated until resolved.")
             return
+    else:
+        # --- This is the new 'else' block ---
+        print("No conflicts detected.")
+        new_runners_df_filtered = new_runners_df # Use all new entries if no conflicts
+        # Optionally: Ensure conflicts file is deleted if it exists from a previous run
+        try:
+            if os.path.exists(conflicts_file):
+                 os.remove(conflicts_file)
+                 print(f"Removed existing empty or resolved {os.path.basename(conflicts_file)}.")
+        except OSError as e:
+             print(f"Error removing existing conflicts file: {e}")
 
-    updated_hashes = new_runners_df['entry_hash'].tolist()
+    updated_hashes = new_runners_df_filtered['entry_hash'].tolist()
     if not existing_df.empty:
         existing_df = existing_df[~existing_df['entry_hash'].isin(updated_hashes)]
 
-    combined_df = pd.concat([existing_df, new_runners_df], ignore_index=True)
+    combined_df = pd.concat([existing_df, new_runners_df_filtered], ignore_index=True)
     combined_df['entry_id'] = pd.to_numeric(combined_df['entry_id'])
     combined_df = combined_df.sort_values(by="entry_id").reset_index(drop=True)
     combined_df['entry_id'] = combined_df['entry_id'].astype(str)
 
+    
+    combined_df = pd.concat([existing_df, new_runners_df_filtered], ignore_index=True)
     # Use the new custom formatter
     final_data_list = combined_df.to_dict(orient='records')
-    # Make sure to use the new function name here!
-    formatted_json_string = format_json_with_custom_layout(final_data_list)
+
+    # Pass the maps to the formatter function
+    formatted_json_string = format_json_with_custom_layout(
+        final_data_list, 
+        runner_unique_skills, 
+        skill_order_map 
+    )
     
     with open(output_file, 'w', encoding='utf-8') as f:
         f.write(formatted_json_string)
 
-    print(f"Successfully updated {output_file} with {len(new_runners_df)} new/updated entries.")
+    print(f"Successfully updated {output_file} with {len(new_runners_df_filtered)} new/updated entries.")

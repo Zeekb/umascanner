@@ -3,7 +3,7 @@ let blueSparkNames = [];
 let greenSparkNames = [];
 let pinkSparkNames = [];
 let whiteSparkNames = [];
-let skillTypes = {};
+let skillData = {};
 let orderedSkills = [];
 let runnerUniqueSkills = {};
 let orderedSparks = {};
@@ -103,21 +103,24 @@ function setupDarkMode() {
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // MODIFICATION: Removed affinityData from destructuring and the API call
-        const [allRunnersData, skillTypesData, orderedSkillsData, runnerUniqueSkillsData, orderedSparksData] = await Promise.all([
+        // --- CORRECTED DATA LOADING ---
+        // 1. We now only call `loadSkills()` for all skill-related data.
+        // 2. The destructuring assignment correctly matches the API calls.
+        const [allRunnersData, loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
             window.api.loadRunners(),
-            window.api.loadSkillTypes(),
-            window.api.loadOrderedSkills(),
-            window.api.loadRunnerSkills(),
+            window.api.loadSkills(),       // Loads the new skills.json
+            window.api.loadRunnerSkills(), // Loads unique skill assignments
             window.api.loadOrderedSparks(),
-            // window.api.loadAffinityData() // Affinity calculator
         ]);
+
         allRunners = allRunnersData;
-        skillTypes = skillTypesData;
-        orderedSkills = orderedSkillsData;
-        runnerUniqueSkills = runnerUniqueSkillsData;
-        orderedSparks = orderedSparksData;
-        // affinityData = affinityDataResult; // Affinity calculator - This line is removed
+        skillData = loadedSkillData || {}; // This is our main object: { "Skill Name": "skill_type", ... }
+        runnerUniqueSkills = uniqueSkillsData || {};
+        orderedSparks = loadedOrderedSparks;
+
+        // 3. DERIVE the list of skill names from the keys of the loaded skill data.
+        //    This replaces the need for a separate orderedSkills.json file.
+        orderedSkills = Object.keys(skillData).sort();
 
         if (!allRunners || allRunners.length === 0) {
             console.warn("No runner data loaded.");
@@ -158,23 +161,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        /* // Affinity calculator
-        if (affinityData) {
-            affinityData.forEach(pair => {
-                const cleanC1 = cleanName(pair.chara1_name);
-                const cleanC2 = cleanName(pair.chara2_name);
-                
-                affinityMap.set(`${cleanC1}-${cleanC2}`, pair.affinity_score);
-                affinityMap.set(`${cleanC2}-${cleanC1}`, pair.affinity_score);
-            });
-        }
-        */
-
         extractSparkNames();
         populateFilters();
-        // populateAffinityDropdowns(); // Affinity calculator
+        
         const firstSkillRow = document.querySelector('.skill-filters');
         if (firstSkillRow) {
+            // The `orderedSkills` variable is now correctly populated for the filter.
             createSearchableSelect(firstSkillRow.querySelector('.skill-name-input'), orderedSkills);
         }
         setupEventListeners();
@@ -757,7 +749,7 @@ function calculateAffinity(traineeName, parent1EntryId, parent2EntryId) {
 
 /**
  * Renders a summary table of skills for a list of runners.
- * Assumes skillTypes object uses the 'category_type_tier' or 'category_type_subtype_tier' naming convention.
+ * Assumes skillData object uses the 'category_type_tier' or 'category_type_subtype_tier' naming convention.
  * e.g., "speed_active_gold", "stamina_detrimental_passive_normal", "unique_recovery_normal"
  */
 function renderSkillsSummary(runners) {
@@ -777,17 +769,15 @@ function renderSkillsSummary(runners) {
             return '';
         }
         
-        // Sort skills: Gold > Unique > Normal. Alphabetical within each tier.
+        // --- UPDATED SORTING LOGIC ---
+        // Sorts skills: Gold > Unique > Normal. Alphabetical within each tier.
         skillsArray.sort((a, b) => {
             const getPriority = (skillName) => {
-                const type = skillTypes[skillName] || '';
-                const parts = type.split('_');
-                const skillCategory = parts[0];
-                const skillTier = parts[parts.length - 1];
-
-                if (skillTier === 'gold') return 0;      // Highest priority
-                if (skillCategory === 'unique') return 1; // Second priority
-                return 2;                                // Default priority
+                // Use the new, descriptive type from `skillData`
+                const type = skillData[skillName] || '';
+                if (type.endsWith('_gold')) return 0;   // Highest priority
+                if (type.startsWith('unique_')) return 1; // Second priority
+                return 2;                             // Default priority
             };
 
             const priorityA = getPriority(a);
@@ -797,32 +787,33 @@ function renderSkillsSummary(runners) {
                 return priorityA - priorityB;
             }
             
-            // Fallback to alphabetical sort if priorities are the same
             return a.localeCompare(b);
         });
 
-        // Map sorted skills to their HTML representation
+        // --- UPDATED STYLING LOGIC ---
         return skillsArray.map(skillName => {
-            const skillType = skillTypes[skillName] || '';
-            const parts = skillType.split('_');
-            const skillCategory = parts[0];
-            const skillTier = parts[parts.length - 1];
-            
-            let content = formatSkillName(skillName); // Assumes formatSkillName() exists
-            const className = `skill-${category}`;
-            
-            if (skillTier === 'gold') {
-                content = `<b class="skill-gold">${content}</b>`;
-            } else if (skillCategory === 'unique') {
-                content = `<span class="skill-unique">${content}</span>`;
-            }
+            const skillType = skillData[skillName] || '';
+            let content = formatSkillName(skillName);
+            const baseClassName = `skill-${category}`;
+            let tierClassName = '';
 
-            return `<span class="${className}">${content}</span>`;
+            // --- FIX IS HERE ---
+            if (skillType.endsWith('_gold')) {
+                tierClassName = 'skill-gold';
+                // We now wrap the content in a <b> tag for boldness
+                content = `<b>${content}</b>`; 
+            } else if (skillType.startsWith('unique_')) {
+                tierClassName = 'skill-unique';
+                 // Unique skills should also be bold
+                content = `<b>${content}</b>`;
+            }
+            
+            const combinedClassName = tierClassName ? `${baseClassName} ${tierClassName}` : baseClassName;
+            return `<span class="${combinedClassName}">${content}</span>`;
         }).join(', ');
     };
 
     const html = runners.map(r => {
-        // Initialize categories for each runner
         const categorizedSkills = {
             recovery: [],
             passive: [],
@@ -831,44 +822,39 @@ function renderSkillsSummary(runners) {
             detrimental: []
         };
 
-        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique'];
+        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
 
         if (r.skills) {
             r.skills.forEach(skillName => {
-                const skillType = skillTypes[skillName];
-                if (!skillType) return; // Skip if skill is not in our definition object
+                const skillType = skillData[skillName]; // Use the new skillData object
+                if (!skillType) return;
 
                 const parts = skillType.split('_');
                 const category = parts[0];
-                const type = parts[1];
+                const type = parts.length > 1 ? parts[1] : '';
 
-                // Categorize skills based on the parsed type string
-                if (type === 'detrimental') {
+                // --- UPDATED CATEGORIZATION LOGIC ---
+                // This logic is more robust because it checks for keywords in the new type string.
+                if (skillType.includes('detrimental')) {
                     categorizedSkills.detrimental.push(skillName);
-                } 
-                else if (type === 'debuff') {
+                } else if (skillType.includes('debuff')) {
                     categorizedSkills.debuff.push(skillName);
-                } 
-                else if (category === 'recovery' || (category === 'unique' && type === 'recovery')) {
+                } else if (category === 'recovery' || skillType.startsWith('unique_recovery')) {
                     categorizedSkills.recovery.push(skillName);
-                } 
-                else if (type === 'passive') {
+                } else if (type === 'passive') {
                     categorizedSkills.passive.push(skillName);
-                } 
-                else if (speedCats.includes(category)) {
+                } else if (speedCats.includes(category)) {
                     categorizedSkills.speed.push(skillName);
                 }
             });
         }
-        
-        // Format each category cell with a count and the list of skills
+
         const recoveryCell = categorizedSkills.recovery.length > 0 ? `(<b>${categorizedSkills.recovery.length}</b>) ${formatSkillCell(categorizedSkills.recovery, 'recovery')}` : '';
         const passiveCell = categorizedSkills.passive.length > 0 ? `(<b>${categorizedSkills.passive.length}</b>) ${formatSkillCell(categorizedSkills.passive, 'passive')}` : '';
         const speedCell = categorizedSkills.speed.length > 0 ? `(<b>${categorizedSkills.speed.length}</b>) ${formatSkillCell(categorizedSkills.speed, 'speed')}` : '';
         const debuffCell = categorizedSkills.debuff.length > 0 ? `(<b>${categorizedSkills.debuff.length}</b>) ${formatSkillCell(categorizedSkills.debuff, 'debuff')}` : '';
         const detrimentalCell = categorizedSkills.detrimental.length > 0 ? `(<b>${categorizedSkills.detrimental.length}</b>) ${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}` : '';
 
-        // Return the complete HTML row for the runner
         return `
             <tr data-entry-id="${r.entry_id || ''}">
                 <td>${r.entry_id || 'N/A'}</td>
@@ -1574,14 +1560,14 @@ function showDetailModal(runner) {
     if (runnerSkills.length > 0) {
         const sortedSkills = [...runnerSkills];
         sortedSkills.forEach((skillName, index) => {
-            const skillType = skillTypes[skillName] || null;
+            const skillType = skillData[skillName] || null;
             let itemClass = 'modal-skill-item';
             if (skillType) {
                 const uniqueSkillName = runnerUniqueSkills[runner.name];
                 if (skillType.startsWith('unique') && index === 0) {
                     itemClass += ' unique';
-                } else if (skillType.endsWith('g')) {
-                    itemClass += ' gold';
+                } else if (skillType.endsWith('_gold')) { 
+                itemClass += ' gold';
                 }
             }
             const iconPath = skillType ? `../assets/skill_icons/${skillType}.png` : '';
