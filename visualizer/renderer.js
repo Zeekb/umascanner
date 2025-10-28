@@ -537,6 +537,8 @@ function setupEventListeners() {
         });
     });
 
+    parentSummaryBody.addEventListener('click', handleDeleteRunner);
+
     // setupAffinityCalculatorListeners(); // Affinity calculator
 
     [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => {
@@ -837,6 +839,7 @@ function renderParentSummary(runners, allSparkCriteria) {
             <td>${whiteDisplay}</td>
             <td class="${gp1Class}">${cleanName(r.gp1 || 'N/A')}</td>
             <td class="${gp2Class}">${cleanName(r.gp2 || 'N/A')}</td>
+            <td><button class="delete-button" data-entry-id="${r.entry_id}">Transfer</button></td>
         </tr>
     `}).join('');
     parentSummaryBody.innerHTML = html;
@@ -932,6 +935,51 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
    `}).join('');
    whiteSparksBody.innerHTML = html;
    hideEntryIdColumn('white-sparks');
+}
+
+async function handleDeleteRunner(event) {
+    if (!event.target.classList.contains('delete-button')) {
+        return; // Only act on delete buttons
+    }
+
+    const entryId = event.target.dataset.entryId;
+    const runner = allRunners.find(r => String(r.entry_id) === String(entryId));
+
+    if (!runner) {
+        console.error(`Runner with entry_id ${entryId} not found.`);
+        return;
+    }
+
+    const confirmation = confirm(`Are you sure you want to delete runner ${runner.name} ${runner.score}? This action cannot be undone.`);
+
+    if (confirmation) {
+        // Filter out the runner to be deleted
+        allRunners = allRunners.filter(r => String(r.entry_id) !== String(entryId));
+
+        try {
+            // Send the updated list to the main process to save
+            const result = await window.api.saveRunners(allRunners);
+            
+            // This 'if' handles the 'resolve' from main.js
+            if (result.success) { 
+                console.log(`Runner ${entryId} deleted and file saved: ${result.message}`);
+                // Re-render the table with the updated data
+                filterAndRender();
+                showTimedMessage(`Runner ${runner.name} ${runner.score} deleted.`);
+            } else {
+                // This is a fallback, though errors should ideally 'reject'
+                console.error("Failed to save runners:", result.error); 
+                allRunners.push(runner); // Add it back
+                alert(`Error saving changes: ${result.error}`);
+            }
+        } catch (error) { 
+            // This 'catch' block will handle the 'reject' from main.js
+            console.error("IPC error or Python script failed:", error);
+            // Revert the in-memory change if save failed
+            allRunners.push(runner);
+            alert(`Error saving changes: ${error.message}`);
+        }
+    }
 }
 
 function handleDetailView(event) {

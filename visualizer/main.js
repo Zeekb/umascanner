@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs').promises; // For async loadSkillTypes
 const fsSync = require('fs'); // For sync loadRunners
+const { spawn } = require('child_process');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -63,6 +64,67 @@ app.whenReady().then(() => {
       return null; // Return null on error
     }
   });
+  ipcMain.handle('save-runners', async (event, runnersData) => {
+  // Assumes 'python' or 'python3' is in the system's PATH.
+  // You may need to change 'python' to 'python3' depending on your system.
+  const pythonExecutable = 'python'; 
+
+  // Path to the new helper script
+  const scriptPath = path.join(__dirname, '..', 'image processor', 'save_formatted_json.py');
+
+  // Convert the runner data from a JS object to a JSON string
+  const dataString = JSON.stringify(runnersData);
+
+  // Return a Promise that resolves/rejects based on the Python script's exit
+  return new Promise((resolve, reject) => {
+
+    // Spawn the python process
+    const pyProcess = spawn(pythonExecutable, [scriptPath], {
+        // Set the Current Working Directory to the script's location
+        // so it can correctly import 'data_updater'
+        cwd: path.join(__dirname, '..', 'image processor'),
+        stdio: ['pipe', 'pipe', 'pipe'], // stdin, stdout, stderr
+        env: { ...process.env, PYTHONIOENCODING: 'UTF-8' }
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    pyProcess.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+
+    pyProcess.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+
+    // Handle the script's exit
+    pyProcess.on('close', (code) => {
+      if (code === 0) {
+        // Success
+        console.log(`Python script stdout: ${stdout}`);
+        resolve({ success: true, message: stdout });
+      } else {
+        // Failure
+        console.error(`Python script exited with code ${code}`);
+        console.error(`Python script stderr: ${stderr}`);
+        // Reject the promise, which will be caught by renderer.js
+        reject(new Error(`Save failed (Python script error): ${stderr}`));
+      }
+    });
+
+    // Handle errors in spawning the process itself
+    pyProcess.on('error', (err) => {
+        console.error('Failed to start Python process:', err);
+        reject(new Error(`Failed to start Python process: ${err.message}`));
+    });
+
+    // Write the JSON data string to the Python script's standard input
+    pyProcess.stdin.write(dataString, 'utf-8');
+    pyProcess.stdin.end();
+  });
+});
+
   createWindow();
 
   app.on('activate', () => {

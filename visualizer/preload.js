@@ -6,5 +6,6 @@ contextBridge.exposeInMainWorld('api', {
   loadOrderedSkills: () => ipcRenderer.invoke('load-ordered-skills'),
   loadRunnerSkills: () => ipcRenderer.invoke('load-runner-skills'),
   loadAffinityData: () => ipcRenderer.invoke('load-affinity-data'),
-  loadOrderedSparks: () => ipcRenderer.invoke('load-ordered-sparks')
+  loadOrderedSparks: () => ipcRenderer.invoke('load-ordered-sparks'),
+  saveRunners: (runnersData) => ipcRenderer.invoke('save-runners', runnersData)
 });

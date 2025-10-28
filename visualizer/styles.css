@@ -536,6 +536,19 @@ th:not(:last-child),
 td:not(:last-child) {
   border-right: 1px solid var(--dark-uma-border-color);
 }
+.delete-button {
+    background-color: #71d71c;
+    color: white;
+    border: 1px solid #539e16;
+    border-radius: 4px;
+    padding: 2px 6px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+.delete-button:hover {
+    background-color: #539e16;
+}
 
 thead {
   z-index: 2; 
