@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>UmaCyclopedia</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="uploader-container" class="app-container" style="padding: 40px; text-align: center;">
+        <h2>UmaScanner Web Visualizer</h2>
+        <p>Please upload your <strong>all_runners.json</strong> file to begin.</p>
+        <input type="file" id="file-input" accept=".json">
+        <button id="load-data-button" style="padding: 10px 20px; margin-left: 10px;">Load Data</button>
+        <p id="loading-message" style="display: none; margin-top: 20px;">Loading...</p>
+        <p id="error-message" style="display: none; color: red; margin-top: 20px;"></p>
+    </div>
+
+    <div id="app-wrapper" class="app-container" style="display: none;">
+        
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
+            <button class="tab-button" data-tab="white-sparks">White Sparks</button>
+            <button class="tab-button" data-tab="skills-summary">Skill Summary</button>
+            
+            <button id="dark-mode-toggle" title="Toggle Dark Mode">
+                <span id="dark-mode-icon">🌙</span>
+            </button>
+        </div>
+
+        <div class="filter-panel">
+            <div class="filter-top-row">
+                </div>
+            <div id="aptitude-filters" class="filter-section">
+                </div>
+            <div class="filter-group-container">
+                </div>
+            <div id="skill-filters-container" class="filter-section">
+                </div>
+
+        </div>
+
+        <div class="table-container">
+            <div id="parent-summary" class="tab-content active">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Spd</th>
+                            <th>Stm</th>
+                            <th>Pow</th>
+                            <th>Gts</th>
+                            <th>Wit</th>
+                            <th>Blue</th>
+                            <th>Green</th>
+                            <th>Pink</th>
+                            <th>White</th>
+                            <th>GP1</th>
+                            <th>GP2</th>
+                            </tr>
+                    </thead>
+                    <tbody id="parent-summary-body"></tbody>
+                </table>
+            </div>
+
+            <div id="white-sparks" class="tab-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Total</th>
+                            <th>Parent</th>
+                            <th>GP1 Name</th>
+                            <th>GP1 Skills</th>
+                            <th>GP2 Name</th>
+                            <th>GP2 Skills</th>
+                        </tr>
+                    </thead>
+                    <tbody id="white-sparks-body"></tbody>
+                </table>
+            </div>
+
+            <div id="skills-summary" class="tab-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Score</th>
+                            <th>Recovery</th>
+                            <th>Passive</th>
+                            <th>Speed</th>
+                            <th>Debuff</th>
+                            <th>Detrimental</th>
+                        </tr>
+                    </thead>
+                    <tbody id="skills-summary-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
