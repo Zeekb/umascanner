@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 3. DERIVE the list of skill names from the keys of the loaded skill data.
         //    This replaces the need for a separate orderedSkills.json file.
-        orderedSkills = Object.keys(skillData).sort();
+        orderedSkills = Object.keys(skillData);
 
         if (!allRunners || allRunners.length === 0) {
             console.warn("No runner data loaded.");
@@ -375,8 +375,17 @@ function extractSparkNames() {
     } else {
         pinkSparkNames = [...extracted.pink].sort();
     }
-    greenSparkNames = [...extracted.green].sort();
-    whiteSparkNames = [...extracted.white].sort();
+    if (orderedSparks?.green && Array.isArray(orderedSparks.green)) {
+        greenSparkNames = orderedSparks.green.filter(name => extracted.green.has(name));
+    } else {
+        greenSparkNames = [...extracted.green].sort();
+    }
+    if (orderedSparks?.white && Array.isArray(orderedSparks.white.race) && Array.isArray(orderedSparks.white.skill)) {
+        const orderedWhiteSparks = [...orderedSparks.white.race, ...orderedSparks.white.skill];
+        whiteSparkNames = orderedWhiteSparks.filter(name => extracted.white.has(name));
+    } else {
+        whiteSparkNames = [...extracted.white].sort();
+    }
 }
 
 function populateFilters() {

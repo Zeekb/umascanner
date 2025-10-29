@@ -5,8 +5,13 @@ const fsSync = require('fs');
 const { spawn } = require('child_process');
 
 const isPackaged = app.isPackaged;
-const basePath = isPackaged ? path.dirname(app.getPath('exe')) : path.join(__dirname, '..', '..');
-const dataFilePath = path.join(basePath, 'data', 'all_runners.json');
+
+// Define a single root for the 'data' directory, handling both packaged and dev environments
+const dataDir = isPackaged
+  ? path.join(process.resourcesPath, 'data')
+  : path.join(__dirname, '..', 'data');
+
+const dataFilePath = path.join(dataDir, 'all_runners.json');
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -28,27 +33,29 @@ function createWindow() {
 app.whenReady().then(() => {
   ipcMain.handle('load-runners', async () => {
     try {
-    const data = fsSync.readFileSync(dataFilePath, 'utf-8');
-    console.log(`Loading runners from: ${dataFilePath}`); // Optional: for debugging
-    return JSON.parse(data);
-  } catch (err) {
-    console.error(`Failed to read or parse runners file at ${dataFilePath}:`, err);
-    return [];
-  }
+      const data = fsSync.readFileSync(dataFilePath, 'utf-8');
+      console.log(`Loading runners from: ${dataFilePath}`); // Optional: for debugging
+      return JSON.parse(data);
+    } catch (err) {
+      console.error(`Failed to read or parse runners file at ${dataFilePath}:`, err);
+      return [];
+    }
   });
+
   ipcMain.handle('load-skills', async () => {
     try {
-      const filePath = path.join(__dirname, '../data', 'game_data', 'skills.json');
+      const filePath = path.join(dataDir, 'game_data', 'skills.json');
       const data = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
-      console.error('Failed to load skills_ordered.json:', error);
+      console.error('Failed to load skills.json:', error);
       return null;
     }
   });
+
   ipcMain.handle('load-runner-skills', async () => {
     try {
-      const filePath = path.join(__dirname, '../data', 'game_data', 'runner_skills.json');
+      const filePath = path.join(dataDir, 'game_data', 'runner_skills.json');
       const data = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
@@ -56,9 +63,10 @@ app.whenReady().then(() => {
       return null; // Return null on error
     }
   });
+
   ipcMain.handle('load-ordered-sparks', async () => {
     try {
-      const filePath = path.join(__dirname, '../data', 'game_data', 'sparks.json');
+      const filePath = path.join(dataDir, 'game_data', 'sparks.json');
       const data = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
@@ -66,9 +74,10 @@ app.whenReady().then(() => {
       return null; // Return null on error
     }
   });
+
   ipcMain.handle('load-affinity-data', async () => {
     try {
-      const filePath = path.join(__dirname, '../data', 'game_data', 'runner_affinity.json');
+      const filePath = path.join(dataDir, 'game_data', 'runner_affinity.json');
       const data = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(data);
     } catch (error) {
