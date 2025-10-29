@@ -355,8 +355,17 @@ function setupDarkMode() {
 }
 
 function createSearchableSelect(inputElement, optionsArray) {
-    const container = inputElement.parentElement;
+    const container = inputElement.closest('.searchable-select-container');
+    if (!container) {
+        console.error("Could not find a '.searchable-select-container' for input:", inputElement);
+        return;
+    }
+
     const optionsContainer = container.querySelector('.options-container');
+    if (!optionsContainer) {
+        console.error("Could not find an '.options-container' within:", container);
+        return;
+    }
 
     const populateOptions = (filter = '') => {
         const lowerCaseFilter = filter.toLowerCase();
@@ -640,16 +649,8 @@ function addSparkFilterRow() {
     createSearchableSelect(newRow.querySelector('[id^="filter-green-spark"]'), greenSparkNames);
     createSearchableSelect(newRow.querySelector('[id^="filter-pink-spark"]'), pinkSparkNames);
     createSearchableSelect(newRow.querySelector('[id^="filter-white-spark"]'), whiteSparkNames);
+
     newRow.querySelectorAll('select').forEach(el => el.addEventListener('change', filterAndRender));
-    
-    newRow.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-        const newId = `${cb.id}-${sparkFilterCounter}`;
-        const label = newRow.querySelector(`label[for="${cb.id}"]`);
-        if (label) {
-            label.htmlFor = newId;
-        }
-        cb.id = newId;
-    });
 
     updateSparkCountDropdown(newRow.querySelector('[id^="min-blue"]'), 9);
     updateSparkCountDropdown(newRow.querySelector('[id^="min-green"]'), 3);
