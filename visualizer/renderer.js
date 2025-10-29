@@ -1119,7 +1119,7 @@ function handleDetailView(event) {
         const targetRunner = findRunnerByDetails(runnerNameForLookup, sparksToFind); 
         
         if (targetRunner) {
-            showDetailModal(targetRunner);
+            showDetailModal(targetRunner, runnerNameForLookup);
         } else {
             console.warn(`Runner named "${runnerNameForLookup}" not found in allRunners with matching sparks.`);
             showTimedMessage("Could not find entry");
@@ -1455,7 +1455,7 @@ function formatSparks(runner, color, allSparkCriteria) {
     return parts.join(' ') || '';
 }
 
-function showDetailModal(runner) {
+function showDetailModal(runner, displayName) {
     const existingModal = document.getElementById('detail-modal-overlay');
     if (existingModal) existingModal.remove();
     const overlay = document.createElement('div');
@@ -1469,8 +1469,23 @@ function showDetailModal(runner) {
     modal.id = 'detail-modal';
     const header = document.createElement('div');
     header.className = 'modal-header';
+    
+    let nameForImage;
+    if (displayName) {
+        nameForImage = displayName;
+    } else {
+        const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
+        if (!hasGreenParentSpark) {
+            nameForImage = runner.name + ' c';
+        } else {
+            nameForImage = runner.name;
+        }
+    }
+    nameForImage = nameForImage || 'N/A';
+    
     const runnerName = runner.name || 'N/A';
-    const runnerImgName = runnerName.replace(/ /g, '_');
+
+    const runnerImgName = nameForImage.trim().replace(/ /g, '_');
     const runnerImgPath = `../assets/profile_images/${runnerImgName}.png`;
     const score = runner.score || 0;
     const rankGrade = calculateRank(score);
@@ -1843,7 +1858,7 @@ function findRunnerByDetails(name, gpSparksArray) {
         return null;
     }
 
-    const cacheKey = `${name}-${JSON.stringify(gpSparksArray)}`; 
+    const cacheKey = `${name}-${JSON.stringify(gpSparksArray)}`;
     if (gpExistenceCache.has(cacheKey)) {
         return gpExistenceCache.get(cacheKey);
     }
@@ -1863,25 +1878,33 @@ function findRunnerByDetails(name, gpSparksArray) {
         gpExistenceCache.set(cacheKey, null);
         return null;
     }
-    
-    let foundRunner = allRunners.find(runner => {
-        if (runner.name === name) {
-            if (!runner.sparks?.parent) return false;
-            const parentSparksString = createComparableString(runner.sparks.parent);
-            return parentSparksString === gpSparksString;
-        }
-        return false;
-    });
 
-    if (!foundRunner) {
-        const cleanedName = cleanName(name);
-        foundRunner = allRunners.find(runner => {
-            if (cleanName(runner.name) !== cleanedName) return false;
-            if (!runner.sparks?.parent) return false;
-            const parentSparksString = createComparableString(runner.sparks.parent);
-            return parentSparksString === gpSparksString;
-        });
-    }
+    const isCVersionLookup = name.endsWith(' c');
+    const baseName = cleanName(name);
+
+    const foundRunner = allRunners.find(runner => {
+        if (runner.name !== baseName) {
+            return false;
+        }
+
+        const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
+
+        if (isCVersionLookup) {
+            if (hasGreenParentSpark) {
+                return false; // This is not a 'c' version entry, skip
+            }
+        } else {
+            // This is a special case for grandparents that are not c-versions but also dont have green sparks (e.g. Maruzensky)
+            // if (!hasGreenParentSpark) {
+            //     return false; // This is a 'c' version entry, but we are looking for a base version, skip
+            // }
+        }
+
+        // Now that we have a potential match based on name and 'c' version, compare sparks
+        if (!runner.sparks?.parent) return false;
+        const parentSparksString = createComparableString(runner.sparks.parent);
+        return parentSparksString === gpSparksString;
+    });
 
     const result = foundRunner || null;
     gpExistenceCache.set(cacheKey, result);
