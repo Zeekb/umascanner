@@ -823,6 +823,24 @@ td.spark-cell b { color: black; }
   position: relative;
   display: inline-block;
 }
+.modal-rank-grade.rank-fix-C,
+.modal-rank-grade.rank-fix-G {
+  left: -3px; 
+}
+
+/* 'S' can sometimes feel a bit off, too */
+.modal-rank-grade.rank-fix-S {
+  left: -1px;
+}
+
+/* 'A', 'B', 'D', 'E', 'F' have flat left edges and are fine by default */
+.modal-rank-grade.rank-fix-A,
+.modal-rank-grade.rank-fix-B,
+.modal-rank-grade.rank-fix-D,
+.modal-rank-grade.rank-fix-E,
+.modal-rank-grade.rank-fix-F {
+  left: 0; /* No adjustment needed, but good to have for clarity */
+}
 
 .modal-rank-grade sup {
     font-size: 0.7em;

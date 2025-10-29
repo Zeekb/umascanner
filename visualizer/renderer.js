@@ -1491,6 +1491,8 @@ function showDetailModal(runner, displayName) {
     const rankGrade = calculateRank(score);
     const rankColor = getAptitudeColor(rankGrade);
     const rankTopColor = adjustColor(rankColor, 40);
+    const baseGradeLetter = rankGrade.replace('<sup>+</sup>', '').replace('+', '');
+    const rankClass = `modal-rank-grade rank-fix-${baseGradeLetter}`;
     const rankRibbonColor = adjustColor(rankColor, -25);
     const rankStyle = `
         --rank-base-color: ${rankColor};
@@ -1510,7 +1512,7 @@ function showDetailModal(runner, displayName) {
             <div class="modal-identity">
                 <div class="modal-rank-container" style="${rankStyle}">
                     <div class="modal-rank-badge">
-                        <div class="modal-rank-grade">${rankGrade}</div>
+                        <div class="${rankClass}">${rankGrade}</div>
                         <div class="modal-rank-text">RANK</div>
                     </div>
                 </div>
