@@ -4,6 +4,14 @@
 
 import os
 import sys
+
+if getattr(sys, 'frozen', False) and len(sys.argv) > 1:
+    # sys.argv[0] is the .exe, sys.argv[1] is our path
+    external_lib_path = sys.argv[1]
+    if os.path.isdir(external_lib_path):
+        # Manually add the external site-packages to sys.path
+        sys.path.append(external_lib_path)
+
 import cv2
 import numpy as np
 import easyocr
@@ -648,8 +656,8 @@ def main():
     skill_order_map: Dict[str, int] = {}
     runner_unique_skills: Dict[str, list] = {}
     try:
-        skills_path = os.path.join(BASE_DIR, 'data', 'game_data', 'skills.json')
-        runner_skills_path = os.path.join(BASE_DIR, 'data', 'game_data', 'runner_skills.json')
+        skills_path = os.path.join(GAME_DATA_ROOT, 'skills.json')
+        runner_skills_path = os.path.join(GAME_DATA_ROOT, 'runner_skills.json')
 
         with open(skills_path, 'r', encoding='utf-8') as f:
             skills_data = json.load(f) # skills_data is a dict {"Skill Name": "type"}
@@ -700,8 +708,7 @@ def main():
     if run_resolver:
         logger.info("Conflicts detected. Launching conflict resolver GUI...")
         try:
-            resolver_script_path = os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')
-            subprocess.run([sys.executable, resolver_script_path], check=True) # Added check=True
+            subprocess.run([sys.executable, RESOLVER_SCRIPT_PATH, DATA_FOLDER], check=True) # Pass DATA_FOLDER as an argument
             logger.info("Conflict resolver finished.")
 
             # --- ADDED: Clean up conflicts.json IF resolver emptied it ---

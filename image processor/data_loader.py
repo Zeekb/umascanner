@@ -1,9 +1,14 @@
 import json
+import sys
 import os
 
 # --- Path Configuration ---
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_FOLDER = os.path.join(BASE_DIR, "data", "game_data")
+if getattr(sys, 'frozen', False):
+    BUNDLED_ROOT = sys._MEIPASS
+    DATA_FOLDER = os.path.join(BUNDLED_ROOT, "data", "game_data")
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_FOLDER = os.path.join(BASE_DIR, "data", "game_data")
 
 def _load_json(path):
     """Helper to load a JSON file with UTF-8 encoding."""

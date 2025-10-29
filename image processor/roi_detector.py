@@ -16,8 +16,14 @@ SPARK_BOX_HEIGHT = config["SPARK_BOX_HEIGHT"] # New config load
 
 
 def load_spark_info():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    sparks_path = os.path.join(script_dir, "..", "data", "game_data", "sparks.json")
+    if getattr(sys, 'frozen', False):
+        BUNDLED_ROOT = sys._MEIPASS
+        data_folder_path = os.path.join(BUNDLED_ROOT, "data", "game_data")
+    else:
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        data_folder_path = os.path.join(script_dir, "..", "data", "game_data")
+
+    sparks_path = os.path.join(data_folder_path, "sparks.json")
     with open(sparks_path, 'r') as f:
         return json.load(f)
 

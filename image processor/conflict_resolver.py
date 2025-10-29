@@ -10,8 +10,31 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-# --- Path Configuration ---
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# --- Path Configuration (Executable Aware) ---
+
+# 1. Get path for EXTERNAL data (conflicts.json, all_runners.json)
+if len(sys.argv) > 1:
+    # External data path is passed as a command-line argument from main.py
+    EXTERNAL_DATA_DIR = sys.argv[1]
+else:
+    # Fallback for testing / running directly as a script
+    EXTERNAL_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+
+# 2. Get path for BUNDLED data (skills.json, runner_skills.json)
+if getattr(sys, 'frozen', False):
+    # We are running as a bundled executable (launched by main.exe)
+    BUNDLED_ROOT = sys._MEIPASS
+    BUNDLED_GAME_DATA_DIR = os.path.join(BUNDLED_ROOT, "data", "game_data")
+else:
+    # We are running as a script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    BUNDLED_GAME_DATA_DIR = os.path.join(script_dir, '..', 'data', 'game_data')
+
+# 3. Define final file paths
+CONFLICTS_FILE = os.path.join(EXTERNAL_DATA_DIR, 'conflicts.json')
+ALL_RUNNERS_FILE = os.path.join(EXTERNAL_DATA_DIR, 'all_runners.json')
+SKILLS_FILE = os.path.join(BUNDLED_GAME_DATA_DIR, 'skills.json')
+RUNNER_SKILLS_FILE = os.path.join(BUNDLED_GAME_DATA_DIR, 'runner_skills.json')
 
 def clear_layout(layout):
     if layout is not None:
@@ -42,7 +65,7 @@ class ConflictResolutionDialog(QDialog):
             self.save_button.setEnabled(False)
 
     def load_conflicts(self):
-        self.conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
+        self.conflicts_file = CONFLICTS_FILE
         if os.path.exists(self.conflicts_file):
             with open(self.conflicts_file, 'r', encoding='utf-8') as f:
                 self.conflicts = json.load(f)
@@ -261,7 +284,7 @@ class ConflictResolutionDialog(QDialog):
                     resolved_entry['sparks'][spark_type] = conflict['new']['sparks'].get(spark_type)
 
         # --- SAVE TO JSON ---
-        all_runners_file = os.path.join(BASE_DIR, 'data', 'all_runners.json')
+        all_runners_file = ALL_RUNNERS_FILE
         with open(all_runners_file, 'r', encoding='utf-8') as f:
             all_data = json.load(f)
         
