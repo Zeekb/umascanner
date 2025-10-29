@@ -1,7 +1,0 @@
-opencv-python
-numpy
-easyocr
-Pillow
-PyQt5
-scikit-image
-pandas
