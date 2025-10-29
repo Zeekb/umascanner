@@ -337,10 +337,10 @@ input[type="range"]:focus { outline: none; }
     font-size: 1.2em;
     line-height: 1;
 }
-#load-new-file-button {
+.icon-button {
   background: none;
-  border: 1px solid #ccc;
-  border-radius: 50%;
+  border: 1px solid #ccc; /* Or use your var(--border-color) */
+  border-radius: 50%;      /* This makes them circular */
   width: 40px;
   height: 40px;
   cursor: pointer;
@@ -348,12 +348,18 @@ input[type="range"]:focus { outline: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 10px; /* Adds space between the buttons */
+  padding: 0; /* Remove default padding */
   color: var(--text-color); /* Uses your existing color variable */
+  transition: background-color 0.2s ease; /* Smooth hover effect */
 }
 
-#load-new-file-button:hover {
+.icon-button:hover {
   background-color: var(--hover-bg-color); /* Uses your existing hover color */
+}
+
+/* We can still use IDs for specific adjustments, like spacing */
+#load-new-file-button {
+  margin-right: 10px;
 }
 #reset-filters-button {
     margin-left: 10px; 

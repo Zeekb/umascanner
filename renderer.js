@@ -189,6 +189,15 @@ function preloadRunnerImages() {
 }
 
 function returnToFileUploader() {
+    const userConfirmed = window.confirm(
+        "Are you sure you want to load a new file?\n\nThis will clear the current data."
+    );
+
+    // If the user clicks "Cancel", the function will stop right here.
+    if (!userConfirmed) {
+        return; 
+    }
+
     // 1. Clear the saved data from localStorage
     localStorage.removeItem('savedRunnerData');
 
@@ -340,10 +349,10 @@ function setupDarkMode() {
             localStorage.setItem('darkMode', currentlyDark);
             
             if (currentlyDark) {
-                if (iconSpan) iconSpan.textContent = '☀️'; // Icon shows the *action* you can take
+                if (iconSpan) iconSpan.textContent = '🌙';
                 if (toggleButton) toggleButton.title = 'Toggle Light Mode';
             } else {
-                if (iconSpan) iconSpan.textContent = '🌙'; // Icon shows the *action* you can take
+                if (iconSpan) iconSpan.textContent = '☀️';
                 if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
             }
             // Re-render if filters are active, as colors might change
