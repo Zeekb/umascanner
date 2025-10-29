@@ -22,6 +22,7 @@ from PIL import Image, ImageOps
 import queue
 import threading
 import logging
+import re
 import io
 from typing import Optional
 import json
@@ -47,30 +48,19 @@ from image_utils import select_layout, crop_rois, load_image
 # and sets paths accordingly.
 
 if getattr(sys, 'frozen', False):
-    # --- EXECUTABLE PATHS ---
-    # We are running in a bundle (e.g., PyInstaller executable)
-    
-    # BASE_DIR is the directory containing the .exe file
-    # This is where external folders (input, processed, logs) will be.
     BASE_DIR = os.path.dirname(sys.executable)
-    DATA_FOLDER = BASE_DIR # External data folders are relative to the .exe
-    
-    # BUNDLED_ROOT is the temporary folder where PyInstaller unpacks
-    # bundled files (like game_data, config.json, profile_images).
+    DATA_FOLDER = os.path.join(BASE_DIR, "data")
     BUNDLED_ROOT = sys._MEIPASS
     
-    # External folders (relative to .exe)
-    INPUT_FOLDER = os.path.join(BASE_DIR, "input_images")
-    COMPLETED_FOLDER = os.path.join(BASE_DIR, "processed_images")
-    DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
-    DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
+    INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
+    COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
+    DEBUG_PORTRAITS_DIR = os.path.join(DATA_FOLDER, 'debug_portraits')
+    DEBUG_MASTER_FACES_DIR = os.path.join(DATA_FOLDER, 'debug_master_faces')
     
-    # Paths for files BUNDLED inside the .exe
     CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'config.json')
     GAME_DATA_ROOT = os.path.join(BUNDLED_ROOT, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BUNDLED_ROOT, 'assets', 'profile_images')
     
-    # Path for the conflict_resolver.py script, also bundled
     RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'image processor', 'conflict_resolver.py')
 
 else:
@@ -85,7 +75,7 @@ else:
     PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
     RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')
 
-with open(CONFIG_PATH, 'r') as f:  # <-- MODIFIED
+with open(CONFIG_PATH, 'r') as f: 
     config = json.load(f)
 
 OCR_READER_CONFIG = config["OCR_READER_CONFIG"]
@@ -100,7 +90,7 @@ logger = logging.getLogger(__name__)
 # which serves as a primary method for grandparent identification.
 SKILL_TO_RUNNER_MAP = {}
 try:
-    skills_path = os.path.join(BASE_DIR, 'data', 'game_data', 'runner_skills.json')
+    skills_path = os.path.join(GAME_DATA_ROOT, 'runner_skills.json')
     with open(skills_path, 'r', encoding='utf-8') as f:
         runner_skills = json.load(f)
     for runner, skills in runner_skills.items():
