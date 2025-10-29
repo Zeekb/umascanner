@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import sys
 from skimage.metrics import structural_similarity
 import easyocr
 import json
