@@ -1,49 +1,35 @@
-UMA SCANNER SETUP GUIDE
+UMA Scanner Setup Guide
 A simple guide to setting up and using the UMA Scanner.
 
 This guide will help you install and use the UMA Scanner to get information from your screenshots.
 
-
 !! NOTE !!
-Running this for myself takes about 15 minutes for 200 entries, so go grab something to drink and put on a video :)
+Running this for myself takes about 15 minutes for 200 entries, so go grab something to drink and put on a video!
 
 
-Step -1: [Optional] Add my data for the program before running your own
-
-If you want to play with my runner data in your program to see what you can dowith it, before doing anything, change the `all-runners_Zeek.json` file in the `data` folder to `all-runners.json`.
-I kept it in so people can play with the **Analyzer** (Described below) without putting in their own screenshots or needing to complete steps 1a, 2 or 3.
-Skip to step 4 after completing step 1c.
-
+Step -1: [Optional] Test UmaCyclopedia without running UmaScanner
+To test the UmaCyclopedia runner filtering without installing requirements for the UmaScanner, you can use the `all-runners.json` from the release zip to test the UmaCyclopedia at zeekb.github.io/umascanner/.
 
 ---
 
+Step 0: Download and Install Python
 
-Step 0: Download and Install Python & Node.js
-
-First, you need to install Python and Node.js on your computer.
+First, you need to install Python on your computer. This is required to install the PyTorch deep learning library to read the screenshots.
 
 1.  Go to the official Python website (https://www.python.org/downloads/).
 2.  Download the latest version of Python.
 3.  When you install Python, make sure to check the box that says "Add Python to PATH". This is very important.
-4.  Go to the official Node.js website (https://nodejs.org/en/download/).
-5.  Download and install the latest LTS version of Node.js.
-6.  To check if Python and Node.js are installed correctly, open a program called "Terminal" or "Command Prompt" and type these commands, then press Enter:
+4.  To check if Python is installed correctly, open a program called "Terminal" or "Command Prompt" and type this command, then press Enter:
 
     python --version
-    node --version
-
 
 ---
 
-Step 1: Install Dependencies
+Step 1: Install PyTorch
 
-The installation is a three-step process. First, you will install the main deep learning library (PyTorch), then you will install the remaining backend and frontend dependencies.
+You have two options for installing PyTorch. Using a GPU is highly recommended for performance. (NVIDIA Only)
 
-Step 1a: Choose and Install PyTorch
-
-You have two options for installing PyTorch. Using a GPU is highly recommended for performance.
-
-*   Performance Note: Using a CPU is the most compatible option, but it is much slower. For a batch of 200 characters, processing can take up to 2 hours on a CPU versus 20 minutes on a GPU.
+* Performance Note: Using a CPU is the most compatible option, but it is much slower. For a batch of 200 characters, processing can take up to 1 and a half on a CPU versus 15 minutes on a GPU.
 
 ---
 
@@ -51,8 +37,8 @@ OPTION 1: CPU Version (Recommended for compatibility)
 
 This is the easiest option and will work on any machine.
 
-*   Download Size: ~700-900 MB
-*   Action: Double-click and run the `install_pytorch_cpu.bat` script.
+* Download Size: ~700-900 MB
+* Action: Double-click and run the `install_pytorch_cpu.bat` script.
 
 ---
 
@@ -60,8 +46,8 @@ OPTION 2: GPU Version (Recommended for performance)
 
 This option requires a compatible NVIDIA GPU and provides a ~6x speed improvement.
 
-*   Download Size: ~2.5 - 4.5 GB
-*   Action: Follow these manual steps:
+* Download Size: ~2.5 GB
+* Action: Follow these manual steps:
     1.  IMPORTANT: If you have ever installed PyTorch before, uninstall it first to avoid conflicts:
         
         pip uninstall torch torchvision torchaudio
@@ -77,68 +63,32 @@ This option requires a compatible NVIDIA GPU and provides a ~6x speed improvemen
 
 ---
 
-Step 1b: Install Backend Dependencies
-
-After you have installed PyTorch using one of the options above, you can install the rest of the required libraries for the backend.
-
-*   Action: Double-click and run the `install_dependencies.bat` script.
-
-This will install all other libraries, including `EasyOCR`, needed to run the scanner.
-
----
-
-Step 1c: Install Frontend Dependencies
-
-Next, you need to install the dependencies for the user interface.
-
-*   Action: Open a "Terminal" or "Command Prompt", navigate to the `visualizer` directory, and run the following command:
-    
-    cd visualizer
-    npm install
-    
-
----
-
-
 Step 2: Prepare Your Screenshots
 
-1.  Put all your loose game screenshots into the `data/input_images` folder. The system will automatically organize them when you run "image processor/main.py" in step 3.
+1.  Put all your loose game screenshots into the `data/input_images` folder.
 
 A quick note:
 
-*   Please use screenshots from a mobile phone. Screenshots from a computer will not work.
-
+* Please use screenshots from a mobile phone. Screenshots from a computer will not work.
 
 ---
-
 
 Step 3: Process Your Screenshots
 
-1.  Run the main processing script from your "Terminal" or "Command Prompt". Make sure you are in the project's root folder.
-
-    python "image processor/main.py"
-
+1.  Run the main processing executable:
+    
+    UmaScanner.exe
+    
 2.  The script will perform the following steps automatically:
-    *   Groups Loose Images: Any loose screenshots in `data/input_images` are automatically organized into character folders based on their name and score.
-    *   Detects ROIs: The script automatically detects the spark information regions from your screenshots.
-    *   Processes Data: It then extracts all stats, ranks, skills, and sparks for each character.
-    *   Handles Conflicts: If the script finds conflicting data for a character that has been processed before (e.g., you are re-processing updated screenshots), a Conflict Resolution window will appear. This allows you to choose which data to keep.
-    *   Saves Results: The extracted data is saved in `data/all_runners.json`, and the processed character folders are moved from `data/input_images` to `data/processed_images`.
-
+    * Groups Loose Images: Any loose screenshots in `data/input_images` are automatically organized into character folders.
+    * Processes Data: It then extracts all stats, ranks, skills, sparks, and identifies grandparents for each character.
+    * Handles Conflicts: If the script finds conflicting data, a Conflict Resolution window will appear.
+    * Saves Results: The extracted data is saved in `data/all_runners.json`, and processed images are moved to `data/processed_images`.
 
 ---
-
 
 Step 4: View Your Results
 
-1.  To view the collected data, run the analyzer application from your "Terminal" or "Command Prompt". Make sure you are in the `visualizer` directory.
+Use the UmaCyclopedia tool at zeekb.github.io/umascanner/.
 
-    cd visualizer
-    npm start
-
-2.  This opens a graphical interface where you can see all your runners' data in a sortable and filterable table.
-   
-3.  You can double-click on any runner in the "Stats Summary" tab to see a detailed view of their stats, skills, and aptitudes.
-    *   There's images in the `assets/` folder as a reference for how the ui looks and what you can do with it.
-
----
+You can load the `all_runners.json` file generated in Step 3 to view, sort, and filter all your scanned data.
