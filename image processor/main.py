@@ -3,6 +3,7 @@
 #
 
 import os
+import sys
 import cv2
 import numpy as np
 import easyocr
@@ -19,7 +20,6 @@ import json
 from multiprocessing import cpu_count
 from datetime import datetime
 from tqdm import tqdm
-import sys
 import subprocess
 import torch
 import warnings
@@ -35,19 +35,49 @@ from ocr_utils import normalize_name
 from image_utils import select_layout, crop_rois, load_image
 
 # --- Path Configuration ---
-# Sets up key directory paths used throughout the application for managing data,
-# input images, processed images, and debugging outputs.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_FOLDER = os.path.join(BASE_DIR, "data")
-INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
-COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
-DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
-DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
+# Detects if running as a script or a frozen executable (.exe)
+# and sets paths accordingly.
 
-# --- Load Configuration ---
-# Loads settings from an external config.json file, such as OCR configurations,
-# logging levels, and processing offsets.
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
+if getattr(sys, 'frozen', False):
+    # --- EXECUTABLE PATHS ---
+    # We are running in a bundle (e.g., PyInstaller executable)
+    
+    # BASE_DIR is the directory containing the .exe file
+    # This is where external folders (input, processed, logs) will be.
+    BASE_DIR = os.path.dirname(sys.executable)
+    DATA_FOLDER = BASE_DIR # External data folders are relative to the .exe
+    
+    # BUNDLED_ROOT is the temporary folder where PyInstaller unpacks
+    # bundled files (like game_data, config.json, profile_images).
+    BUNDLED_ROOT = sys._MEIPASS
+    
+    # External folders (relative to .exe)
+    INPUT_FOLDER = os.path.join(BASE_DIR, "input_images")
+    COMPLETED_FOLDER = os.path.join(BASE_DIR, "processed_images")
+    DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
+    DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
+    
+    # Paths for files BUNDLED inside the .exe
+    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'config.json')
+    GAME_DATA_ROOT = os.path.join(BUNDLED_ROOT, "data", "game_data")
+    PROFILE_IMAGES_DIR = os.path.join(BUNDLED_ROOT, 'assets', 'profile_images')
+    
+    # Path for the conflict_resolver.py script, also bundled
+    RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'image processor', 'conflict_resolver.py')
+
+else:
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    DATA_FOLDER = os.path.join(BASE_DIR, "data")
+    INPUT_FOLDER = os.path.join(DATA_FOLDER, "input_images")
+    COMPLETED_FOLDER = os.path.join(DATA_FOLDER, "processed_images")
+    DEBUG_PORTRAITS_DIR = os.path.join(BASE_DIR, 'debug_portraits')
+    DEBUG_MASTER_FACES_DIR = os.path.join(BASE_DIR, 'debug_master_faces')
+    CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
+    GAME_DATA_ROOT = os.path.join(BASE_DIR, "data", "game_data")
+    PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
+    RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')
+
+with open(CONFIG_PATH, 'r') as f:  # <-- MODIFIED
     config = json.load(f)
 
 OCR_READER_CONFIG = config["OCR_READER_CONFIG"]
@@ -640,7 +670,7 @@ def main():
     # Step 4: Create a DataFrame from the results and update the main data file.
     new_runners_df = _create_new_runners_dataframe(final_results)
     if not new_runners_df.empty:
-        update_all_runners(new_runners_df, runner_unique_skills, skill_order_map)
+        update_all_runners(new_runners_df, runner_unique_skills, skill_order_map, DATA_FOLDER)
 
     # If conflicts were detected during data updates, launch the conflict resolver tool.
     conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')

@@ -6,7 +6,7 @@ const { spawn } = require('child_process');
 
 const isPackaged = app.isPackaged;
 const basePath = isPackaged ? path.dirname(app.getPath('exe')) : path.join(__dirname, '..', '..');
-const dataFilePath = path.join(basePath, 'all_runners.json');
+const dataFilePath = path.join(basePath, 'data', 'all_runners.json');
 
 function createWindow() {
   const win = new BrowserWindow({

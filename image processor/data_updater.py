@@ -3,8 +3,6 @@ import os
 import json
 from typing import Dict, List
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 def format_json_with_custom_layout(
     all_runners_data: List[dict], 
     runner_unique_skills: Dict[str, list], 
@@ -101,8 +99,9 @@ def format_json_with_custom_layout(
 
 def update_all_runners(
     new_runners_df: pd.DataFrame,
-    runner_unique_skills: Dict[str, list], # Add parameter
-    skill_order_map: Dict[str, int]        # Add parameter
+    runner_unique_skills: Dict[str, list],
+    skill_order_map: Dict[str, int],       
+    data_folder_path: str
 ):
     """
     Reads existing all_runners.json, detects conflicts, and updates the file
@@ -112,8 +111,8 @@ def update_all_runners(
         print("No new runners to update.")
         return
 
-    output_file = os.path.join(BASE_DIR, "data", "all_runners.json")
-    conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
+    output_file = os.path.join(data_folder_path, "all_runners.json")
+    conflicts_file = os.path.join(data_folder_path, 'conflicts.json')
     
     try:
         with open(output_file, 'r', encoding='utf-8') as f:
