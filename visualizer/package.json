@@ -32,7 +32,7 @@
   },
   "build": {
     "appId": "com.example.umaanalyzer",
-    "productName": "UmaScanner",
+    "productName": "UmaCyclopedia",
     "files": [
       "**/*",
       "!../image processor/",     
