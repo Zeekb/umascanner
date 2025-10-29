@@ -23,6 +23,7 @@ let tabButtons, tabContents, parentSummaryBody, whiteSparksBody, skillsSummaryBo
 let aptitudeFiltersContainer, resetFiltersButton, addSparkFilterButton, sparkFiltersContainer;
 let skillFiltersContainer, addSkillFilterButton;
 let uploaderContainer, fileInput, loadDataButton, loadingMessage, errorMessage, appWrapper;
+let loadNewFileButton;
 
 // --- Constants ---
 const APTITUDE_RANK_MAP = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100};
@@ -49,8 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up the dark mode toggle *early* so the page loads with the right theme
     setupDarkMode(); 
 
-    // Add listener to the load button
-    loadDataButton.addEventListener('click', handleFileLoad);
+    const savedData = localStorage.getItem('savedRunnerData');
+    if (savedData) {
+        console.log("Found saved data, attempting to load...");
+        setTimeout(() => {
+            loadFromSavedData(savedData);
+        }, 100);
+    } else {
+        loadDataButton.addEventListener('click', handleFileLoad);
+    }
 });
 
 /**
@@ -59,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
 async function handleFileLoad() {
     const file = fileInput.files[0];
 
-    // Reset messages
     loadingMessage.style.display = 'block';
     errorMessage.style.display = 'none';
 
@@ -68,11 +75,11 @@ async function handleFileLoad() {
         return;
     }
 
+    let fileContent;
     let allRunnersData;
 
-    // 1. Read the user's uploaded file
     try {
-        const fileContent = await file.text();
+        fileContent = await file.text(); // Read content as text first
         allRunnersData = JSON.parse(fileContent);
     } catch (err) {
         showError(`Error reading file: ${err.message}`);
@@ -80,8 +87,14 @@ async function handleFileLoad() {
     }
 
     if (!Array.isArray(allRunnersData)) {
-         showError('Invalid file format. The JSON file must contain an array of runners.');
-         return;
+        showError('Invalid file format. The JSON file must contain an array of runners.');
+        return;
+    }
+    
+    try {
+        localStorage.setItem('savedRunnerData', fileContent);
+    } catch (e) {
+        console.error("Could not save to localStorage:", e);
     }
 
     allRunners = allRunnersData;
@@ -115,6 +128,38 @@ async function handleFileLoad() {
     }
 }
 
+async function loadFromSavedData(jsonData) {
+    loadingMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+    
+    try {
+        allRunners = JSON.parse(jsonData);
+    } catch (e) {
+        showError('Error parsing saved data. Please load a file again.');
+        localStorage.removeItem('savedRunnerData'); // Clear corrupted data
+        loadDataButton.addEventListener('click', handleFileLoad); // Re-enable button
+        return;
+    }
+
+    // Now, proceed with the rest of the initialization just like in handleFileLoad
+    try {
+        const [loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
+            fetch('./data/skills.json').then(res => res.json()),
+            fetch('./data/runner_skills.json').then(res => res.json()),
+            fetch('./data/sparks.json').then(res => res.json()),
+        ]);
+
+        skillData = loadedSkillData || {};
+        runnerUniqueSkills = uniqueSkillsData || {};
+        orderedSparks = loadedOrderedSparks || {};
+        orderedSkills = Object.keys(skillData);
+
+        initializeApp();
+    } catch (err) {
+        showError(`Failed to load game data (skills.json, etc.): ${err.message}`);
+    }
+}
+
 /**
  * NEW: Shows an error message on the loader screen
  */
@@ -122,6 +167,52 @@ function showError(message) {
     loadingMessage.style.display = 'none';
     errorMessage.textContent = message;
     errorMessage.style.display = 'block';
+}
+
+function preloadRunnerImages() {
+    const preloadedImages = new Set(); // Prevents trying to load the same image multiple times
+    
+    allRunners.forEach(runner => {
+        // Preload the main profile image
+        const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
+        let nameForImage = hasGreenParentSpark ? runner.name : `${runner.name} c`;
+        nameForImage = (nameForImage || 'N/A').trim().replace(/ /g, '_');
+        const imagePath = `./assets/profile_images/${nameForImage}.png`;
+
+        if (!preloadedImages.has(imagePath)) {
+            const img = new Image();
+            img.src = imagePath;
+            preloadedImages.add(imagePath);
+        }
+    });
+    console.log(`Preloading ${preloadedImages.size} unique runner images...`);
+}
+
+function returnToFileUploader() {
+    // 1. Clear the saved data from localStorage
+    localStorage.removeItem('savedRunnerData');
+
+    // 2. Reset all global data arrays and sets
+    allRunners = [];
+    blueSparkNames = [];
+    greenSparkNames = [];
+    pinkSparkNames = [];
+    whiteSparkNames = [];
+    skillData = {};
+    orderedSkills = [];
+    allRunnerNamesSet.clear();
+    gpExistenceCache.clear();
+
+    // 3. Hide the main application and show the uploader
+    appWrapper.style.display = 'none';
+    uploaderContainer.style.display = 'block';
+
+    // 4. Reset the file input so the user can re-upload the same file if needed
+    fileInput.value = '';
+
+    // 5. Hide any previous error messages on the uploader screen
+    errorMessage.style.display = 'none';
+    loadingMessage.style.display = 'none';
 }
 
 /**
@@ -161,6 +252,7 @@ function initializeApp() {
     sparkFiltersContainer = document.getElementById('spark-filters-container');
     skillFiltersContainer = document.getElementById('skill-filters-container');
     addSkillFilterButton = document.getElementById('add-skill-filter-button');
+    loadNewFileButton = document.getElementById('load-new-file-button');
 
     // --- Start of original setup logic ---
     if (!allRunners || allRunners.length === 0) {
@@ -216,6 +308,10 @@ function initializeApp() {
     // Hide uploader and show the app
     uploaderContainer.style.display = 'none';
     appWrapper.style.display = 'flex'; // Use 'flex' to match .app-container
+
+    loadNewFileButton.addEventListener('click', returnToFileUploader);
+
+    preloadRunnerImages(); 
 }
 
 function isDarkModeActive() {
