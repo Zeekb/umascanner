@@ -600,7 +600,7 @@ function setupEventListeners() {
             
             // Update the button text and title
             if (isCollapsed) {
-                toggleFilterButton.textContent = 'v';
+                toggleFilterButton.textContent = 'Show v';
                 toggleFilterButton.title = 'Show Filters';
             } else {
                 toggleFilterButton.textContent = '^';
