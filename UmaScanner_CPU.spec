@@ -1,8 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
 import os
-
-torch_lib_path = os.path.join('venv_cpu', 'Lib', 'site-packages', 'torch', 'lib')
-
 vc_dlls_path = 'vc_dlls'
 
 a = Analysis(
@@ -12,22 +9,10 @@ a = Analysis(
     datas=[
         ('data/game_data', 'data/game_data'),
         ('assets/profile_images', 'assets/profile_images'),
-        ('src/config.json', 'src'),  
-        ('src/conflict_resolver.py', 'src'),
-        ('src/data_loader.py', 'src'),
-        ('src/data_updater.py', 'src'),
-        ('src/image_utils.py', 'src'),
-        ('src/ocr_utils.py', 'src'),
-        ('src/rankings.py', 'src'),
-        ('src/roi_detector.py', 'src'),
-        ('src/roi_selector_gui.py', 'src'),
-        ('src/schema.py', 'src'),
-        ('src/spark_parser.py', 'src'),
-        ('src/tabs.py', 'src'),
-        ('src/umamusume_parser.py', 'src'),
-        (os.path.join(torch_lib_path, 'libiomp5md.dll'), '.'),
+        ('src/config.json', 'src'),
         (os.path.join(vc_dlls_path, 'vcruntime140.dll'), '.'),
-        (os.path.join(vc_dlls_path, 'msvcp140.dll'), '.')
+        (os.path.join(vc_dlls_path, 'msvcp140.dll'), '.'),
+        (os.path.join(vc_dlls_path, 'vcruntime140_1.dll'), '.')
     ],
     hiddenimports=['modulefinder', 'PIL.ImageEnhance', 'PyQt5'],
     hookspath=[],

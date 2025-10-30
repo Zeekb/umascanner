@@ -1,18 +1,62 @@
 #
-# --- image_processor.py ---
+# --- main.py ---
 #
 
-import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+import os
 import sys
 
-if getattr(sys, 'frozen', False) and len(sys.argv) > 1:
-    # sys.argv[0] is the .exe, sys.argv[1] is our path
-    external_lib_path = sys.argv[1]
-    if os.path.isdir(external_lib_path):
-        # Manually add the external site-packages to sys.path
-        sys.path.append(external_lib_path)
+def add_external_lib_path(lib_path):
+    """Helper to add a library path to sys.path and OS DLL paths."""
+    if not lib_path or (not os.path.isdir(lib_path) and "site-packages" not in lib_path):
+        # Allow the path even if it doesn't exist yet, but log a warning.
+        # The check will be the os.path.isdir inside.
+        print(f"Warning: Received library path may be invalid: {lib_path}")
+    
+    if os.path.isdir(lib_path):
+        # 1. Add to sys.path for Python modules
+        print(f"Adding to sys.path: {lib_path}")
+        sys.path.append(lib_path)
+        
+        # 2. Add torch\lib to DLL path
+        torch_lib_path = os.path.join(lib_path, 'torch', 'lib')
+        if os.path.isdir(torch_lib_path):
+            try:
+                os.add_dll_directory(torch_lib_path)
+                print(f"Adding to DLL path: {torch_lib_path}")
+            except AttributeError:
+                os.environ['PATH'] = torch_lib_path + os.pathsep + os.environ.get('PATH', '')
+                print(f"Adding to OS PATH (fallback): {torch_lib_path}")
+        else:
+            print(f"Warning: torch\\lib not found at {torch_lib_path}")
+    else:
+        print(f"Error: Path is not a valid directory, cannot add: {lib_path}")
 
+
+# --- This variable must be defined in the global scope for later ---
+external_lib_path = "" 
+
+if getattr(sys, 'frozen', False) and len(sys.argv) > 1 and "site-packages" in sys.argv[1]:
+    # --- GPU BUILD ---
+    # A path was passed, so this is the GPU build.
+    # We use your helper function (defined on line 10) to add the path.
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    external_lib_path = sys.argv[1]
+    add_external_lib_path(external_lib_path) 
+
+elif getattr(sys, 'frozen', False):
+    # --- CPU BUILD ---
+    # No path was passed, so this is the CPU build.
+    # Force CPU-mode.
+    os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
+else:
+    # --- LOCAL SCRIPT RUN ---
+    # Not frozen, so do nothing.
+    pass
+
+import torch
 import cv2
 import numpy as np
 import easyocr
@@ -31,9 +75,9 @@ from multiprocessing import cpu_count
 from datetime import datetime
 from tqdm import tqdm
 import subprocess
-import torch
 import warnings
 
+from conflict_resolver import launch_resolver_gui
 from schema import init_schema, CharacterData
 from umamusume_parser import parse_umamusume
 from spark_parser import parse_sparks
@@ -699,28 +743,25 @@ def main():
     if run_resolver:
         logger.info("Conflicts detected. Launching conflict resolver GUI...")
         try:
-            subprocess.run([sys.executable, RESOLVER_SCRIPT_PATH, DATA_FOLDER], check=True) # Pass DATA_FOLDER as an argument
+            # This is now a direct function call, not a subprocess
+            launch_resolver_gui(DATA_FOLDER, GAME_DATA_ROOT)
+
             logger.info("Conflict resolver finished.")
 
-            # --- ADDED: Clean up conflicts.json IF resolver emptied it ---
+            # --- This cleanup logic you had is good, keep it ---
             try:
                 if os.path.exists(conflicts_file):
                     with open(conflicts_file, 'r', encoding='utf-8') as f:
                         content_after = f.read().strip()
-                    # If resolver left it empty, remove it
                     if content_after == '[]':
                         os.remove(conflicts_file)
                         logger.info(f"Removed empty {os.path.basename(conflicts_file)} after resolution.")
             except (IOError, OSError, json.JSONDecodeError) as e:
-                 logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
-            # --- END ADDED ---
+                logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
 
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Conflict resolver script failed with exit code {e.returncode}.")
-        except FileNotFoundError:
-             logger.error("Conflict resolver script not found.")
         except Exception as e:
-             logger.error(f"Error running conflict resolver: {e}")
+            # Catch any errors from the GUI itself
+            logger.error(f"Error running conflict resolver: {e}", exc_info=True)    
     else:
         # --- This 'else' block runs if no resolver was needed ---
         logger.info("No unresolved conflicts found.")
