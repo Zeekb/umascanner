@@ -453,7 +453,7 @@ function populateFilters() {
     const currentSort = filterElements.sort.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
-        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'whites (grandparents)'
+        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)'
     ];
 
     filterElements.sort.innerHTML = allSortOptions.map(o => {
@@ -1260,7 +1260,6 @@ function sortData(data, sortBy, sortDir) {
             'whites (parent)': ['parent'],
             'whites (gp1)': ['gp1'],
             'whites (gp2)': ['gp2'],
-            'whites (grandparents)': ['gp1', 'gp2'],
             'whites (total)': ['parent', 'gp1', 'gp2']
         };
         if (whiteSortKeys[sortBy]) {
