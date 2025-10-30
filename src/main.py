@@ -3,6 +3,7 @@
 #
 
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import sys
 
 if getattr(sys, 'frozen', False) and len(sys.argv) > 1:
@@ -57,11 +58,11 @@ if getattr(sys, 'frozen', False):
     DEBUG_PORTRAITS_DIR = os.path.join(DATA_FOLDER, 'debug_portraits')
     DEBUG_MASTER_FACES_DIR = os.path.join(DATA_FOLDER, 'debug_master_faces')
     
-    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'config.json')
+    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'src', 'config.json')
     GAME_DATA_ROOT = os.path.join(BUNDLED_ROOT, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BUNDLED_ROOT, 'assets', 'profile_images')
     
-    RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'image processor', 'conflict_resolver.py')
+    RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'src', 'conflict_resolver.py')
 
 else:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,7 +74,7 @@ else:
     CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
     GAME_DATA_ROOT = os.path.join(BASE_DIR, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
-    RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'image processor', 'conflict_resolver.py')
+    RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'src', 'conflict_resolver.py')
 
 with open(CONFIG_PATH, 'r') as f: 
     config = json.load(f)
@@ -599,7 +600,7 @@ def main():
     # Warn if GPU is configured but not available.
     if OCR_READER_CONFIG.get("gpu") and not torch.cuda.is_available():
         # This warning will now only appear in the log file, not the console.
-        warnings.warn("\n\GPU acceleration is enabled, but a compatible GPU/PyTorch was not found. \nFalling back to CPU (slower).\n")
+        warnings.warn("\n\GPU acceleration is enabled, but a compatible GPU/PyTorch was not found. \nCrashing Out\n")
 
     logger.info("Starting Umamusume Scanner...")
     # Clear any previous conflict resolution files.

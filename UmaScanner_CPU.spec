@@ -1,5 +1,9 @@
 # -*- mode: python ; coding: utf-8 -*-
+import os
 
+torch_lib_path = os.path.join('venv_cpu', 'Lib', 'site-packages', 'torch', 'lib')
+
+vc_dlls_path = 'vc_dlls'
 
 a = Analysis(
     ['src\\main.py'],
@@ -20,7 +24,10 @@ a = Analysis(
         ('src/schema.py', 'src'),
         ('src/spark_parser.py', 'src'),
         ('src/tabs.py', 'src'),
-        ('src/umamusume_parser.py', 'src')
+        ('src/umamusume_parser.py', 'src'),
+        (os.path.join(torch_lib_path, 'libiomp5md.dll'), '.'),
+        (os.path.join(vc_dlls_path, 'vcruntime140.dll'), '.'),
+        (os.path.join(vc_dlls_path, 'msvcp140.dll'), '.')
     ],
     hiddenimports=['modulefinder', 'PIL.ImageEnhance', 'PyQt5'],
     hookspath=[],
@@ -29,8 +36,6 @@ a = Analysis(
     excludes=[
         'cudatoolkit',
         'numpy.random._examples',
-        'scipy',
-        'matplotlib',
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,

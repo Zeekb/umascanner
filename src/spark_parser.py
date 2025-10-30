@@ -6,11 +6,18 @@ from difflib import get_close_matches
 from data_loader import SPARKS_BY_COLOR, SPARK_CORRECTION_RULES # New import
 import json
 import logging # New import
+import sys
 
 # --- Load Configuration ---
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
-    config = json.load(f)
+if getattr(sys, 'frozen', False):
+    BUNDLED_ROOT = sys._MEIPASS
+    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'src', 'config.json')
+else:
+    CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
 
+with open(CONFIG_PATH, 'r') as f:
+    config = json.load(f)
+    
 SPARK_BOX_HEIGHT = config["SPARK_BOX_HEIGHT"]
 YELLOW_STAR_HSV_LOWER = np.array(config["YELLOW_STAR_HSV_LOWER"])
 YELLOW_STAR_HSV_UPPER = np.array(config["YELLOW_STAR_HSV_UPPER"])

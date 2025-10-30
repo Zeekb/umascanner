@@ -2,9 +2,16 @@ import numpy as np
 import cv2
 import json
 import os
+import sys
 
 # --- Load Configuration ---
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
+if getattr(sys, 'frozen', False):
+    BUNDLED_ROOT = sys._MEIPASS
+    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'src', 'config.json')
+else:
+    CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
+
+with open(CONFIG_PATH, 'r') as f:
     config = json.load(f)
 
 COLOR_TO_GRADE_LISTS = config["COLOR_TO_GRADE"]

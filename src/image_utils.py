@@ -2,11 +2,18 @@ import cv2
 import json
 import os
 import logging
+import sys
 
 # --- Load Configuration ---
-with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json'), 'r') as f:
-    config = json.load(f)
+if getattr(sys, 'frozen', False):
+    BUNDLED_ROOT = sys._MEIPASS
+    CONFIG_PATH = os.path.join(BUNDLED_ROOT, 'src', 'config.json')
+else:
+    CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
 
+with open(CONFIG_PATH, 'r') as f:
+    config = json.load(f)
+    
 ROI_MOBILE = config["ROI_MOBILE"]
 MOBILE_SCREENSHOT_HEIGHT_THRESHOLD = config["MOBILE_SCREENSHOT_HEIGHT_THRESHOLD"]
 MOBILE_ROI_SHIFT = config["MOBILE_ROI_SHIFT"]
