@@ -362,7 +362,7 @@ input[type="range"]:focus { outline: none; }
   margin-right: 10px;
 }
 #reset-filters-button {
-    margin-left: 10px; 
+    margin-right: 10px; 
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -1412,4 +1412,30 @@ td.spark-cell .skill-gold b {
 .filter-help {
     margin-left:0px;
     white-space: pre-line;
+}
+/* This new div needs to manage the layout for the filter containers */
+#collapsible-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 5px; /* This provides the spacing between filter sections */
+}
+
+/* This rule hides the filters when the panel is collapsed */
+.filter-panel.collapsed #collapsible-filters {
+    display: none;
+}
+
+/* Style for the new toggle button */
+#toggle-filter-panel {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px; /* Spaces it from the "Reset" button */
+}
+#toggle-filter-panel:hover {
+    background-color: var(--uma-accent-pink);
 }

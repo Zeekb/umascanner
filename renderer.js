@@ -590,6 +590,24 @@ function setupEventListeners() {
 
     tabButtons.forEach(button => button.addEventListener('click', () => handleTabChange(button.dataset.tab)));
     resetFiltersButton.addEventListener('click', resetFilters);
+    const toggleFilterButton = document.getElementById('toggle-filter-panel');
+    const filterPanel = document.querySelector('.filter-panel');
+
+    if (toggleFilterButton && filterPanel) {
+        toggleFilterButton.addEventListener('click', () => {
+            // Toggle the 'collapsed' class on the main filter panel
+            const isCollapsed = filterPanel.classList.toggle('collapsed');
+            
+            // Update the button text and title
+            if (isCollapsed) {
+                toggleFilterButton.textContent = 'v';
+                toggleFilterButton.title = 'Show Filters';
+            } else {
+                toggleFilterButton.textContent = '^';
+                toggleFilterButton.title = 'Collapse Filters';
+            }
+        });
+    }
     addSparkFilterButton.addEventListener('click', addSparkFilterRow);
 
     addSkillFilterButton.addEventListener('click', addSkillFilterRow);

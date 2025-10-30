@@ -38,6 +38,7 @@
 
         <div class="filter-panel">
             <div class="filter-top-row">
+                <button id="toggle-filter-panel" title="Collapse Filters">^</button>
                 <div class="filter-section">
                     <span class="tab-help filter-help" data-tooltip="This panel filters all runners shown in the detail tabs.&#10;  
                         1. Sorting: &#10;Filter by a specific runner or change the sort order.&#10;  
@@ -67,124 +68,126 @@
                 </div>
                 <button id="reset-filters-button">Reset Filters</button>
             </div>
-            <div id="stat-filters-container" class="filter-group-container">
-                <div class="filter-section sliders">
-                    <div class="slider-container">
-                        <label for ="filter-speed">Speed</label>
-                        <input type="number" id="val-speed" class="stat-input" min="0" max="1200" value="0">
-                        <input type="range" id="filter-speed" min="0" max="1200" value="0">
-                    </div>
-                    <div class="slider-container">
-                        <label for ="filter-stamina">Stamina</label>
-                        <input type="number" id="val-stamina" class="stat-input" min="0" max="1200" value="0">
-                        <input type="range" id="filter-stamina" min="0" max="1200" value="0">
-                    </div>
-                    <div class="slider-container">
-                        <label for ="filter-power">Power</label>
-                        <input type="number" id="val-power" class="stat-input" min="0" max="1200" value="0">
-                        <input type="range" id="filter-power" min="0" max="1200" value="0">
-                    </div>
-                    <div class="slider-container">
-                        <label for ="filter-guts">Guts</label>
-                        <input type="number" id="val-guts" class="stat-input" min="0" max="1200" value="0">
-                        <input type="range" id="filter-guts" min="0" max="1200" value="0">
-                    </div>
-                    <div class="slider-container">
-                        <label for ="filter-wit">Wit</label>
-                        <input type="number" id="val-wit" class="stat-input" min="0" max="1200" value="0">
-                        <input type="range" id="filter-wit" min="0" max="1200" value="0">
-                    </div>
-                </div>
-            </div>
-            <div id="aptitude-filters-container" class="filter-group-container">
-                <div class="filter-section aptitude-filters" id="aptitude-filters">
-                    <div class="filter-group">
-                        <label>Track</label>
-                        <select id="apt-min-turf"><option value="">Turf</option></select>
-                        <select id="apt-min-dirt"><option value="">Dirt</option></select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Distance</label>
-                        <select id="apt-min-sprint"><option value="">Sprint</option></select>
-                        <select id="apt-min-mile"><option value="">Mile</option></select>
-                        <select id="apt-min-medium"><option value="">Med.</option></select>
-                        <select id="apt-min-long"><option value="">Long</option></select>
-                    </div>
-                    <div class="filter-group">
-                        <label>Style</label>
-                        <select id="apt-min-front"><option value="">Front</option></select>
-                        <select id="apt-min-pace"><option value="">Pace</option></select>
-                        <select id="apt-min-late"><option value="">Late</option></select>
-                        <select id="apt-min-end"><option value="">End</option></select>
-                    </div>
-                </div>
-            </div>                
-            <div id="skill-filters-container" class="filter-group-container">
-                <div class="skill-filters">
-                    <div class="filter-group">
-                        <label for="filter-skill-name-1">Skill Name</label>
-                        <div class="searchable-select-container">
-                            <input type="text" id="filter-skill-name-1" placeholder="Search Skill Name" class="skill-name-input" autocomplete="off">
-                            <div class="options-container"></div>
+            <div id="collapsible-filters">
+                <div id="stat-filters-container" class="filter-group-container">
+                    <div class="filter-section sliders">
+                        <div class="slider-container">
+                            <label for ="filter-speed">Speed</label>
+                            <input type="number" id="val-speed" class="stat-input" min="0" max="1200" value="0">
+                            <input type="range" id="filter-speed" min="0" max="1200" value="0">
                         </div>
-                    </div>
-                    <button class="remove-skill-filter-button" title="Remove this skill filter">X</button>
-                </div>
-                <button id="add-skill-filter-button">+ Add Skill Filter</button>
-            </div>  
-            <div id="spark-filters-container" class="filter-group-container">
-                <div class="filter-section spark-filters">
-                    <div class="strikethrough-container">
-                        <div class="filter-group parent-only-group">
-                            <label for="rep-only-checkbox-1">Parent?</label>
-                            <input type="checkbox" id="rep-only-checkbox-1" class="rep-only-checkbox">
+                        <div class="slider-container">
+                            <label for ="filter-stamina">Stamina</label>
+                            <input type="number" id="val-stamina" class="stat-input" min="0" max="1200" value="0">
+                            <input type="range" id="filter-stamina" min="0" max="1200" value="0">
                         </div>
-                        <div class="filter-group">
-                            <label for="filter-blue-spark">Blue Sparks</label>
-                            <div class="searchable-select-container">
-                                <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-shorter" autocomplete="off">
-                                <div class="options-container"></div>
-                            </div>
-                            <label for="min-blue"></label>
-                            <select id="min-blue" class="min-spark-select spark-count-select"></select>
+                        <div class="slider-container">
+                            <label for ="filter-power">Power</label>
+                            <input type="number" id="val-power" class="stat-input" min="0" max="1200" value="0">
+                            <input type="range" id="filter-power" min="0" max="1200" value="0">
                         </div>
-                        <div class="filter-group">
-                            <label for="filter-green-spark">Green Sparks</label>
-                            <div class="searchable-select-container">
-                                <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
-                                <div class="options-container"></div>
-                            </div>
-                            <label for="min-green"></label>
-                            <select id="min-green" class="min-spark-select spark-count-select"></select>
+                        <div class="slider-container">
+                            <label for ="filter-guts">Guts</label>
+                            <input type="number" id="val-guts" class="stat-input" min="0" max="1200" value="0">
+                            <input type="range" id="filter-guts" min="0" max="1200" value="0">
                         </div>
-                        <div class="filter-group">
-                            <label for="filter-pink-spark">Pink Sparks</label>
-                            <div class="searchable-select-container">
-                                <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
-                                <div class="options-container"></div>
-                            </div>
-                            <label for="min-pink"></label>
-                            <select id="min-pink" class="min-spark-select spark-count-select"></select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filter-white-spark">White Sparks</label>
-                            <div class="searchable-select-container">
-                                <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
-                                <div class="options-container"></div>
-                            </div>
-                            <label for="min-white"></label>
-                            <select id="min-white" class="min-spark-select spark-count-select"></select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="min-total-white">Total White Sparks</label>
-                            <select id="min-total-white" class="min-spark-select spark-count-select"></select>
+                        <div class="slider-container">
+                            <label for ="filter-wit">Wit</label>
+                            <input type="number" id="val-wit" class="stat-input" min="0" max="1200" value="0">
+                            <input type="range" id="filter-wit" min="0" max="1200" value="0">
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="add-filters-container" class="filter-group-container">
-                <div class="add-filter-container">
-                    <button id="add-spark-filter-button">+ Add Spark Filter Row</button>
+                <div id="aptitude-filters-container" class="filter-group-container">
+                    <div class="filter-section aptitude-filters" id="aptitude-filters">
+                        <div class="filter-group">
+                            <label>Track</label>
+                            <select id="apt-min-turf"><option value="">Turf</option></select>
+                            <select id="apt-min-dirt"><option value="">Dirt</option></select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Distance</label>
+                            <select id="apt-min-sprint"><option value="">Sprint</option></select>
+                            <select id="apt-min-mile"><option value="">Mile</option></select>
+                            <select id="apt-min-medium"><option value="">Med.</option></select>
+                            <select id="apt-min-long"><option value="">Long</option></select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Style</label>
+                            <select id="apt-min-front"><option value="">Front</option></select>
+                            <select id="apt-min-pace"><option value="">Pace</option></select>
+                            <select id="apt-min-late"><option value="">Late</option></select>
+                            <select id="apt-min-end"><option value="">End</option></select>
+                        </div>
+                    </div>
+                </div>                
+                <div id="skill-filters-container" class="filter-group-container">
+                    <div class="skill-filters">
+                        <div class="filter-group">
+                            <label for="filter-skill-name-1">Skill Name</label>
+                            <div class="searchable-select-container">
+                                <input type="text" id="filter-skill-name-1" placeholder="Search Skill Name" class="skill-name-input" autocomplete="off">
+                                <div class="options-container"></div>
+                            </div>
+                        </div>
+                        <button class="remove-skill-filter-button" title="Remove this skill filter">X</button>
+                    </div>
+                    <button id="add-skill-filter-button">+ Add Skill Filter</button>
+                </div>  
+                <div id="spark-filters-container" class="filter-group-container">
+                    <div class="filter-section spark-filters">
+                        <div class="strikethrough-container">
+                            <div class="filter-group parent-only-group">
+                                <label for="rep-only-checkbox-1">Parent?</label>
+                                <input type="checkbox" id="rep-only-checkbox-1" class="rep-only-checkbox">
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-blue-spark">Blue Sparks</label>
+                                <div class="searchable-select-container">
+                                    <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-shorter" autocomplete="off">
+                                    <div class="options-container"></div>
+                                </div>
+                                <label for="min-blue"></label>
+                                <select id="min-blue" class="min-spark-select spark-count-select"></select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-green-spark">Green Sparks</label>
+                                <div class="searchable-select-container">
+                                    <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
+                                    <div class="options-container"></div>
+                                </div>
+                                <label for="min-green"></label>
+                                <select id="min-green" class="min-spark-select spark-count-select"></select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-pink-spark">Pink Sparks</label>
+                                <div class="searchable-select-container">
+                                    <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
+                                    <div class="options-container"></div>
+                                </div>
+                                <label for="min-pink"></label>
+                                <select id="min-pink" class="min-spark-select spark-count-select"></select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="filter-white-spark">White Sparks</label>
+                                <div class="searchable-select-container">
+                                    <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
+                                    <div class="options-container"></div>
+                                </div>
+                                <label for="min-white"></label>
+                                <select id="min-white" class="min-spark-select spark-count-select"></select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="min-total-white">Total White Sparks</label>
+                                <select id="min-total-white" class="min-spark-select spark-count-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="add-filters-container" class="filter-group-container">
+                    <div class="add-filter-container">
+                        <button id="add-spark-filter-button">+ Add Spark Filter Row</button>
+                    </div>
                 </div>
             </div>
         </div>
