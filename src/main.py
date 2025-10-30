@@ -699,28 +699,25 @@ def main():
     if run_resolver:
         logger.info("Conflicts detected. Launching conflict resolver GUI...")
         try:
-            subprocess.run([sys.executable, RESOLVER_SCRIPT_PATH, DATA_FOLDER], check=True) # Pass DATA_FOLDER as an argument
+            # This is now a direct function call, not a subprocess
+            launch_resolver_gui(DATA_FOLDER, GAME_DATA_ROOT)
+
             logger.info("Conflict resolver finished.")
 
-            # --- ADDED: Clean up conflicts.json IF resolver emptied it ---
+            # --- This cleanup logic you had is good, keep it ---
             try:
                 if os.path.exists(conflicts_file):
                     with open(conflicts_file, 'r', encoding='utf-8') as f:
                         content_after = f.read().strip()
-                    # If resolver left it empty, remove it
                     if content_after == '[]':
                         os.remove(conflicts_file)
                         logger.info(f"Removed empty {os.path.basename(conflicts_file)} after resolution.")
             except (IOError, OSError, json.JSONDecodeError) as e:
-                 logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
-            # --- END ADDED ---
+                logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
 
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Conflict resolver script failed with exit code {e.returncode}.")
-        except FileNotFoundError:
-             logger.error("Conflict resolver script not found.")
         except Exception as e:
-             logger.error(f"Error running conflict resolver: {e}")
+            # Catch any errors from the GUI itself
+            logger.error(f"Error running conflict resolver: {e}", exc_info=True)    
     else:
         # --- This 'else' block runs if no resolver was needed ---
         logger.info("No unresolved conflicts found.")
@@ -737,6 +734,7 @@ def main():
         except (IOError, OSError, json.JSONDecodeError) as e:
              logger.warning(f"Could not check or remove empty conflicts file when no conflicts were found: {e}")
         # --- END ADDED ---
+
 
     logger.info("Processing finished successfully!")
 
