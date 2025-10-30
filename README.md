@@ -4,7 +4,7 @@ A simple guide to setting up and using the UMA Scanner.
 This guide will help you install and use the UMA Scanner to get information from your screenshots.
 
 !! NOTE !!
-Running this for myself takes about 15 minutes for 200 entries, so go grab something to drink and put on a video!
+Running this for myself takes 5 seconds max for a runner in the gpu version and 35 seconds for a runner in the cpu version - for 200 entries this is 17 minutes vs ~2 hours
 
 
 ## Step -1: [Optional] Test UmaCyclopedia without running UmaScanner
