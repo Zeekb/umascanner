@@ -1,98 +1,106 @@
-# UMA Scanner Setup Guide
-A simple guide to setting up and using the UMA Scanner.
+# UmaScanner v1.0.0 Release
 
-This guide will help you install and use the UMA Scanner to get information from your screenshots.
-
-!! NOTE !!
-Running this for myself takes 5 seconds max for a runner in the gpu version and 35 seconds for a runner in the cpu version - for 200 entries this is 17 minutes vs ~2 hours
-
-
-## Step -1: [Optional] Test UmaCyclopedia without running UmaScanner
-To test the UmaCyclopedia runner filtering without installing requirements for the UmaScanner, you can use the `all-runners.json` from the release zip to test the UmaCyclopedia at [zeekb.github.io/umascanner/](https://zeekb.github.io/umascanner/).
+go to [Release](https://github.com/Zeekb/umascanner/releases/tag/v1.0.0) page to download the latest version.
 
 ---
 
-## Step 0: Download and Install Python
+This is the first release of the UmaScanner backend for the [UmaCyclopedia](https://zeekb.github.io/umascanner/) project. Use this program to scan your game screenshots and generate the `all_runners.json` file needed for the runner analyzer. 
 
-First, you need to install Python on your computer. This is required to install the PyTorch deep learning library to read the screenshots.
+Time estimates used will vary depending on computer specification, generally it will be the time estimate or faster.
 
-1.  Go to the [official Python website](https://www.python.org/downloads/).
-2.  Download the latest version of Python.
-3.  When you install Python, make sure to check the box that says **"Add Python to PATH"**. This is very important.
-4.  To check if Python is installed correctly, open a program called **Terminal** or **Command Prompt** and type this command, then press Enter:
+---
 
-    ```bash
-    python --version
+## Try It First with Sample Data!
+
+Before you download the scanner, you can test the features of the UmaCyclopedia website with a sample data file. This will show you what the final result looks like and how the analyzer works.
+
+1.  Download the `all_runners_Zeek.json` file attached to this release.
+2.  Visit [UmaCyclopedia](https://zeekb.github.io/umascanner/).
+3.  Upload the `all_runners_Zeek.json` file to see how you can sort, filter, and analyze the data.
+
+---
+
+There are two versions available: **CPU** and **GPU**.
+
+---
+
+## CPU Version (Recommended for ease of use)
+
+This version is designed for maximum compatibility and works on most PCs without extra setup.
+
+*   **Advantages**:
+    *   Much smaller download size.
+    *   Works out of the box with no additional installs.
+*   **Disadvantages**:
+    *   Significantly slower than the GPU version (e.g., ~6-30 seconds per character).
+
+#### How to Use (CPU Version)
+1.  Download and extract the `UmaScanner-CPU.zip` file.
+2.  Place your mobile game screenshots into the `data/input_images` folder.
+3.  Run `UmaScanner.exe`.
+4.  Once processing is complete, find your results in the `data/all_runners.json` file.
+5.  Upload this file to the [UmaCyclopedia](https://zeekb.github.io/umascanner/) tool to view and filter your umas.
+
+---
+
+## GPU Version (Recommended for performance)
+
+This version uses an NVIDIA GPU to accelerate screenshot processing, offering a major speed improvement. It requires a one-time setup to install the necessary dependencies.
+
+*   **Advantages**:
+    *   Extremely fast (e.g., 2-5 seconds per character).
+    *   Includes a conflict resolver for handling data inconsistencies.
+*   **Disadvantages**:
+    *   Extra setup
+    *   Larger overall download size. (PyTorch size between 2-4 GB)
+    *   Requires a compatible NVIDIA GPU.
+
+### Setup Instructions (GPU Version)
+
+You only need to do this once.
+
+**Step 1: Install Python**
+1.  Download and install the latest version of Python from the [official Python website](https://www.python.org/downloads/).
+2.  **Crucially**, check the box that says **"Add Python to PATH"** during installation.
+3.  Verify the installation by opening **Command Prompt** or **Terminal** and running `python --version`.
+
+**Step 2: Install PyTorch with CUDA**
+1.  Determine your GPU's maximum supported CUDA version by opening **Command Prompt** or **Terminal** and running the command:
     ```
-
----
-
-## Step 1: Install PyTorch
-
-You have two options for installing PyTorch. Using a GPU is highly recommended for performance. (NVIDIA Only)
-
-* **Performance Note:** Using a CPU is the most compatible option, but it is much slower. For a batch of 200 characters, processing can take up to **1 and a half on a CPU** versus **15 minutes on a GPU**.
-
----
-
-**OPTION 1: CPU Version (Recommended for compatibility)**
-
-This is the easiest option and will work on any machine.
-
-* **Download Size:** ~700-900 MB
-* **Action:** Double-click and run the `install_pytorch_cpu.bat` script.
-
----
-
-**OPTION 2: GPU Version (Recommended for performance)**
-
-This option requires a compatible NVIDIA GPU and provides a ~6x speed improvement.
-
-* **Download Size:** ~2.5 GB
-* **Action:** Follow these manual steps:
-    1.  **IMPORTANT:** If you have ever installed PyTorch before, uninstall it first to avoid conflicts:
-        ```bash
-        pip uninstall torch torchvision torchaudio
-        ```
-    2.  Find your maximum supported CUDA version by running this command in your terminal:
-        ```bash
-        nvidia-smi
-        ```
-        Look for the "CUDA Version" in the top-right of the output (e.g., 12.2).
-    3.  Go to the [official PyTorch website](https://pytorch.org/get-started/locally/).
-    4.  Use the website's tool to select your system settings and a CUDA version that is less than or equal to the one from the previous step.
-    5.  Copy and run the generated `pip` command.
-
----
-
-
-## Step 2: Prepare Your Screenshots
-
-1.  Put all your loose game screenshots into the `data/input_images` folder.
-
-**A quick note:**
-
-* Please use screenshots from a mobile phone. Screenshots from a computer will not work.
-
----
-
-## Step 3: Process Your Screenshots
-
-1.  Run the main processing executable:
-    ```bash
-    UmaScanner.exe
+    nvidia-smi
     ```
+    Note the "CUDA Version" displayed in the top-right corner.
 
-2.  The script will perform the following steps automatically:
-    * **Groups Loose Images:** Any loose screenshots in `data/input_images` are automatically organized into character folders.
-    * **Processes Data:** It then extracts all stats, ranks, skills, sparks, and identifies grandparents for each character.
-    * **Handles Conflicts:** If the script finds conflicting data, a **Conflict Resolution** window will appear.
-    * **Saves Results:** The extracted data is saved in `data/all_runners.json`, and processed images are moved to `data/processed_images`.
+2.  Go to the [Official PyTorch Website](https://pytorch.org/get-started/locally/).
 
----
+3.  Use the selection tool on the website to choose the following:
+    *   **Build**: Stable
+    *   **OS**: Windows
+    *   **Package**: Pip
+    *   **Language**: Python
+    *   **Compute Platform**: Select a CUDA version that is **less than or equal to** the version you noted in the first step.
 
-## Step 4: View Your Results
+4.  Copy the generated command (it will start with `pip install torch...`) and run it in your **Command Prompt** or **Terminal**.
 
-Use the UmaCyclopedia tool at [zeekb.github.io/umascanner/](https://zeekb.github.io/umascanner/).
+**Step 3: Configure the Runner**
+1.  After PyTorch is installed, find its installation path by running this command:
+    ```
+    pip show torch
+    ```
+    Copy the path shown next to `Location:`.
 
-You can load the `all_runners.json` file generated in Step 3 to view, sort, and filter all your scanned data.
+2.  Open the `run_scanner_gpu.bat` file (included in the `.zip`) with a text editor.
+
+3.  Replace `ADD_TORCH_PATH` with the path you just copied. The line should look something like this:
+    ```batch
+    set TORCH_PATH=C:\Users\YourUser\AppData\Local\Programs\Python\Python311\Lib\site-packages
+    ```
+4.  Save and close the file.
+
+### How to Use (GPU Version)
+1.  Download and extract the `UmaScanner-GPU.zip` file.
+2.  Complete the one-time **Setup Instructions** above.
+3.  Place your mobile game screenshots into the `data/input_images` folder.
+4.  Run the `run_scanner_gpu.bat` file. **Do NOT run `UmaScanner_GPU.exe` directly.**
+5.  Once processing is complete, find your results in the `data/all_runners.json` file.
+6.  Upload this file to the [UmaCyclopedia](https://zeekb.github.io/umascanner/) website to view your results.
