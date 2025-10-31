@@ -62,7 +62,6 @@ if getattr(sys, 'frozen', False):
     GAME_DATA_ROOT = os.path.join(BUNDLED_ROOT, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BUNDLED_ROOT, 'assets', 'profile_images')
     
-    RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'src', 'conflict_resolver.py')
 
 else:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,7 +73,6 @@ else:
     CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
     GAME_DATA_ROOT = os.path.join(BASE_DIR, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
-    RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'src', 'conflict_resolver.py')
 
 with open(CONFIG_PATH, 'r') as f: 
     config = json.load(f)
@@ -670,72 +668,7 @@ def main():
     new_runners_df = _create_new_runners_dataframe(final_results)
     if not new_runners_df.empty:
         update_all_runners(new_runners_df, runner_unique_skills, skill_order_map, DATA_FOLDER)
-
-    # If conflicts were detected during data updates, launch the conflict resolver tool.
-    conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
-
-    run_resolver = False
-    try:
-        # Check if the file exists AND is not empty "[]"
-        if os.path.exists(conflicts_file) and os.path.getsize(conflicts_file) > 2: # Check size > 2
-             with open(conflicts_file, 'r', encoding='utf-8') as f:
-                 content = f.read().strip()
-                 # Check content is not just empty brackets
-                 if content and content != '[]':
-                     try:
-                         # Verify it's valid JSON and contains data
-                         if json.loads(content):
-                              run_resolver = True
-                     except json.JSONDecodeError:
-                          logger.error(f"{os.path.basename(conflicts_file)} is corrupted.")
-                          run_resolver = False # Don't run if corrupted
-
-    except IOError as e:
-         logger.error(f"Error checking conflicts file: {e}")
-    except Exception as e:
-         logger.error(f"Unexpected error checking conflicts file status: {e}")
-
-
-    if run_resolver:
-        logger.info("Conflicts detected. Launching conflict resolver GUI...")
-        try:
-            # This is now a direct function call, not a subprocess
-            launch_resolver_gui(DATA_FOLDER, GAME_DATA_ROOT)
-
-            logger.info("Conflict resolver finished.")
-
-            # --- This cleanup logic you had is good, keep it ---
-            try:
-                if os.path.exists(conflicts_file):
-                    with open(conflicts_file, 'r', encoding='utf-8') as f:
-                        content_after = f.read().strip()
-                    if content_after == '[]':
-                        os.remove(conflicts_file)
-                        logger.info(f"Removed empty {os.path.basename(conflicts_file)} after resolution.")
-            except (IOError, OSError, json.JSONDecodeError) as e:
-                logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
-
-        except Exception as e:
-            # Catch any errors from the GUI itself
-            logger.error(f"Error running conflict resolver: {e}", exc_info=True)    
-    else:
-        # --- This 'else' block runs if no resolver was needed ---
-        logger.info("No unresolved conflicts found.")
-        # --- ADDED: Ensure empty file is removed if no resolver was needed ---
-        try:
-             # Check if the file exists (it might not if data_updater found no conflicts)
-             if os.path.exists(conflicts_file):
-                 with open(conflicts_file, 'r', encoding='utf-8') as f:
-                      content = f.read().strip()
-                 # If it exists but is empty, remove it
-                 if content == '[]':
-                      os.remove(conflicts_file)
-                      logger.info(f"Removed empty {os.path.basename(conflicts_file)} as no conflicts were found.")
-        except (IOError, OSError, json.JSONDecodeError) as e:
-             logger.warning(f"Could not check or remove empty conflicts file when no conflicts were found: {e}")
-        # --- END ADDED ---
-
-
+        
     logger.info("Processing finished successfully!")
 
 if __name__ == "__main__":

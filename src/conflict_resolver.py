@@ -10,11 +10,31 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 
-# Global path placeholders
-CONFLICTS_FILE = ""
-ALL_RUNNERS_FILE = ""
-SKILLS_FILE = ""
-RUNNER_SKILLS_FILE = ""
+# --- Path Configuration (Executable Aware) ---
+
+# 1. Get path for EXTERNAL data (conflicts.json, all_runners.json)
+if len(sys.argv) > 1:
+    # External data path is passed as a command-line argument from main.py
+    EXTERNAL_DATA_DIR = sys.argv[1]
+else:
+    # Fallback for testing / running directly as a script
+    EXTERNAL_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+
+# 2. Get path for BUNDLED data (skills.json, runner_skills.json)
+if getattr(sys, 'frozen', False):
+    # We are running as a bundled executable (launched by main.exe)
+    BUNDLED_ROOT = sys._MEIPASS
+    BUNDLED_GAME_DATA_DIR = os.path.join(BUNDLED_ROOT, "data", "game_data")
+else:
+    # We are running as a script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    BUNDLED_GAME_DATA_DIR = os.path.join(script_dir, '..', 'data', 'game_data')
+
+# 3. Define final file paths
+CONFLICTS_FILE = os.path.join(EXTERNAL_DATA_DIR, 'conflicts.json')
+ALL_RUNNERS_FILE = os.path.join(EXTERNAL_DATA_DIR, 'all_runners.json')
+SKILLS_FILE = os.path.join(BUNDLED_GAME_DATA_DIR, 'skills.json')
+RUNNER_SKILLS_FILE = os.path.join(BUNDLED_GAME_DATA_DIR, 'runner_skills.json')
 
 def clear_layout(layout):
     if layout is not None:
@@ -36,7 +56,6 @@ class ConflictResolutionDialog(QDialog):
         self.current_conflict_index = 0
         self.choice_widgets = {}
         self.load_conflicts()
-        self.load_skill_data()
         
         self.init_ui()
         if self.conflicts:
@@ -111,24 +130,6 @@ class ConflictResolutionDialog(QDialog):
         self.save_button.clicked.connect(self.save_resolution)
         button_layout.addWidget(self.save_button)
         dialog_layout.addLayout(button_layout) # This is the crucial fix
-
-    def load_skill_data(self):
-        """Loads skill data required for formatting."""
-        self.skill_order_map = {}
-        self.runner_unique_skills = {}
-        try:
-            # Load skills.json to create the order map
-            with open(SKILLS_FILE, 'r', encoding='utf-8') as f:
-                skills_data = json.load(f)
-            self.skill_order_map = {skill_name: i for i, skill_name in enumerate(skills_data.keys())}
-            
-            # Load runner_skills.json
-            with open(RUNNER_SKILLS_FILE, 'r', encoding='utf-8') as f:
-                self.runner_unique_skills = json.load(f)
-
-        except Exception as e:
-            # This will prevent a crash, though formatting might be affected
-            print(f"Warning: Could not load skill data for resolver: {e}")
 
     def diff_sparks(self, existing_sparks, new_sparks):
         # ... (This helper function remains the same)
@@ -215,7 +216,7 @@ class ConflictResolutionDialog(QDialog):
                 e_text, n_text = spark_diffs[spark_type]
                 if e_text != n_text:
                     self.sparks_layout.addWidget(QLabel(f"<b>{spark_type.title()}:</b>"), spark_row, 0)
-                    self.sparks_layout.addLayout(self.create_choice_row(f"{spark_type}_sparks", e_text, n_text), spark_row, 1)
+                    self.sparks_layout.addLayout(self.create_choice_row(spark_type, e_text, n_text), spark_row, 1)
                     spark_row += 1
 
     def create_choice_row(self, key, existing_text, new_text):
@@ -246,33 +247,18 @@ class ConflictResolutionDialog(QDialog):
         lbl_key.setAlignment(Qt.AlignCenter)
         layout.addWidget(lbl_key)
 
-        # --- START FIX ---
-        # Create radio button with simple text
-        rb_existing = QRadioButton("Existing")
+        rb_existing = QRadioButton(f"Existing: {existing_text}")
         rb_existing.setChecked(True)
-        # Create a separate label for the value
-        lbl_existing = QLabel(existing_text) 
-
-        # Create radio button with simple text
-        rb_new = QRadioButton("New")
-        # Create a separate label for the value
-        lbl_new = QLabel(new_text) 
         
-        # Color the text on the LABELS, not the radio buttons
+        rb_new = QRadioButton(f"New: {new_text}")
+        
+        # Color the text if they are different
         if existing_text != new_text:
-            lbl_existing.setText(f'<font color="blue">{existing_text}</font>')
-            lbl_new.setText(f'<font color="blue">{new_text}</font>')
+            rb_existing.setText(f'Existing: <font color="blue">{existing_text}</font>')
+            rb_new.setText(f'New: <font color="blue">{new_text}</font>')
 
-        group.addButton(rb_existing)
-        group.addButton(rb_new)
-        
-        # Add the widgets to the layout
-        layout.addWidget(rb_existing)
-        layout.addWidget(lbl_existing)
-        layout.addWidget(rb_new)
-        layout.addWidget(lbl_new)
-        # --- END FIX ---
-        
+        group.addButton(rb_existing); group.addButton(rb_new)
+        layout.addWidget(rb_existing); layout.addWidget(rb_new)
         layout.addStretch()
 
         self.choice_widgets[key] = rb_existing
@@ -285,20 +271,17 @@ class ConflictResolutionDialog(QDialog):
         # Overwrite with "existing" choices where selected
         for key, rb_existing in self.choice_widgets.items():
             if rb_existing.isChecked():
-                if key.endswith("_sparks"): # Check for our new key
-                    spark_type = key.split('_')[0] # Get the original name (e.g., "gp1")
+                if key in ["parent", "gp1", "gp2"]: # Handle granular sparks
                     if 'sparks' not in resolved_entry: resolved_entry['sparks'] = {}
-                    resolved_entry['sparks'][spark_type] = conflict['existing']['sparks'].get(spark_type)
+                    resolved_entry['sparks'][key] = conflict['existing']['sparks'].get(key)
                 else: # Handle all other fields
                     resolved_entry[key] = conflict['existing'].get(key)
         
         # For sparks, ensure non-conflicting types are carried over from the 'new' entry
         if 'sparks' in resolved_entry and 'sparks' in conflict['new']:
             for spark_type in ["parent", "gp1", "gp2"]:
-                if f"{spark_type}_sparks" not in self.choice_widgets:
+                if spark_type not in self.choice_widgets: # This type had no conflict
                     resolved_entry['sparks'][spark_type] = conflict['new']['sparks'].get(spark_type)
-
-            resolved_entry['entry_hash'] = conflict['hash']
 
         # --- SAVE TO JSON ---
         all_runners_file = ALL_RUNNERS_FILE
@@ -311,7 +294,7 @@ class ConflictResolutionDialog(QDialog):
                 break
         
         with open(all_runners_file, 'w', encoding='utf-8') as f:
-            f.write(format_json_with_custom_layout(all_data, self.runner_unique_skills, self.skill_order_map))
+            f.write(format_json_with_custom_layout(all_data))
 
         # --- Update conflicts file ---
         self.conflicts.pop(self.current_conflict_index)
@@ -323,23 +306,11 @@ class ConflictResolutionDialog(QDialog):
         else:
             self.display_conflict(self.current_conflict_index % len(self.conflicts))
 
-def launch_resolver_gui(external_data_path, bundled_game_data_path):
-    """Launches the conflict resolution dialog."""
-    global CONFLICTS_FILE, ALL_RUNNERS_FILE, SKILLS_FILE, RUNNER_SKILLS_FILE
-
-    # Set the global paths for the dialog to use
-    CONFLICTS_FILE = os.path.join(external_data_path, 'conflicts.json')
-    ALL_RUNNERS_FILE = os.path.join(external_data_path, 'all_runners.json')
-    SKILLS_FILE = os.path.join(bundled_game_data_path, 'skills.json')
-    RUNNER_SKILLS_FILE = os.path.join(bundled_game_data_path, 'runner_skills.json')
-
-    # Get the existing app instance or create a new one
-    app = QApplication.instance() or QApplication(sys.argv)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
     app.setFont(QFont("Calibri", 12))
-
+    # app.setStyleSheet(QSS)
     dialog = ConflictResolutionDialog()
     if dialog.conflicts:
         dialog.exec_()
-    else:
-        # No conflicts were found when loading, so just close.
-        pass
+    sys.exit(0)
