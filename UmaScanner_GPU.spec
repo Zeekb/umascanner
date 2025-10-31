@@ -7,7 +7,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('data/game_data', 'data/game_data'),
-        ('assets/profile_images', 'assets/profile_images'),
+        ('assets', 'assets'),
         ('src/config.json', 'src'),  
         ('src/conflict_resolver.py', 'src'),
         ('src/data_loader.py', 'src'),

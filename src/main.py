@@ -2,8 +2,6 @@
 # --- main.py ---
 #
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
-
 import os
 import sys
 
@@ -263,7 +261,6 @@ def _find_and_crop_match_from_master(master_img_gray: Image.Image, template_face
 
 # --- Character Portrait Identification Engine ---
 MASTER_IMAGE_CACHE = {}
-PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
 
 def _identify_portrait(screenshot_portrait_img: Image.Image, debug_filename: str) -> str:
     """
