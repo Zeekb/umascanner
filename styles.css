@@ -716,7 +716,12 @@ td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
 td.left-align { text-align: left; white-space: normal; }
 
 .outline-label {
+  font-weight: bold;
+  font-size: 1em;
   color: var(--uma-text-dark);
+  text-shadow:
+   -1px -1px 0 var(--uma-light-bg),  1px -1px 0 var(--uma-light-bg),
+   -1px  1px 0 var(--uma-light-bg),  1px  1px 0 var(--uma-light-bg);
 }
 
 td.spark-cell { text-align: left; white-space: normal; font-size: 0.85em; min-width: 150px; }
