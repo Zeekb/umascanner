@@ -26,7 +26,6 @@ let uploaderContainer, fileInput, loadDataButton, loadingMessage, errorMessage, 
 let loadNewFileButton;
 let saveDataButton;
 let entriesCountDisplay;
-let transferTargetsBody;
 
 // --- Constants ---
 const APTITUDE_RANK_MAP = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100};
@@ -272,7 +271,6 @@ function initializeApp() {
     loadNewFileButton = document.getElementById('load-new-file-button');
     saveDataButton = document.getElementById('save-data-button');
     entriesCountDisplay = document.getElementById('entries-count-display');
-    transferTargetsBody = document.getElementById('transfer-targets-body');
 
     // --- Start of original setup logic ---
     if (!allRunners || allRunners.length === 0) {
@@ -312,67 +310,6 @@ function initializeApp() {
         if (totalCount > maxTotalWhiteSparks) {
             maxTotalWhiteSparks = totalCount;
         }
-    });
-
-    /**
-     * Helper to get spark values.
-     * @param {object} runner - The runner object.
-     * @param {string|string[]} color - The color(s) to count.
-     * @param {boolean} isParentOnly - Whether to check parent only or all 3 sources.
-     * @returns {number} - The total value (star count for BPG, item count for White).
-     */
-    const getSparkValue = (runner, color, isParentOnly) => {
-        const sources = isParentOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
-        let totalValue = 0;
-        const colorsToSum = Array.isArray(color) ? color : [color];
-        
-        for (const source of sources) {
-            if (Array.isArray(runner.sparks?.[source])) {
-                for (const spark of runner.sparks[source]) {
-                    if (colorsToSum.includes(spark.color)) {
-                        // For blue, green, pink, we sum the star count
-                        if (spark.color !== 'white') {
-                            totalValue += parseInt(spark.count || 0);
-                        } else {
-                            // For white, we just count how many there are
-                            totalValue += 1;
-                        }
-                    }
-                }
-            }
-        }
-        return totalValue;
-    };
-
-    // Define weights for each value component
-    const W_SCORE = 1;         // 1 score point = 1 value
-    const W_PARENT_BPG = 500;  // 1 parent BPG star = 500 value
-    const W_TOTAL_BPG = 200;   // 1 total BPG star = 200 value
-    const W_PARENT_WHITE = 400;  // 1 parent white spark = 400 value
-    const W_TOTAL_WHITE = 150;   // 1 total white spark = 150 value
-
-    allRunners.forEach(r => {
-        const parent_bpg_val = getSparkValue(r, ['blue', 'pink', 'green'], true);
-        const total_bpg_val = getSparkValue(r, ['blue', 'pink', 'green'], false);
-        const parent_white_val = getSparkValue(r, 'white', true);
-        const total_white_val = getSparkValue(r, 'white', false);
-
-        let v_score = (r.score || 0) * W_SCORE;
-        let v_parent_bpg = parent_bpg_val * W_PARENT_BPG;
-        let v_total_bpg = total_bpg_val * W_TOTAL_BPG;
-        let v_parent_white = parent_white_val * W_PARENT_WHITE;
-        let v_total_white = total_white_val * W_TOTAL_WHITE;
-        
-        r.valueScore = v_score + v_parent_bpg + v_total_bpg + v_parent_white + v_total_white;
-        
-        // Store the breakdown so we can display the "Reason"
-        r.valueBreakdown = {
-            "Score": v_score,
-            "Parent BPG (★)": v_parent_bpg,
-            "Total BPG (★)": v_total_bpg,
-            "Parent Whites": v_parent_white,
-            "Total Whites": v_total_white
-        };
     });
 
     extractSparkNames();
@@ -526,7 +463,7 @@ function populateFilters() {
     const currentSort = filterElements.sort.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
-        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'valueScore'
+        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)'
     ];
 
     filterElements.sort.innerHTML = allSortOptions.map(o => {
@@ -715,9 +652,6 @@ function setupEventListeners() {
     [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => {
         body.addEventListener('dblclick', handleDetailView);
     });
-
-    transferTargetsBody.addEventListener('click', handleDeleteRunner);
-    transferTargetsBody.addEventListener('dblclick', handleDetailView);
 
     saveDataButton.addEventListener('click', saveDataToFile); 
     
@@ -1221,16 +1155,11 @@ function filterAndRender() {
         }
     }
 
-    if (activeTabId === 'transfer-targets') {
-        sortData(filteredData, 'valueScore', 'asc');
-    } else {
-        sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
-    }
+    sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
 
     parentSummaryBody.innerHTML = '';
     whiteSparksBody.innerHTML = '';
     skillsSummaryBody.innerHTML = '';
-    transferTargetsBody.innerHTML = '';
     
     const allSparkCriteria = getAllSparkFilterCriteria();
 
@@ -1986,32 +1915,4 @@ function updateEntriesCount() {
     if (entriesCountDisplay) {
         entriesCountDisplay.textContent = `Entries count: ${allRunners.length}/200`;
     }
-}
-
-function renderTransferTargets(runners) {
-    if (!runners.length) {
-        transferTargetsBody.innerHTML = '<tr><td colspan="5">No runners match filters.</td></tr>';
-        return;
-    }
-
-    const html = runners.map(r => {
-        // Format the reason breakdown, sorted by lowest value first
-        const reasonHtml = r.valueBreakdown ? Object.entries(r.valueBreakdown)
-            .sort(([, valA], [, valB]) => valA - valB) // Sort by lowest value
-            .map(([key, value]) => `<li><b>${key}</b>: ${Math.round(value).toLocaleString()}</li>`)
-            .join('') : '<li>No breakdown available</li>';
-
-        return `
-        <tr data-entry-id="${r.entry_id || ''}">
-            <td>${r.entry_id || 'N/A'}</td>
-            <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-            <td>${Math.round(r.valueScore).toLocaleString()}</td>
-            <td class="reason-cell"><ul>${reasonHtml}</ul></td>
-            <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
-        </tr>
-        `;
-    }).join('');
-    
-    transferTargetsBody.innerHTML = html;
-    hideEntryIdColumn('transfer-targets');
 }

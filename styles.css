@@ -1479,21 +1479,3 @@ td.spark-cell .skill-gold b {
     right: 0;   /* Aligns the tooltip to the right edge of the '?' icon */
     transform: translateX(0); /* Keeps the horizontal position as-is */
 }
-
-.reason-cell {
-    text-align: left;
-    font-size: 0.85em;
-    white-space: normal;
-    vertical-align: top;
-    line-height: 1.4;
-    max-width: 300px;
-}
-
-.reason-cell ul {
-    margin: 0;
-    padding-left: 18px;
-}
-
-.reason-cell li {
-    margin-bottom: 2px;
-}
