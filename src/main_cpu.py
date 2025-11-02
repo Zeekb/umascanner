@@ -1,5 +1,5 @@
 #
-# --- image_processor.py ---
+# --- main.py ---
 #
 
 import os
@@ -25,12 +25,11 @@ import threading
 import logging
 import re
 import io
-from typing import Optional
+from typing import Optional, Dict
 import json
 from multiprocessing import cpu_count
 from datetime import datetime
 from tqdm import tqdm
-import subprocess
 import torch
 import warnings
 
@@ -40,7 +39,7 @@ from spark_parser import parse_sparks
 from roi_selector_gui import get_entries, combine_images_horizontally
 from roi_detector import detect_spark_zones
 from tabs import detect_active_tab
-from data_updater import update_all_runners
+from data_updater import format_json_with_custom_layout
 from ocr_utils import normalize_name
 from image_utils import select_layout, crop_rois, load_image
 
@@ -62,7 +61,6 @@ if getattr(sys, 'frozen', False):
     GAME_DATA_ROOT = os.path.join(BUNDLED_ROOT, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BUNDLED_ROOT, 'assets', 'profile_images')
     
-    RESOLVER_SCRIPT_PATH = os.path.join(BUNDLED_ROOT, 'src', 'conflict_resolver.py')
 
 else:
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -74,7 +72,6 @@ else:
     CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
     GAME_DATA_ROOT = os.path.join(BASE_DIR, "data", "game_data")
     PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
-    RESOLVER_SCRIPT_PATH = os.path.join(BASE_DIR, 'src', 'conflict_resolver.py')
 
 with open(CONFIG_PATH, 'r') as f: 
     config = json.load(f)
@@ -219,7 +216,6 @@ def _find_and_crop_match_from_master(master_img_gray: Image.Image, template_face
 
 # --- Character Portrait Identification Engine ---
 MASTER_IMAGE_CACHE = {}
-PROFILE_IMAGES_DIR = os.path.join(BASE_DIR, 'assets', 'profile_images')
 
 def _identify_portrait(screenshot_portrait_img: Image.Image, debug_filename: str) -> str:
     """
@@ -471,6 +467,53 @@ def _create_new_runners_dataframe(final_results):
 
     return pd.DataFrame(new_runners_rows)
 
+def update_all_runners(new_runners_df: pd.DataFrame, runner_unique_skills: dict, skill_order_map: dict, data_folder: str):
+    """
+    Updates the main all_runners.json file.
+    If an entry with the same 'entry_hash' exists, it is completely replaced.
+    If it does not exist, it is added. The final JSON is written with custom formatting.
+    """
+    logger.info("\n=== Step 5: Updating all_runners.json ===")
+    all_runners_path = os.path.join(data_folder, "all_runners.json")
+
+    if new_runners_df.empty:
+        logger.info("No new data to update in all_runners.json.")
+        return
+
+    new_runners_df = new_runners_df.set_index('entry_hash')
+
+    if os.path.exists(all_runners_path):
+        try:
+            existing_df = pd.read_json(all_runners_path)
+            if not existing_df.empty and 'entry_hash' in existing_df.columns:
+                existing_df = existing_df.set_index('entry_hash')
+            else:
+                existing_df = pd.DataFrame() # Ensure it's a dataframe
+        except (ValueError, FileNotFoundError):
+            logger.warning("all_runners.json is empty or corrupted. A new file will be created.")
+            existing_df = pd.DataFrame()
+    else:
+        existing_df = pd.DataFrame()
+
+    hashes_to_update = new_runners_df.index
+    if not existing_df.empty:
+        existing_df = existing_df.drop(index=hashes_to_update, errors='ignore')
+
+    combined_df = pd.concat([existing_df, new_runners_df])
+    combined_df.reset_index(inplace=True)
+    all_data = combined_df.to_dict('records')
+
+    formatted_json_string = format_json_with_custom_layout(
+        all_data,
+        runner_unique_skills,
+        skill_order_map
+    )
+    
+    with open(all_runners_path, 'w', encoding='utf-8') as f:
+        f.write(formatted_json_string)
+
+    logger.info(f"Successfully updated all_runners.json with {len(new_runners_df)} new/updated entries.")
+
 def _group_loose_images(reader):
     """
     Organizes individual image files in the input directory into subfolders. Images are
@@ -603,10 +646,6 @@ def main():
         warnings.warn("\n\GPU acceleration is enabled, but a compatible GPU/PyTorch was not found. \nCrashing Out\n")
 
     logger.info("Starting Umamusume Scanner...")
-    # Clear any previous conflict resolution files.
-    conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
-    if os.path.exists(conflicts_file):
-        with open(conflicts_file, 'w') as f: json.dump([], f)
 
     reader = easyocr.Reader(OCR_READER_CONFIG["languages"], gpu=OCR_READER_CONFIG["gpu"])
 
@@ -668,76 +707,9 @@ def main():
     _move_processed_folders(processed_folder_names)
     # Step 4: Create a DataFrame from the results and update the main data file.
     new_runners_df = _create_new_runners_dataframe(final_results)
-    if not new_runners_df.empty:
-        update_all_runners(new_runners_df, runner_unique_skills, skill_order_map, DATA_FOLDER)
-
-    # If conflicts were detected during data updates, launch the conflict resolver tool.
-    conflicts_file = os.path.join(BASE_DIR, 'data', 'conflicts.json')
-
-    run_resolver = False
-    try:
-        # Check if the file exists AND is not empty "[]"
-        if os.path.exists(conflicts_file) and os.path.getsize(conflicts_file) > 2: # Check size > 2
-             with open(conflicts_file, 'r', encoding='utf-8') as f:
-                 content = f.read().strip()
-                 # Check content is not just empty brackets
-                 if content and content != '[]':
-                     try:
-                         # Verify it's valid JSON and contains data
-                         if json.loads(content):
-                              run_resolver = True
-                     except json.JSONDecodeError:
-                          logger.error(f"{os.path.basename(conflicts_file)} is corrupted.")
-                          run_resolver = False # Don't run if corrupted
-
-    except IOError as e:
-         logger.error(f"Error checking conflicts file: {e}")
-    except Exception as e:
-         logger.error(f"Unexpected error checking conflicts file status: {e}")
-
-
-    if run_resolver:
-        logger.info("Conflicts detected. Launching conflict resolver GUI...")
-        try:
-            subprocess.run([sys.executable, RESOLVER_SCRIPT_PATH, DATA_FOLDER], check=True) # Pass DATA_FOLDER as an argument
-            logger.info("Conflict resolver finished.")
-
-            # --- ADDED: Clean up conflicts.json IF resolver emptied it ---
-            try:
-                if os.path.exists(conflicts_file):
-                    with open(conflicts_file, 'r', encoding='utf-8') as f:
-                        content_after = f.read().strip()
-                    # If resolver left it empty, remove it
-                    if content_after == '[]':
-                        os.remove(conflicts_file)
-                        logger.info(f"Removed empty {os.path.basename(conflicts_file)} after resolution.")
-            except (IOError, OSError, json.JSONDecodeError) as e:
-                 logger.warning(f"Could not check or remove empty conflicts file after resolution: {e}")
-            # --- END ADDED ---
-
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Conflict resolver script failed with exit code {e.returncode}.")
-        except FileNotFoundError:
-             logger.error("Conflict resolver script not found.")
-        except Exception as e:
-             logger.error(f"Error running conflict resolver: {e}")
-    else:
-        # --- This 'else' block runs if no resolver was needed ---
-        logger.info("No unresolved conflicts found.")
-        # --- ADDED: Ensure empty file is removed if no resolver was needed ---
-        try:
-             # Check if the file exists (it might not if data_updater found no conflicts)
-             if os.path.exists(conflicts_file):
-                 with open(conflicts_file, 'r', encoding='utf-8') as f:
-                      content = f.read().strip()
-                 # If it exists but is empty, remove it
-                 if content == '[]':
-                      os.remove(conflicts_file)
-                      logger.info(f"Removed empty {os.path.basename(conflicts_file)} as no conflicts were found.")
-        except (IOError, OSError, json.JSONDecodeError) as e:
-             logger.warning(f"Could not check or remove empty conflicts file when no conflicts were found: {e}")
-        # --- END ADDED ---
-
+    # Step 5: Update the main runners file, overwriting any existing entries.
+    update_all_runners(new_runners_df, runner_unique_skills, skill_order_map, DATA_FOLDER)
+        
     logger.info("Processing finished successfully!")
 
 if __name__ == "__main__":
