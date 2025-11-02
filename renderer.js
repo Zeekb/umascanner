@@ -1883,7 +1883,7 @@ function handleDeleteRunner(event) {
         if (runnerIndex > -1) {
             // Get runner name for confirmation
             const runnerName = allRunners[runnerIndex].name || 'this runner';
-            const confirmed = window.confirm(`Are you sure you want to transfer ${runnerName} ${score}?`);
+            const confirmed = window.confirm(`Are you sure you want to transfer ${runnerName} ${allRunners[runnerIndex].score}?`);
             
             if (confirmed) {
                 // Remove the runner from the main data array
