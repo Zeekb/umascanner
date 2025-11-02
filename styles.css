@@ -698,6 +698,12 @@ tbody td:nth-child(2) {
 }
 td.stats { font-family: monospace; font-size: 0.9em; min-width: 100px; }
 .stat-cell { min-width: 40px; text-align: center; }
+.stat-cell-compact {
+    font-family: monospace;
+    font-size: 0.9em;
+    white-space: nowrap;
+    text-align: center;
+}
 td.aptitude { font-weight: bold; color: #333; min-width: 40px; }
 .dark-mode td.aptitude { color: var(--uma-text-dark); }
 
