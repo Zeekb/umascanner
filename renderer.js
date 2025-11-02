@@ -244,7 +244,7 @@ function returnToFileUploader() {
 }
 
 /**
- * NEW: Main app initialization, runs *after* all data is loaded
+ * Main app initialization, runs *after* all data is loaded
  */
 function initializeApp() {
     // Now that the app is visible, get references to its elements
@@ -298,64 +298,82 @@ function initializeApp() {
         orderedSparks = {};
     }
 
+    // ----------------------------------------------------
+    // ▼ NEW PRE-CALCULATION LOOP ▼
+    // This loop replaces your old "Loop 1" and "Loop 2"
+    // ----------------------------------------------------
+    console.log("Running pre-calculation on all runners...");
+    maxTotalWhiteSparks = 0; // Reset counters
+    maxParentWhiteSparks = 0;
+
     allRunners.forEach(runner => {
+        // 1. Basic data prep
         if (runner.name) allRunnerNamesSet.add(runner.name);
         runner.sparks = (typeof runner.sparks === 'string') ? JSON.parse(runner.sparks) : runner.sparks || {};
         runner.skills = (typeof runner.skills === 'string') ? runner.skills.split('|').map(s => s.trim()).filter(s => s) : runner.skills || [];
-    });
 
-    allRunners.forEach(runner => {
-        let totalCount = 0;
-        let parentCount = 0;
+        // 2. For fast skill filtering
+        runner._searchableSkills = runner.skills.join('|').toLowerCase();
+
+        // 3. For fast spark filtering
+        runner._sparkTotals = { blue: {}, green: {}, pink: {}, white: {} }; // Totals by name
+        runner._sparkParentTotals = { blue: {}, green: {}, pink: {}, white: {} };
+
+        // 4. For fast sorting
+        runner['whites (total)'] = 0;
+        runner['whites (parent)'] = 0;
+        runner['whites (gp1)'] = 0;
+        runner['whites (gp2)'] = 0;
+
+        const sources = ['parent', 'gp1', 'gp2'];
         if (runner.sparks && typeof runner.sparks === 'object') {
-            if (Array.isArray(runner.sparks.parent)) {
-                parentCount = runner.sparks.parent.filter(s => s?.color === 'white').length;
-            }
-            ['parent', 'gp1', 'gp2'].forEach(source => {
+            for (const source of sources) {
                 if (Array.isArray(runner.sparks[source])) {
-                    totalCount += runner.sparks[source].filter(s => s?.color === 'white').length;
-                }
-            });
-        }
-        if (parentCount > maxParentWhiteSparks) {
-            maxParentWhiteSparks = parentCount;
-        }
-        if (totalCount > maxTotalWhiteSparks) {
-            maxTotalWhiteSparks = totalCount;
-        }
-    });
+                    for (const spark of runner.sparks[source]) {
+                        if (!spark || !spark.spark_name || !runner._sparkTotals[spark.color]) continue;
+                        
+                        const name = spark.spark_name;
+                        const count = (spark.color === 'white') ? 1 : parseInt(spark.count || 0);
+                        const isWhite = spark.color === 'white';
 
-    /**
-     * Helper to get spark values.
-     * @param {object} runner - The runner object.
-     * @param {string|string[]} color - The color(s) to count.
-     * @param {boolean} isParentOnly - Whether to check parent only or all 3 sources.
-     * @returns {number} - The total value (star count for BPG, item count for White).
-     */
-    const getSparkValue = (runner, color, isParentOnly) => {
-        const sources = isParentOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
-        let totalValue = 0;
-        const colorsToSum = Array.isArray(color) ? color : [color];
-        
-        for (const source of sources) {
-            if (Array.isArray(runner.sparks?.[source])) {
-                for (const spark of runner.sparks[source]) {
-                    if (colorsToSum.includes(spark.color)) {
-                        // For blue, green, pink, we sum the star count
-                        if (spark.color !== 'white') {
-                            totalValue += parseInt(spark.count || 0);
-                        } else {
-                            // For white, we just count how many there are
-                            totalValue += 1;
+                        // Add to combined totals
+                        runner._sparkTotals[spark.color][name] = (runner._sparkTotals[spark.color][name] || 0) + count;
+                        if (isWhite) runner['whites (total)']++;
+
+                        // Add to parent-only totals
+                        if (source === 'parent') {
+                            runner._sparkParentTotals[spark.color][name] = (runner._sparkParentTotals[spark.color][name] || 0) + count;
+                            if (isWhite) runner['whites (parent)']++;
+                        }
+                        // Add to GP-specific totals
+                        else if (source === 'gp1' && isWhite) {
+                            runner['whites (gp1)']++;
+                        } else if (source === 'gp2' && isWhite) {
+                            runner['whites (gp2)']++;
                         }
                     }
                 }
             }
         }
-        return totalValue;
-    };
+
+        // 5. Update max spark counts (replaces old Loop 2)
+        if (runner['whites (parent)'] > maxParentWhiteSparks) {
+            maxParentWhiteSparks = runner['whites (parent)'];
+        }
+        if (runner['whites (total)'] > maxTotalWhiteSparks) {
+            maxTotalWhiteSparks = runner['whites (total)'];
+        }
+        
+        // 6. For fast GP lookup
+        runner._parentSparksString = createComparableString(runner.sparks.parent);
+    });
+    console.log("Pre-calculation complete.");
+    // ----------------------------------------------------
+    // ▲ END PRE-CALCULATION LOOP ▲
+    // ----------------------------------------------------
 
     // --- Complex Weights for Legacy Parent Valuation ---
+    // (This section is unchanged, just copied from your file)
     // --- 1. DEFINE YOUR "TROPHY" LISTS ---
     const S_TIER_SKILLS = new Set([
         'Groundwork', 'Non-stop Girl', 'Straightaway Spurt', 
@@ -389,8 +407,6 @@ function initializeApp() {
 
 
     // --- 2. DEFINE THE WEIGHTS (Points-Based) ---
-    
-    // --- POSITIVE WEIGHTS ---
     const W_PARENT_BLUE_3STAR_PRIZED = 20000;
     const W_PARENT_BLUE_3STAR_OTHER = 12000;
     const W_PARENT_S_TIER_SKILL = 15000;
@@ -409,21 +425,15 @@ function initializeApp() {
     const W_GP_G1_RACE = 100;
     const W_GP_SCENARIO_URA = 200;
     const W_PARENT_FACTOR_SYNERGY = 6000;
-
-    // --- NEW/ADJUSTED PENALTY WEIGHTS ---
     const W_PARENT_BLUE_1STAR_GUTS = -8000;
     const W_PARENT_BLUE_1STAR_OTHER = -5000;
     const W_PARENT_PINK_1STAR = -1000;
     const W_GP_BLUE_1STAR = -2000;
     const W_GP_PINK_1STAR = -500;
-    
-    // ----------------------------------------------------
-    // ▼ BUG FIX HERE ▼
-    // ----------------------------------------------------
-    const W_PARENT_DETRIMENTAL_SKILL = -15000; // This was missing, causing NaN scores
-    // ----------------------------------------------------
+    const W_PARENT_DETRIMENTAL_SKILL = -15000; // Bug fix
 
     // --- 3. THE NEW VALUATION FUNCTION ---
+    // (This loop is unchanged)
     allRunners.forEach(r => {
         let totalValue = 0;
         let breakdown = {};
@@ -483,9 +493,6 @@ function initializeApp() {
                         }
                         break;
                     case 'white':
-                        // ----------------------------------------------------
-                        // ▼ BUG FIX HERE ▼ (Added detrimental check)
-                        // ----------------------------------------------------
                         if (DETRIMENTAL_SKILLS.has(name)) {
                              addValue(`Penalty: ${name}`, W_PARENT_DETRIMENTAL_SKILL * stars);
                         } else if (S_TIER_SKILLS.has(name)) {
@@ -499,13 +506,11 @@ function initializeApp() {
                         } else {
                             addValue('Generic White', W_PARENT_GENERIC_SKILL * stars);
                         }
-                        // ----------------------------------------------------
                         break;
                 }
             });
         }
  
-
         // --- Process Factor Synergy ---
         const synergyMap = {
             'Speed': ['Sprint', 'Mile'],
@@ -540,10 +545,10 @@ function initializeApp() {
                     addValue(isPrized ? 'GP 3★ (Prized)' : 'GP 3★ (Other)', isPrized ? W_GP_BLUE_3STAR_PRIZED : W_GP_BLUE_3STAR_OTHER);
                 } else if (stars === 2) {
                     addValue('GP 2★ (Prized)', isPrized ? W_GP_BLUE_2STAR_PRIZED : 0);
-                } else if (stars === 1) { // NEW: Penalty for 1-star GP factors
+                } else if (stars === 1) { 
                     addValue('Penalty GP 1★ Blue', W_GP_BLUE_1STAR);
                 }
-            } else if (color === 'pink') { // NEW: Penalty for 1-star GP factors
+            } else if (color === 'pink') { 
                  if (stars === 1) {
                     addValue('Penalty GP 1★ Pink', W_GP_PINK_1STAR);
                  }
@@ -551,7 +556,7 @@ function initializeApp() {
                 if (G1_RACES.has(name)) {
                     addValue('GP G1 Win (Affinity)', W_GP_G1_RACE * stars);
                 } else if (SCENARIO_FACTORS.has(name)) {
-                    addValue('GP Scenario Factor', W_GP_SCENARIO_URA * stars);
+                    addValue('Scenario Factor', W_GP_SCENARIO_URA * stars);
                 }
             }
         });
@@ -566,26 +571,18 @@ function initializeApp() {
     // ----------------------------------------------------
     // ▼ NEW O(1) GRANDPARENT LOOKUP MAP ▼
     // ----------------------------------------------------
-    // This builds the fast lookup map to fix the O(N²) lag
     console.log("Building parent lookup map...");
     const runnerLookupByParent = new Map();
     allRunners.forEach(runner => {
-        // Uses the '_parentSparksString' we created in the pre-calc loop
-        const key = `${runner.name}::${runner._parentSparksString}`;
-        
-        // This handles "c" (non-green) vs non-"c" (green) runners.
-        // It prioritizes the non-"c" (green spark) version if one exists.
+        const key = `${runner.name}::${runner._parentSparksString}`; // Uses pre-calculated string
         const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
         
         if (!runnerLookupByParent.has(key) || hasGreenParentSpark) {
             runnerLookupByParent.set(key, runner);
         }
     });
-    // Make this map globally available for findRunnerByDetails to use
     window.runnerLookupByParent = runnerLookupByParent;
     console.log(`Lookup map built with ${runnerLookupByParent.size} unique entries.`);
-    // ----------------------------------------------------
-    // ▲ END NEW MAP LOGIC ▲
     // ----------------------------------------------------
 
     extractSparkNames();
