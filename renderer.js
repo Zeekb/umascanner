@@ -467,7 +467,9 @@ function initializeApp() {
                         }
                         break;
                     case 'white':
-                        if (S_TIER_SKILLS.has(name)) {
+                        if (DETRIMENTAL_SKILLS.has(name)) { // NEW: Check for detrimental skills
+                            addValue(`Penalty: ${name}`, W_PARENT_DETRIMENTAL_SKILL * stars);
+                        } else if (S_TIER_SKILLS.has(name)) {
                             addValue(`S-Skill: ${name}`, W_PARENT_S_TIER_SKILL * stars);
                         } else if (A_TIER_SKILLS.has(name)) {
                             addValue(`A-Skill: ${name}`, W_PARENT_A_TIER_SKILL * stars);
@@ -698,12 +700,18 @@ function populateFilters() {
         'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'transferScore'
     ];
 
-    // This is the only block you need to populate the sort dropdown
+    // This block now correctly maps the key 'transferScore' to the label 'Transfer Score'
+    // I've also removed the duplicate block that was overwriting this.
     filterElements.sort.innerHTML = allSortOptions.map(o => {
         let label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         if (o === 'transferScore') {
-            label = 'Transfer Score'; 
+            label = 'Transfer Score'; // This sets the friendly label
         }
+        return `<option value="${o}">${label}</option>`; // This sets the correct value="${o}"
+    }).join('');
+
+    filterElements.sort.innerHTML = allSortOptions.map(o => {
+        const label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         return `<option value="${o}">${label}</option>`;
     }).join('');
     
@@ -2097,7 +2105,7 @@ function handleDeleteRunner(event) {
         if (runnerIndex > -1) {
             // Get runner name for confirmation
             const runnerName = allRunners[runnerIndex].name || 'this runner';
-            const confirmed = window.confirm(`Are you sure you want to transfer ${runnerName} ${allRunners[runnerIndex].score}?`);
+            const confirmed = window.confirm(`Are you sure you want to transfer ${runnerName} ${score}?`);
             
             if (confirmed) {
                 // Remove the runner from the main data array
