@@ -50,15 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up the dark mode toggle *early* so the page loads with the right theme
     setupDarkMode(); 
 
+    // *** FIX 1: Event listener is now attached regardless of saved data ***
+    loadDataButton.addEventListener('click', handleFileLoad);
+
     const savedData = localStorage.getItem('savedRunnerData');
     if (savedData) {
         console.log("Found saved data, attempting to load...");
         setTimeout(() => {
             loadFromSavedData(savedData);
         }, 100);
-    } else {
-        loadDataButton.addEventListener('click', handleFileLoad);
-    }
+    } 
+    // The 'else' block that previously contained the event listener is removed
 });
 
 /**
@@ -214,7 +216,9 @@ function returnToFileUploader() {
 
     // 3. Hide the main application and show the uploader
     appWrapper.style.display = 'none';
-    uploaderContainer.style.display = 'block';
+    
+    // *** FIX 2: Set display to 'flex' to match the app-container class rule ***
+    uploaderContainer.style.display = 'flex';
 
     // 4. Reset the file input so the user can re-upload the same file if needed
     fileInput.value = '';
