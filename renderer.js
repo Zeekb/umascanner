@@ -346,153 +346,137 @@ function initializeApp() {
 
     // --- Complex Weights for Legacy Parent Valuation ---
     // --- 1. DEFINE YOUR "TROPHY" LISTS ---
+    // S-Tier: The skills you prize most
     const S_TIER_SKILLS = new Set([
         'Groundwork', 'Non-stop Girl', 'Straightaway Spurt', 
-        'Position Sense', 'Pluck and Pride'
+        'Position Sense', 'Pluck and Pride' // Customize this list
     ]);
+
+    // A-Tier: Good gold skills or hard-to-get normal skills
     const A_TIER_SKILLS = new Set([
-        'Swinging Maestro', 'Corner Adept ○', 'Straightaway Adept', 
-        'Arc of Triumph', 'Full Throttle', 'Speed Eater', 'Gourmand', 'Hydrate'
+        'Corner Adept O', 'Straight Adept O', 'Arc of Triumph',
+        'Full Throttle' // Customize this list
     ]);
-    // NOTE: Your JSON file uses capitalized stat names ("Speed", "Stamina", "Power")
-    const PRIZED_BLUE_FACTORS = new Set(['Speed', 'Stamina', 'Power']);
-    const G1_RACES = new Set([
-        'Satsuki Sho', 'Kikuka Sho', 'Arima Kinen', 'Tenno Sho (Autumn)', 
-        'Tenno Sho (Spring)', 'Osaka Hai', 'Takarazuka Kinen', 'Japan Cup',
-        'Japanese Oaks', 'Hanshin J.F.', 'Asahi Hai F.S.', 'Mile Ch.', 
-        'Yasuda Kinen', 'Victoria Mile', 'Oka Sho', 'Shuka Sho', 'February S.',
-        'NHK Mile C.', 'Sprinters S.', 'Takamatsunomiya Kinen', 'Champions C.',
-        'Japanese Derby'
-    ]);
-    const SCENARIO_FACTORS = new Set(['URA Finale']);
+
+    // The Blue factors we prize most
+    const PRIZED_BLUE_FACTORS = new Set(['speed', 'stamina', 'power']);
+
 
     // --- 2. DEFINE THE WEIGHTS (Points-Based) ---
-    const W_PARENT_BLUE_3STAR_PRIZED = 20000;
-    const W_PARENT_BLUE_3STAR_OTHER = 12000;
-    const W_PARENT_S_TIER_SKILL = 15000;
-    const W_PARENT_PINK_3STAR = 8000;
+
+    // S-Tier Trophies
+    const W_PARENT_BLUE_3STAR_PRIZED = 20000; // The Jackpot!
+    const W_PARENT_BLUE_3STAR_OTHER = 12000;  // Guts/Wits
+    const W_PARENT_S_TIER_SKILL = 15000;      // Almost as good as a 3* blue
+
+    // A-Tier Trophies
+    const W_PARENT_RED_3STAR = 8000;
     const W_PARENT_A_TIER_SKILL = 5000;
     const W_PARENT_GREEN_3STAR = 4000;
+
+    // B-Tier Trophies (Stepping Stones)
     const W_PARENT_BLUE_2STAR_PRIZED = 3000;
     const W_PARENT_BLUE_2STAR_OTHER = 1500;
-    const W_PARENT_PINK_2STAR = 1000;
-    const W_PARENT_SCENARIO_URA = 1000;
-    const W_PARENT_G1_RACE = 250;
+    const W_PARENT_RED_2STAR = 1000;
+
+    // C-Tier (Foundation)
+    const W_PARENT_G1_RACE = 250; // For affinity. Value in quantity.
     const W_PARENT_GENERIC_SKILL = 50;
+
+    // Grandparent (Legacy) Factors - Vital for 9-star builds
+    // We value them, but less than the immediate parent's.
     const W_GP_BLUE_3STAR_PRIZED = 7000;
     const W_GP_BLUE_3STAR_OTHER = 4000;
     const W_GP_BLUE_2STAR_PRIZED = 1000;
     const W_GP_G1_RACE = 100;
-    const W_GP_SCENARIO_URA = 200;
+
 
     // --- 3. THE NEW VALUATION FUNCTION ---
+
     allRunners.forEach(r => {
         let totalValue = 0;
         let breakdown = {};
 
+        // Helper to add to value and breakdown
         const addValue = (key, value) => {
             if (value > 0) {
                 totalValue += value;
                 breakdown[key] = (breakdown[key] || 0) + value;
             }
         };
-        
-        // Ensure sparks data exists and is an object
-        if (!r.sparks || typeof r.sparks !== 'object') {
-            r.valueScore = 0;
-            r.valueBreakdown = {};
-            return; // Skip this runner if sparks data is missing
-        }
 
         // --- Process Parent Factors ---
-        if (Array.isArray(r.sparks.parent)) {
-            r.sparks.parent.forEach(factor => {
-                const color = factor.color;
-                const name = factor.spark_name;
-                const stars = parseInt(factor.count || 0);
+        r.factors.parent.forEach(factor => {
+            switch (factor.type) {
+                case 'blue':
+                    const isPrized = PRIZED_BLUE_FACTORS.has(factor.stat);
+                    if (factor.stars === 3) {
+                        addValue(
+                            isPrized ? 'Parent 3★ (Prized)' : 'Parent 3★ (Other)',
+                            isPrized ? W_PARENT_BLUE_3STAR_PRIZED : W_PARENT_BLUE_3STAR_OTHER
+                        );
+                    } else if (factor.stars === 2) {
+                        addValue(
+                            'Parent 2★ (Prized)',
+                            isPrized ? W_PARENT_BLUE_2STAR_PRIZED : W_PARENT_BLUE_2STAR_OTHER
+                        );
+                    }
+                    break;
 
-                switch (color) {
-                    case 'blue':
-                        const isPrized = PRIZED_BLUE_FACTORS.has(name);
-                        if (stars === 3) {
-                            addValue(
-                                isPrized ? 'Parent 3★ (Prized)' : 'Parent 3★ (Other)',
-                                isPrized ? W_PARENT_BLUE_3STAR_PRIZED : W_PARENT_BLUE_3STAR_OTHER
-                            );
-                        } else if (stars === 2) {
-                            addValue(
-                                isPrized ? 'Parent 2★ (Prized)' : 'Parent 2★ (Other)',
-                                isPrized ? W_PARENT_BLUE_2STAR_PRIZED : W_PARENT_BLUE_2STAR_OTHER
-                            );
-                        }
-                        break;
-                    case 'pink': // This is 'Pink'
-                        if (stars === 3) {
-                            addValue('Parent 3★ (Pink)', W_PARENT_PINK_3STAR);
-                        } else if (stars === 2) {
-                            addValue('Parent 2★ (Pink)', W_PARENT_PINK_2STAR);
-                        }
-                        break;
-                    case 'green':
-                        if (stars === 3) {
-                            addValue('Parent 3★ (Green)', W_PARENT_GREEN_3STAR);
-                        }
-                        break;
-                    case 'white':
-                        // Value is multiplied by star count ('count')
-                        if (S_TIER_SKILLS.has(name)) {
-                            addValue(`S-Skill: ${name}`, W_PARENT_S_TIER_SKILL * stars);
-                        } else if (A_TIER_SKILLS.has(name)) {
-                            addValue(`A-Skill: ${name}`, W_PARENT_A_TIER_SKILL * stars);
-                        } else if (G1_RACES.has(name)) {
-                            addValue('G1 Win (Affinity)', W_PARENT_G1_RACE * stars);
-                        } else if (SCENARIO_FACTORS.has(name)) {
-                            addValue('Scenario Factor', W_PARENT_SCENARIO_URA * stars);
+                case 'red':
+                    if (factor.stars === 3) {
+                        addValue('Parent 3★ (Red)', W_PARENT_RED_3STAR);
+                    } else if (factor.stars === 2) {
+                        addValue('Parent 2★ (Red)', W_PARENT_RED_2STAR);
+                    }
+                    break;
+
+                case 'green':
+                    if (factor.stars === 3) {
+                        addValue('Parent 3★ (Green)', W_PARENT_GREEN_3STAR);
+                    }
+                    break;
+
+                case 'white':
+                    if (factor.category === 'skill') {
+                        if (S_TIER_SKILLS.has(factor.name)) {
+                            addValue('S-Tier Skill', W_PARENT_S_TIER_SKILL);
+                        } else if (A_TIER_SKILLS.has(factor.name)) {
+                            addValue('A-Tier Skill', W_PARENT_A_TIER_SKILL);
                         } else {
-                            addValue('Generic White', W_PARENT_GENERIC_SKILL * stars);
+                            addValue('Generic Skill', W_PARENT_GENERIC_SKILL);
                         }
-                        break;
-                }
-            });
-        }
+                    } else if (factor.category === 'race' && factor.name.includes('G1')) {
+                        // Simple G1 check
+                        addValue('G1 Win (Affinity)', W_PARENT_G1_RACE);
+                    }
+                    break;
+            }
+        });
 
-        // --- Process Grandparent Factors (gp1 + gp2) ---
-        // Combine gp1 and gp2 arrays, handling cases where they might be missing
-        const gp_factors = (r.sparks.gp1 || []).concat(r.sparks.gp2 || []);
-        
-        gp_factors.forEach(factor => {
-            const color = factor.color;
-            const name = factor.spark_name;
-            const stars = parseInt(factor.count || 0);
-
-            if (color === 'blue') {
-                const isPrized = PRIZED_BLUE_FACTORS.has(name);
-                if (stars === 3) {
+        // --- Process Grandparent Factors (Simplified) ---
+        r.factors.grandparents.forEach(factor => {
+            if (factor.type === 'blue') {
+                const isPrized = PRIZED_BLUE_FACTORS.has(factor.stat);
+                if (factor.stars === 3) {
                     addValue(
                         isPrized ? 'GP 3★ (Prized)' : 'GP 3★ (Other)',
                         isPrized ? W_GP_BLUE_3STAR_PRIZED : W_GP_BLUE_3STAR_OTHER
                     );
-                } else if (stars === 2) {
+                } else if (factor.stars === 2) {
                     addValue(
                         'GP 2★ (Prized)',
-                        isPrized ? W_GP_BLUE_2STAR_PRIZED : 0 // Only value 2-star prized
+                        isPrized ? W_GP_BLUE_2STAR_PRIZED : 0 // You can ignore 2* GP if you want
                     );
                 }
-            } else if (color === 'white') {
-                if (G1_RACES.has(name)) {
-                    addValue('GP G1 Win (Affinity)', W_GP_G1_RACE * stars);
-                } else if (SCENARIO_FACTORS.has(name)) {
-                    addValue('GP Scenario Factor', W_GP_SCENARIO_URA * stars);
-                }
+            } else if (factor.type === 'white' && factor.category === 'race' && factor.name.includes('G1')) {
+                addValue('GP G1 Win', W_GP_G1_RACE);
             }
+            // ... can add red/green GP checks if you want
         });
 
         r.valueScore = totalValue;
-        // Sort breakdown by value for readability in the "Transfer" tab
-        const sortedBreakdown = Object.fromEntries(
-            Object.entries(breakdown).sort(([,a],[,b]) => a - b)
-        );
-        r.valueBreakdown = sortedBreakdown;
+        r.valueBreakdown = breakdown;
     });
 
     // After this, sort allRunners by r.valueScore descending
