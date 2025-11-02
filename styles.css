@@ -1483,18 +1483,26 @@ td.spark-cell .skill-gold b {
 .reason-cell {
     text-align: left;
     font-size: 0.85em;
-    white-space: normal; /* <-- Changed */
+    white-space: nowrap; /* <-- Changed */
     vertical-align: middle; /* <-- Changed */
     line-height: 1.4;
     max-width: 300px;
+    overflow: hidden; /* <-- Added */
+    text-overflow: ellipsis; /* <-- Added */
 }
 
 /* --- Transfer Tab Column Widths --- */
 #transfer-targets-body .name-cell {
-    max-width: 110px;
+    max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+#transfer-targets-body .spark-cell {
+    min-width: 100px; /* Give a minimum width */
+    max-width: 250px; /* But cap it from getting too wide */
+    white-space: normal; /* Allow sparks to wrap if needed */
 }
 
 #transfer-targets-body .reason-cell {
