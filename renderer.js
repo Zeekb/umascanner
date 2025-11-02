@@ -399,7 +399,7 @@ function initializeApp() {
         
         // Ensure sparks data exists and is an object
         if (!r.sparks || typeof r.sparks !== 'object') {
-            r.valueScore = 0;
+            r.transferScore = 0;
             r.valueBreakdown = {};
             return; // Skip this runner if sparks data is missing
         }
@@ -487,7 +487,7 @@ function initializeApp() {
             }
         });
 
-        r.valueScore = totalValue;
+        r.transferScore = totalValue;
         // Sort breakdown by value for readability in the "Transfer" tab
         const sortedBreakdown = Object.fromEntries(
             Object.entries(breakdown).sort(([,a],[,b]) => a - b)
@@ -495,7 +495,7 @@ function initializeApp() {
         r.valueBreakdown = sortedBreakdown;
     });
 
-    // After this, sort allRunners by r.valueScore descending
+    // After this, sort allRunners by r.transferScore descending
     // The top runner will be your best-in-slot parent
 
     extractSparkNames();
@@ -649,8 +649,16 @@ function populateFilters() {
     const currentSort = filterElements.sort.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
-        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'transfer score'
+        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'transferScore'
     ];
+
+    filterElements.sort.innerHTML = allSortOptions.map(o => {
+        let label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        if (o === 'transferScore') {
+            label = 'Transfer Score'; // This keeps the friendly label in the dropdown
+        }
+        return `<option value="${o}">${label}</option>`;
+    }).join('');
 
     filterElements.sort.innerHTML = allSortOptions.map(o => {
         const label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
@@ -1345,7 +1353,7 @@ function filterAndRender() {
     }
 
     if (activeTabId === 'transfer-targets') {
-        sortData(filteredData, 'transfer score', 'asc');
+        sortData(filteredData, 'transferScore', 'asc');
     } else {
         sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
     }
@@ -2131,7 +2139,7 @@ function renderTransferTargets(runners) {
         <tr data-entry-id="${r.entry_id || ''}">
             <td>${r.entry_id || 'N/A'}</td>
             <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-            <td>${Math.round(r.valueScore).toLocaleString()}</td>
+            <td>${Math.round(r.transferScore).toLocaleString()}</td>
             <td class="reason-cell"><ul>${reasonHtml}</ul></td>
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
         </tr>
