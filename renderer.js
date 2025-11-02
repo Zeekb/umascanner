@@ -318,8 +318,6 @@ function initializeApp() {
         // 3. For fast spark filtering
         runner._sparkTotals = { blue: {}, green: {}, pink: {}, white: {} }; // Totals by name
         runner._sparkParentTotals = { blue: {}, green: {}, pink: {}, white: {} };
-        runner._sparkGP1Totals = { white: {} }; // ADD THIS
-        runner._sparkGP2Totals = { white: {} }; // ADD THIS
 
         // 4. For fast sorting
         runner['whites (total)'] = 0;
@@ -348,13 +346,10 @@ function initializeApp() {
                             if (isWhite) runner['whites (parent)']++;
                         }
                         // Add to GP-specific totals
-                        // Add to GP-specific totals
                         else if (source === 'gp1' && isWhite) {
                             runner['whites (gp1)']++;
-                            runner._sparkGP1Totals.white[name] = (runner._sparkGP1Totals.white[name] || 0) + 1;
                         } else if (source === 'gp2' && isWhite) {
                             runner['whites (gp2)']++;
-                            runner._sparkGP2Totals.white[name] = (runner._sparkGP2Totals.white[name] || 0) + 1;
                         }
                     }
                 }
@@ -1139,9 +1134,17 @@ function renderParentSummary(runners, allSparkCriteria) {
         return;
     }
     const html = runners.map(r => {
-        const whiteTotal = r['whites (total)'] || 0;
-        const whiteParent = r['whites (parent)'] || 0;
-        const whiteDisplay = `${whiteTotal}(${whiteParent})`;;
+        let whiteTotal = 0, whiteParent = 0;
+        if (r.sparks && typeof r.sparks === 'object'){
+            ['parent', 'gp1', 'gp2'].forEach(source => {
+                if(Array.isArray(r.sparks[source])) {
+                    const count = r.sparks[source].filter(s => s?.color === 'white').length;
+                    whiteTotal += count;
+                    if (source === 'parent') whiteParent = count;
+                }
+            });
+        }
+        const whiteDisplay = `${whiteTotal}(${whiteParent})`;
 
         const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
         const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
@@ -1178,16 +1181,23 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
        return;
     }
     const html = runners.map(r => {
-        const totalCounts = {
-            parent: r['whites (parent)'] || 0,
-            gp1: r['whites (gp1)'] || 0,
-            gp2: r['whites (gp2)'] || 0
-        };
-        const individualCounts = {
-            parent: r._sparkParentTotals?.white || {},
-            gp1: r._sparkGP1Totals?.white || {},
-            gp2: r._sparkGP2Totals?.white || {}
-        };
+        let totalCounts = { parent: 0, gp1: 0, gp2: 0 };
+        let individualCounts = { parent: {}, gp1: {}, gp2: {} };
+
+        if (r.sparks){
+            ['parent', 'gp1', 'gp2'].forEach(source => {
+                if(Array.isArray(r.sparks[source])) {
+                   r.sparks[source].forEach(spark => {
+                       if (spark?.color === 'white' && spark.spark_name) {
+                            const sparkCount = parseInt(spark.count, 10) || 1; 
+                            totalCounts[source] += 1;
+                            const name = spark.spark_name;
+                            individualCounts[source][name] = (individualCounts[source][name] || 0) + sparkCount;
+                       }
+                   });
+                }
+            });
+        }
 
         const totalWhiteSparks = totalCounts.parent + totalCounts.gp1 + totalCounts.gp2;
         
