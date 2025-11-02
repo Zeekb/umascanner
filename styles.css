@@ -1483,19 +1483,12 @@ td.spark-cell .skill-gold b {
 .reason-cell {
     text-align: left;
     font-size: 0.85em;
-    white-space: normal;
-    vertical-align: top;
+    white-space: nowrap; /* <-- Changed */
+    vertical-align: middle; /* <-- Changed */
     line-height: 1.4;
     max-width: 300px;
-}
-
-.reason-cell ul {
-    margin: 0;
-    padding-left: 18px;
-}
-
-.reason-cell li {
-    margin-bottom: 2px;
+    overflow: hidden; /* <-- Added */
+    text-overflow: ellipsis; /* <-- Added */
 }
 
 /* --- Transfer Tab Column Widths --- */
