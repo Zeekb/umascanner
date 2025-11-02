@@ -1375,7 +1375,7 @@ function filterAndRender() {
         renderSkillsSummary(filteredData);
     }
     else if (activeTabId === 'transfer-targets') {
-        renderTransferTargets(filteredData, allSparkCriteria);
+        renderTransferTargets(filteredData);
     }
 }
 
@@ -2122,9 +2122,9 @@ function updateEntriesCount() {
     }
 }
 
-function renderTransferTargets(runners, allSparkCriteria) {
+function renderTransferTargets(runners) {
     if (!runners.length) {
-        transferTargetsBody.innerHTML = '<tr><td colspan="10">No runners match filters.</td></tr>'; // Updated colspan
+        transferTargetsBody.innerHTML = '<tr><td colspan="5">No runners match filters.</td></tr>';
         return;
     }
 
@@ -2134,30 +2134,11 @@ function renderTransferTargets(runners, allSparkCriteria) {
             .sort(([, valA], [, valB]) => valA - valB) // Sort by lowest value
             .map(([key, value]) => `<li><b>${key}</b>: ${Math.round(value).toLocaleString()}</li>`)
             .join('') : '<li>No breakdown available</li>';
-        
-        // Get White Total Count
-        let whiteTotal = 0;
-        if (r.sparks && typeof r.sparks === 'object'){
-            ['parent', 'gp1', 'gp2'].forEach(source => {
-                if(Array.isArray(r.sparks[source])) {
-                    whiteTotal += r.sparks[source].filter(s => s?.color === 'white').length;
-                }
-            });
-        }
-
-        // Format spark strings
-        const bluesHtml = formatSparks(r, 'blue', allSparkCriteria);
-        const pinksHtml = formatSparks(r, 'pink', allSparkCriteria);
 
         return `
         <tr data-entry-id="${r.entry_id || ''}">
             <td>${r.entry_id || 'N/A'}</td>
             <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-            <td>${(r.score || 0).toLocaleString()}</td>
-            <td class="stat-cell-compact">${r.speed || 0}/${r.stamina || 0}/${r.power || 0}/${r.guts || 0}/${r.wit || 0}</td>
-            <td class="spark-cell">${bluesHtml}</td>
-            <td class="spark-cell">${pinksHtml}</td>
-            <td>${whiteTotal}</td>
             <td>${Math.round(r.transferScore).toLocaleString()}</td>
             <td class="reason-cell"><ul>${reasonHtml}</ul></td>
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
