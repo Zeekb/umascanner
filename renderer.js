@@ -2124,7 +2124,7 @@ function updateEntriesCount() {
 
 function renderTransferTargets(runners, allSparkCriteria) {
     if (!runners.length) {
-        transferTargetsBody.innerHTML = '<tr><td colspan="10">No runners match filters.</td></tr>'; // Updated colspan
+        transferTargetsBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>'; // Colspan is now 14
         return;
     }
 
@@ -2135,15 +2135,19 @@ function renderTransferTargets(runners, allSparkCriteria) {
             .map(([key, value]) => `<li><b>${key}</b>: ${Math.round(value).toLocaleString()}</li>`)
             .join('') : '<li>No breakdown available</li>';
         
-        // Get White Total Count
+        // Get White Total and Parent-Only Count
         let whiteTotal = 0;
+        let whiteParent = 0;
         if (r.sparks && typeof r.sparks === 'object'){
             ['parent', 'gp1', 'gp2'].forEach(source => {
                 if(Array.isArray(r.sparks[source])) {
-                    whiteTotal += r.sparks[source].filter(s => s?.color === 'white').length;
+                    const count = r.sparks[source].filter(s => s?.color === 'white').length;
+                    whiteTotal += count;
+                    if (source === 'parent') whiteParent = count;
                 }
             });
         }
+        const whiteDisplay = `${whiteTotal}(${whiteParent})`; // New x(y) format
 
         // Format spark strings
         const bluesHtml = formatSparks(r, 'blue', allSparkCriteria);
@@ -2152,12 +2156,16 @@ function renderTransferTargets(runners, allSparkCriteria) {
         return `
         <tr data-entry-id="${r.entry_id || ''}">
             <td>${r.entry_id || 'N/A'}</td>
-            <td><span class="outline-label">${r.name || 'N/A'}</span></td>
+            <td class="name-cell"><span class="outline-label">${r.name || 'N/A'}</span></td>
             <td>${(r.score || 0).toLocaleString()}</td>
-            <td class="stat-cell-compact">${r.speed || 0}/${r.stamina || 0}/${r.power || 0}/${r.guts || 0}/${r.wit || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.speed)}">${r.speed || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.stamina)}">${r.stamina || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.power)}">${r.power || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.guts)}">${r.guts || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.wit)}">${r.wit || 0}</td>
             <td class="spark-cell">${bluesHtml}</td>
             <td class="spark-cell">${pinksHtml}</td>
-            <td>${whiteTotal}</td>
+            <td>${whiteDisplay}</td>
             <td>${Math.round(r.transferScore).toLocaleString()}</td>
             <td class="reason-cell"><ul>${reasonHtml}</ul></td>
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
