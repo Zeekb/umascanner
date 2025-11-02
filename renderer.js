@@ -16,6 +16,17 @@ let maxTotalWhiteSparks = 0;
 let maxParentWhiteSparks = 0;
 const cleanName = (name) => name ? name.replace(/ c$/, '').trim() : '';
 
+const createComparableString = (arr) => {
+    if (!arr || arr.length === 0) return '';
+    // Sort to ensure "Speed 3, Stamina 2" is the same as "Stamina 2, Speed 3"
+    const sortedArr = [...arr].sort((a, b) => {
+        if (a.spark_name < b.spark_name) return -1;
+        if (a.spark_name > b.spark_name) return 1;
+        return (a.count || 0) - (b.count || 0);
+    });
+    return JSON.stringify(sortedArr); // A stable, unique key
+};
+
 // --- Element References ---
 // We define these *after* the DOM is loaded
 let filterElements = {};
@@ -2028,7 +2039,7 @@ function findRunnerByDetails(name, gpSparksArray) {
     }
 
     // Use the global helper and map created during initializeApp
-    const gpSparksString = window.createComparableString(gpSparksArray);
+    const gpSparksString = createComparableString(gpSparksArray);
     const key = `${cleanName(name)}::${gpSparksString}`;
 
     // This is now an O(1) Map lookup, not an O(N) loop.
