@@ -1437,11 +1437,7 @@ function filterAndRender() {
         }
     }
 
-    if (activeTabId === 'transfer-targets') {
-        sortData(filteredData, 'transferScore', 'asc');
-    } else {
-        sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
-    }
+    sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
 
     parentSummaryBody.innerHTML = '';
     whiteSparksBody.innerHTML = '';
@@ -1568,22 +1564,10 @@ function getAllSparkFilterCriteria() {
 }
 
 function formatSparks(runner, color, allSparkCriteria) {
-    const sparks = {}, parentSparks = {};
+    const sparks = runner._sparkTotals ? runner._sparkTotals[color] : {};
+    const parentSparks = runner._sparkParentTotals ? runner._sparkParentTotals[color] : {};
+
     const highlightStyle = isDarkModeActive() ? ` style="color: #e08b3e; font-weight: bold;"` : '';
-    ['parent', 'gp1', 'gp2'].forEach(source => {
-        if (Array.isArray(runner.sparks?.[source])) {
-            runner.sparks[source].forEach(spark => {
-                 if (spark?.color === color && spark.spark_name) {
-                    const name = spark.spark_name;
-                    const count = parseInt(spark.count || 0);
-                    sparks[name] = (sparks[name] || 0) + count;
-                    if (source === 'parent') {
-                        parentSparks[name] = (parentSparks[name] || 0) + count;
-                    }
-                }
-            });
-        }
-    });
 
     const parts = Object.entries(sparks)
         .sort(([nameA], [nameB]) => nameA.localeCompare(nameB))
@@ -1591,8 +1575,10 @@ function formatSparks(runner, color, allSparkCriteria) {
             const parentCount = parentSparks[name] || 0;
             let displayPart = `${name} ${grandparentsCount}`;
             if (parentCount > 0) displayPart += `(${parentCount})`;
+
             let shouldHighlight = false;
             for (const criteria of allSparkCriteria) {
+                // ... (rest of your highlight logic is fine)
                 const countToCheck = criteria.isRepOnly ? parentCount : grandparentsCount;
                 const nameFilter = criteria[`${color}Spark`];
                 const minCount = criteria[`min${color.charAt(0).toUpperCase() + color.slice(1)}`];
@@ -2175,18 +2161,9 @@ function renderTransferTargets(runners, allSparkCriteria) {
             .join(' ') : 'No breakdown available'; // Join with a space
         
         // Get White Total and Parent-Only Count
-        let whiteTotal = 0;
-        let whiteParent = 0;
-        if (r.sparks && typeof r.sparks === 'object'){
-            ['parent', 'gp1', 'gp2'].forEach(source => {
-                if(Array.isArray(r.sparks[source])) {
-                    const count = r.sparks[source].filter(s => s?.color === 'white').length;
-                    whiteTotal += count;
-                    if (source === 'parent') whiteParent = count;
-                }
-            });
-        }
-        const whiteDisplay = `${whiteTotal}(${whiteParent})`; // New x(y) format
+        const whiteTotal = r['whites (total)'] || 0;
+        const whiteParent = r['whites (parent)'] || 0;
+        const whiteDisplay = `${whiteTotal}(${whiteParent})`;
 
         // Format spark strings
         const bluesHtml = formatSparks(r, 'blue', allSparkCriteria);
