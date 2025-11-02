@@ -2182,8 +2182,8 @@ function renderTransferTargets(runners, allSparkCriteria) {
         // Format the reason breakdown, sorted by lowest value first
         const reasonHtml = r.valueBreakdown ? Object.entries(r.valueBreakdown)
             .sort(([, valA], [, valB]) => valA - valB) // Sort by lowest value
-            .map(([key, value]) => `<b>${key}</b>: ${Math.round(value).toLocaleString()}`)
-            .join(' ') : 'No breakdown available'; // Join with a space
+            .map(([key, value]) => `<li><b>${key}</b>: ${Math.round(value).toLocaleString()}</li>`)
+            .join('') : '<li>No breakdown available</li>';
         
         // Get White Total and Parent-Only Count
         let whiteTotal = 0;
@@ -2217,7 +2217,7 @@ function renderTransferTargets(runners, allSparkCriteria) {
             <td class="spark-cell">${pinksHtml}</td>
             <td>${whiteDisplay}</td>
             <td>${Math.round(r.transferScore).toLocaleString()}</td>
-            <td class="reason-cell">${reasonHtml}</td>
+            <td class="reason-cell"><ul>${reasonHtml}</ul></td>
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
         </tr>
         `;
