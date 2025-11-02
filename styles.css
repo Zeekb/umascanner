@@ -317,7 +317,6 @@ input[type="range"]::-moz-range-track {
 input[type="range"]:focus { outline: none; }
 
 #dark-mode-toggle {
-    margin-left: auto; 
     margin-right: 10px; 
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
