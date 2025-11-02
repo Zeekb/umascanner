@@ -1200,51 +1200,104 @@ function getAllSparkFilterCriteria() {
     return criteria;
 }
 
+
+
 function checkSpark(runner, color, nameFilter, minStars, repOnly) {
+    // If no filter and min 0, pass immediately.
     if (!nameFilter && minStars === 0) return true;
-    
-    const totals = repOnly ? runner._sparkParentTotals[color] : runner._sparkTotals[color];
-    
+
+    // --- CHANGE ---
+    // If a filter IS provided AND minStars is 0, set the effective minimum to 1.
+    // Otherwise, use the provided minStars.
+    const effectiveMinStars = (nameFilter && minStars === 0) ? 1 : minStars;
+    // --- END CHANGE ---
+
+    const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+
     if (nameFilter) {
-        // If the user wants 0 stars, it means "does this spark exist at all?".
-        // We check if the name is a key in our totals object.
-        if (minStars === 0) {
-            return nameFilter in totals;
+        let totalStars = 0;
+        let foundSpecificSpark = false;
+        for (const source of sparkSources) {
+            if (Array.isArray(runner.sparks?.[source])) {
+                for (const spark of runner.sparks[source]) {
+                    if (spark?.color === color && spark.spark_name === nameFilter) {
+                        // Using '|| 0' for correct counting
+                        totalStars += parseInt(spark.count || 0, 10);
+                        foundSpecificSpark = true;
+                    }
+                }
+            }
         }
-        // Otherwise, check if the count meets the minimum.
-        return (totals[nameFilter] || 0) >= minStars;
-    } else {
-        // This part is correct: check if *any* spark has at least minStars.
-        return Object.values(totals).some(total => total >= minStars);
+        // Check against the new 'effectiveMinStars'
+        return foundSpecificSpark && totalStars >= effectiveMinStars;
+    } 
+    else { 
+        const sparkTotals = {};
+        for (const source of sparkSources) {
+            if (Array.isArray(runner.sparks?.[source])) {
+                for (const spark of runner.sparks[source]) {
+                    if (spark?.color === color && spark.spark_name) {
+                        const name = spark.spark_name;
+                        // --- BUG FIX ---
+                        // Changed '|| 1' to '|| 0' for correct counting
+                        const count = parseInt(spark.count || 0, 10);
+                        sparkTotals[name] = (sparkTotals[name] || 0) + count;
+                        // --- END BUG FIX ---
+                    }
+                }
+            }
+        }
+        
+        // Check against 'effectiveMinStars' (which will equal minStars in this 'else' block)
+        for (const total of Object.values(sparkTotals)) {
+            if (total >= effectiveMinStars) return true; 
+        }
+        return false;
     }
 }
 
-// Replace your existing checkWhiteSpark (line 1480) with this corrected version
 function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
     const result = { pass: false, passingSparks: new Set() };
+
     if (!nameFilter && minCount === 0) {
         result.pass = true;
         return result;
     }
 
-    const totals = repOnly ? runner._sparkParentTotals.white : runner._sparkTotals.white;
+    const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+    const sparkTotals = {};
+
+    for (const source of sparkSources) {
+        if (Array.isArray(runner.sparks?.[source])) {
+            for (const spark of runner.sparks[source]) {
+                if (spark?.color === 'white' && spark.spark_name) {
+                    const name = spark.spark_name;
+                    // --- BUG FIX ---
+                    // Changed '|| 1' to '|| 0' for correct counting
+                    const count = parseInt(spark.count, 10) || 0;
+                    sparkTotals[name] = (sparkTotals[name] || 0) + count;
+                    // --- END BUG FIX ---
+                }
+            }
+        }
+    }
 
     if (nameFilter) {
-        // If user wants 0, just check for existence.
-        if (minCount === 0) {
-            if (nameFilter in totals) {
-                result.pass = true;
-                result.passingSparks.add(nameFilter);
-            }
-        } 
-        // Otherwise, check for the required count.
-        else if ((totals[nameFilter] || 0) >= minCount) {
+        // This logic correctly sets the minimum to 1 if it was 0
+        const effectiveMinCount = minCount === 0 ? 1 : minCount;
+
+        // --- BUG FIX ---
+        // Changed '(sparkTotals[nameFilter] || 1)' to '(sparkTotals[nameFilter] || 0)'
+        // The old code would always be true if effectiveMinCount was 1.
+        if ((sparkTotals[nameFilter] || 0) >= effectiveMinCount) {
+        // --- END BUG FIX ---
             result.pass = true;
             result.passingSparks.add(nameFilter);
         }
     } else {
-        // This part is correct.
-        for (const [name, total] of Object.entries(totals)) {
+        // This 'else' block is correct, as the (minCount === 0) case
+        // is already handled by the first 'if' in the function.
+        for (const [name, total] of Object.entries(sparkTotals)) {
             if (total >= minCount) {
                 result.pass = true;
                 result.passingSparks.add(name);
