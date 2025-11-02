@@ -1243,9 +1243,6 @@ function filterAndRender() {
     else if (activeTabId === 'skills-summary') {
         renderSkillsSummary(filteredData);
     }
-    else if (activeTabId === 'transfer-targets') {
-        renderTransferTargets(filteredData);
-    }
 }
 
 function getAllSparkFilterCriteria() {
