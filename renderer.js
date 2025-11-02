@@ -1126,7 +1126,7 @@ function renderParentSummary(runners, allSparkCriteria) {
             <td class="stat-cell aptitude-${getStatGrade(r.power)}">${r.power || 0}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.guts)}">${r.guts || 0}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.wit)}">${r.wit || 0}</td>
-            <td class="spark-cell">${formatSparks(r, 'blue', allSparkCriteria)}</td>
+            <td class="spark-cell spark-blue">${formatSparks(r, 'blue', allSparkCriteria)}</td>
             <td class="spark-cell">${formatSparks(r, 'green', allSparkCriteria)}</td>
             <td class="spark-cell">${formatSparks(r, 'pink', allSparkCriteria)}</td>
             <td>${whiteDisplay}</td>
