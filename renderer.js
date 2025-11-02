@@ -25,6 +25,7 @@ let skillFiltersContainer, addSkillFilterButton;
 let uploaderContainer, fileInput, loadDataButton, loadingMessage, errorMessage, appWrapper;
 let loadNewFileButton;
 let saveDataButton;
+let entriesCountDisplay;
 
 // --- Constants ---
 const APTITUDE_RANK_MAP = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100};
@@ -227,6 +228,7 @@ function returnToFileUploader() {
     // 5. Hide any previous error messages on the uploader screen
     errorMessage.style.display = 'none';
     loadingMessage.style.display = 'none';
+    if (entriesCountDisplay) entriesCountDisplay.textContent = '';
 }
 
 /**
@@ -268,6 +270,7 @@ function initializeApp() {
     addSkillFilterButton = document.getElementById('add-skill-filter-button');
     loadNewFileButton = document.getElementById('load-new-file-button');
     saveDataButton = document.getElementById('save-data-button');
+    entriesCountDisplay = document.getElementById('entries-count-display');
 
     // --- Start of original setup logic ---
     if (!allRunners || allRunners.length === 0) {
@@ -326,6 +329,7 @@ function initializeApp() {
 
     loadNewFileButton.addEventListener('click', returnToFileUploader);
 
+    updateEntriesCount();
     preloadRunnerImages(); 
 }
 
@@ -1862,6 +1866,7 @@ function handleDeleteRunner(event) {
                 
                 // Re-filter and render the table
                 filterAndRender();
+                updateEntriesCount();
                 showTimedMessage(`${runnerName} transferred (deleted).`);
             }
         } else {
@@ -1903,5 +1908,11 @@ function saveDataToFile() {
     } catch (err) {
         console.error("Failed to save data:", err);
         showTimedMessage("Error: Could not save file.");
+    }
+}
+
+function updateEntriesCount() {
+    if (entriesCountDisplay) {
+        entriesCountDisplay.textContent = `Entries count: ${allRunners.length}/200`;
     }
 }

@@ -357,6 +357,21 @@ input[type="range"]:focus { outline: none; }
     line-height: 1;
 }
 
+#entries-count-display {
+    margin-left: auto; /* Pushes this and subsequent items to the right */
+    margin-right: 15px; /* Adds space before the save button */
+    display: flex;
+    align-items: center;
+    font-size: 0.85em; /* Smaller size */
+    color: var(--uma-text-dark);
+    opacity: 0.7; /* Faded text */
+}
+
+.dark-mode #entries-count-display {
+    color: var(--dark-text-color);
+    opacity: 0.7;
+}
+
 .icon-button {
   background: none;
   border: 1px solid #ccc; /* Or use your var(--border-color) */
