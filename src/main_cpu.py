@@ -1,5 +1,5 @@
 #
-# --- image_processor.py ---
+# --- main.py ---
 #
 
 import os
