@@ -1129,7 +1129,7 @@ function renderParentSummary(runners, allSparkCriteria) {
             <td class="spark-cell spark-blue">${formatSparks(r, 'blue', allSparkCriteria)}</td>
             <td class="spark-cell">${formatSparks(r, 'green', allSparkCriteria)}</td>
             <td class="spark-cell">${formatSparks(r, 'pink', allSparkCriteria)}</td>
-            <td class="white-spark-cell">${whiteDisplay}</td>
+            <td>${whiteDisplay}</td>
             <td class="${gp1Class}">${cleanName(r.gp1 || 'N/A')}</td>
             <td class="${gp2Class}">${cleanName(r.gp2 || 'N/A')}</td>
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
@@ -1403,7 +1403,7 @@ function filterAndRender() {
     }
 
     if (activeTabId === 'transfer-targets') {
-        sortData(filteredData, 'transferScore', 'asc');
+        sortData(filteredData, 'transfer score', 'asc');
     } else {
         sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
     }
