@@ -1383,12 +1383,6 @@ td.spark-cell .skill-gold b {
     z-index: 2; 
 }
 
-.help-top-right::before {
-    left: auto; /* Removes the 'left: 0' alignment */
-    right: 0;   /* Aligns the tooltip to the right edge of the '?' icon */
-    transform: translateX(0); /* Keeps the horizontal position as-is */
-}
-
 .dark-mode .tab-help {
     background-color: #777777; /* Darker gray for dark mode */
 }
@@ -1464,4 +1458,10 @@ td.spark-cell .skill-gold b {
 }
 #toggle-filter-panel:hover {
     background-color: var(--uma-accent-pink);
+}
+
+.help-top-right::before {
+    left: auto; /* Removes the 'left: 0' alignment */
+    right: 0;   /* Aligns the tooltip to the right edge of the '?' icon */
+    transform: translateX(0); /* Keeps the horizontal position as-is */
 }
