@@ -722,7 +722,7 @@ td.left-align { text-align: left; white-space: normal; }
 td.spark-cell { text-align: left; white-space: normal; font-size: 0.85em; min-width: 150px; }
 td.spark-cell b { color: black; }
 .dark-mode td.spark-cell b { color: var(--uma-text-dark); } 
-td.spark-cell td.spark-blue { min-width: 156px;}
+
 
 /* --- Modal: Base & Overlay --- */
 #detail-modal-overlay {
