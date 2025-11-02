@@ -649,12 +649,12 @@ function populateFilters() {
     const currentSort = filterElements.sort.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
-        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'transferScore'
+        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)', 'transfer score'
     ];
 
     filterElements.sort.innerHTML = allSortOptions.map(o => {
         let label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        if (o === 'transferScore') {
+        if (o === 'transfer score') {
             label = 'Transfer Score'; // This keeps the friendly label in the dropdown
         }
         return `<option value="${o}">${label}</option>`;
@@ -1353,7 +1353,7 @@ function filterAndRender() {
     }
 
     if (activeTabId === 'transfer-targets') {
-        sortData(filteredData, 'transferScore', 'asc');
+        sortData(filteredData, 'transfer score', 'asc');
     } else {
         sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
     }
