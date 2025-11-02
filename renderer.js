@@ -350,6 +350,7 @@ function initializeApp() {
         'Groundwork', 'Non-stop Girl', 'Straightaway Spurt', 
         'Position Sense', 'Pluck and Pride'
     ]);
+    // CLEANUP: Removed 'Corner Adept ○' and 'Straightaway Adept' as they are too common.
     const A_TIER_SKILLS = new Set([
         'Swinging Maestro', 'Arc of Triumph', 'Full Throttle', 
         'Speed Eater', 'Gourmand', 'Hydrate'
@@ -403,15 +404,9 @@ function initializeApp() {
     const W_PARENT_BLUE_1STAR_GUTS = -8000;
     const W_PARENT_BLUE_1STAR_OTHER = -5000;
     const W_PARENT_PINK_1STAR = -1000;
-    const W_GP_BLUE_1STAR = -2000;
-    const W_GP_PINK_1STAR = -500;
+    const W_GP_BLUE_1STAR = -2000;             // Penalty for a 1-star GP blue factor
+    const W_GP_PINK_1STAR = -500;              // Penalty for a 1-star GP pink factor
     
-    // ----------------------------------------------------
-    // ▼ BUG FIX HERE ▼
-    // ----------------------------------------------------
-    const W_PARENT_DETRIMENTAL_SKILL = -15000; // This was missing, causing NaN scores
-    // ----------------------------------------------------
-
     // --- 3. THE NEW VALUATION FUNCTION ---
     allRunners.forEach(r => {
         let totalValue = 0;
@@ -472,12 +467,7 @@ function initializeApp() {
                         }
                         break;
                     case 'white':
-                        // ----------------------------------------------------
-                        // ▼ BUG FIX HERE ▼ (Added detrimental check)
-                        // ----------------------------------------------------
-                        if (DETRIMENTAL_SKILLS.has(name)) {
-                             addValue(`Penalty: ${name}`, W_PARENT_DETRIMENTAL_SKILL * stars);
-                        } else if (S_TIER_SKILLS.has(name)) {
+                        if (S_TIER_SKILLS.has(name)) {
                             addValue(`S-Skill: ${name}`, W_PARENT_S_TIER_SKILL * stars);
                         } else if (A_TIER_SKILLS.has(name)) {
                             addValue(`A-Skill: ${name}`, W_PARENT_A_TIER_SKILL * stars);
@@ -488,7 +478,6 @@ function initializeApp() {
                         } else {
                             addValue('Generic White', W_PARENT_GENERIC_SKILL * stars);
                         }
-                        // ----------------------------------------------------
                         break;
                 }
             });
@@ -552,30 +541,8 @@ function initializeApp() {
         r.valueBreakdown = sortedBreakdown;
     });
 
-    // ----------------------------------------------------
-    // ▼ NEW O(1) GRANDPARENT LOOKUP MAP ▼
-    // ----------------------------------------------------
-    // This builds the fast lookup map to fix the O(N²) lag
-    console.log("Building parent lookup map...");
-    const runnerLookupByParent = new Map();
-    allRunners.forEach(runner => {
-        // Uses the '_parentSparksString' we created in the pre-calc loop
-        const key = `${runner.name}::${runner._parentSparksString}`;
-        
-        // This handles "c" (non-green) vs non-"c" (green) runners.
-        // It prioritizes the non-"c" (green spark) version if one exists.
-        const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
-        
-        if (!runnerLookupByParent.has(key) || hasGreenParentSpark) {
-            runnerLookupByParent.set(key, runner);
-        }
-    });
-    // Make this map globally available for findRunnerByDetails to use
-    window.runnerLookupByParent = runnerLookupByParent;
-    console.log(`Lookup map built with ${runnerLookupByParent.size} unique entries.`);
-    // ----------------------------------------------------
-    // ▲ END NEW MAP LOGIC ▲
-    // ----------------------------------------------------
+    // After this, sort allRunners by r.transferScore descending
+    // The top runner will be your best-in-slot parent
 
     extractSparkNames();
     populateFilters();
@@ -815,10 +782,7 @@ function setupEventListeners() {
     const debouncedFilterAndRender = debounce(filterAndRender, 250);
 
     Object.values(filterElements).forEach(el => {
-        if (el.type !== 'range') {
-            el.addEventListener('change', debouncedFilterAndRender);
-        }
-            
+        if (el.type !== 'range') el.addEventListener('change', filterAndRender);
     });
 
     skillFiltersContainer.addEventListener('input', (event) => {
@@ -841,7 +805,7 @@ function setupEventListeners() {
                 updateTotalWhiteDropdown(row, isParentOnly);
             }
         }
-        debouncedFilterAndRender();
+        filterAndRender();
     });
 
     skillFiltersContainer.addEventListener('click', (event) => {
@@ -1334,7 +1298,6 @@ function handleDetailView(event) {
     }
 }
 
-// Replace your existing filterAndRender (line 1251)
 function filterAndRender() {
     allRunners.forEach(r => delete r._passingWhiteSparks);
 
@@ -1361,18 +1324,15 @@ function filterAndRender() {
         .map(input => input.value.toLowerCase().trim())
         .filter(val => val);
 
-    // ----------------------------------------------------
-    // ▼ OPTIMIZED SKILL FILTER ▼
-    // ----------------------------------------------------
     if (skillNameFilters.length > 0) {
         filteredData = filteredData.filter(runner => {
-            // This is now a simple string search, not a nested loop
             return skillNameFilters.every(filterText => 
-                runner._searchableSkills.includes(filterText)
+                (runner.skills || []).some(runnerSkill => 
+                    runnerSkill.toLowerCase().includes(filterText)
+                )
             );
         });
     }
-    // ----------------------------------------------------
 
     const sparkFilterRows = document.querySelectorAll('#spark-filters-container .spark-filters');
 
@@ -1380,7 +1340,7 @@ function filterAndRender() {
         if (row.classList.contains('disabled')) {
             return; 
         }
-        // (This logic is unchanged, but the functions it calls are now fast)
+
         const isRepOnly = row.querySelector('.rep-only-checkbox').checked;
 
         const rowCriteria = {
@@ -1408,8 +1368,13 @@ function filterAndRender() {
         
         if (rowCriteria.minTotalWhite > 0) {
             filteredData = filteredData.filter(r => {
-                // This now reads a pre-calculated value!
-                const totalWhiteCount = isRepOnly ? r['whites (parent)'] : r['whites (total)'];
+                const sparkSources = isRepOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+                let totalWhiteCount = 0;
+                sparkSources.forEach(source => {
+                    if (Array.isArray(r.sparks?.[source])) {
+                        totalWhiteCount += r.sparks[source].filter(s => s?.color === 'white').length;
+                    }
+                });
                 return totalWhiteCount >= rowCriteria.minTotalWhite;
             });
         }
@@ -1456,83 +1421,6 @@ function filterAndRender() {
     }
 }
 
-
-// Replace your existing checkSpark (line 1438)
-function checkSpark(runner, color, nameFilter, minStars, repOnly) {
-    if (!nameFilter && minStars === 0) return true;
-    
-    // This now reads from the pre-calculated objects
-    const totals = repOnly ? runner._sparkParentTotals[color] : runner._sparkTotals[color];
-    
-    if (nameFilter) {
-        // O(1) property lookup
-        return (totals[nameFilter] || 0) >= minStars;
-    } else {
-        // This is still a loop, but it's looping over ~5-10 *unique spark names*
-        // instead of 50-100 *individual sparks*. Much faster.
-        return Object.values(totals).some(total => total >= minStars);
-    }
-}
-
-// Replace your existing checkWhiteSpark (line 1480)
-function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
-    const result = { pass: false, passingSparks: new Set() };
-    if (!nameFilter && minCount === 0) {
-        result.pass = true;
-        return result;
-    }
-
-    // This now reads from the pre-calculated objects
-    const totals = repOnly ? runner._sparkParentTotals.white : runner._sparkTotals.white;
-    const effectiveMinCount = (minCount === 0 && nameFilter) ? 1 : minCount;
-
-    if (nameFilter) {
-        // O(1) property lookup
-        if ((totals[nameFilter] || 0) >= effectiveMinCount) {
-            result.pass = true;
-            result.passingSparks.add(nameFilter);
-        }
-    } else {
-        // Same as checkSpark: loops over unique names, which is very fast.
-        for (const [name, total] of Object.entries(totals)) {
-            if (total >= minCount) {
-                result.pass = true;
-                result.passingSparks.add(name);
-            }
-        }
-    }
-    return result;
-}
-
-// Replace your existing sortData (line 1183)
-function sortData(data, sortBy, sortDir) {
-    // DELETE the 'getWhiteCount' helper function (lines 1184-1194). It's not needed.
-    
-    data.sort((a, b) => {
-        let valA, valB;
-        
-        // This 'if' block is now removed, as the 'else' block handles it.
-        if (['turf', 'dirt', 'sprint', 'mile', 'medium', 'long', 'front', 'pace', 'late', 'end'].includes(sortBy)) {
-            valA = APTITUDE_RANK_MAP[a[sortBy]?.toUpperCase() || ''] ?? -100;
-            valB = APTITUDE_RANK_MAP[b[sortBy]?.toUpperCase() || ''] ?? -100;
-        } else {
-            // This now handles 'score', 'name', 'speed', 'transferScore', 
-            // AND 'whites (total)', 'whites (parent)', etc., by simple property lookup.
-            valA = a[sortBy] ?? (sortBy === 'name' ? '' : 0);
-            valB = b[sortBy] ?? (sortBy === 'name' ? '' : 0);
-        }
-
-        const numA = Number(valA) || 0;
-        const numB = Number(valB) || 0;
-
-        if (typeof valA === 'string' && typeof valB === 'string') {
-            return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
-        } else {
-            return sortDir === 'asc' ? numA - numB : numB - numA;
-        }
-    });
-}
-
 function getAllSparkFilterCriteria() {
     const criteria = [];
     document.querySelectorAll('#spark-filters-container .spark-filters').forEach(row => {
@@ -1557,6 +1445,119 @@ function getAllSparkFilterCriteria() {
         }
     });
     return criteria;
+}
+
+function checkSpark(runner, color, nameFilter, minStars, repOnly) {
+    if (!nameFilter && minStars === 0) return true;
+    const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+    if (nameFilter) {
+        let totalStars = 0;
+        let foundSpecificSpark = false;
+        for (const source of sparkSources) {
+            if (Array.isArray(runner.sparks?.[source])) {
+                for (const spark of runner.sparks[source]) {
+                    if (spark?.color === color && spark.spark_name === nameFilter) {
+                        totalStars += parseInt(spark.count || 0);
+                        foundSpecificSpark = true;
+                    }
+                }
+            }
+        }
+        return foundSpecificSpark && totalStars >= minStars;
+    } 
+    else { 
+        const sparkTotals = {};
+        for (const source of sparkSources) {
+            if (Array.isArray(runner.sparks?.[source])) {
+                for (const spark of runner.sparks[source]) {
+                    if (spark?.color === color && spark.spark_name) {
+                        const name = spark.spark_name;
+                        const count = parseInt(spark.count || 0);
+                        sparkTotals[name] = (sparkTotals[name] || 0) + count;
+                    }
+                }
+            }
+        }
+        for (const total of Object.values(sparkTotals)) {
+            if (total >= minStars) return true; 
+        }
+        return false;
+    }
+}
+
+function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
+    const result = { pass: false, passingSparks: new Set() };
+    if (!nameFilter && minCount === 0) {
+        result.pass = true;
+        return result;
+    }
+    const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+    const sparkTotals = {};
+    for (const source of sparkSources) {
+        if (Array.isArray(runner.sparks?.[source])) {
+            for (const spark of runner.sparks[source]) {
+                if (spark?.color === 'white' && spark.spark_name) {
+                    const name = spark.spark_name;
+                    const count = parseInt(spark.count, 10) || 1;
+                    sparkTotals[name] = (sparkTotals[name] || 0) + count;
+                }
+            }
+        }
+    }
+    if (nameFilter) {
+        const effectiveMinCount = minCount === 0 ? 1 : minCount;
+        if ((sparkTotals[nameFilter] || 0) >= effectiveMinCount) {
+            result.pass = true;
+            result.passingSparks.add(nameFilter);
+        }
+    } else {
+        for (const [name, total] of Object.entries(sparkTotals)) {
+            if (total >= minCount) {
+                result.pass = true;
+                result.passingSparks.add(name);
+            }
+        }
+    }
+    return result;
+}
+
+function sortData(data, sortBy, sortDir) {
+    const getWhiteCount = (runner, sources) => {
+        if (!runner.sparks || typeof runner.sparks !== 'object') return 0;
+        let count = 0;
+        sources.forEach(source => {
+            if (Array.isArray(runner.sparks[source])) {
+                count += runner.sparks[source].filter(s => s?.color === 'white').length;
+            }
+        });
+        return count;
+    };
+    data.sort((a, b) => {
+        let valA, valB;
+        const whiteSortKeys = {
+            'whites (parent)': ['parent'],
+            'whites (gp1)': ['gp1'],
+            'whites (gp2)': ['gp2'],
+            'whites (total)': ['parent', 'gp1', 'gp2']
+        };
+        if (whiteSortKeys[sortBy]) {
+            valA = getWhiteCount(a, whiteSortKeys[sortBy]);
+            valB = getWhiteCount(b, whiteSortKeys[sortBy]);
+        } else if (['turf', 'dirt', 'sprint', 'mile', 'medium', 'long', 'front', 'pace', 'late', 'end'].includes(sortBy)) {
+            valA = APTITUDE_RANK_MAP[a[sortBy]?.toUpperCase() || ''] ?? -100;
+            valB = APTITUDE_RANK_MAP[b[sortBy]?.toUpperCase() || ''] ?? -100;
+        } else {
+            valA = a[sortBy] ?? (sortBy === 'name' ? '' : 0);
+            valB = b[sortBy] ?? (sortBy === 'name' ? '' : 0);
+        }
+        const numA = Number(valA) || 0;
+        const numB = Number(valB) || 0;
+        if (typeof valA === 'string' && typeof valB === 'string') {
+            return sortDir === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        } else {
+            return sortDir === 'asc' ? numA - numB : numB - numA;
+        }
+    });
 }
 
 function formatSparks(runner, color, allSparkCriteria) {
@@ -2020,37 +2021,47 @@ function findRunnerByDetails(name, gpSparksArray) {
     if (!name || !gpSparksArray || gpSparksArray.length === 0) {
         return null;
     }
-    
-    // Cache key remains the same
     const cacheKey = `${name}-${JSON.stringify(gpSparksArray)}`;
     if (gpExistenceCache.has(cacheKey)) {
         return gpExistenceCache.get(cacheKey);
     }
+    const createComparableString = (arr) => {
+        if (!arr) return null;
+        const sortedArr = [...arr].sort((a, b) => {
+            if (a.spark_name < b.spark_name) return -1;
+            if (a.spark_name > b.spark_name) return 1;
+            return (a.count || 0) - (b.count || 0);
+        });
+        return JSON.stringify(sortedArr);
+    };
 
-    // Use the global helper and map created during initializeApp
-    const gpSparksString = window.createComparableString(gpSparksArray);
-    const key = `${cleanName(name)}::${gpSparksString}`;
-
-    // This is now an O(1) Map lookup, not an O(N) loop.
-    const foundRunner = window.runnerLookupByParent.get(key) || null;
-    
-    if (foundRunner) {
-         // We still must check for "c" version mismatches
-         const hasGreenParentSpark = foundRunner.sparks?.parent?.some(s => s.color === 'green');
-         const isCVersionLookup = name.endsWith(' c');
-         
-         // If we looked for a "c" version (no green) but found the green version, it's not a match.
-         if (isCVersionLookup && hasGreenParentSpark) {
-             gpExistenceCache.set(cacheKey, null);
-             return null; 
-         }
-         
-         gpExistenceCache.set(cacheKey, foundRunner);
-         return foundRunner;
+    const gpSparksString = createComparableString(gpSparksArray);
+    if (!gpSparksString) {
+        gpExistenceCache.set(cacheKey, null);
+        return null;
     }
 
-    gpExistenceCache.set(cacheKey, null);
-    return null;
+    const isCVersionLookup = name.endsWith(' c');
+    const baseName = cleanName(name);
+
+    const foundRunner = allRunners.find(runner => {
+        if (runner.name !== baseName) {
+            return false;
+        }
+        const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
+        if (isCVersionLookup) {
+            if (hasGreenParentSpark) {
+                return false;
+            }
+        }
+        if (!runner.sparks?.parent) return false;
+        const parentSparksString = createComparableString(runner.sparks.parent);
+        return parentSparksString === gpSparksString;
+    });
+
+    const result = foundRunner || null;
+    gpExistenceCache.set(cacheKey, result);
+    return result;
 }
 
 function showTimedMessage(message) {
