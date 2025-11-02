@@ -145,12 +145,12 @@ def update_all_runners(
         print(f"Detected {len(conflicts)} conflicts. Writing to {conflicts_file}")
         with open(conflicts_file, 'w', encoding='utf-8') as f:
             json.dump(conflicts, f, indent=2)
-        new_runners_df = new_runners_df[~new_runners_df['entry_hash'].isin(hashes_with_conflicts)]
-        if new_runners_df.empty:
+        new_runners_df_filtered = new_runners_df[~new_runners_df['entry_hash'].isin(hashes_with_conflicts)]
+        if new_runners_df_filtered.empty:
             print("All new entries have conflicts. 'all_runners.json' will not be updated until resolved.")
             return
     else:
-        # --- This is the new 'else' block ---
+        # --- This block is correct ---
         print("No conflicts detected.")
         new_runners_df_filtered = new_runners_df # Use all new entries if no conflicts
         # Optionally: Ensure conflicts file is deleted if it exists from a previous run
