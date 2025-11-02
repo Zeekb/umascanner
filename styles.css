@@ -338,11 +338,10 @@ input[type="range"]:focus { outline: none; }
     line-height: 1;
 }
 
-#save-data-button {
+#save-data-button, #load-new-file-button {
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
-    border-radius: 5px;
     padding: 5px 10px;
     cursor: pointer;
     display: flex;
@@ -1382,6 +1381,12 @@ td.spark-cell .skill-gold b {
     margin-top: -2px;
     /* Ensures it renders on top of the button's margin/border */
     z-index: 2; 
+}
+
+.help-top-right::before {
+    left: auto; /* Removes the 'left: 0' alignment */
+    right: 0;   /* Aligns the tooltip to the right edge of the '?' icon */
+    transform: translateX(0); /* Keeps the horizontal position as-is */
 }
 
 .dark-mode .tab-help {
