@@ -24,6 +24,7 @@ let aptitudeFiltersContainer, resetFiltersButton, addSparkFilterButton, sparkFil
 let skillFiltersContainer, addSkillFilterButton;
 let uploaderContainer, fileInput, loadDataButton, loadingMessage, errorMessage, appWrapper;
 let loadNewFileButton;
+let saveDataButton;
 
 // --- Constants ---
 const APTITUDE_RANK_MAP = {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100};
@@ -266,6 +267,7 @@ function initializeApp() {
     skillFiltersContainer = document.getElementById('skill-filters-container');
     addSkillFilterButton = document.getElementById('add-skill-filter-button');
     loadNewFileButton = document.getElementById('load-new-file-button');
+    saveDataButton = document.getElementById('save-data-button');
 
     // --- Start of original setup logic ---
     if (!allRunners || allRunners.length === 0) {
@@ -641,11 +643,13 @@ function setupEventListeners() {
         });
     });
 
-    // We no longer add the 'handleDeleteRunner' listener
+    parentSummaryBody.addEventListener('click', handleDeleteRunner);
 
     [parentSummaryBody, whiteSparksBody, skillsSummaryBody].forEach(body => {
         body.addEventListener('dblclick', handleDetailView);
     });
+
+    saveDataButton.addEventListener('click', saveDataToFile); 
     
     updateRemoveButtonVisibility();
     updateRemoveSkillButtonVisibility();
@@ -877,6 +881,7 @@ function renderParentSummary(runners, allSparkCriteria) {
             <td>${whiteDisplay}</td>
             <td class="${gp1Class}">${cleanName(r.gp1 || 'N/A')}</td>
             <td class="${gp2Class}">${cleanName(r.gp2 || 'N/A')}</td>
+            <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
             </tr>
     `}).join('');
     parentSummaryBody.innerHTML = html;
@@ -1823,4 +1828,80 @@ function showTimedMessage(message) {
             popup.remove();
         }, 500);
     }, 2000);
+}
+
+/**
+ * Handles clicks on the "Transfer" button in the Parent Summary table.
+ */
+function handleDeleteRunner(event) {
+    const target = event.target;
+    // Check if the clicked element is a delete button
+    if (target.classList.contains('delete-button')) {
+        const entryId = target.dataset.entryId;
+        if (!entryId) return;
+
+        // Find the runner in the main data array
+        const runnerIndex = allRunners.findIndex(r => String(r.entry_id) === String(entryId));
+        
+        if (runnerIndex > -1) {
+            // Get runner name for confirmation
+            const runnerName = allRunners[runnerIndex].name || 'this runner';
+            const confirmed = window.confirm(`Are you sure you want to transfer (delete) ${runnerName} (ID: ${entryId})? This cannot be undone.`);
+            
+            if (confirmed) {
+                // Remove the runner from the main data array
+                allRunners.splice(runnerIndex, 1);
+                
+                // Update the local storage with the modified data
+                try {
+                    localStorage.setItem('savedRunnerData', JSON.stringify(allRunners));
+                } catch (e) {
+                    console.error("Could not update localStorage after deletion:", e);
+                    showTimedMessage("Runner removed, but failed to update local storage.");
+                }
+                
+                // Re-filter and render the table
+                filterAndRender();
+                showTimedMessage(`${runnerName} transferred (deleted).`);
+            }
+        } else {
+            console.warn(`Could not find runner with entry ID ${entryId} to delete.`);
+            showTimedMessage("Error: Could not find runner to delete.");
+        }
+    }
+}
+
+/**
+ * Triggers a browser download of the current allRunners data as a JSON file.
+ */
+function saveDataToFile() {
+    try {
+        // 1. Convert the current data to a JSON string
+        const jsonData = JSON.stringify(allRunners, null, 2); // Pretty-print with 2-space indent
+        
+        // 2. Create a Blob (binary large object)
+        const blob = new Blob([jsonData], { type: 'application/json' });
+        
+        // 3. Create a temporary URL for the Blob
+        const url = URL.createObjectURL(blob);
+        
+        // 4. Create a temporary link element
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'all_runners.json'; // Set the download filename
+        
+        // 5. Simulate a click to trigger the download
+        document.body.appendChild(a);
+        a.click();
+        
+        // 6. Clean up by removing the link and revoking the URL
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showTimedMessage("Data saved to all_runners.json");
+
+    } catch (err) {
+        console.error("Failed to save data:", err);
+        showTimedMessage("Error: Could not save file.");
+    }
 }

@@ -337,6 +337,27 @@ input[type="range"]:focus { outline: none; }
     font-size: 1.2em;
     line-height: 1;
 }
+
+#save-data-button {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: bold;
+}
+#save-data-button:hover { 
+    background-color: var(--uma-accent-pink); 
+}
+#save-file-icon {
+    font-size: 1.2em;
+    line-height: 1;
+}
+
 .icon-button {
   background: none;
   border: 1px solid #ccc; /* Or use your var(--border-color) */
