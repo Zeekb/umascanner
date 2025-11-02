@@ -350,11 +350,11 @@ function initializeApp() {
         'Groundwork', 'Non-stop Girl', 'Straightaway Spurt', 
         'Position Sense', 'Pluck and Pride'
     ]);
+    // CLEANUP: Removed 'Corner Adept ○' and 'Straightaway Adept' as they are too common.
     const A_TIER_SKILLS = new Set([
-        'Swinging Maestro', 'Corner Adept ○', 'Straightaway Adept', 
-        'Arc of Triumph', 'Full Throttle', 'Speed Eater', 'Gourmand', 'Hydrate'
+        'Swinging Maestro', 'Arc of Triumph', 'Full Throttle', 
+        'Speed Eater', 'Gourmand', 'Hydrate'
     ]);
-    // NOTE: Your JSON file uses capitalized stat names ("Speed", "Stamina", "Power")
     const PRIZED_BLUE_FACTORS = new Set(['Speed', 'Stamina', 'Power']);
     const G1_RACES = new Set([
         'Satsuki Sho', 'Kikuka Sho', 'Arima Kinen', 'Tenno Sho (Autumn)', 
@@ -366,7 +366,21 @@ function initializeApp() {
     ]);
     const SCENARIO_FACTORS = new Set(['URA Finale']);
 
+    // --- NEW: Automatically create a set of all detrimental skills ---
+    const DETRIMENTAL_SKILLS = new Set();
+    if (skillData) {
+        for (const skillName in skillData) {
+            if (skillData[skillName].includes('_detrimental_')) {
+                DETRIMENTAL_SKILLS.add(skillName);
+            }
+        }
+    }
+    console.log(`Identified ${DETRIMENTAL_SKILLS.size} detrimental skills to penalize.`);
+
+
     // --- 2. DEFINE THE WEIGHTS (Points-Based) ---
+    
+    // --- POSITIVE WEIGHTS ---
     const W_PARENT_BLUE_3STAR_PRIZED = 20000;
     const W_PARENT_BLUE_3STAR_OTHER = 12000;
     const W_PARENT_S_TIER_SKILL = 15000;
@@ -384,24 +398,34 @@ function initializeApp() {
     const W_GP_BLUE_2STAR_PRIZED = 1000;
     const W_GP_G1_RACE = 100;
     const W_GP_SCENARIO_URA = 200;
+    const W_PARENT_FACTOR_SYNERGY = 6000;
 
+    // --- NEW/ADJUSTED PENALTY WEIGHTS ---
+    const W_PARENT_BLUE_1STAR_GUTS = -8000;
+    const W_PARENT_BLUE_1STAR_OTHER = -5000;
+    const W_PARENT_PINK_1STAR = -1000;
+    const W_GP_BLUE_1STAR = -2000;             // Penalty for a 1-star GP blue factor
+    const W_GP_PINK_1STAR = -500;              // Penalty for a 1-star GP pink factor
+    
     // --- 3. THE NEW VALUATION FUNCTION ---
     allRunners.forEach(r => {
         let totalValue = 0;
         let breakdown = {};
+        
+        let parentBlueFactors = new Set();
+        let parentPinkFactors = new Set();
 
         const addValue = (key, value) => {
-            if (value > 0) {
+            if (value !== 0) {
                 totalValue += value;
                 breakdown[key] = (breakdown[key] || 0) + value;
             }
         };
         
-        // Ensure sparks data exists and is an object
         if (!r.sparks || typeof r.sparks !== 'object') {
             r.transferScore = 0;
             r.valueBreakdown = {};
-            return; // Skip this runner if sparks data is missing
+            return;
         }
 
         // --- Process Parent Factors ---
@@ -413,24 +437,28 @@ function initializeApp() {
 
                 switch (color) {
                     case 'blue':
+                        parentBlueFactors.add(name);
                         const isPrized = PRIZED_BLUE_FACTORS.has(name);
                         if (stars === 3) {
-                            addValue(
-                                isPrized ? 'Parent 3★ (Prized)' : 'Parent 3★ (Other)',
-                                isPrized ? W_PARENT_BLUE_3STAR_PRIZED : W_PARENT_BLUE_3STAR_OTHER
-                            );
+                            addValue(isPrized ? 'Parent 3★ (Prized)' : 'Parent 3★ (Other)', isPrized ? W_PARENT_BLUE_3STAR_PRIZED : W_PARENT_BLUE_3STAR_OTHER);
                         } else if (stars === 2) {
-                            addValue(
-                                isPrized ? 'Parent 2★ (Prized)' : 'Parent 2★ (Other)',
-                                isPrized ? W_PARENT_BLUE_2STAR_PRIZED : W_PARENT_BLUE_2STAR_OTHER
-                            );
+                            addValue(isPrized ? 'Parent 2★ (Prized)' : 'Parent 2★ (Other)', isPrized ? W_PARENT_BLUE_2STAR_PRIZED : W_PARENT_BLUE_2STAR_OTHER);
+                        } else if (stars === 1) {
+                            if (name === 'Guts') {
+                                addValue('Penalty 1★ Guts', W_PARENT_BLUE_1STAR_GUTS);
+                            } else {
+                                addValue('Penalty 1★ Blue', W_PARENT_BLUE_1STAR_OTHER);
+                            }
                         }
                         break;
-                    case 'pink': // This is 'Pink'
+                    case 'pink':
+                        parentPinkFactors.add(name);
                         if (stars === 3) {
                             addValue('Parent 3★ (Pink)', W_PARENT_PINK_3STAR);
                         } else if (stars === 2) {
                             addValue('Parent 2★ (Pink)', W_PARENT_PINK_2STAR);
+                        } else if (stars === 1) {
+                            addValue('Penalty 1★ Pink', W_PARENT_PINK_1STAR);
                         }
                         break;
                     case 'green':
@@ -439,8 +467,9 @@ function initializeApp() {
                         }
                         break;
                     case 'white':
-                        // Value is multiplied by star count ('count')
-                        if (S_TIER_SKILLS.has(name)) {
+                        if (DETRIMENTAL_SKILLS.has(name)) { // NEW: Check for detrimental skills
+                            addValue(`Penalty: ${name}`, W_PARENT_DETRIMENTAL_SKILL * stars);
+                        } else if (S_TIER_SKILLS.has(name)) {
                             addValue(`S-Skill: ${name}`, W_PARENT_S_TIER_SKILL * stars);
                         } else if (A_TIER_SKILLS.has(name)) {
                             addValue(`A-Skill: ${name}`, W_PARENT_A_TIER_SKILL * stars);
@@ -455,9 +484,29 @@ function initializeApp() {
                 }
             });
         }
+ 
+
+        // --- Process Factor Synergy ---
+        const synergyMap = {
+            'Speed': ['Sprint', 'Mile'],
+            'Stamina': ['Medium', 'Long'],
+            'Power': ['Sprint', 'Mile', 'Dirt'],
+        };
+        let synergyBonusApplied = false;
+        for (const blueFactor of parentBlueFactors) {
+            if (synergyBonusApplied) break;
+            if (synergyMap[blueFactor]) {
+                for (const matchingPink of synergyMap[blueFactor]) {
+                    if (parentPinkFactors.has(matchingPink)) {
+                        addValue('Factor Synergy', W_PARENT_FACTOR_SYNERGY);
+                        synergyBonusApplied = true;
+                        break; 
+                    }
+                }
+            }
+        }
 
         // --- Process Grandparent Factors (gp1 + gp2) ---
-        // Combine gp1 and gp2 arrays, handling cases where they might be missing
         const gp_factors = (r.sparks.gp1 || []).concat(r.sparks.gp2 || []);
         
         gp_factors.forEach(factor => {
@@ -468,16 +517,16 @@ function initializeApp() {
             if (color === 'blue') {
                 const isPrized = PRIZED_BLUE_FACTORS.has(name);
                 if (stars === 3) {
-                    addValue(
-                        isPrized ? 'GP 3★ (Prized)' : 'GP 3★ (Other)',
-                        isPrized ? W_GP_BLUE_3STAR_PRIZED : W_GP_BLUE_3STAR_OTHER
-                    );
+                    addValue(isPrized ? 'GP 3★ (Prized)' : 'GP 3★ (Other)', isPrized ? W_GP_BLUE_3STAR_PRIZED : W_GP_BLUE_3STAR_OTHER);
                 } else if (stars === 2) {
-                    addValue(
-                        'GP 2★ (Prized)',
-                        isPrized ? W_GP_BLUE_2STAR_PRIZED : 0 // Only value 2-star prized
-                    );
+                    addValue('GP 2★ (Prized)', isPrized ? W_GP_BLUE_2STAR_PRIZED : 0);
+                } else if (stars === 1) { // NEW: Penalty for 1-star GP factors
+                    addValue('Penalty GP 1★ Blue', W_GP_BLUE_1STAR);
                 }
+            } else if (color === 'pink') { // NEW: Penalty for 1-star GP factors
+                 if (stars === 1) {
+                    addValue('Penalty GP 1★ Pink', W_GP_PINK_1STAR);
+                 }
             } else if (color === 'white') {
                 if (G1_RACES.has(name)) {
                     addValue('GP G1 Win (Affinity)', W_GP_G1_RACE * stars);
@@ -488,7 +537,6 @@ function initializeApp() {
         });
 
         r.transferScore = totalValue;
-        // Sort breakdown by value for readability in the "Transfer" tab
         const sortedBreakdown = Object.fromEntries(
             Object.entries(breakdown).sort(([,a],[,b]) => a - b)
         );
