@@ -1,7 +1,7 @@
 {
   "OCR_READER_CONFIG": {
     "languages": ["en"],
-    "gpu": false
+    "gpu": true
   },
   "ROI_MOBILE": {
     "name": [506, 574, 580, 970],

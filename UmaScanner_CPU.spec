@@ -6,7 +6,7 @@ torch_lib_path = os.path.join('venv_cpu', 'Lib', 'site-packages', 'torch', 'lib'
 vc_dlls_path = 'vc_dlls'
 
 a = Analysis(
-    ['src\\main.py'],
+    ['src\\main_cpu.py'],
     pathex=['.'],
     binaries=[],
     datas=[
