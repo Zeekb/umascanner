@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     uploaderContainer = document.getElementById('uploader-container');
     fileInput = document.getElementById('file-input');
     loadDataButton = document.getElementById('load-data-button');
+    const loadTestDataButton = document.getElementById('load-test-data-button');
     loadingMessage = document.getElementById('loading-message');
     errorMessage = document.getElementById('error-message');
     appWrapper = document.getElementById('app-wrapper');

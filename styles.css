@@ -1483,7 +1483,7 @@ td.spark-cell .skill-gold b {
 }
 
 .example-screenshots img {
-    max-height: 30%;          
+    max-height: 500px;          
     height: auto;            /* Maintains aspect ratio */
     border: 1px solid var(--uma-border-color, #ccc); /* Adds a border */
     border-radius: 4px;      /* Rounds the corners slightly */
