@@ -1483,7 +1483,7 @@ td.spark-cell .skill-gold b {
 }
 
 .example-screenshots img {
-    max-width: 30%;          /* Makes each image take up roughly a third of the space */
+    max-height: 30%;          
     height: auto;            /* Maintains aspect ratio */
     border: 1px solid var(--uma-border-color, #ccc); /* Adds a border */
     border-radius: 4px;      /* Rounds the corners slightly */
