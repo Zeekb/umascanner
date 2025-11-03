@@ -1474,3 +1474,17 @@ td.spark-cell .skill-gold b {
     right: 0;   /* Aligns the tooltip to the right edge of the '?' icon */
     transform: translateX(0); /* Keeps the horizontal position as-is */
 }
+
+.example-screenshots {
+    display: flex;
+    justify-content: center; /* Centers the images */
+    gap: 10px;               /* Adds a small space between images */
+    flex-wrap: wrap;         /* Allows images to wrap on small screens */
+}
+
+.example-screenshots img {
+    max-width: 30%;          /* Makes each image take up roughly a third of the space */
+    height: auto;            /* Maintains aspect ratio */
+    border: 1px solid var(--uma-border-color, #ccc); /* Adds a border */
+    border-radius: 4px;      /* Rounds the corners slightly */
+}
