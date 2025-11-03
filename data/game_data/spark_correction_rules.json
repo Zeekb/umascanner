@@ -53,5 +53,11 @@
         "keywords": ["blazing", "pride"],
         "color": "green",
         "spark_name": "Blazing Pride"
+    },
+    {
+        "keywords": ["gap"],
+        "color": "white",
+        "spark_name": "Gap Closer"
+        
     }
 ]
