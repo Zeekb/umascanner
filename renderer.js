@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up the dark mode toggle *early* so the page loads with the right theme
     setupDarkMode(); 
 
-    // *** FIX 1: Event listener is now attached regardless of saved data ***
     loadDataButton.addEventListener('click', handleFileLoad);
+    loadTestDataButton.addEventListener('click', handleTestFileLoad);
 
     const savedData = localStorage.getItem('savedRunnerData');
     if (savedData) {
@@ -132,6 +132,72 @@ async function handleFileLoad() {
     }
 }
 
+/**
+ * NEW: Loads the specific test data file all_runners_Zeek.json from the assets folder
+ */
+async function handleTestFileLoad() {
+    loadingMessage.style.display = 'block';
+    errorMessage.style.display = 'none';
+
+    let fileContent;
+    let allRunnersData;
+
+    try {
+        // 1. Fetch the specific test file from the assets folder
+        const response = await fetch('./assets/all_runners_Zeek.json');
+        if (!response.ok) {
+            throw new Error(`Could not find file: ${response.statusText}`);
+        }
+        fileContent = await response.text();
+        allRunnersData = JSON.parse(fileContent);
+
+    } catch (err) {
+        showError(`Error loading test file (all_runners_Zeek.json): ${err.message}. <br>Make sure the file is in the 'assets' folder.`);
+        return;
+    }
+
+    if (!Array.isArray(allRunnersData)) {
+        showError('Invalid test file format. The JSON file must contain an array of runners.');
+        return;
+    }
+    
+    try {
+        localStorage.setItem('savedRunnerData', fileContent);
+    } catch (e) {
+        console.error("Could not save to localStorage:", e);
+    }
+
+    allRunners = allRunnersData;
+
+    // 2. Fetch the static game data from our repo (same as other load functions)
+    try {
+        const [loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
+            fetch('./data/skills.json').then(res => res.json()),
+            fetch('./data/runner_skills.json').then(res => res.json()),
+            fetch('./data/sparks.json').then(res => res.json()),
+        ]);
+
+        skillData = loadedSkillData || {};
+        runnerUniqueSkills = uniqueSkillsData || {};
+        orderedSparks = loadedOrderedSparks || {};
+        
+        // Derive skill names from the loaded skill data
+        orderedSkills = Object.keys(skillData);
+
+    } catch (err) {
+        showError(`Failed to load game data (skills.json, etc.): ${err.message}`);
+        return;
+    }
+
+    // 3. If all data is loaded, initialize the main application
+    try {
+        initializeApp();
+    } catch (err) {
+         showError(`Error initializing app: ${err.message}`);
+         console.error("Initialization failed:", err);
+    }
+}
+
 async function loadFromSavedData(jsonData) {
     loadingMessage.style.display = 'block';
     errorMessage.style.display = 'none';
@@ -169,7 +235,7 @@ async function loadFromSavedData(jsonData) {
  */
 function showError(message) {
     loadingMessage.style.display = 'none';
-    errorMessage.textContent = message;
+    errorMessage.innerHTML = message;
     errorMessage.style.display = 'block';
 }
 

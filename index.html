@@ -13,6 +13,7 @@
         <p>Produce this file from the <a href="https://github.com/Zeekb/umascanner/releases">UmaScanner</a> program with screenshots from your runner's skills and sparks tabs</p>
         <input type="file" id="file-input" accept=".json">
         <button id="load-data-button" style="padding: 10px 20px; margin-left: 10px;">Load Data</button>
+        <button id="load-test-data-button" style="padding: 10px 20px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Load Test Data</button>
         <p id="loading-message" style="display: none; margin-top: 20px;">Loading...</p>
         <p id="error-message" style="display: none; color: red; margin-top: 20px;"></p>
     </div>
@@ -32,14 +33,14 @@
             <span id="entries-count-display"></span>
             
             <button id="dark-mode-toggle" title="Toggle Dark Mode" class="icon-button">
-                <span id="dark-mode-icon">🌙</span>
+                <span id="dark-mode-icon">嫌</span>
             </button>
             <button id="save-data-button" title="Save changes to file" class="icon-button">
-                <span id="save-file-icon">💾</span>
+                <span id="save-file-icon">沈</span>
             </button>
             <span class="tab-help help-top-right" data-tooltip="Saves all current data, including any transfers (deletions), into a new 'all_runners.json' file for you to download.">?</span>
             <button id="load-new-file-button" title="Load a new file" class="icon-button">
-                <span id="load-file-icon">📂</span>
+                <span id="load-file-icon">唐</span>
             </button>
         </div>
 
@@ -218,7 +219,7 @@
                             <th>Whites</th>
                             <th>GP1</th>
                             <th>GP2</th>
-                            <th><span class="tab-help help-top-right" data-tooltip="Clicking 'Transfer' will permanently delete this runner from the loaded data. &#10;&#10;This action can't be undone unless you reload the original file. Use the 'Save' (💾) button to download your edited data.">?</span></th>
+                            <th><span class="tab-help help-top-right" data-tooltip="Clicking 'Transfer' will permanently delete this runner from the loaded data. &#10;&#10;This action can't be undone unless you reload the original file. Use the 'Save' (沈) button to download your edited data.">?</span></th>
                         </tr>
                     </thead>
                     <tbody id="parent-summary-body"></tbody>
