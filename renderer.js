@@ -17,7 +17,6 @@ let maxParentWhiteSparks = 0;
 const cleanName = (name) => name ? name.replace(/ c$/, '').trim() : '';
 
 // --- Element References ---
-// We define these *after* the DOM is loaded
 let filterElements = {};
 let tabButtons, tabContents, parentSummaryBody, whiteSparksBody, skillsSummaryBody;
 let aptitudeFiltersContainer, resetFiltersButton, addSparkFilterButton, sparkFiltersContainer;
@@ -39,9 +38,8 @@ const STAT_ICONS = {
     'guts': 'guts.png', 'wit': 'wit.png'
 };
 
-// --- NEW BOOTSTRAP: Fires when the page loads ---
+// --- App Initialization ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Get references to the uploader and app wrapper
     uploaderContainer = document.getElementById('uploader-container');
     fileInput = document.getElementById('file-input');
     loadDataButton = document.getElementById('load-data-button');
@@ -50,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
     errorMessage = document.getElementById('error-message');
     appWrapper = document.getElementById('app-wrapper');
 
-    // Set up the dark mode toggle *early* so the page loads with the right theme
     setupDarkMode(); 
 
     loadDataButton.addEventListener('click', handleFileLoad);
@@ -63,12 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
             loadFromSavedData(savedData);
         }, 100);
     } 
-    // The 'else' block that previously contained the event listener is removed
 });
 
-/**
- * NEW: Reads the user's file and game data, then starts the app
- */
 async function handleFileLoad() {
     const file = fileInput.files[0];
 
@@ -84,7 +77,7 @@ async function handleFileLoad() {
     let allRunnersData;
 
     try {
-        fileContent = await file.text(); // Read content as text first
+        fileContent = await file.text();
         allRunnersData = JSON.parse(fileContent);
     } catch (err) {
         showError(`Error reading file: ${err.message}`);
@@ -104,7 +97,6 @@ async function handleFileLoad() {
 
     allRunners = allRunnersData;
 
-    // 2. Fetch the static game data from our repo
     try {
         const [loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
             fetch('./data/skills.json').then(res => res.json()),
@@ -115,8 +107,6 @@ async function handleFileLoad() {
         skillData = loadedSkillData || {};
         runnerUniqueSkills = uniqueSkillsData || {};
         orderedSparks = loadedOrderedSparks || {};
-        
-        // Derive skill names from the loaded skill data
         orderedSkills = Object.keys(skillData);
 
     } catch (err) {
@@ -124,7 +114,6 @@ async function handleFileLoad() {
         return;
     }
 
-    // 3. If all data is loaded, initialize the main application
     try {
         initializeApp();
     } catch (err) {
@@ -133,9 +122,6 @@ async function handleFileLoad() {
     }
 }
 
-/**
- * NEW: Loads the specific test data file all_runners_Zeek.json from the assets folder
- */
 async function handleTestFileLoad() {
     loadingMessage.style.display = 'block';
     errorMessage.style.display = 'none';
@@ -144,7 +130,6 @@ async function handleTestFileLoad() {
     let allRunnersData;
 
     try {
-        // 1. Fetch the specific test file from the assets folder
         const response = await fetch('./assets/all_runners_Zeek.json');
         if (!response.ok) {
             throw new Error(`Could not find file: ${response.statusText}`);
@@ -170,7 +155,6 @@ async function handleTestFileLoad() {
 
     allRunners = allRunnersData;
 
-    // 2. Fetch the static game data from our repo (same as other load functions)
     try {
         const [loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
             fetch('./data/skills.json').then(res => res.json()),
@@ -181,8 +165,6 @@ async function handleTestFileLoad() {
         skillData = loadedSkillData || {};
         runnerUniqueSkills = uniqueSkillsData || {};
         orderedSparks = loadedOrderedSparks || {};
-        
-        // Derive skill names from the loaded skill data
         orderedSkills = Object.keys(skillData);
 
     } catch (err) {
@@ -190,7 +172,6 @@ async function handleTestFileLoad() {
         return;
     }
 
-    // 3. If all data is loaded, initialize the main application
     try {
         initializeApp();
     } catch (err) {
@@ -207,12 +188,11 @@ async function loadFromSavedData(jsonData) {
         allRunners = JSON.parse(jsonData);
     } catch (e) {
         showError('Error parsing saved data. Please load a file again.');
-        localStorage.removeItem('savedRunnerData'); // Clear corrupted data
-        loadDataButton.addEventListener('click', handleFileLoad); // Re-enable button
+        localStorage.removeItem('savedRunnerData');
+        loadDataButton.addEventListener('click', handleFileLoad);
         return;
     }
 
-    // Now, proceed with the rest of the initialization just like in handleFileLoad
     try {
         const [loadedSkillData, uniqueSkillsData, loadedOrderedSparks] = await Promise.all([
             fetch('./data/skills.json').then(res => res.json()),
@@ -231,9 +211,6 @@ async function loadFromSavedData(jsonData) {
     }
 }
 
-/**
- * NEW: Shows an error message on the loader screen
- */
 function showError(message) {
     loadingMessage.style.display = 'none';
     errorMessage.innerHTML = message;
@@ -241,10 +218,9 @@ function showError(message) {
 }
 
 function preloadRunnerImages() {
-    const preloadedImages = new Set(); // Prevents trying to load the same image multiple times
+    const preloadedImages = new Set();
     
     allRunners.forEach(runner => {
-        // Preload the main profile image
         const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
         let nameForImage = hasGreenParentSpark ? runner.name : `${runner.name} c`;
         nameForImage = (nameForImage || 'N/A').trim().replace(/ /g, '_');
@@ -264,15 +240,12 @@ function returnToFileUploader() {
         "Are you sure you want to load a new file?\n\nThis will clear the current data."
     );
 
-    // If the user clicks "Cancel", the function will stop right here.
     if (!userConfirmed) {
         return; 
     }
 
-    // 1. Clear the saved data from localStorage
     localStorage.removeItem('savedRunnerData');
 
-    // 2. Reset all global data arrays and sets
     allRunners = [];
     blueSparkNames = [];
     greenSparkNames = [];
@@ -283,26 +256,16 @@ function returnToFileUploader() {
     allRunnerNamesSet.clear();
     gpExistenceCache.clear();
 
-    // 3. Hide the main application and show the uploader
     appWrapper.style.display = 'none';
-    
-    // *** FIX 2: Set display to 'flex' to match the app-container class rule ***
     uploaderContainer.style.display = 'flex';
-
-    // 4. Reset the file input so the user can re-upload the same file if needed
     fileInput.value = '';
 
-    // 5. Hide any previous error messages on the uploader screen
     errorMessage.style.display = 'none';
     loadingMessage.style.display = 'none';
     if (entriesCountDisplay) entriesCountDisplay.textContent = '';
 }
 
-/**
- * NEW: Main app initialization, runs *after* all data is loaded
- */
 function initializeApp() {
-    // Now that the app is visible, get references to its elements
     filterElements = {
         runner: document.getElementById('filter-runner'),
         sort: document.getElementById('filter-sort'),
@@ -339,7 +302,6 @@ function initializeApp() {
     saveDataButton = document.getElementById('save-data-button');
     entriesCountDisplay = document.getElementById('entries-count-display');
 
-    // --- Start of original setup logic ---
     if (!allRunners || allRunners.length === 0) {
         console.warn("No runner data loaded.");
         const noDataMsg = '<tr><td colspan="18">No runner data found.</td></tr>';
@@ -388,11 +350,9 @@ function initializeApp() {
     }
     setupEventListeners();
     handleTabChange('parent-summary');
-    // --- End of original setup logic ---
 
-    // Hide uploader and show the app
     uploaderContainer.style.display = 'none';
-    appWrapper.style.display = 'flex'; // Use 'flex' to match .app-container
+    appWrapper.style.display = 'flex';
 
     loadNewFileButton.addEventListener('click', returnToFileUploader);
 
@@ -432,7 +392,6 @@ function setupDarkMode() {
                 if (iconSpan) iconSpan.textContent = '☀️';
                 if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
             }
-            // Re-render if filters are active, as colors might change
             if (allRunners.length > 0) {
                  filterAndRender();
             }
@@ -499,7 +458,6 @@ function extractSparkNames() {
         });
     });
 
-    // (This logic is unchanged)
     if (orderedSparks?.blue && Array.isArray(orderedSparks.blue)) {
         blueSparkNames = orderedSparks.blue.filter(name => extracted.blue.has(name));
     } else {
@@ -625,6 +583,12 @@ function setupEventListeners() {
             debouncedFilterAndRender();
         }
     });
+    
+    sparkFiltersContainer.addEventListener('input', (event) => {
+        if (event.target.classList.contains('spark-search-input')) {
+            debouncedFilterAndRender();
+        }
+    });
 
     sparkFiltersContainer.addEventListener('change', (event) => {
         if (event.target.classList.contains('rep-only-checkbox')) {
@@ -668,7 +632,6 @@ function setupEventListeners() {
                 filterAndRender();
             });
             numInput.value = slider.value;
-
             updateStatInputPlaceholder(numInput); 
         }
     });
@@ -680,10 +643,8 @@ function setupEventListeners() {
 
     if (toggleFilterButton && filterPanel) {
         toggleFilterButton.addEventListener('click', () => {
-            // Toggle the 'collapsed' class on the main filter panel
             const isCollapsed = filterPanel.classList.toggle('collapsed');
             
-            // Update the button text and title
             if (isCollapsed) {
                 toggleFilterButton.textContent = '+';
                 toggleFilterButton.title = 'Show Filters';
@@ -694,7 +655,6 @@ function setupEventListeners() {
         });
     }
     addSparkFilterButton.addEventListener('click', addSparkFilterRow);
-
     addSkillFilterButton.addEventListener('click', addSkillFilterRow);
 
     sparkFiltersContainer.addEventListener('click', (event) => {
@@ -818,8 +778,6 @@ function handleTabChange(activeTabId) {
 
     filterAndRender();
 }
-
-// --- All Affinity Calculator functions are removed as they were commented out ---
 
 function renderSkillsSummary(runners) {
     if (!runners.length) {
@@ -1057,8 +1015,6 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
    hideEntryIdColumn('white-sparks');
 }
 
-// --- handleDeleteRunner FUNCTION IS REMOVED ---
-
 function handleDetailView(event) {
     const clickedCell = event.target.closest('td');
     if (!clickedCell) return;
@@ -1154,7 +1110,6 @@ function filterAndRender() {
         (parseInt(r.wit || 0)) >= parseInt(baseFilters.wit)
     );
 
-    const activeTabId = document.querySelector('.tab-content.active')?.id;
     const skillNameFilters = Array.from(document.querySelectorAll('.skill-name-input'))
         .map(input => input.value.toLowerCase().trim())
         .filter(val => val);
@@ -1236,6 +1191,7 @@ function filterAndRender() {
     skillsSummaryBody.innerHTML = '';
     
     const allSparkCriteria = getAllSparkFilterCriteria();
+    const activeTabId = document.querySelector('.tab-content.active')?.id;
 
     if (activeTabId === 'parent-summary') {
         renderParentSummary(filteredData, allSparkCriteria);
@@ -1274,62 +1230,47 @@ function getAllSparkFilterCriteria() {
     return criteria;
 }
 
-
-
+/**
+ * [MODIFIED] Checks if a runner has a specific spark based on partial name and minimum stars.
+ */
 function checkSpark(runner, color, nameFilter, minStars, repOnly) {
-    // If no filter and min 0, pass immediately.
     if (!nameFilter && minStars === 0) return true;
 
-    // --- CHANGE ---
-    // If a filter IS provided AND minStars is 0, set the effective minimum to 1.
-    // Otherwise, use the provided minStars.
     const effectiveMinStars = (nameFilter && minStars === 0) ? 1 : minStars;
-    // --- END CHANGE ---
-
     const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+    const sparkTotals = {};
+
+    for (const source of sparkSources) {
+        if (Array.isArray(runner.sparks?.[source])) {
+            for (const spark of runner.sparks[source]) {
+                if (spark?.color === color && spark.spark_name) {
+                    const name = spark.spark_name;
+                    const count = parseInt(spark.count || 0, 10);
+                    sparkTotals[name] = (sparkTotals[name] || 0) + count;
+                }
+            }
+        }
+    }
 
     if (nameFilter) {
-        let totalStars = 0;
-        let foundSpecificSpark = false;
-        for (const source of sparkSources) {
-            if (Array.isArray(runner.sparks?.[source])) {
-                for (const spark of runner.sparks[source]) {
-                    if (spark?.color === color && spark.spark_name === nameFilter) {
-                        // Using '|| 0' for correct counting
-                        totalStars += parseInt(spark.count || 0, 10);
-                        foundSpecificSpark = true;
-                    }
-                }
+        const lowerCaseNameFilter = nameFilter.toLowerCase();
+        for (const [sparkName, totalStars] of Object.entries(sparkTotals)) {
+            if (sparkName.toLowerCase().includes(lowerCaseNameFilter) && totalStars >= effectiveMinStars) {
+                return true;
             }
         }
-        // Check against the new 'effectiveMinStars'
-        return foundSpecificSpark && totalStars >= effectiveMinStars;
-    } 
-    else { 
-        const sparkTotals = {};
-        for (const source of sparkSources) {
-            if (Array.isArray(runner.sparks?.[source])) {
-                for (const spark of runner.sparks[source]) {
-                    if (spark?.color === color && spark.spark_name) {
-                        const name = spark.spark_name;
-                        // --- BUG FIX ---
-                        // Changed '|| 1' to '|| 0' for correct counting
-                        const count = parseInt(spark.count || 0, 10);
-                        sparkTotals[name] = (sparkTotals[name] || 0) + count;
-                        // --- END BUG FIX ---
-                    }
-                }
-            }
-        }
-        
-        // Check against 'effectiveMinStars' (which will equal minStars in this 'else' block)
+        return false;
+    } else {
         for (const total of Object.values(sparkTotals)) {
-            if (total >= effectiveMinStars) return true; 
+            if (total >= effectiveMinStars) return true;
         }
         return false;
     }
 }
 
+/**
+ * [MODIFIED] Checks if a runner has a specific white spark based on partial name and minimum count.
+ */
 function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
     const result = { pass: false, passingSparks: new Set() };
 
@@ -1337,7 +1278,8 @@ function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
         result.pass = true;
         return result;
     }
-
+    
+    const effectiveMinCount = (nameFilter && minCount === 0) ? 1 : minCount;
     const sparkSources = repOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
     const sparkTotals = {};
 
@@ -1346,33 +1288,24 @@ function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
             for (const spark of runner.sparks[source]) {
                 if (spark?.color === 'white' && spark.spark_name) {
                     const name = spark.spark_name;
-                    // --- BUG FIX ---
-                    // Changed '|| 1' to '|| 0' for correct counting
                     const count = parseInt(spark.count, 10) || 0;
                     sparkTotals[name] = (sparkTotals[name] || 0) + count;
-                    // --- END BUG FIX ---
                 }
             }
         }
     }
 
     if (nameFilter) {
-        // This logic correctly sets the minimum to 1 if it was 0
-        const effectiveMinCount = minCount === 0 ? 1 : minCount;
-
-        // --- BUG FIX ---
-        // Changed '(sparkTotals[nameFilter] || 1)' to '(sparkTotals[nameFilter] || 0)'
-        // The old code would always be true if effectiveMinCount was 1.
-        if ((sparkTotals[nameFilter] || 0) >= effectiveMinCount) {
-        // --- END BUG FIX ---
-            result.pass = true;
-            result.passingSparks.add(nameFilter);
+        const lowerCaseNameFilter = nameFilter.toLowerCase();
+        for (const [name, total] of Object.entries(sparkTotals)) {
+            if (name.toLowerCase().includes(lowerCaseNameFilter) && total >= effectiveMinCount) {
+                result.pass = true;
+                result.passingSparks.add(name);
+            }
         }
     } else {
-        // This 'else' block is correct, as the (minCount === 0) case
-        // is already handled by the first 'if' in the function.
         for (const [name, total] of Object.entries(sparkTotals)) {
-            if (total >= minCount) {
+            if (total >= effectiveMinCount) {
                 result.pass = true;
                 result.passingSparks.add(name);
             }
@@ -1380,6 +1313,7 @@ function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
     }
     return result;
 }
+
 
 function sortData(data, sortBy, sortDir) {
     const getWhiteCount = (runner, sources) => {
@@ -1497,11 +1431,7 @@ function showDetailModal(runner, displayName) {
     nameForImage = nameForImage || 'N/A';
     
     const runnerName = runner.name || 'N/A';
-
     const runnerImgName = nameForImage.trim().replace(/ /g, '_');
-    
-    // *** PATH CHANGE HERE ***
-    // Changed from ../assets to ./assets
     const runnerImgPath = `./assets/profile_images/${runnerImgName}.png`;
     
     const score = runner.score || 0;
@@ -1515,8 +1445,6 @@ function showDetailModal(runner, displayName) {
         --rank-ribbon-color: ${rankRibbonColor};
     `;
 
-    // *** CLASS CHANGE HERE ***
-    // Added the dynamic class for letter-spacing fix
     const baseGradeLetter = rankGrade.replace('<sup>+</sup>', '').replace('+', '').replace('SS', 'S');
     const rankClass = `modal-rank-grade rank-fix-${baseGradeLetter}`;
 
@@ -1551,8 +1479,6 @@ function showDetailModal(runner, displayName) {
         const grade = getStatGrade(value);
         const { gradeColor, topColor, bottomColor, outlineColor } = getGradeColors(grade);
         
-        // *** PATH CHANGE HERE ***
-        // Changed from ../assets to ./assets
         statsHtml += `
             <div class="modal-stat-column">
                 <div class="modal-stat-header">
@@ -1621,8 +1547,6 @@ function showDetailModal(runner, displayName) {
                 }
             }
             
-            // *** PATH CHANGE HERE ***
-            // Changed from ../assets to ./assets
             const iconPath = skillType ? `./assets/skill_icons/${skillType}.png` : '';
             const iconStyle = iconPath ? `background-image: url('${iconPath}')` : '';
             
@@ -1751,10 +1675,6 @@ function updateRemoveButtonVisibility() {
             removeBtn.style.display = shouldShowRemove ? 'block' : 'none';
         }
     });
-}
-
-function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function getStatGrade(value) {
@@ -1943,29 +1863,21 @@ function showTimedMessage(message) {
     }, 2000);
 }
 
-/**
- * Handles clicks on the "Transfer" button in the Parent Summary table.
- */
 function handleDeleteRunner(event) {
     const target = event.target;
-    // Check if the clicked element is a delete button
     if (target.classList.contains('delete-button')) {
         const entryId = target.dataset.entryId;
         if (!entryId) return;
 
-        // Find the runner in the main data array
         const runnerIndex = allRunners.findIndex(r => String(r.entry_id) === String(entryId));
         
         if (runnerIndex > -1) {
-            // Get runner name for confirmation
             const runnerName = allRunners[runnerIndex].name || 'this runner';
             const confirmed = window.confirm(`Are you sure you want to transfer ${runnerName} ${allRunners[runnerIndex].score}?`);
             
             if (confirmed) {
-                // Remove the runner from the main data array
                 allRunners.splice(runnerIndex, 1);
                 
-                // Update the local storage with the modified data
                 try {
                     localStorage.setItem('savedRunnerData', JSON.stringify(allRunners));
                 } catch (e) {
@@ -1973,7 +1885,6 @@ function handleDeleteRunner(event) {
                     showTimedMessage("Runner removed, but failed to update local storage.");
                 }
                 
-                // Re-filter and render the table
                 filterAndRender();
                 updateEntriesCount();
                 showTimedMessage(`${runnerName} transferred (deleted).`);
@@ -1985,30 +1896,16 @@ function handleDeleteRunner(event) {
     }
 }
 
-/**
- * Triggers a browser download of the current allRunners data as a JSON file.
- */
 function saveDataToFile() {
     try {
-        // 1. Convert the current data to a JSON string
-        const jsonData = JSON.stringify(allRunners, null, 2); // Pretty-print with 2-space indent
-        
-        // 2. Create a Blob (binary large object)
+        const jsonData = JSON.stringify(allRunners, null, 2);
         const blob = new Blob([jsonData], { type: 'application/json' });
-        
-        // 3. Create a temporary URL for the Blob
         const url = URL.createObjectURL(blob);
-        
-        // 4. Create a temporary link element
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'all_runners.json'; // Set the download filename
-        
-        // 5. Simulate a click to trigger the download
+        a.download = 'all_runners.json';
         document.body.appendChild(a);
         a.click();
-        
-        // 6. Clean up by removing the link and revoking the URL
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         

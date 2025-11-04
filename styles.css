@@ -215,6 +215,7 @@ body {
     border: 1px solid var(--uma-border-color);
     border-top: none;
     margin-bottom: 10px;
+    z-index: 5;
 }
 
 .filter-top-row {
@@ -509,7 +510,8 @@ input[type="range"]::-moz-range-track {
     max-height: 1000px;
     opacity: 1;
     transform: translateY(0);
-    z-index: 5;
+    position: relative;
+    z-index: 15;
 }
 
 .filter-panel.collapsed #collapsible-filters {
@@ -690,9 +692,9 @@ input[type="range"]::-moz-range-track {
     border: 1px solid var(--uma-border-color);
     margin-top: 1px;
     border-radius: 3px;
-    z-index: 10;
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #f0f0f0;
+    z-index: 20; /* [FIX] Increased z-index */
 }
 
 .options-container::-webkit-scrollbar { width: 6px; }
@@ -1439,7 +1441,7 @@ td.spark-cell b {
     cursor: help;
     margin-left: -14px;
     margin-top: -2px;
-    z-index: 10;
+    z-index: 2;
 }
 
 .dark-mode .tab-help {
@@ -1480,12 +1482,8 @@ td.spark-cell b {
     transform: translateX(0);
 }
 
-.transfer-help {
-    margin-left: 0px;
-}
-
 .filter-help {
-    margin-left:4px;
+    margin-left:0px;
     white-space: pre-line;
 }
 
@@ -1494,6 +1492,7 @@ td.spark-cell b {
     right: 0;
     transform: translateX(0);
 }
+
 
 /* --- Utility & Helper Classes --- */
 .gp-link {
