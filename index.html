@@ -53,7 +53,6 @@
         
         <div class="filter-panel">
             <div class="filter-top-row">
-                <button id="toggle-filter-panel" title="Collapse Filters">Hide ^</button>
                 <div class="filter-section">
                     <span class="tab-help filter-help" data-tooltip="This panel filters all runners shown in the detail tabs.&#10;  
                         1. Sorting: &#10;Filter by a specific runner or change the sort order.&#10;  
@@ -117,22 +116,22 @@
                     <div class="filter-section aptitude-filters" id="aptitude-filters">
                         <div class="filter-group">
                             <label>Track</label>
-                            <select id="apt-min-turf"><option value="">Turf</option></select>
-                            <select id="apt-min-dirt"><option value="">Dirt</option></select>
+                            <select id="apt-min-turf"class="aptitude-select"><option value="">All Turf</option></select>
+                            <select id="apt-min-dirt" class="aptitude-select"><option value="">All Dirt</option></select>
                         </div>
                         <div class="filter-group">
                             <label>Distance</label>
-                            <select id="apt-min-sprint"><option value="">Sprint</option></select>
-                            <select id="apt-min-mile"><option value="">Mile</option></select>
-                            <select id="apt-min-medium"><option value="">Med.</option></select>
-                            <select id="apt-min-long"><option value="">Long</option></select>
+                            <select id="apt-min-sprint" class="aptitude-select"><option value="">All Sprint</option></select>
+                            <select id="apt-min-mile" class="aptitude-select"><option value="">All Mile</option></select>
+                            <select id="apt-min-medium" class="aptitude-select"><option value="">All Med.</option></select>
+                            <select id="apt-min-long" class="aptitude-select"><option value="">All Long</option></select>
                         </div>
                         <div class="filter-group">
                             <label>Style</label>
-                            <select id="apt-min-front"><option value="">Front</option></select>
-                            <select id="apt-min-pace"><option value="">Pace</option></select>
-                            <select id="apt-min-late"><option value="">Late</option></select>
-                            <select id="apt-min-end"><option value="">End</option></select>
+                            <select id="apt-min-front" class="aptitude-select"><option value="">All Front</option></select>
+                            <select id="apt-min-pace"class="aptitude-select"><option value="">All Pace</option></select>
+                            <select id="apt-min-late" class="aptitude-select"><option value="">All Late</option></select>
+                            <select id="apt-min-end" class="aptitude-select"><option value="">All End</option></select>
                         </div>
                     </div>
                 </div>                
@@ -141,7 +140,7 @@
                         <div class="filter-group">
                             <label for="filter-skill-name-1">Skill Name</label>
                             <div class="searchable-select-container">
-                                <input type="text" id="filter-skill-name-1" placeholder="Search Skill Name" class="skill-name-input" autocomplete="off">
+                                <input type="text" id="filter-skill-name-1" placeholder="Search Skill Name" class="skill-name-input" autocomplete="on">
                                 <div class="options-container"></div>
                             </div>
                         </div>
@@ -162,8 +161,7 @@
                                     <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-shorter" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <label for="min-blue"></label>
-                                <select id="min-blue" class="min-spark-select spark-count-select"></select>
+                                <select id="min-blue" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-green-spark">Green Sparks</label>
@@ -171,8 +169,7 @@
                                     <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <label for="min-green"></label>
-                                <select id="min-green" class="min-spark-select spark-count-select"></select>
+                                <select id="min-green" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-pink-spark">Pink Sparks</label>
@@ -180,8 +177,7 @@
                                     <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <label for="min-pink"></label>
-                                <select id="min-pink" class="min-spark-select spark-count-select"></select>
+                                <select id="min-pink" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-white-spark">White Sparks</label>
@@ -189,12 +185,11 @@
                                     <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <label for="min-white"></label>
-                                <select id="min-white" class="min-spark-select spark-count-select"></select>
+                                <select id="min-white" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="min-total-white">Total White Sparks</label>
-                                <select id="min-total-white" class="min-spark-select spark-count-select"></select>
+                                <select id="min-total-white" class="min-spark-select spark-count-select aptitude-select"></select>
                             </div>
                         </div>
                     </div>
@@ -205,6 +200,8 @@
                     </div>
                 </div>
             </div>
+            
+            <button id="toggle-filter-panel" title="Collapse Filters">−</button>
         </div>
 
         <div class="table-container">

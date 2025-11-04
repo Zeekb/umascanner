@@ -589,14 +589,14 @@ function populateFilters() {
 
     const aptGrades = ['S', 'A', 'B'];
     const aptGradeOptions = aptGrades.map(g => `<option value="${g}">${g !== 'S' ? g + '+' : g}</option>`).join('');
+    
     Object.values(filterElements)
     .filter(el => el.id.startsWith('apt-min-'))
     .forEach(sel => {
-        const aptitudeName = sel.id.replace('apt-min-', '');
-        const placeholderText = aptitudeName.charAt(0).toUpperCase() + aptitudeName.slice(1);
-        const placeholderOption = `<option value="" selected>All ${placeholderText}</option>`;
-        sel.innerHTML = placeholderOption + aptGradeOptions;
+        sel.innerHTML += aptGradeOptions;
     });
+
+    document.querySelectorAll('.aptitude-select').forEach(updateSelectPlaceholder);
 
     filterElements.sortDir.value = 'desc';
 }
@@ -614,6 +614,10 @@ function setupEventListeners() {
 
     Object.values(filterElements).forEach(el => {
         if (el.type !== 'range') el.addEventListener('change', filterAndRender);
+    });
+
+    document.querySelectorAll('.aptitude-select').forEach(sel => {
+        sel.addEventListener('change', () => updateSelectPlaceholder(sel));
     });
 
     skillFiltersContainer.addEventListener('input', (event) => {
@@ -653,15 +657,19 @@ function setupEventListeners() {
         if (slider && numInput) {
             slider.addEventListener('input', () => {
                 numInput.value = slider.value;
+                updateStatInputPlaceholder(numInput);
                 debouncedFilterAndRender();
             });
             numInput.addEventListener('change', () => {
                 let value = parseInt(numInput.value, 10) || 0;
                 slider.value = Math.max(slider.min, Math.min(slider.max, value));
                 numInput.value = slider.value;
+                updateStatInputPlaceholder(numInput);
                 filterAndRender();
             });
             numInput.value = slider.value;
+
+            updateStatInputPlaceholder(numInput); 
         }
     });
 
@@ -677,10 +685,10 @@ function setupEventListeners() {
             
             // Update the button text and title
             if (isCollapsed) {
-                toggleFilterButton.textContent = 'Show v';
+                toggleFilterButton.textContent = '+';
                 toggleFilterButton.title = 'Show Filters';
             } else {
-                toggleFilterButton.textContent = '^';
+                toggleFilterButton.textContent = '−';
                 toggleFilterButton.title = 'Collapse Filters';
             }
         });
@@ -982,8 +990,7 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                 }
             });
         }
-
-        const totalWhiteSparks = totalCounts.parent + totalCounts.gp1 + totalCounts.gp2;
+        const whiteDisplay = `${totalCounts.parent + totalCounts.gp1 + totalCounts.gp2}(${totalCounts.parent})`;
         
         const formatWhiteSparkDisplay = (sourceTotal, sourceDetails, runner) => {
             
@@ -1038,7 +1045,7 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
            <td>${r.entry_id || 'N/A'}</td>
            <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
            <td >${(r.score || 0).toLocaleString()}</td>
-           <td>${totalWhiteSparks}</td>
+           <td>${whiteDisplay}</td>
            <td class="left-align spark-cell gp-skills-link">${parentDisplay}</td>
            <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
            <td class="left-align spark-cell ${gp1SkillsClass}" data-gp-name="${r.gp1 || ''}">${gp1Display}</td>
@@ -1695,6 +1702,8 @@ function resetFilters() {
 
     updateRemoveButtonVisibility();
     filterElements.sortDir.value = 'desc';
+    document.querySelectorAll('.stat-input').forEach(updateStatInputPlaceholder);
+    document.querySelectorAll('.aptitude-select').forEach(updateSelectPlaceholder);
     filterAndRender();
 }
 
@@ -2014,5 +2023,25 @@ function saveDataToFile() {
 function updateEntriesCount() {
     if (entriesCountDisplay) {
         entriesCountDisplay.textContent = `Entries count: ${allRunners.length}/200`;
+    }
+}
+
+function updateSelectPlaceholder(selectElement) {
+    if (!selectElement) return;
+
+    if (selectElement.value === "") {
+        selectElement.classList.add('placeholder-selected');
+    } else {
+        selectElement.classList.remove('placeholder-selected');
+    }
+}
+
+function updateStatInputPlaceholder(inputElement) {
+    if (!inputElement) return;
+
+    if (inputElement.value === '0') {
+        inputElement.classList.add('placeholder-value');
+    } else {
+        inputElement.classList.remove('placeholder-value');
     }
 }
