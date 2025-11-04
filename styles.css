@@ -1461,10 +1461,11 @@ td.spark-cell .skill-gold b {
         opacity 0.4s cubic-bezier(0.25, 0.8, 0.5, 1),
         transform 0.4s cubic-bezier(0.25, 0.8, 0.5, 1);
         
-    overflow: hidden; 
+    overflow: visible; 
     max-height: 1000px; 
     opacity: 1;
     transform: translateY(0); /* Start position */
+    z-index: 5;
 }
 
 /* --- CSS for .filter-panel.collapsed (Hidden State) --- */
@@ -1477,6 +1478,7 @@ td.spark-cell .skill-gold b {
     padding-bottom: 0; /* CRITICAL: Must remove padding */
     /* Make the content move upwards 15px as it disappears */
     transform: translateY(-15px);
+    overflow: hidden; 
 }
 
 /* Style for the new toggle button */
