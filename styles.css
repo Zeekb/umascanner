@@ -770,6 +770,10 @@ tbody tr:nth-child(even) {
 tbody tr:hover {
   background-color: var(--uma-selection-bg);
 }
+tbody tr.selected {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+}
 tbody td:nth-child(2) {
     cursor: pointer;
 }
@@ -823,6 +827,19 @@ td.spark-cell b {
   color: var(--uma-text-dark);
 }
 
+td.skill-cell {
+  text-align: left;
+  white-space: normal;
+  font-size: 0.85em;
+  min-width: 80px;
+}
+td.skill-cell b {
+  color: black;
+}
+.dark-mode td.skill-cell b {
+  color: var(--uma-text-dark);
+}
+
 .delete-button {
     background-color: #71d71c;
     color: white;
@@ -868,7 +885,7 @@ td.spark-cell b {
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  /* gap: 15px; */
   flex-grow: 1;
   min-height: 0;
 }
@@ -894,8 +911,8 @@ td.spark-cell b {
   position: relative;
   width: 100px;
   height: 120px;
-  margin-top: -20px;
-  border-radius: 120px 120px 200px 200px ;
+  /* margin-top: -20px; */
+  border-radius: 120px 120px 200px 200px;
   overflow: hidden;
 }
 
@@ -1166,6 +1183,7 @@ td.spark-cell b {
   gap: 8px 10px;
   padding: 0 10px;
   flex-shrink: 0;
+  margin-top: 15px;
 }
 
 .modal-apt-label {
@@ -1441,7 +1459,7 @@ td.spark-cell b {
     cursor: help;
     margin-left: -14px;
     margin-top: -2px;
-    z-index: 2;
+    z-index: 50;
 }
 
 .dark-mode .tab-help {
@@ -1469,12 +1487,13 @@ td.spark-cell b {
     visibility: hidden;
     opacity: 0;
     transition: opacity 0.3s ease;
-    z-index: 100;
+    z-index: 1001;
 }
 
 .tab-help:hover::before {
     visibility: visible;
     opacity: 1;
+    z-index: 1001;
 }
 
 .tab-help::before {
@@ -1493,6 +1512,9 @@ td.spark-cell b {
     transform: translateX(0);
 }
 
+.transfer-help {
+  margin-left: 0px;
+}
 
 /* --- Utility & Helper Classes --- */
 .gp-link {
@@ -1535,17 +1557,295 @@ td.spark-cell b {
 .skill-detrimental { color: var(--skill-color-detrimental); }
 .skill-unique { font-weight: bold; }
 
-td.spark-cell .skill-unique b {
+td.skill-cell .skill-unique b {
     color: inherit;
     font-weight: 600;
 }
 
-td.spark-cell .skill-gold b {
+td.skill-cell .skill-gold b {
     color: #FFC107;
     font-weight: 600;
 }
 
-.dark-mode td.spark-cell .skill-gold b {
+.dark-mode td.skill-celll .skill-gold b {
     color: #FFC107;
     font-weight: 600;
+}
+
+/* --- legacies Planner --- */
+#legacies-planner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.legacies-pair {
+    display: flex;
+    gap: 20px;
+}
+
+.breeder-selection {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+}
+
+.breeder-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* --- Grandparent Analysis --- */
+#grandparent-analysis-content {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.grandparent-summary {
+    flex: 2;
+}
+
+.descendant-list {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+}
+
+/* --- Inheritance Log --- */
+#inheritance-log-content {
+    padding: 20px;
+}
+
+#inheritance-graph ul {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+#inheritance-graph li {
+    margin: 5px 0;
+    position: relative;
+}
+
+#inheritance-graph li::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -20px;
+    width: 10px;
+    height: 100%;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+#inheritance-graph li:last-child::before {
+    height: 1em;
+}
+
+/* --- Modal: New Tab System (Definitive Fix) --- */
+.modal-tabs {
+    display: flex;
+    justify-content: center;
+    /* gap: 5px; */
+    margin-top: 15px;
+    /* margin-bottom: 5px; */
+    border-bottom: 3px solid var(--uma-dark-accent);
+    flex-shrink: 0;
+}
+
+.modal-tab-button {
+    flex-grow: 1;
+    padding: 4px 0px;
+    cursor: pointer;
+    background-color: #e0e0e0;
+    color: var(--uma-text-dark);
+    border: 1px solid #ccc;
+    border-bottom: none;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 0px;
+    transition: all 0.2s ease;
+    width: 50%;
+}
+.dark-mode .modal-tab-button {
+    background-color: #555;
+    border-color: #444;
+}
+
+.modal-tab-button.active {
+    background-color: var(--uma-dark-accent);
+    color: var(--uma-header-text);
+    border-color: var(--uma-dark-accent);
+    /* transform: translateY(3px); */
+}
+.dark-mode .modal-tab-button.active {
+    background-color: #71d71c;
+}
+
+/* --- Modal: Tab Content (Definitive Fix for Scrolling) --- */
+#detail-modal {
+    /* Ensure the main modal container uses flexbox correctly */
+    display: flex;
+    flex-direction: column;
+}
+
+#detail-modal-content {
+    /* This must be a flex container for its children to grow and shrink properly */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allows this section to fill available space */
+    min-height: 0; /* The key to making flex-grow work with scrolling */
+}
+
+.modal-tab-content-container {
+    background-color: var(--uma-medium-bg);
+    border: 2px solid var(--uma-dark-accent);
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    
+    /* This container must also be flexible */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 0; /* And this is also critical */
+    overflow: hidden; 
+}
+
+.modal-tab-panel {
+    display: none;
+    height: 100%;
+    overflow-y: auto; /* SCROLLING IS RESTORED HERE */
+    scrollbar-width: thin;
+    scrollbar-color: #BCBCBC #EAEAEA;
+}
+.modal-tab-panel.active {
+    display: block;
+}
+
+#modal-inspiration-panel {
+    padding: 10px 15px 10px 5px; /* This padding now ONLY applies to the inspiration tab */
+}
+
+.modal-tab-panel::-webkit-scrollbar { width: 6px; }
+.modal-tab-panel::-webkit-scrollbar-track { background: #EAEAEA; border-radius: 3px; }
+.dark-mode .modal-tab-panel::-webkit-scrollbar-track { background: #555; }
+.modal-tab-panel::-webkit-scrollbar-thumb { background-color: #BCBCBC; border-radius: 3px; border: 1px solid #9E9E9E; }
+.dark-mode .modal-tab-panel::-webkit-scrollbar-thumb { background-color: #888; border-color: #666;}
+
+
+/* --- Modal: Inspiration Panel Styling (Definitive Fix) --- */
+.modal-sparks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.spark-legacy-section {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.spark-legacy-image-container {
+    flex-shrink: 0;
+    width: 64px;        /* Original 100px * 0.64 */
+    height: 77px;       /* Original 120px * 0.64 = 76.8px */
+    margin-top: -13px;  /* Original -20px * 0.64 = -12.8px */
+    position: relative;
+    overflow: hidden;   /* Added to be safe */
+}
+
+.spark-legacy-frame-scaler {
+    transform: scale(0.64);
+    transform-origin: top left;
+    width: 100px;  /* Original width of .modal-profile-frame */
+    height: 120px; /* Original height of .modal-profile-frame */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.spark-items-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    gap: 8px 6px;
+    width: 100%;
+}
+
+.spark-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 0px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 0.7;
+    color: var(--uma-text-light);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.spark-item-name {
+    font-size: 0.85em;
+    line-height: 1.3;
+}
+
+.spark-item-stars {
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    color: #fce15d;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
+}
+
+/* Define new variables for the specific spark colors */
+:root {
+  --spark-blue-bg:  #82B1FF;
+  --spark-pink-bg:  #FF80AB;
+  --spark-green-bg: #71d71c;
+  --spark-white-bg: #e0e0e0;
+}
+
+/* FIX: Use the new variables. These will be the same for light and dark mode. */
+.spark-blue { background-color: var(--spark-blue-bg); }
+.spark-pink { background-color: var(--spark-pink-bg); }
+.spark-green { background-color: var(--spark-green-bg); }
+
+/* The white spark cell needs to adapt, as its text color changes. */
+.spark-white {
+    background-color: var(--spark-white-bg);
+    color: var(--uma-text-dark);
+    text-shadow: none;
+}
+.dark-mode .spark-blue, .spark-pink, .spark-green {
+    color: var(--dark-text-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+.dark-mode .spark-white {
+    background-color: #666666; /* A slightly different grey for dark mode is okay */
+    color: var(--dark-text-color);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modal-profile-img.not-in-data {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.spark-potential {
+    display: inline-grid;
+}
+
+.spark-pool {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px 290px;
 }
