@@ -340,8 +340,11 @@
   text-align: right;
   align-self: center;
   font-size: 1.1em;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
   color: var(--uma-text-dark);
+}
+
+.dark-mode .modal-apt-label {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .modal-apt-button {
@@ -552,9 +555,11 @@
     border-top-right-radius: 8px;
     font-size: 14pt;
     font-weight: bold;
-    transition: all 0.2s ease;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
     width: 50%;
+    transition: all 0.2s ease;
+}
+.dark-mode .modal-tab-button {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 .dark-mode .modal-tab-button {
     background-color: #555;
@@ -670,7 +675,10 @@
     text-align: left;
     width: 100%;
     padding-left: 8px;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
+  }
+  
+.dark-mode .spark-item-name {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5), -1px -1px 0 rgba(0, 0, 0, 0.5), 1px -1px 0 rgba(0, 0, 0, 0.5), -1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .spark-item-stars {

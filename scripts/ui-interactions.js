@@ -145,15 +145,15 @@ export function setupDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     const body = document.body;
     const toggleButton = document.getElementById('dark-mode-toggle');
-    const iconSpan = document.getElementById('dark-mode-icon');
+    const iconImg = document.getElementById('dark-mode-icon');
     
     if (isDarkMode) {
         body.classList.add('dark-mode');
-        if (iconSpan) iconSpan.textContent = '🌙';
+        if (iconImg) iconImg.src = 'assets/day-icon.png';
         if (toggleButton) toggleButton.title = 'Toggle Light Mode';
     } else {
         body.classList.remove('dark-mode');
-        if (iconSpan) iconSpan.textContent = '☀️';
+        if (iconImg) iconImg.src = 'assets/night-icon.png';
         if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
     }
 
@@ -163,10 +163,10 @@ export function setupDarkMode() {
             localStorage.setItem('darkMode', currentlyDark);
             
             if (currentlyDark) {
-                if (iconSpan) iconSpan.textContent = '🌙';
+                if (iconImg) iconImg.src = 'assets/day-icon.png';
                 if (toggleButton) toggleButton.title = 'Toggle Light Mode';
             } else {
-                if (iconSpan) iconSpan.textContent = '☀️';
+                if (iconImg) iconImg.src = 'assets/night-icon.png';
                 if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
             }
             if (state.allRunners.length > 0) {

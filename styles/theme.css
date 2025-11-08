@@ -3,15 +3,14 @@
   --uma-light-bg: #FEFEFE;
   --uma-medium-bg: #FFFFFF;
   --uma-dark-accent: #71d71c;
-  --uma-accent-pink: #FF80AB;
-  --uma-accent-blue: #82B1FF;
+  --uma-accent-pink: #e56487; /* MODIFIED */
+  --uma-accent-blue: #82B1FF; /* MODIFIED */
   --uma-text-dark: #333;
   --uma-text-light: #FFFFFF;
   --uma-border-color: var(--uma-dark-accent);
   --uma-table-border-color: #ddd;
   --uma-alt-row-bg: #f0f0f0;
   --uma-selection-bg: #dbeaff;
-  /* FIX: Added a lighter header background for light mode */
   --uma-light-header-bg: #A5D6A7; 
   --uma-header-bg: var(--uma-light-header-bg);
   --uma-header-text: var(--uma-text-light);
@@ -47,8 +46,8 @@
   --dark-bg-alt-row: #353535;
   --dark-text-color: #f0f0f0;
   --dark-uma-dark-accent: #385628;
-  --dark-uma-accent-pink: #914d69;
-  --dark-uma-accent-blue: #4a6a8c;
+  --dark-uma-accent-pink: #e56487; /* MODIFIED */
+  --dark-uma-accent-blue: #82B1FF; /* MODIFIED */
   --dark-uma-border-color: #555555;
   --dark-uma-selection-bg: #4c6d93;
 
@@ -75,7 +74,6 @@
   --uma-accent-blue: var(--dark-uma-accent-blue);
   --uma-border-color: var(--dark-uma-border-color);
   --uma-table-border-color: var(--dark-uma-border-color);
-  /* This now correctly overrides the light header bg */
   --uma-header-bg: #539e16; 
   --uma-text-dark: var(--dark-text-color);
   --uma-alt-row-bg: var(--dark-bg-alt-row);

@@ -139,11 +139,17 @@ td.spark-cell {
   font-size: 0.85em;
   min-width: 185px;
 }
+
+dark-mode td.spark-cell {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
 td.spark-cell b {
   color: black;
+  font-weight: normal;
 }
 .dark-mode td.spark-cell b {
   color: var(--uma-text-dark);
+  font-weight: normal;
 }
 
 td.whites-cell {
@@ -168,8 +174,12 @@ td.skill-cell b {
 }
 
 .text-highlight {
-    color: var(--uma-highlight-color);
-    font-weight: bold;
+    color: #f0bd1a !important;
+  }
+  
+  .dark-mode .text-highlight {
+    color: #f0bd1a !important;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
 .delete-button {

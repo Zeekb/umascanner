@@ -595,15 +595,20 @@ function formatSparks(runner, allSparkCriteria) {
             const nameFilter = criteria[`${spark.color}Spark`];
             const minCount = criteria[`min${spark.color.charAt(0).toUpperCase() + spark.color.slice(1)}`];
 
+            // --- FIX START ---
+            // Changed logic to correctly highlight based on filter criteria
             if (nameFilter) {
-                if (spark.name === nameFilter && countToCheck >= minCount) {
+                // Use 'includes' to match partial text, just like the filter logic
+                if (spark.name.toLowerCase().includes(nameFilter.toLowerCase()) && countToCheck >= (minCount === 0 ? 1 : minCount)) {
                     shouldHighlight = true;
                     break;
                 }
             } else if (minCount > 0 && countToCheck >= minCount) {
+                // This part remains the same
                 shouldHighlight = true;
                 break;
             }
+            // --- FIX END ---
         }
         spark.highlight = shouldHighlight;
         allSparks.push(spark);

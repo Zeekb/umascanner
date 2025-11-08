@@ -130,6 +130,6 @@
 }
 
 .spark-button.highlight {
-    color: #f0bd1a;
-    font-weight: bold;
+    color: #f0bd1a !important;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }

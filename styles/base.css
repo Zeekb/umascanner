@@ -54,7 +54,9 @@ body {
   margin-bottom: -1px;
   margin-right: 2px;
 }
-
+.dark-mode .tab-button {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1), -1px -1px 0 rgba(0, 0, 0, 0.1), 1px -1px 0 rgba(0, 0, 0, 0.1), -1px 1px 0 rgba(0, 0, 0, 0.1);
+}
 .tab-button:hover,
 .tab-button.active {
   background-color: var(--uma-accent-pink);
@@ -72,8 +74,7 @@ body {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c0c0c0 #f0f0f0;
-  background-color: #999;
-  background-image: repeating-linear-gradient(-35deg, #888 5px, transparent 10px, transparent 20px);
+  background-color: #888;
 }
 
 .tab-content.active {
@@ -82,7 +83,6 @@ body {
 
 .dark-mode .tab-content {
   background-color: var(--dark-bg-body);
-  background-image: repeating-linear-gradient(-35deg, #333 5px, transparent 10px, transparent 20px);
 }
 
 #affinity-calculator.tab-content {

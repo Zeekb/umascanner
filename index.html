@@ -28,35 +28,35 @@
     <div id="app-wrapper" class="app-container" style="display: none;">
         
         <div class="tab-buttons">
-            <button class="tab-button active" data-tab="parent-summary">Parent Summary</button>
+            <button class="tab-button active" data-tab="parent-summary">Runner Overview</button>
             <span class="tab-help" data-tooltip="Main overview for finding runners. &#10;&#10;&bull;  Use the filters to find runners with high stats or specific sparks (Blue, Green, Pink, White). &#10;&bull;  Sparks matching your filters will be highlighted. &#10;&bull;  Double-click any row for full details, or double-click a grandparent's name (if not grayed out) to jump to their entry.">?</span>
 
-            <button class="tab-button" data-tab="white-sparks">White Sparks Legacy</button>
+            <button class="tab-button" data-tab="white-sparks">Runner White Sparks</button>
             <span class="tab-help" data-tooltip="Focuses on White Sparks to trace their lineage. &#10;&#10;&bull;  It shows the total count, then breaks down the specific sparks for the runner (Parent), their first grandparent (GP1), and their second grandparent (GP2). &#10;&bull;  Sparks that match your White Spark filters will be highlighted.">?</span>
 
-            <button class="tab-button" data-tab="skills-summary">Skills Summary</button>
+            <button class="tab-button" data-tab="skills-summary">Skills Overview</button>
             <span class="tab-help" data-tooltip="Summarizes all of a runner's skills. &#10;&#10;&bull;  Skills are categorized into types like Recovery, Passive, and Speed. &#10;&bull;  Important skills are highlighted: Gold skills have a gold color, and Unique skills are bold.">?</span>
 
-            <button class="tab-button" data-tab="legacies-planner">[WIP]Legacies Planner</button>
+            <button class="tab-button" data-tab="legacies-planner">[WIP]Breeding Planner</button>
             <span class="tab-help" data-tooltip="[WIP]Select two parents to see their combined inheritance potential.">?</span>
 
-            <button class="tab-button" data-tab="grandparent-analysis">[WIP]Grandparent Analysis</button>
+            <button class="tab-button" data-tab="grandparent-analysis">[WIP]Legacy Analysis</button>
             <span class="tab-help" data-tooltip="[WIP]Analyze the most influential grandparents in your collection.">?</span>
 
-            <button class="tab-button" data-tab="inheritance-log">[WIP]Inheritance Log</button>
+            <button class="tab-button" data-tab="inheritance-log">[WIP]Spark Tracer</button>
             <span class="tab-help" data-tooltip="[WIP]Trace the lineage of a specific spark through your collection.">?</span>
             
             <span id="entries-count-display"></span>
             
-            <button id="dark-mode-toggle" title="Toggle Dark Mode" class="icon-button">
-                <span id="dark-mode-icon">🌙</span>
+            <button id="dark-mode-toggle" title="Toggle Light Mode" class="icon-button">
+                <img id="dark-mode-icon" src="assets/day-icon.png" alt="Toggle Dark Light">
             </button>
             <button id="save-data-button" title="Save changes to file" class="icon-button">
-                <span id="save-file-icon">💾</span>
+                <img id="save-file-icon" src="assets/save-icon.png" alt="Toggle Save">
             </button>
             <span class="tab-help help-top-right" data-tooltip="Saves all current data, including any transfers (deletions), into a new 'all_runners.json' file for you to download.">?</span>
             <button id="load-new-file-button" title="Load a new file" class="icon-button">
-                <span id="load-file-icon">📂</span>
+                <img id="load-file-icon" src="assets/load-icon.png" alt="Toggle Load">
             </button>
         </div>
         
@@ -201,6 +201,8 @@
                                 <select id="min-total-white" class="min-spark-select spark-count-select aptitude-select"></select>
                             </div>
                         </div>
+                        <button class="disable-spark-filter-button" title="Disable this filter row">✓</button>
+                        <button class="remove-spark-filter-button" title="Remove this filter row" style="display: none;">X</button>
                     </div>
                 </div>
                 <div id="add-filters-container" class="filter-group-container">
