@@ -1,0 +1,106 @@
+/* --- Theme & Variables --- */
+:root {
+  --uma-light-bg: #FEFEFE;
+  --uma-medium-bg: #FFFFFF;
+  --uma-dark-accent: #71d71c;
+  --uma-accent-pink: #FF80AB;
+  --uma-accent-blue: #82B1FF;
+  --uma-text-dark: #333;
+  --uma-text-light: #FFFFFF;
+  --uma-border-color: var(--uma-dark-accent);
+  --uma-table-border-color: #ddd;
+  --uma-alt-row-bg: #f0f0f0;
+  --uma-selection-bg: #dbeaff;
+  /* FIX: Added a lighter header background for light mode */
+  --uma-light-header-bg: #A5D6A7; 
+  --uma-header-bg: var(--uma-light-header-bg);
+  --uma-header-text: var(--uma-text-light);
+  --profile-frame-color: #FFFFFF;
+  --profile-frame-shadow: #F0D050;
+  --rank-ribbon-pink: #D46487;
+  --modal-content-bg: var(--uma-light-bg, #fefefe);
+  --uma-highlight-color: #e08b3e;
+  --placeholder-text-color: #757575;
+
+  --apt-s-base: #f0bd1a;
+  --apt-a-base: #f48337;
+  --apt-b-base: #e56487;
+  --apt-c-base: #61c340;
+  --apt-d-base: #49ace2;
+  --apt-e-base: #d477f2;
+  --apt-f-base: #766ad6;
+  --apt-g-base: #b3b2b3;
+  --apt-n-a-base: #ddd;
+  --apt-ss: var(--apt-s-base); --apt-s: var(--apt-s-base);
+  --apt-a: var(--apt-a-base); --apt-b: var(--apt-b-base); --apt-c: var(--apt-c-base);
+  --apt-d: var(--apt-d-base); --apt-e: var(--apt-e-base); --apt-f: var(--apt-f-base);
+  --apt-g: var(--apt-g-base); --apt-n-a: var(--apt-n-a-base);
+
+  --skill-color-recovery: #0091ea;
+  --skill-color-passive: #4caf50;
+  --skill-color-speed: #f57c00;
+  --skill-color-debuff: #e53935;
+  --skill-color-detrimental: #aa00ff;
+
+  --dark-bg-body: #222222;
+  --dark-bg-element: #3c3c3c;
+  --dark-bg-alt-row: #353535;
+  --dark-text-color: #f0f0f0;
+  --dark-uma-dark-accent: #385628;
+  --dark-uma-accent-pink: #914d69;
+  --dark-uma-accent-blue: #4a6a8c;
+  --dark-uma-border-color: #555555;
+  --dark-uma-selection-bg: #4c6d93;
+
+  --dark-apt-s-base: #f0bd1a;
+  --dark-apt-a-base: #f48337;
+  --dark-apt-b-base: #e56487;
+  --dark-apt-c-base: #61c340;
+  --dark-apt-d-base: #49ace2;
+  --dark-apt-e-base: #d477f2;
+  --dark-apt-f-base: #766ad6;
+  --dark-apt-g-base: #b3b2b3;
+  --dark-apt-n-a-base: #555555;
+}
+
+.dark-mode {
+  color: var(--dark-text-color);
+  background-color: var(--dark-bg-body);
+
+  --uma-light-bg: var(--dark-bg-element);
+  --uma-medium-bg: var(--dark-bg-element);
+  --uma-text-light: var(--dark-bg-element);
+  --uma-dark-accent: var(--dark-uma-dark-accent);
+  --uma-accent-pink: var(--dark-uma-accent-pink);
+  --uma-accent-blue: var(--dark-uma-accent-blue);
+  --uma-border-color: var(--dark-uma-border-color);
+  --uma-table-border-color: var(--dark-uma-border-color);
+  /* This now correctly overrides the light header bg */
+  --uma-header-bg: #539e16; 
+  --uma-text-dark: var(--dark-text-color);
+  --uma-alt-row-bg: var(--dark-bg-alt-row);
+  --uma-selection-bg: var(--dark-uma-selection-bg);
+  --uma-header-text: var(--dark-text-color);
+  --profile-frame-color: var(--dark-bg-element);
+  --profile-frame-shadow: #8d7630;
+  --rank-ribbon-pink: #7d485a;
+  --modal-content-bg: var(--dark-bg-element);
+  --uma-highlight-color: #e08b3e;
+  --placeholder-text-color: #a0a0a0;
+
+  --apt-ss: var(--dark-apt-s-base); --apt-s: var(--dark-apt-s-base);
+  --apt-a: var(--dark-apt-a-base);
+  --apt-b: var(--dark-apt-b-base);
+  --apt-c: var(--dark-apt-c-base);
+  --apt-d: var(--dark-apt-d-base);
+  --apt-e: var(--dark-apt-e-base);
+  --apt-f: var(--dark-apt-f-base);
+  --apt-g: var(--dark-apt-g-base);
+  --apt-n-a: var(--dark-apt-n-a-base);
+
+  --skill-color-recovery: #40c4ff;
+  --skill-color-passive: #76ff03;
+  --skill-color-speed: #ffb74d;
+  --skill-color-debuff: #ff5252;
+  --skill-color-detrimental: #e040fb;
+}

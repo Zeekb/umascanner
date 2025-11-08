@@ -1,0 +1,135 @@
+/* styles/sparks.css */
+:root {
+    --spark-blue-bg: #82B1FF;
+    --spark-pink-bg: #FF80AB;
+    --spark-green-bg: #71d71c;
+    --spark-white-bg: #f0f0f0;
+
+    /* Lighter shades for borders */
+    --spark-blue-border: #a7c8ff;
+    --spark-pink-border: #ff9fbb;
+    --spark-green-border: #92e046;
+    --spark-white-border: #ffffff;
+}
+
+.spark-cell-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+}
+
+.dark-mode .spark-cell-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-x: auto;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.spark-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15em;
+    padding: 4px 5px;
+    border-radius: 12px;
+    border-style: solid;
+    border-width: 1px;
+    color: white;
+    white-space: nowrap;
+}
+
+.spark-button .star {
+    font-size: 1.1em;
+    text-shadow: 0 0 #333;
+    margin-top: -0.1em;
+    margin-bottom: -0.1em;
+    line-height: 1.1;
+}
+
+.dark-mode .spark-button .star {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.parent-spark {
+    color: #f0bd1a;
+}
+
+.spark-button .parent-count {
+    font-size: 1em;
+    opacity: 0.95;
+}
+
+/* --- FIX: Light Mode Spark Button Visibility --- */
+
+.spark-button.blue {
+    color: #1c5ab8; 
+    background-color: var(--spark-blue-bg);
+    border-color: var(--spark-blue-border);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: none;
+}
+
+.spark-button.pink {
+    color: #b81b6e;
+    background-color: var(--spark-pink-bg);
+    border-color: var(--spark-pink-border);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: none;
+}
+
+.spark-button.green {
+    /* FIX: Changed to a much darker green for better contrast */
+    color: #1B5E20; 
+    background-color: var(--spark-green-bg);
+    border-color: var(--spark-green-border);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: none;
+}
+
+.spark-button.white {
+    background-color: var(--spark-white-bg);
+    border-color: var(--spark-white-border);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    color: #333;
+    text-shadow: none;
+}
+
+
+/* --- Dark Mode Styles (Unchanged but necessary) --- */
+
+.dark-mode .spark-button.blue {
+    color: var(--spark-blue-bg);
+    background-color: #343434;
+    border-color: var(--spark-blue-border);
+    font-weight: normal;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .spark-button.pink {
+    color: var(--spark-pink-bg);
+    background-color: #343434;
+    border-color: var(--spark-pink-border);
+    font-weight: normal;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .spark-button.green {
+    color: var(--spark-green-bg);
+    background-color: #343434;
+    border-color: var(--spark-green-border);
+    font-weight: normal;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.spark-button.highlight {
+    color: #f0bd1a;
+    font-weight: bold;
+}

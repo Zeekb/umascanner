@@ -1,0 +1,101 @@
+/* --- Global & Base Styles --- */
+body {
+  background-color: var(--uma-medium-bg);
+  color: var(--uma-text-dark);
+  font-family: 'Segoe UI';
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 20px);
+  background-color: var(--uma-light-bg);
+  border: 1px solid var(--uma-border-color);
+  border-radius: 5px;
+}
+
+/* --- Uploader View --- */
+.example-screenshots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.example-screenshots img {
+    max-height: 500px;
+    height: auto;
+    border: 1px solid var(--uma-border-color, #ccc);
+    border-radius: 4px;
+}
+
+/* --- Layout & Tabs --- */
+.tab-buttons {
+  display: flex;
+  padding-left: 5px;
+  background-color: var(--uma-light-bg);
+  border-bottom: 1px solid var(--uma-border-color);
+}
+
+.tab-button {
+  padding: 5px 10px;
+  min-width: 8ex;
+  cursor: pointer;
+  background-color: var(--uma-medium-bg);
+  color: var(--uma-text-dark);
+  border: 1px solid var(--uma-border-color);
+  border-bottom: none;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  margin-bottom: -1px;
+  margin-right: 2px;
+}
+
+.tab-button:hover,
+.tab-button.active {
+  background-color: var(--uma-accent-pink);
+  color: var(--uma-text-light);
+}
+
+.tab-button.active {
+  border-color: var(--uma-accent-pink);
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 #f0f0f0;
+  background-color: #999;
+  background-image: repeating-linear-gradient(-35deg, #888 5px, transparent 10px, transparent 20px);
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.dark-mode .tab-content {
+  background-color: var(--dark-bg-body);
+  background-image: repeating-linear-gradient(-35deg, #333 5px, transparent 10px, transparent 20px);
+}
+
+#affinity-calculator.tab-content {
+    background-color: var(--uma-medium-bg);
+    background-image: none;
+}
+
+.dark-mode #affinity-calculator.tab-content {
+    background-color: var(--dark-bg-body);
+}
+
+.tab-content::-webkit-scrollbar { width: 6px; }
+.tab-content::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 5px; }
+.dark-mode .tab-content::-webkit-scrollbar-track { background: #555; }
+.tab-content::-webkit-scrollbar-thumb { background-color: #c0c0c0; border-radius: 5px; }
+.dark-mode .tab-content::-webkit-scrollbar-thumb { background-color: #888; }
