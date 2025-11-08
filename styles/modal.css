@@ -305,7 +305,7 @@
 .modal-stat-grade sup {
   font-size: 0.72em;
   vertical-align: super;
-  margin-left: -3px;
+  margin-left: 1px;
   line-height: 0;
 }
 
