@@ -6,7 +6,7 @@ export const state = {
     skillData: {},
     runnerUniqueSkills: {},
     orderedSparks: {},
-    inspirationData: {},
+    inheritanceModel: {},
 
     lastFilteredData: [],
 

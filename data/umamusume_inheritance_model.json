@@ -1,0 +1,73 @@
+{
+  "model_info": {
+    "description": "A data model for Umamusume inheritance activation (proc) logic, based on datamined community info.",
+    "activation_formula": "ActivationChance = BaseSparkChance * (1 + (SpecificAffinityScore / 100))",
+    "notes": [
+      "SpecificAffinityScore is a hidden value calculated for each of the 6 ancestors based on Base Affinity (hidden per-pair values) and G1 win bonuses.",
+      "Green (Unique) sparks from the 2 direct parents are guaranteed at the start of the run and do not use this formula. This formula applies to the 4 grandparent Green sparks."
+    ]
+  },
+  "base_activation_chances": {
+    "description": "Base probability for a spark to activate (proc) during an April inheritance event, *before* affinity multipliers.",
+    "blue_stat": {
+      "1_star": 0.7,
+      "2_star": 0.8,
+      "3_star": 0.9
+    },
+    "green_unique": {
+      "1_star": 0.05,
+      "2_star": 0.1,
+      "3_star": 0.15
+    },
+    "white_skill": {
+      "1_star": 0.03,
+      "2_star": 0.06,
+      "3_star": 0.09
+    },
+    "red_aptitude": {
+      "1_star": 0.01,
+      "2_star": 0.02,
+      "3_star": 0.05
+    }
+  },
+  "affinity_logic": {
+    "description": "Logic for how affinity is calculated and displayed.",
+    "symbol_thresholds": {
+      "description": "The visual symbol represents the 'Total Affinity Value' between pairs.",
+      "batsu_max": 50,
+      "maru_max": 100,
+      "double_circle_min": 150,
+      "note": "Higher values above 150 (e.g., 200) still provide a greater bonus in the activation formula."
+    },
+    "calculation_components": {
+      "g1_race_bonus": 3,
+      "g1_bonus_description": "Per unique G1 race won by *both* members of an affinity pair (e.g., Parent A and Grandparent A1).",
+      "base_affinity_note": "A hidden, preset value for every character-to-character pairing (e.g., Teio/Rudolf is high) is the other main component. This data is not in this file as it is character-pair specific."
+    }
+  },
+  "stat_gain_logic": {
+    "description": "Stat gains from Blue (Stat) sparks, which happen in two separate phases.",
+    "initial_guaranteed_gain": {
+      "description": "Fixed stat gain at the *start* of the run from all 6 ancestors' Blue sparks. This is guaranteed and not probabilistic.",
+      "1_star": 5,
+      "2_star": 12,
+      "3_star": 21
+    },
+    "april_event_random_gain": {
+      "description": "Random stat gain from Blue sparks that successfully *activate* during the two April events. Higher affinity weights this roll higher.",
+      "1_star": {
+        "min": 1,
+        "max": 10
+      },
+      "2_star": {
+        "min": 1,
+        "max": 16
+      },
+      "3_star": {
+        "min": 1,
+        "max": 21,
+        "note": "3-star range is probabilistic and weighted higher; this 'max' is an estimate based on the initial gain value."
+      }
+    }
+  }
+}

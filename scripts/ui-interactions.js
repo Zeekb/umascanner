@@ -3,7 +3,7 @@
 import { state } from './state.js';
 import { debounce, findRunnerByDetails, showTimedMessage, cleanName } from './utils.js';
 import { filterAndRender, sortAndRender } from './filter.js';
-import { showDetailModal } from './ui-renderer.js';
+import { showDetailModal, resetTabSpecificFilters } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
 
 export function setupEventListeners() {
@@ -567,6 +567,7 @@ export function resetFilters() {
     state.elements.filterElements.sortDir.value = 'desc';
     document.querySelectorAll('.stat-input').forEach(updateStatInputPlaceholder);
     document.querySelectorAll('.aptitude-select').forEach(updateSelectPlaceholder);
+    resetTabSpecificFilters();
     filterAndRender();
 }
 

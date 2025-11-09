@@ -78,17 +78,17 @@ export async function loadFromSavedData(jsonData) {
 
 async function loadGameDataAndInitialize() {
     try {
-        const [skillData, uniqueSkillsData, orderedSparks, inspirationData] = await Promise.all([
+        const [skillData, uniqueSkillsData, orderedSparks, inheritanceModel] = await Promise.all([
             fetch('./data/skills.json').then(res => res.json()),
             fetch('./data/runner_skills.json').then(res => res.json()),
             fetch('./data/sparks.json').then(res => res.json()),
-            fetch('./data/inspiration_chance.json').then(res => res.json())
+            fetch('./data/umamusume_inheritance_model.json').then(res => res.json())
         ]);
 
         state.skillData = skillData || {};
         state.runnerUniqueSkills = uniqueSkillsData || {};
         state.orderedSparks = orderedSparks || {};
-        state.inspirationData = inspirationData || {};
+        state.inheritanceModel = inheritanceModel || {};
         state.orderedSkills = Object.keys(state.skillData);
 
         initializeApp();

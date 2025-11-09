@@ -320,6 +320,13 @@ td.skill-cell .skill-gold b {
     border-radius: 5px;
 }
 
+.breeder-selection h3 {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .breeder-image {
     width: 100px;
     height: 100px;
@@ -478,4 +485,45 @@ td.skill-cell .skill-gold b {
 
 .dark-mode .inheritance-via {
     color: #aaa;
+}
+
+.spark-chance-breakdown {
+    font-size: 0.9em;
+    color: #555;
+    padding-left: 10px;
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.dark-mode .spark-chance-breakdown {
+    color: #bbb;
+}
+
+.score-cell-style {
+    font-weight: 400; 
+    letter-spacing: 1px; 
+    font-size: 0.9em; /* Match table font size */
+    color: var(--uma-text-dark);
+}
+
+.dark-mode .score-cell-style {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.spark-cell-style {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 0.75em; /* Match table spark cell font size */
+    margin-top: 5px; /* Add some space */
+}
+
+.spark-cell-style .no-sparks {
+    font-size: 1.2em; /* Make 'None' readable */
+    font-style: italic;
+    opacity: 0.7;
+    color: var(--uma-text-dark);
 }
