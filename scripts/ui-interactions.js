@@ -8,8 +8,33 @@ import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main
 export function setupEventListeners() {
     const debouncedFilterAndRender = debounce(filterAndRender, 250);
 
+    const handleSelectWheelScroll = (event) => {
+        const select = event.currentTarget;
+        if (document.activeElement === select) {
+            return;
+        }
+        
+        event.preventDefault(); 
+        
+        let newIndex = select.selectedIndex;
+        
+        if (event.deltaY < 0) { 
+            newIndex = Math.max(0, newIndex - 1);
+        } else { 
+            newIndex = Math.min(select.options.length - 1, newIndex + 1);
+        }
+        
+        if (select.selectedIndex !== newIndex) {
+            select.selectedIndex = newIndex;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
+
     Object.values(state.elements.filterElements).forEach(el => {
         if (el.type !== 'range') el.addEventListener('change', filterAndRender);
+        if (el.tagName === 'SELECT') {
+            el.addEventListener('wheel', handleSelectWheelScroll, { passive: false });
+        }
     });
 
     document.querySelectorAll('.aptitude-select').forEach(sel => {
@@ -44,6 +69,12 @@ export function setupEventListeners() {
         }
         filterAndRender();
     });
+
+    state.elements.sparkFiltersContainer.addEventListener('wheel', (event) => {
+        if (event.target.classList.contains('min-spark-select') || event.target.classList.contains('spark-count-select')) {
+            handleSelectWheelScroll(event);
+        }
+    }, { passive: false });
 
     state.elements.skillFiltersContainer.addEventListener('click', (event) => {
         if (event.target.classList.contains('remove-skill-filter-button')) {
@@ -107,6 +138,18 @@ export function setupEventListeners() {
         }
     });
     
+    const closeAllDropdowns = () => {
+        document.querySelectorAll('.options-container').forEach(container => {
+            container.style.display = 'none';
+        });
+    };
+
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.addEventListener('scroll', closeAllDropdowns);
+    });
+
+    window.addEventListener('resize', closeAllDropdowns);
+
     document.addEventListener('click', (e) => {
         document.querySelectorAll('.options-container').forEach(container => {
             if (!container.parentElement.contains(e.target)) {
@@ -132,6 +175,10 @@ export function setupEventListeners() {
     if (inheritanceContent) {
         inheritanceContent.addEventListener('click', handleInheritanceNodeClick);
     }
+
+    document.querySelectorAll('#affinity-selection, #spark-select, .runner-select').forEach(sel => {
+        sel.addEventListener('wheel', handleSelectWheelScroll, { passive: false });
+    });
     
     updateRemoveButtonVisibility();
     updateRemoveSkillButtonVisibility();
@@ -200,6 +247,13 @@ export function createSearchableSelect(inputElement, optionsArray) {
                 optionsContainer.appendChild(optionEl);
             }
         });
+
+        const rect = inputElement.getBoundingClientRect();
+        optionsContainer.style.position = 'fixed';
+        optionsContainer.style.top = `${rect.bottom}px`;
+        optionsContainer.style.left = `${rect.left}px`;
+        optionsContainer.style.width = `${rect.width}px`;
+
         optionsContainer.style.display = optionsContainer.children.length > 1 ? 'block' : 'none';
     };
 
@@ -213,6 +267,34 @@ export function createSearchableSelect(inputElement, optionsArray) {
             filterAndRender();
         }
     });
+
+    inputElement.addEventListener('wheel', (event) => {
+        if (optionsContainer.style.display === 'block') {
+            return;
+        }
+        
+        event.preventDefault(); 
+
+        const currentValue = inputElement.value;
+        let currentIndex = optionsArray.indexOf(currentValue);
+        
+        if (currentIndex === -1) {
+            currentIndex = -1;
+        }
+
+        let newIndex;
+        if (event.deltaY < 0) { 
+            newIndex = Math.max(-1, currentIndex - 1); 
+        } else { 
+            newIndex = Math.min(optionsArray.length - 1, currentIndex + 1); 
+        }
+        
+        if (newIndex !== currentIndex) {
+            const newValue = (newIndex === -1) ? '' : optionsArray[newIndex];
+            inputElement.value = newValue;
+            inputElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        }
+    }, { passive: false });
 }
 
 // FIXED: Added 'export' so main.js can import and use this export function
