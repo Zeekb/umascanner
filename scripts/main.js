@@ -76,7 +76,8 @@ export function initializeApp() {
     state.elements.addSkillFilterButton = document.getElementById('add-skill-filter-button');
     state.elements.loadNewFileButton = document.getElementById('load-new-file-button');
     state.elements.saveDataButton = document.getElementById('save-data-button');
-    state.elements.entriesCountDisplay = document.getElementById('entries-count-display');
+    state.elements.lastUpdatedDisplay = document.getElementById('last-updated-display'); 
+    state.elements.entriesDisplay = document.getElementById('entries-display');
 
     if (!state.allRunners || state.allRunners.length === 0) {
         const noDataMsg = '<tr><td colspan="18">No runner data found.</td></tr>';
@@ -125,6 +126,7 @@ export function initializeApp() {
 
     state.elements.loadNewFileButton.addEventListener('click', returnToFileUploader);
 
+    updateLastUpdated();
     updateEntriesCount();
     preloadRunnerImages(); 
 }
@@ -216,7 +218,7 @@ export function returnToFileUploader() {
 
     state.elements.errorMessage.style.display = 'none';
     state.elements.loadingMessage.style.display = 'none';
-    if (state.elements.entriesCountDisplay) state.elements.entriesCountDisplay.textContent = '';
+    if (state.elements.entriesDisplay) state.elements.entriesDisplay.textContent = '';
 }
 
 export function saveDataToFile() {
@@ -236,8 +238,47 @@ export function saveDataToFile() {
     }
 }
 
+export function lastUpdated() {
+    if (!state.allRunners || state.allRunners.length === 0) {
+    return "No data loaded";
+  }
+
+  let latestDate = null;
+
+  try {
+    for (const runner of state.allRunners) {
+      if (runner.last_updated) {
+        const currentDate = new Date(runner.last_updated);
+
+        if (!latestDate || currentDate > latestDate) {
+          latestDate = currentDate;
+        }
+      }
+    }
+
+    const h = String(latestDate.getHours()).padStart(2, '0');
+    const m = String(latestDate.getMinutes()).padStart(2, '0');
+    const period = String(Number(h) >= 12 ? 'PM' : 'AM');
+    const dd = String(latestDate.getDate()).padStart(2, '0');
+    const mm = String(latestDate.getMonth() + 1).padStart(2, '0');
+    const yyyy = latestDate.getFullYear();
+
+    return `${h}:${m}${period} ${dd}/${mm}/${yyyy}`;
+
+  } catch (error) {
+    console.error("Error in lastUpdated function:", error);
+    return "Error parsing dates";
+  }
+}
+
+export function updateLastUpdated() {
+    if (state.elements.lastUpdatedDisplay) {
+        state.elements.lastUpdatedDisplay.textContent = `Last Updated: ${lastUpdated()}`;
+    }
+}
+
 export function updateEntriesCount() {
-    if (state.elements.entriesCountDisplay) {
-        state.elements.entriesCountDisplay.textContent = `Entries count: ${state.allRunners.length}/200`;
+    if (state.elements.entriesDisplay) {
+        state.elements.entriesDisplay.textContent = `Entries count: ${state.allRunners.length}/230`;
     }
 }

@@ -160,7 +160,21 @@ input[type="range"]::-moz-range-track {
   text-overflow: ellipsis;
 }
 
-#entries-count-display {
+#last-updated-display {
+    margin-left: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 0.85em;
+    color: #222;
+    opacity: 0.7;
+}
+.dark-mode #last-updated-display {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+    color: var(--dark-text-color);
+    opacity: 0.7;
+}
+
+#entries-display {
     margin-left: auto;
     margin-right: 15px;
     display: flex;
@@ -169,12 +183,8 @@ input[type="range"]::-moz-range-track {
     color: #222;
     opacity: 0.7;
 }
-
-.dark-mode #entries-count-display {
+.dark-mode #entries-display {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
-}
-
-.dark-mode #entries-count-display {
     color: var(--dark-text-color);
     opacity: 0.7;
 }
@@ -427,9 +437,13 @@ input[type="range"]::-moz-range-track {
   min-width: 54px;
   box-sizing: border-box;
   margin-right: 10px;
+  min-height: 28px;
+}
+.spark-search-input {
+  min-height: 28px;
 }
 .min-spark-select {
-  margin-top: 1px;
+  min-height: 28px;
 }
 
 .add-filter-container {

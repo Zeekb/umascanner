@@ -52,12 +52,9 @@
     line-height: 1.1;
 }
 
-/* [START] MODIFIED SECTION: Removed star shadow in dark mode */
 .dark-mode .spark-button .star {
-    /* text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); */
     text-shadow: none;
 }
-/* [END] MODIFIED SECTION */
 
 .parent-spark {
     color: #f0bd1a;
@@ -67,8 +64,6 @@
     font-size: 1em;
     opacity: 0.95;
 }
-
-/* --- FIX: Light Mode Spark Button Visibility --- */
 
 .spark-button.blue {
     color: #1c5ab8; 
@@ -87,7 +82,6 @@
 }
 
 .spark-button.green {
-    /* FIX: Changed to a much darker green for better contrast */
     color: #1B5E20; 
     background-color: var(--spark-green-bg);
     border-color: var(--spark-green-border);
@@ -102,9 +96,6 @@
     color: #333;
     text-shadow: none;
 }
-
-
-/* --- Dark Mode Styles (Unchanged but necessary) --- */
 
 .dark-mode .spark-button.blue {
     color: var(--spark-blue-bg);
@@ -140,7 +131,9 @@
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); /* 0.7 rgba shadow */
 }
 
-.spark-button.highlight {
+.spark-button.highlight .spark-name,
+.spark-button.highlight > span:first-child,
+.spark-button.highlight .parent-count {
     color: #f0bd1a !important;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
