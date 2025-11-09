@@ -276,25 +276,28 @@
                     <div class="legacies-pair">
                         <div class="breeder-selection" id="parent1-selection">
                             <h3>Parent 1</h3>
-                            <select class="runner-select"></select>
+                            <select class="runner-name-select"></select>
+                            <select class="runner-entry-select" style="display: none; width: 100%; margin-top: 5px;"></select>
                             <div class="runner-details"></div>
                         </div>
                         <div class="breeder-selection" id="parent2-selection">
                             <h3>Parent 2</h3>
-                            <select class="runner-select"></select>
+                            <select class="runner-name-select"></select>
+                            <select class="runner-entry-select" style="display: none; width: 100%; margin-top: 5px;"></select>
                             <div class="runner-details"></div>
                         </div>
                     </div>
                     <div class="offspring-potential">
-                        <h3>Offspring Potential</h3>
-
-                        <div class="affinity-selector-container" style="margin-bottom: 15px; text-align: center;">
-                            <label for="affinity-selection" style="margin-right: 10px;"><b>Assumed Affinity:</b></label>
-                            <select id="affinity-selection">
-                            <option value="triangle">△ (Low)</option>
-                            <option value="circle">〇 (Mid)</option>
-                            <option value="double_circle" selected>◎ (High)</option>
-                            </select>
+                        <div class="offspring-header">
+                            <h3>Offspring Potential</h3>
+                            <div class="affinity-selector-container">
+                                <label for="affinity-selection" style="margin-right: 10px;"><b>Assumed Affinity:</b></label>
+                                <select id="affinity-selection">
+                                <option value="triangle">△ (Low)</option>
+                                <option value="circle">〇 (Mid)</option>
+                                <option value="double_circle" selected>◎ (High)</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="spark-pool"></div>
                     </div>

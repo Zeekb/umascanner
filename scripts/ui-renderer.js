@@ -332,42 +332,65 @@ function renderSkillsSummary(runners) {
 
 function renderLegaciesPlanner() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
-    const selects = document.querySelectorAll('#legacies-planner .runner-select');
-
-    selects.forEach((select) => {
-        const currentVal = select.value;
-        const defaultOption = '<option value="">Select a runner</option>';
-        select.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
-        if (runnerNames.includes(currentVal)) {
-            select.value = currentVal;
-        }
-    });
-
-    const parent1Select = document.querySelector('#parent1-selection .runner-select');
-    const parent2Select = document.querySelector('#parent2-selection .runner-select');
     
+    const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
+    const parent1EntrySelect = document.querySelector('#parent1-selection .runner-entry-select');
+    const parent1Details = document.querySelector('#parent1-selection .runner-details');
+
+    const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
+    const parent2EntrySelect = document.querySelector('#parent2-selection .runner-entry-select');
+    const parent2Details = document.querySelector('#parent2-selection .runner-details');
+
     const affinitySelect = document.querySelector('#affinity-selection');
     const affinity = affinitySelect ? affinitySelect.value : 'double_circle';
 
-    displayParentDetails(parent1Select, document.querySelector('#parent1-selection .runner-details'));
-    displayParentDetails(parent2Select, document.querySelector('#parent2-selection .runner-details'));
-
-    if (parent1Select.value && parent2Select.value) {
-        calculateOffspringPotential(parent1Select.value, parent2Select.value, affinity);
-    } else {
-        document.querySelector('.offspring-potential .spark-pool').innerHTML = '';
-    }
-
+    // --- Initialization (only run once) ---
     if (!state.elements.legaciesPlannerBody.dataset.initialized) {
-        selects.forEach((select) => {
-            select.addEventListener('change', renderLegaciesPlanner);
+        const defaultOption = '<option value="">Select a runner</option>';
+        
+        // Populate name selects
+        parent1NameSelect.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
+        parent2NameSelect.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
+
+        // Add event listeners
+        parent1NameSelect.addEventListener('change', () => {
+            populateEntrySelect(parent1NameSelect, parent1EntrySelect, parent1Details);
+        });
+        parent2NameSelect.addEventListener('change', () => {
+            populateEntrySelect(parent2NameSelect, parent2EntrySelect, parent2Details);
         });
         
+        parent1EntrySelect.addEventListener('change', () => {
+            displayParentDetails(parent1EntrySelect, parent1Details);
+            renderLegaciesPlanner(); // Re-run to trigger calculation
+        });
+        parent2EntrySelect.addEventListener('change', () => {
+            displayParentDetails(parent2EntrySelect, parent2Details);
+            renderLegaciesPlanner(); // Re-run to trigger calculation
+        });
+
         if (affinitySelect) {
             affinitySelect.addEventListener('change', renderLegaciesPlanner);
         }
         
         state.elements.legaciesPlannerBody.dataset.initialized = 'true';
+    }
+    
+    // --- Update Logic (runs on every change) ---
+
+    // Get current selected *entry IDs*
+    const parent1EntryId = parent1EntrySelect.value;
+    const parent2EntryId = parent2EntrySelect.value;
+
+    // Update details (in case of reload/state change)
+    displayParentDetails(parent1EntrySelect, parent1Details);
+    displayParentDetails(parent2EntrySelect, parent2Details);
+
+    // Run calculation if both entries are selected
+    if (parent1EntryId && parent2EntryId) {
+        calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity);
+    } else {
+        document.querySelector('.offspring-potential .spark-pool').innerHTML = '';
     }
 }
 
@@ -719,7 +742,7 @@ function formatSparks(runner, allSparkCriteria) {
     // [START] REPLACED SORT LOGIC
     // This is the new sorting logic based on your request
     allSparks.sort((a, b) => {
-        // 1. By Color (Blue, Pink, Green)
+        // 1. By Color (Blue, Pink)
         const colorA = colorOrder[a.color];
         const colorB = colorOrder[b.color];
         if (colorA !== colorB) {
@@ -773,9 +796,143 @@ function formatSparks(runner, allSparkCriteria) {
     return parts.length > 0 ? `<div class="spark-cell-container">${parts.join('')}</div>` : '';
 }
 
-function displayParentDetails(selectElement, detailsElement) {
-    const runnerName = selectElement.value;
-    const runner = state.allRunners.find(r => r.name === runnerName);
+function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
+    const runnerName = nameSelect.value;
+    // Find all entries for this runner, sorted by score
+    const entries = state.allRunners
+        .filter(r => r.name === runnerName)
+        .sort((a,b) => b.score - a.score);
+    
+    entrySelect.innerHTML = '<option value="">Select an entry</option>';
+    
+    if (entries.length > 0) {
+        // Helper map for spark name shortening
+        const nameMap = {
+            'Front Runner': 'Front',
+            'Pace Chaser': 'Pace',
+            'Late Surger': 'Late',
+            'End Closer': 'End'
+        };
+
+        entrySelect.innerHTML += entries.map(entry => {
+            // --- Start of new logic ---
+            
+            // 1. Get Parent Spark Counts (Blue, Pink) & White Count
+            const parentSparksLookup = {};
+            let whiteParent = 0;
+            if (Array.isArray(entry.sparks?.parent)) {
+                entry.sparks.parent.forEach(spark => {
+                    if (spark?.spark_name) {
+                        if (spark.color === 'blue' || spark.color === 'pink') {
+                            const name = spark.spark_name;
+                            const count = parseInt(spark.count || 0, 10);
+                            // Aggregate star count from parent
+                            parentSparksLookup[name] = (parentSparksLookup[name] || 0) + count;
+                        } else if (spark.color === 'white') {
+                            // Count number of white spark *entries*
+                            whiteParent++; 
+                        }
+                    }
+                });
+            }
+
+            // 2. Aggregate Blue/Pink sparks from all sources
+            const aggregatedSparks = {};
+            ['parent', 'gp1', 'gp2'].forEach(source => {
+                if (Array.isArray(entry.sparks?.[source])) {
+                    entry.sparks[source].forEach(spark => {
+                        if (spark?.color && (spark.color === 'blue' || spark.color === 'pink') && spark.spark_name) {
+                            const name = spark.spark_name;
+                            if (!aggregatedSparks[name]) {
+                                aggregatedSparks[name] = {
+                                    name: name,
+                                    color: spark.color,
+                                    totalCount: 0,
+                                    // Get the pre-calculated parent count
+                                    parentCount: parentSparksLookup[name] || 0 
+                                };
+                            }
+                            // Sum total star count from all sources
+                            aggregatedSparks[name].totalCount += parseInt(spark.count || 0, 10);
+                        }
+                    });
+                }
+            });
+            
+            // 3. Format the spark strings by color
+            // Get data-file sort order for sparks
+            const blueSparkOrder = new Map((state.orderedSparks?.blue || []).map((name, index) => [name, index]));
+            const pinkSparkOrder = new Map((state.orderedSparks?.pink || []).map((name, index) => [name, index]));
+            const maxSortVal = blueSparkOrder.size + pinkSparkOrder.size;
+            
+            const colorSortOrder = { 'blue': 1, 'pink': 2};
+            
+            const sortedSparkValues = Object.values(aggregatedSparks).sort((a, b) => {
+                const colorA = colorSortOrder[a.color];
+                const colorB = colorSortOrder[b.color];
+                if (colorA !== colorB) return colorA - colorB; // Sort by color
+
+                // Sort by data-file order
+                const getSortVal = (spark) => {
+                    if (spark.color === 'blue') return blueSparkOrder.get(spark.name) ?? maxSortVal;
+                    if (spark.color === 'pink') return pinkSparkOrder.get(spark.name) ?? maxSortVal;
+                    return maxSortVal;
+                };
+
+                const sortA = getSortVal(a);
+                const sortB = getSortVal(b);
+                if (sortA !== sortB) return sortA - sortB;
+
+                return b.totalCount - a.totalCount; // Fallback to total count
+            });
+
+            let blueSparksStr = '';
+            let pinkSparksStr = '';
+
+            sortedSparkValues.forEach(spark => {
+                const displayName = nameMap[spark.name] || spark.name;
+                const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
+                // Format: Speed 6(3)★
+                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
+                
+                if (spark.color === 'blue') {
+                    blueSparksStr += `${formattedSpark} `;
+                } else if (spark.color === 'pink') {
+                    pinkSparksStr += `${formattedSpark} `;
+                }
+            });
+
+            // Trim trailing spaces
+            blueSparksStr = blueSparksStr.trim();
+            pinkSparksStr = pinkSparksStr.trim();
+
+            // 4. Format the final label
+            // Build the label, only adding sections if they exist
+            let labelParts = [`Score: ${entry.score}`];
+            if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
+            if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
+            labelParts.push(`Whites: x${whiteParent}★`);
+            
+            const label = labelParts.join(' | ');
+            
+            // --- End of new logic ---
+            
+            return `<option value="${entry.entry_id}">${label}</option>`;
+        }).join('');
+        entrySelect.style.display = 'block';
+    } else {
+        entrySelect.style.display = 'none';
+    }
+    
+    // Clear details and re-render the planner to update calculations
+    detailsDiv.innerHTML = '';
+    renderLegaciesPlanner();
+}
+
+function displayParentDetails(entrySelect, detailsElement) {
+    const entryId = entrySelect.value;
+    const runner = state.allRunners.find(r => String(r.entry_id) === String(entryId));
+    
     if (runner) {
         const hasGreenParentSpark = runner.sparks?.parent?.some(s => s.color === 'green');
         let nameForImage = hasGreenParentSpark ? runner.name : `${runner.name} c`;
@@ -797,9 +954,9 @@ function displayParentDetails(selectElement, detailsElement) {
     }
 }
 
-function calculateOffspringPotential(parent1Name, parent2Name, affinity) {
-    const parent1 = state.allRunners.find(r => r.name === parent1Name);
-    const parent2 = state.allRunners.find(r => r.name === parent2Name);
+function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity) {
+    const parent1 = state.allRunners.find(r => String(r.entry_id) === String(parent1EntryId));
+    const parent2 = state.allRunners.find(r => String(r.entry_id) === String(parent2EntryId));
     if (!parent1 || !parent2) return;
 
     const sparkPool = {};
@@ -843,42 +1000,73 @@ function calculateOffspringPotential(parent1Name, parent2Name, affinity) {
     addSparksToPool(gp2_1, parent2.gp1 || 'P2-GP1');
     addSparksToPool(gp2_2, parent2.gp2 || 'P2-GP2');
     
-    const sortedSparks = Object.values(sparkPool).sort((a, b) => b.instances.length - a.instances.length);
+    // Define color sort order
+    const colorSortOrder = { 'blue': 1, 'pink': 2, 'green': 3, 'white': 4 };
+
+    // Sort by color, then by number of instances (highest first)
+    const sortedSparks = Object.values(sparkPool).sort((a, b) => {
+        const colorA = colorSortOrder[a.color] || 5;
+        const colorB = colorSortOrder[b.color] || 5;
+        if (colorA !== colorB) {
+            return colorA - colorB;
+        }
+        // Fallback to sorting by most contributors
+        return b.instances.length - a.instances.length; 
+    });
 
     const statMultiplier = state.inspirationData.affinity_bonuses.stat_multiplier.multipliers[affinity] || 1.0;
 
     let html = sortedSparks.map(spark => {
-        let probOfNotInheriting = 1.0;
         let totalStars = 0;
+        let individualChances = []; // To store individual %
 
         spark.instances.forEach(instance => {
             const isParent = instance.role.startsWith('Parent');
             const baseChance = getBaseChance(spark.color, instance.stars);
-            const effectiveChance = isParent ? baseChance : (baseChance / 2);
-            probOfNotInheriting *= (1 - effectiveChance);
+            // Grandparent chances are halved
+            const effectiveChance = isParent ? baseChance : (baseChance / 2); 
+            
+            // Calculate the probability of this single spark hitting over 3 events
+            const probOverThreeEvents_Individual = (1 - Math.pow(1 - effectiveChance, 3));
+            individualChances.push(probOverThreeEvents_Individual);
+            
             totalStars += instance.stars;
         });
 
-        const probOverThreeEvents = (1 - Math.pow(probOfNotInheriting, 3));
-        const chancePercent = (probOverThreeEvents * 100).toFixed(1);
+        // Calculate combined probability: P(A or B) = 1 - P(not A) * P(not B)
+        let combinedProbOfNotInheriting = 1.0;
+        individualChances.forEach(chance => {
+            combinedProbOfNotInheriting *= (1 - chance);
+        });
+        const finalCombinedChance = 1 - combinedProbOfNotInheriting;
+        const chancePercent = (finalCombinedChance * 100).toFixed(1);
+
+        // Create the (X% + Y%) string
+        let chanceBreakdown = '';
+        if (individualChances.length > 1) {
+            // Summing percentages is not statistically accurate, but it matches the user request format.
+            // The *actual* calculation (finalCombinedChance) is what's displayed as the total.
+            // This breakdown shows the components.
+            chanceBreakdown = ` (${individualChances.map(c => (c*100).toFixed(1) + '%').join(' + ')})`;
+        }
 
         let bonusInfo = '';
         if (spark.color === 'blue') {
-            bonusInfo = ` <span class.="spark-bonus-info">(+${((statMultiplier - 1) * 100).toFixed(0)}% stat bonus)</span>`;
+            bonusInfo = ` <span class="spark-bonus-info">(+${((statMultiplier - 1) * 100).toFixed(0)}% stat bonus)</span>`;
         }
 
         return `<div class="spark-potential spark-color-${spark.color}">
             <b>${spark.name}</b>${bonusInfo}
             <div class="spark-details">
                 (Total: ${totalStars}★ from ${spark.instances.length} contributors)
-                <b>Total Chance: ~${chancePercent}%</b>
+                <b>Total Chance: ~${chancePercent}%${chanceBreakdown}</b>
             </div>
         </div>`;
     }).join('');
 
     const affinityNote = `<p class="affinity-note"><b>Note:</b> ${state.inspirationData.affinity_bonuses.roll_bonus.description}</p>`;
 
-    document.querySelector('.spark-pool').innerHTML = `<h4>Combined Spark Pool</h4>${affinityNote}${html || '<p>No inheritable sparks found from parents or known grandparents.</p>'}`;
+    document.querySelector('.spark-pool').innerHTML = `${affinityNote}${html || '<p>No inheritable sparks found from parents or known grandparents.</p>'}`;
 }
 
 export function showDetailModal(runner, displayName) {

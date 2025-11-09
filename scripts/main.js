@@ -268,7 +268,7 @@ export function lastUpdated() {
     const mm = String(latestDate.getMonth() + 1).padStart(2, '0');
     const yyyy = latestDate.getFullYear();
 
-    return `${h}:${m}${period} ${dd}/${mm}/${yyyy}, ${currentDateCount} added`;
+    return `${h}:${m}${period} ${dd}/${mm}/${yyyy}, ${currentDateCount} added/updated`;
 
   } catch (error) {
     console.error("Error in lastUpdated function:", error);
