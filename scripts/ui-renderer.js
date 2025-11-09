@@ -1021,7 +1021,7 @@ function displayParentDetails(entrySelect, detailsElement) {
                     </div>
                     <div>
                         <b>Legacy Sparks:</b>
-                        <div class="spark-cell-style">${legacySparksHtml}</div>
+                        <div class="spark-cell-style">${runner.gp1} & ${runner.gp2} ${legacySparksHtml}</div>
                     </div>
                 </div>
             </div>
