@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="icon" type="image/png" href="assets/gui_icons/icon.png">
 </head>
-<body>
+<body class="dark-mode">
     <div id="uploader-container" class="app-container" style="padding: 40px; text-align: center;">
         <h2>UmaScanner Web Visualizer</h2>
         <p>Please upload your <strong>all_runners.json</strong> file to begin.</p>
@@ -37,15 +37,18 @@
             <button class="tab-button" data-tab="skills-summary">Skills Overview</button>
             <span class="tab-help" data-tooltip="Summarizes all of a runner's skills. &#10;&#10;&bull;  Skills are categorized into types like Recovery, Passive, and Speed. &#10;&bull;  Important skills are highlighted: Gold skills have a gold color, and Unique skills are bold.">?</span>
 
+            <button class="tab-button" data-tab="useful-links">Useful Links</button>
+            
             <button class="tab-button" data-tab="legacies-planner">[WIP]Breeding Planner</button>
             <span class="tab-help" data-tooltip="[WIP]Select two parents to see their combined inheritance potential.">?</span>
-
+            
             <button class="tab-button" data-tab="grandparent-analysis">[WIP]Legacy Analysis</button>
             <span class="tab-help" data-tooltip="[WIP]Analyze the most influential grandparents in your collection.">?</span>
-
+            
             <button class="tab-button" data-tab="inheritance-log">[WIP]Spark Tracer</button>
             <span class="tab-help" data-tooltip="[WIP]Trace the lineage of a specific spark through your collection.">?</span>
             
+
             <span id="last-updated-display"></span>
             <span id="entries-display"></span>
             
@@ -327,6 +330,63 @@
                         <select id="spark-select"></select>
                     </div>
                     <div id="inheritance-graph"></div>
+                </div>
+            </div>
+            <div class="tab-content" id="useful-links">
+                <div id="useful-links-content">
+                    <h2 style="padding-left:15px; margin:0px;">Useful Links</h2>
+                    <div class="links-container">
+                        <div class="link-resource">
+                            <h4>GameTora</h4>
+                            <p>A Global wiki for Umamasume game data, including character stats, skill descriptions, event calculators, and inheritance charts.</p>
+                            <p><a href="https://gametora.com/umamusume/" target="_blank">GameTora.com/Umamusume/</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Global Google Doc</h4>
+                            <p>This guide is a general overview of everything you need to get started and will be useful for a long time, contains information about most game topics.</p>
+                            <p><a href="https://docs.google.com/document/d/11X2P7pLuh-k9E7PhRiD20nDX22rNWtCpC1S4IMx_8pQ/" target="_blank">docs.google.com/uma-musume-reference-doc-global</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Race Simulator (Advanced)</h4>
+                            <p>A race simulator to compare runners on specific tracks and a skill recommender. This version allows you to set a virtual pacemaker to set the pace of the run.</p>
+                            <p><a href="https://kachi-dev.github.io/uma-tools/umalator-global/" target="_blank">kachi-dev.github.io/uma-tools/umalator-global/</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Race Simulator</h4>
+                            <p>A race simulator to compare runners on specific tracks and a skill recommender.</p>
+                            <p><a href="https://alpha123.github.io/uma-tools/umalator-global/" target="_blank">alpha123.github.io/uma-tools/umalator-global/</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>uma.moe</h4>
+                            <p>A set of useful tools for release dates, support card ranking, etc.</p>
+                            <p><a href="https://uma.moe/" target="_blank">uma.moe</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Game8</h4>
+                            <p>A website that has some ok guides for the game.</p>
+                            <p><a href="https://game8.co/games/Umamusume-Pretty-Derby" target="_blank">Game8.co/games/Umamusume-Pretty-Derby</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Current Champions Meeting Event Guide: GameTora</h4>
+                            <p>A page containing the current Champions Meeting details and a schedule of upcoming Champions Meetings.</p>
+                            <p><a href="https://gametora.com/umamusume/events/champions-meeting" target="_blank">GameTora.com/Umamusume/events/Champions-Meeting</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>ChronoGenesis</h4>
+                            <p>A tool for tracking club ranking and fan contribution as well as used to find characters and support cards to borrow.</p>
+                            <p><a href="https://chronogenesis.net/" target="_blank">ChronoGenesis.net</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Umsatei</h4>
+                            <p>A tool used to calculate the grade of your runner, useful if you are planning a build for a high rank or min-maxing for Champions Meet Open League. No official English translation.</p>
+                            <p><a href="https://umsatei.com/" target="_blank">umsatei.com</a></p>
+                        </div>
+                        <div class="link-resource">
+                            <h4>Umamusume DB</h4>
+                            <p>A tool used to find characters and support cards to borrow.</p>
+                            <p><a href="https://uma-global.pure-db.com/" target="_blank">uma-global.pure-db</a></p>
+                        </div>
+                    </div>       
                 </div>
             </div>
         </div>

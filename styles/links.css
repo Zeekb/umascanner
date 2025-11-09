@@ -1,0 +1,55 @@
+#useful-links {
+    padding: 10px;
+    box-sizing: border-box;
+    line-height: 1.5; /* Slightly reduced line height */
+}
+
+.links-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 equal columns */
+    gap: 10px; /* Reduced gap */
+    padding: 5px 10px; /* Reduced padding */
+}
+
+.link-resource {
+    margin-bottom: 0;
+    padding: 10px 12px; /* Reduced padding */
+    border: 1px solid var(--uma-table-border-color);
+    border-radius: 5px;
+    background-color: var(--uma-medium-bg);
+    display: flex;
+    flex-direction: column;
+}
+
+.dark-mode .link-resource {
+    background-color: var(--dark-bg-alt-row);
+}
+.link-resource h4 {
+    margin-top: 0;
+    margin-bottom: 5px; /* Added margin-bottom */
+    color: var(--uma-text-dark);
+    font-size: 1.1em; /* Slightly smaller heading */
+}
+.link-resource p {
+    margin: 3px 0; /* Reduced margin */
+    color: var(--uma-text-dark);
+    font-size: 0.9em; /* Smaller paragraph text */
+}
+
+.link-resource p:last-of-type {
+    margin-top: auto; 
+    padding-top: 8px; /* Reduced padding */
+}
+.link-resource a {
+    color: var(--uma-accent-blue);
+    text-decoration: none;
+    font-weight: bold;
+}
+.link-resource a:hover {
+    text-decoration: underline;
+    color: var(--uma-accent-pink);
+}
+.dark-mode .link-resource h4,
+.dark-mode .link-resource p {
+    color: var(--dark-text-color);
+}

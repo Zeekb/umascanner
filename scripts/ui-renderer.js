@@ -25,6 +25,9 @@ export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
     else if (activeTabId === 'inheritance-log') {
         renderInheritanceLog();
     }
+    else if (activeTabId === 'useful-links') {
+        renderUsefulLinks();
+    }
 }
 
 function renderParentSummary(runners, allSparkCriteria) {
@@ -524,6 +527,10 @@ function renderInheritanceLog() {
     } else {
         graphContainer.innerHTML = 'Select a spark from the dropdown to see its inheritance chains.';
     }
+}
+
+function renderUsefulLinks() {
+    
 }
 
 function traceInheritance(sparkName) {

@@ -248,17 +248,17 @@ export function lastUpdated() {
 
   try {
     for (const runner of state.allRunners) {
-        if (runner.last_updated) {
+      if (runner.last_updated) {
         const currentDate = new Date(runner.last_updated);
 
         if (!latestDate || currentDate > latestDate) {
-            latestDate = currentDate;
-            currentDateCount = 1;
+          latestDate = currentDate;
+          currentDateCount = 1;
         }
         else if (currentDate.getTime() === latestDate.getTime()) {
-            currentDateCount++;
+          currentDateCount++;
         }
-        }
+      }
     }
 
     const h = String(latestDate.getHours()).padStart(2, '0');
