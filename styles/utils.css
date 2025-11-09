@@ -144,7 +144,6 @@
     text-decoration: underline;
     text-underline-offset: 3px;
     font-size: 0.75em;
-    color: #999;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7), -1px -1px 0 rgba(255, 255, 255, 0.7), 1px -1px 0 rgba(255, 255, 255, 0.7), -1px 1px 0 rgba(255, 255, 255, 0.7);
 }
 
@@ -175,10 +174,6 @@
 
 .dark-mode .gp-borrowed {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
-}
-
-.dark-mode .gp-borrowed {
-    color: #999;
 }
 
 #timed-message-popup {
@@ -231,7 +226,7 @@ td.skill-cell .skill-gold b {
     color: var(--uma-text-dark);
     border: 1px solid var(--uma-border-color);
     border-radius: 4px;
-    font-family: 'Segoe UI', sans-serif; /* Ensure consistent font */
+    font-family: 'Segoe UI', sans-serif;
     width: 100%;
     padding: 3px 5px;
     box-sizing: border-box;
@@ -260,7 +255,7 @@ td.skill-cell .skill-gold b {
     background-color: var(--dark-bg-element);
     color: var(--dark-text-color);
 }
-/* New 4-Column Spark Pool */
+
 #legacies-planner .spark-pool {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -296,7 +291,7 @@ td.skill-cell .skill-gold b {
 }
 
 #legacies-planner .spark-details b {
-    font-size: 1em; /* Reset font size from parent */
+    font-size: 1em;
     color: var(--uma-accent-pink);
 }
 
@@ -304,14 +299,13 @@ td.skill-cell .skill-gold b {
     color: var(--uma-accent-blue);
 }
 
-/* Color-coded borders */
 #legacies-planner .spark-color-blue { border-left: 4px solid var(--spark-blue-bg); }
 #legacies-planner .spark-color-pink { border-left: 4px solid var(--spark-pink-bg); }
 #legacies-planner .spark-color-green { border-left: 4px solid var(--spark-green-bg); }
-#legacies-planner .spark-color-white { border-left: 4px solid #ddd; } /* Lighter grey for light mode */
+#legacies-planner .spark-color-white { border-left: 4px solid #ddd; }
 
 .dark-mode #legacies-planner .spark-color-white { 
-    border-left: 4px solid #999; /* Darker grey for dark mode */
+    border-left: 4px solid #999;
 }
 
 .legacies-pair {
@@ -356,27 +350,132 @@ td.skill-cell .skill-gold b {
     padding: 20px;
 }
 
-#inheritance-graph ul {
+#inheritance-graph {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.inheritance-tree, .inheritance-tree ul {
     list-style-type: none;
-    padding-left: 20px;
-}
-
-#inheritance-graph li {
-    margin: 5px 0;
     position: relative;
+    padding-left: 30px; 
 }
 
-#inheritance-graph li::before {
-    content: "";
+.inheritance-tree {
+    padding-left: 0;
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 1px dashed #ccc;
+}
+
+.inheritance-tree:nth-child(1) {
+    border-top: 1px dashed #ccc;
+}
+.dark-mode .inheritance-tree:nth-child(1) {
+    border-top-color: #555;
+}
+
+.inheritance-tree li {
+    margin: 0;
+    padding: 4px 0;
+    position: relative;
+    align-self: center;
+}
+
+.inheritance-tree li::before, .inheritance-tree li::after {
+    content: '';
     position: absolute;
-    top: -5px;
-    left: -20px;
-    width: 10px;
-    height: 100%;
-    border-left: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    left: -15px;
 }
 
-#inheritance-graph li:last-child::before {
-    height: 1em;
+.inheritance-tree li::before {
+    border-left: 1px solid #ccc;
+    height: 100%;
+    width: 0;
+    top: -2px; 
+}
+
+.inheritance-tree li::after {
+    border-top: 1px solid #ccc;
+    height: 0;
+    width: 15px;
+    top: 22px;
+}
+
+.inheritance-tree li:last-child::before {
+    height: 24px;
+}
+
+.inheritance-tree > li::before,
+.inheritance-tree > li::after {
+    display: none;
+}
+
+.inheritance-tree + .inheritance-tree {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #ccc;
+}
+
+.dark-mode .inheritance-tree + .inheritance-tree {
+    border-top-color: #555;
+}
+
+.dark-mode .inheritance-tree li::before,
+.dark-mode .inheritance-tree li::after {
+    border-color: #555;
+}
+
+.inheritance-explanation {
+    position: sticky;
+}
+.inheritance-tree .gp-link {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: var(--uma-light-bg);
+    border: 1px solid var(--uma-border-color);
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.95em;
+    color: var(--uma-text-dark);
+    text-shadow: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.inheritance-tree .gp-link:hover {
+    background-color: var(--uma-selection-bg);
+    border-color: var(--uma-accent-pink);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.inheritance-via {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.dark-mode .inheritance-tree .gp-link {
+    background-color: var(--dark-bg-element);
+    border-color: var(--dark-uma-border-color);
+    color: var(--dark-text-color);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .inheritance-tree .gp-link:hover {
+    border-color: var(--uma-accent-blue);
+    background-color: var(--dark-bg-hover);
+}
+
+.dark-mode .inheritance-via {
+    color: #aaa;
 }

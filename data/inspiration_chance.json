@@ -16,7 +16,7 @@
       }
     },
     "roll_bonus": {
-      "description": "A high affinity (especially ◎) does not change the base probability of a single spark. Instead, it significantly increases the *total number* of sparks that are inherited during each event. Think of it as getting more 'lottery tickets' from the pool. This greatly improves the practical odds of inheriting rare (Green, Pink, White) sparks, as you get more chances for them to be selected.",
+      "description": "A high affinity does not change the base chance of a single spark. it increases the *total number* of sparks that are inherited during each event.",
       "effect": "Increases total quantity of inherited sparks per event."
     }
   }

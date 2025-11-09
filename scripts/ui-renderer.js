@@ -30,6 +30,15 @@ export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
     }
 }
 
+function calculateMaxDepth(node) {
+    if (!node.children || node.children.length === 0) {
+        return 1;
+    }
+
+    const childDepths = node.children.map(child => calculateMaxDepth(child));
+    return 1 + Math.max(...childDepths);
+}
+
 function renderParentSummary(runners, allSparkCriteria) {
     if (!runners.length) {
         state.elements.parentSummaryBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>';
@@ -81,21 +90,13 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
        return;
     }
  
-    // [START] NEW SORTING LOGIC SETUP
-    // Create lookup maps for Race/Skill spark order
-    // This is done once, outside the loop, for efficiency.
     const raceSparks = state.orderedSparks?.white?.race || [];
     const skillSparks = state.orderedSparks?.white?.skill || [];
-    
-    // Create a Map for O(1) lookups of a spark's sort index
     const raceSparkOrder = new Map(raceSparks.map((name, index) => [name, index]));
     const skillSparkOffset = raceSparks.length;
     const skillSparkOrder = new Map(skillSparks.map((name, index) => [name, index + skillSparkOffset]));
-    
-    // Sparks not in either list will get this high value + alphabetical sort
     const unknownSparkOffset = skillSparkOffset + skillSparks.length;
 
-    // Helper function to get the numeric sort value for a spark name
     const getSparkSortValue = (sparkName) => {
         if (raceSparkOrder.has(sparkName)) {
             return raceSparkOrder.get(sparkName);
@@ -103,15 +104,13 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
         if (skillSparkOrder.has(sparkName)) {
             return skillSparkOrder.get(sparkName);
         }
-        return unknownSparkOffset; // Will be sorted alphabetically after skills
+        return unknownSparkOffset;
     };
-    // [END] NEW SORTING LOGIC SETUP
 
     const html = runners.map(r => {
         let totalWhiteEntries = 0;
         let parentWhiteEntries = 0;
         
-        // 1. Create a lookup for parent sparks (for the (x) display)
         const parentWhiteSparksLookup = {};
         if (Array.isArray(r.sparks?.parent)) {
             r.sparks.parent.forEach(spark => {
@@ -124,7 +123,6 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
             });
         }
  
-        // 2. Create a flat list of *all* individual white sparks from all sources
         const allWhiteSparksList = [];
         totalWhiteEntries = parentWhiteEntries;
  
@@ -145,39 +143,30 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
             }
         });
  
-        // [START] MODIFIED SORT LOGIC
-        // 3. Sort sparks: Parent > GP1 > GP2, then Race > Skill > Alpha, then Stars
         const sourceOrder = { 'parent': 0, 'gp1': 1, 'gp2': 2 };
         allWhiteSparksList.sort((a, b) => {
-            // Primary: Sort by source (parent < gp1 < gp2)
             const aSourceOrder = sourceOrder[a.source];
             const bSourceOrder = sourceOrder[b.source];
             if (aSourceOrder !== bSourceOrder) {
                 return aSourceOrder - bSourceOrder;
             }
  
-            // Secondary: Sort by spark type (Race < Skill < Unknown)
             const aSortVal = getSparkSortValue(a.name);
             const bSortVal = getSparkSortValue(b.name);
             if (aSortVal !== bSortVal) {
                 return aSortVal - bSortVal;
             }
             
-            // If both are "unknown" type, sort alphabetically
             if (aSortVal === unknownSparkOffset && a.name !== b.name) {
                  return a.name.localeCompare(b.name);
             }
  
-            // Tertiary: Sort by star count (descending)
             return b.count - a.count;
         });
-        // [END] MODIFIED SORT LOGIC
- 
-        // 4. Generate the HTML for the spark bubbles, now with separators
+
         let whiteSparksHtml = '';
         let previousSource = '';
         allWhiteSparksList.forEach(spark => {
-            // Check if we need to add a separator
             if (previousSource && spark.source !== previousSource) {
                 whiteSparksHtml += '<div class="spark-separator"></div>';
             }
@@ -204,7 +193,6 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
                 titleText = `${cleanName(r.gp2) || 'Unknown'} (grandparent)`;
              }
  
-             // Append the spark button HTML
              whiteSparksHtml += `
              <div class="spark-button white${highlightClass}" title="${titleText}">
                  <span>${spark.count}</span>
@@ -215,16 +203,12 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
              `;
          });
  
-        // This is the (Total) / (Parent) count of *entries*
         const whiteDisplay = `${totalWhiteEntries}(${parentWhiteEntries})`;
- 
         const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
         const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
- 
         const gp1NameClass = gp1Exists ? 'gp-link' : 'gp-borrowed';
         const gp2NameClass = gp2Exists ? 'gp-link' : 'gp-borrowed';
  
-       // 5. Build the final table row
        return `
        <tr data-entry-id="${r.entry_id || ''}">
            <td>${r.entry_id || 'N/A'}</td>
@@ -248,7 +232,6 @@ function renderSkillsSummary(runners) {
         return;
     }
 
-    // Helper function to format skills into bubbles
     const formatSkillBubbles = (runner) => {
         if (!runner.skills || runner.skills.length === 0) {
             return '';
@@ -264,8 +247,6 @@ function renderSkillsSummary(runners) {
             'detrimental': 5,
             'unknown': 6
         };
-
-        // 1. Categorize all skills
         runner.skills.forEach(skillName => {
             const skillType = state.skillData[skillName];
             let category = 'unknown';
@@ -290,29 +271,25 @@ function renderSkillsSummary(runners) {
             });
         });
 
-        // 2. Sort skills by category, then tier (unique/gold first), then name
         categorizedSkills.sort((a, b) => {
             if (a.sortOrder !== b.sortOrder) {
-                return a.sortOrder - b.sortOrder; // Sort by category
+                return a.sortOrder - b.sortOrder; 
             }
-            // Put unique/gold skills first within their category
             const aTierSort = (a.tier === 'unique' || a.tier === 'gold') ? 0 : 1;
             const bTierSort = (b.tier === 'unique' || b.tier === 'gold') ? 0 : 1;
             if (aTierSort !== bTierSort) {
                 return aTierSort - bTierSort;
             }
-            return a.name.localeCompare(b.name); // Alphabetical fallback
+            return a.name.localeCompare(b.name); 
         });
 
-        // 3. Build the bubble HTML
         return categorizedSkills.map(skill => {
             const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier}`;
-            const formattedName = formatSkillName(skill.name); // formatSkillName adds the ◎○× spans
+            const formattedName = formatSkillName(skill.name); 
             return `<div class="${bubbleClasses}">${formattedName}</div>`;
         }).join('');
     };
 
-    // Build the final table rows
     const html = runners.map(r => {
         const skillsHtml = formatSkillBubbles(r);
 
@@ -344,15 +321,12 @@ function renderLegaciesPlanner() {
     const affinitySelect = document.querySelector('#affinity-selection');
     const affinity = affinitySelect ? affinitySelect.value : 'double_circle';
 
-    // --- Initialization (only run once) ---
     if (!state.elements.legaciesPlannerBody.dataset.initialized) {
         const defaultOption = '<option value="">Select a runner</option>';
         
-        // Populate name selects
         parent1NameSelect.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
         parent2NameSelect.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
 
-        // Add event listeners
         parent1NameSelect.addEventListener('change', () => {
             populateEntrySelect(parent1NameSelect, parent1EntrySelect, parent1Details);
         });
@@ -362,11 +336,11 @@ function renderLegaciesPlanner() {
         
         parent1EntrySelect.addEventListener('change', () => {
             displayParentDetails(parent1EntrySelect, parent1Details);
-            renderLegaciesPlanner(); // Re-run to trigger calculation
+            renderLegaciesPlanner(); 
         });
         parent2EntrySelect.addEventListener('change', () => {
             displayParentDetails(parent2EntrySelect, parent2Details);
-            renderLegaciesPlanner(); // Re-run to trigger calculation
+            renderLegaciesPlanner(); 
         });
 
         if (affinitySelect) {
@@ -376,17 +350,12 @@ function renderLegaciesPlanner() {
         state.elements.legaciesPlannerBody.dataset.initialized = 'true';
     }
     
-    // --- Update Logic (runs on every change) ---
-
-    // Get current selected *entry IDs*
     const parent1EntryId = parent1EntrySelect.value;
     const parent2EntryId = parent2EntrySelect.value;
 
-    // Update details (in case of reload/state change)
     displayParentDetails(parent1EntrySelect, parent1Details);
     displayParentDetails(parent2EntrySelect, parent2Details);
 
-    // Run calculation if both entries are selected
     if (parent1EntryId && parent2EntryId) {
         calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity);
     } else {
@@ -483,10 +452,18 @@ function renderInheritanceLog() {
         mainContent.className = 'inheritance-main';
         mainContent.style.flex = '3';
 
-        const selector = contentContainer.querySelector('.spark-selector');
-        const graph = contentContainer.querySelector('#inheritance-graph');
-        if (selector) mainContent.appendChild(selector);
-        if (graph) mainContent.appendChild(graph);
+        const selectorWrapper = document.createElement('div');
+        selectorWrapper.className = 'inheritance-search-container';
+        
+        selectorWrapper.innerHTML = `
+            <select id="spark-select" class="runner-name-select"></select>
+        `;
+        mainContent.appendChild(selectorWrapper);
+        
+        const graph = document.createElement('div');
+        graph.id = 'inheritance-graph';
+        mainContent.appendChild(graph);
+
         contentContainer.innerHTML = '';
         contentContainer.appendChild(mainContent);
 
@@ -502,14 +479,16 @@ function renderInheritanceLog() {
             <p style="font-size: 0.9em; line-height: 1.4;">
                 The Inheritance Log visualizes the lineage of a single spark through your collection, creating a "family tree" for that specific trait.
             </p>
+            <p style="font-size: 0.9em; line-height: 1.4;">
+                This list is limited to the sparks in your data that have a family tree or 3 of more runners.
+            </p>
             <h4>How to Use</h4>
             <p style="font-size: 0.9em; line-height: 1.4;">
-                Select a spark from the dropdown. The graph will show all runners who have that spark and who they inherited it from.
+                Select a spark from the dropdown. The list is filtered to only show sparks with inheritance chains of at least three generations.
             </p>
             <ul style="font-size: 0.9em; line-height: 1.4; padding-left: 20px;">
-                <li>Each list is a distinct inheritance chain.</li>
-                <li>The runner at the top is the earliest known source of the spark in that chain within your data.</li>
-                <li>The <b>Score</b> and the spark's star-level (<b>★</b>) are shown for each runner.</li>
+                <li>Each tree represents a distinct family line for the selected spark.</li>
+                <li>The inheritance path (via which grandparent) is shown for each descendant.</li>
                 <li>Click any runner's name to view their full details.</li>
             </ul>
         `;
@@ -529,11 +508,20 @@ function renderInheritanceLog() {
     });
 
     const sortedSparks = [...allSparks].sort();
+    const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
+        const chains = traceInheritance(sparkName);
+        if (!chains || chains.length === 0) {
+            return false;
+        }
+        const maxDepth = Math.max(...chains.map(sourceNode => calculateMaxDepth(sourceNode)));
+        return maxDepth >= 3;
+    });
+
     const sparkSelect = document.getElementById('spark-select');
     
     const currentVal = sparkSelect.value;
-    sparkSelect.innerHTML = '<option value="">Select a spark to trace</option>' + sortedSparks.map(s => `<option value="${s}">${s}</option>`).join('');
-    if (sortedSparks.includes(currentVal)) {
+    sparkSelect.innerHTML = '<option value="">Select a deep-rooted spark</option>' + sparksWithSufficientDepth.map(s => `<option value="${s}">${s}</option>`).join('');
+    if (sparksWithSufficientDepth.includes(currentVal)) {
         sparkSelect.value = currentVal;
     }
 
@@ -548,7 +536,7 @@ function renderInheritanceLog() {
         const chains = traceInheritance(selectedSpark);
         renderInheritanceGraph(chains, graphContainer);
     } else {
-        graphContainer.innerHTML = 'Select a spark from the dropdown to see its inheritance chains.';
+        graphContainer.innerHTML = 'Select a spark to see its inheritance tree.';
     }
 }
 
@@ -558,7 +546,6 @@ function renderUsefulLinks() {
 
 function traceInheritance(sparkName) {
     const nodes = new Map();
-
     state.allRunners.forEach(r => {
         const parentSparks = r.sparks?.parent || [];
         const sparkInstance = parentSparks.find(s => s.spark_name === sparkName);
@@ -592,48 +579,64 @@ function traceInheritance(sparkName) {
 
     const sources = [...nodes.values()].filter(node => !hasParentInSet.has(node.runner.entry_id));
 
-    const chains = [];
-    function buildChain(node, currentChain) {
-        const newChain = [...currentChain, { 
-            runner: node.runner, 
-            score: node.runner.score || 0,
-            sparkLevel: node.sparkLevel 
-        }];
-        
-        if (node.children.length === 0) {
-            chains.push(newChain);
-        } else {
-            node.children.sort((a, b) => (b.runner.score || 0) - (a.runner.score || 0));
-            node.children.forEach(child => buildChain(child, newChain));
+    sources.sort((a,b) => (b.runner.score || 0) - (a.runner.score || 0));
+
+    return sources;
+}
+
+function buildTreeHtml(node, parentNode = null) {
+    const r = node.runner;
+    const sl = node.sparkLevel;
+
+    let inheritancePath = '';
+    if (parentNode) {
+        const parentRunner = parentNode.runner;
+        let via = null;
+
+        if (cleanName(r.gp1) === parentRunner.name) {
+            via = cleanName(r.gp1);
+        } 
+        else if (cleanName(r.gp2) === parentRunner.name) {
+            via = cleanName(r.gp2);
+        }
+
+        if (via) {
+            inheritancePath = `<div class="inheritance-via">via ${via}</div>`;
         }
     }
 
-    sources.forEach(sourceNode => buildChain(sourceNode, []));
-
-    return chains;
+    let html = `<li>
+        <span class="gp-link" data-entry-id="${r.entry_id}">
+            ${r.name} (Score: ${(r.score || 0).toLocaleString()}) - <b>${sl}★</b>
+        </span>`;
+    
+    if (node.children && node.children.length > 0) {
+        html += `<ul>`;
+        node.children.sort((a, b) => (b.runner.score || 0) - (a.runner.score || 0));
+        for (const child of node.children) {
+            html += buildTreeHtml(child, node);
+        }
+        html += `</ul>`;
+    }
+    
+    html += `</li>`;
+    return html;
 }
 
-function renderInheritanceGraph(chains, container) {
-    if (!chains || chains.length === 0) {
+function renderInheritanceGraph(sources, container) {
+
+    const deepChains = sources.filter(sourceNode => calculateMaxDepth(sourceNode) >= 3);
+
+    if (!deepChains || deepChains.length === 0) {
         container.innerHTML = "<p>No inheritance chains found for this spark in your collection.</p>";
         return;
     }
 
-    chains.sort((a, b) => b.length - a.length);
-
-    let html = chains.map(chain => {
-        const listItems = chain.map(link => {
-            const { runner, score, sparkLevel } = link;
-            return `<li class="gp-link" data-entry-id="${runner.entry_id}">
-                        ${runner.name} 
-                        (Score: ${score.toLocaleString()}) - 
-                        <b>${sparkLevel}★</b>
-                    </li>`;
-        }).join('');
-        return `<ul>${listItems}</ul>`;
+    let html = deepChains.map(sourceNode => {
+        return `<ul class="inheritance-tree">${buildTreeHtml(sourceNode)}</ul>`;
     }).join('');
 
-    container.innerHTML = `<h4>Inheritance Chains (Source → Descendant)</h4>${html}`;
+    container.innerHTML = html;
 }
 
 // --- Helper functions for rendering ---
@@ -648,21 +651,15 @@ function hideEntryIdColumn(tabId) {
 } 
 
 function formatSparks(runner, allSparkCriteria) {
-    // [START] NEW SORTING LOGIC SETUP
-    // Create lookup maps from state.orderedSparks for fast, ordered sorting
     const blueSparks = state.orderedSparks?.blue || [];
     const pinkSparks = state.orderedSparks?.pink || [];
     const greenSparks = state.orderedSparks?.green || [];
-
     const blueSparkOrder = new Map(blueSparks.map((name, index) => [name, index]));
     const pinkSparkOrder = new Map(pinkSparks.map((name, index) => [name, index]));
     const greenSparkOrder = new Map(greenSparks.map((name, index) => [name, index]));
-
     const colorOrder = { 'blue': 0, 'pink': 1, 'green': 2 };
-    // Get a high value to push unknown sparks to the end of their group
     const maxSortVal = blueSparks.length + pinkSparks.length + greenSparks.length;
 
-    // Helper to get the numeric sort index for a spark
     const getSparkSortValue = (spark) => {
         if (spark.color === 'blue' && blueSparkOrder.has(spark.name)) {
             return blueSparkOrder.get(spark.name);
@@ -673,14 +670,12 @@ function formatSparks(runner, allSparkCriteria) {
         if (spark.color === 'green' && greenSparkOrder.has(spark.name)) {
             return greenSparkOrder.get(spark.name);
         }
-        return maxSortVal; // Unknown sparks go last
+        return maxSortVal;
     };
-    // [END] NEW SORTING LOGIC SETUP
     
     const allSparks = [];
     const parentSparksLookup = {};
 
-    // 1. First, collect all parent sparks for quick lookup
     if (Array.isArray(runner.sparks?.parent)) {
         runner.sparks.parent.forEach(spark => {
             if (spark?.spark_name) {
@@ -694,7 +689,6 @@ function formatSparks(runner, allSparkCriteria) {
         });
     }
 
-    // 2. Collect and aggregate all sparks from parent and grandparents
     const aggregatedSparks = {};
     ['parent', 'gp1', 'gp2'].forEach(source => {
         if (Array.isArray(runner.sparks?.[source])) {
@@ -707,7 +701,6 @@ function formatSparks(runner, allSparkCriteria) {
                             color: spark.color,
                             totalCount: 0,
                             parentCount: parentSparksLookup[name] || 0,
-                            // This new property is key for sorting
                             isParent: (parentSparksLookup[name] || 0) > 0
                         };
                     }
@@ -717,7 +710,6 @@ function formatSparks(runner, allSparkCriteria) {
         }
     });
 
-    // 3. Determine highlighting and convert to array
     for (const spark of Object.values(aggregatedSparks)) {
         let shouldHighlight = false;
         for (const criteria of allSparkCriteria) {
@@ -738,38 +730,30 @@ function formatSparks(runner, allSparkCriteria) {
         spark.highlight = shouldHighlight;
         allSparks.push(spark);
     }
-    
-    // [START] REPLACED SORT LOGIC
-    // This is the new sorting logic based on your request
+
     allSparks.sort((a, b) => {
-        // 1. By Color (Blue, Pink)
         const colorA = colorOrder[a.color];
         const colorB = colorOrder[b.color];
         if (colorA !== colorB) {
             return colorA - colorB;
         }
 
-        // 2. By Source (Parent sparks first)
         if (a.isParent && !b.isParent) {
-            return -1; // 'a' is parent, comes first
+            return -1; 
         }
         if (!a.isParent && b.isParent) {
-            return 1; // 'b' is parent, comes first
+            return 1; 
         }
 
-        // 3. By Data File Order (using the maps created above)
         const aSortVal = getSparkSortValue(a);
         const bSortVal = getSparkSortValue(b);
         if (aSortVal !== bSortVal) {
             return aSortVal - bSortVal;
         }
 
-        // 4. Fallback: Alphabetical (for sparks not in data files)
         return a.name.localeCompare(b.name);
     });
-    // [END] REPLACED SORT LOGIC
-
-    // 4. Build the HTML (this part is unchanged)
+    
     const nameMap = {
         'Front Runner': 'Front',
         'Pace Chaser': 'Pace',
@@ -798,7 +782,7 @@ function formatSparks(runner, allSparkCriteria) {
 
 function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     const runnerName = nameSelect.value;
-    // Find all entries for this runner, sorted by score
+    
     const entries = state.allRunners
         .filter(r => r.name === runnerName)
         .sort((a,b) => b.score - a.score);
@@ -806,7 +790,6 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     entrySelect.innerHTML = '<option value="">Select an entry</option>';
     
     if (entries.length > 0) {
-        // Helper map for spark name shortening
         const nameMap = {
             'Front Runner': 'Front',
             'Pace Chaser': 'Pace',
@@ -815,9 +798,6 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
         };
 
         entrySelect.innerHTML += entries.map(entry => {
-            // --- Start of new logic ---
-            
-            // 1. Get Parent Spark Counts (Blue, Pink) & White Count
             const parentSparksLookup = {};
             let whiteParent = 0;
             if (Array.isArray(entry.sparks?.parent)) {
@@ -826,17 +806,14 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                         if (spark.color === 'blue' || spark.color === 'pink') {
                             const name = spark.spark_name;
                             const count = parseInt(spark.count || 0, 10);
-                            // Aggregate star count from parent
                             parentSparksLookup[name] = (parentSparksLookup[name] || 0) + count;
                         } else if (spark.color === 'white') {
-                            // Count number of white spark *entries*
                             whiteParent++; 
                         }
                     }
                 });
             }
 
-            // 2. Aggregate Blue/Pink sparks from all sources
             const aggregatedSparks = {};
             ['parent', 'gp1', 'gp2'].forEach(source => {
                 if (Array.isArray(entry.sparks?.[source])) {
@@ -848,19 +825,15 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                                     name: name,
                                     color: spark.color,
                                     totalCount: 0,
-                                    // Get the pre-calculated parent count
                                     parentCount: parentSparksLookup[name] || 0 
                                 };
                             }
-                            // Sum total star count from all sources
                             aggregatedSparks[name].totalCount += parseInt(spark.count || 0, 10);
                         }
                     });
                 }
             });
             
-            // 3. Format the spark strings by color
-            // Get data-file sort order for sparks
             const blueSparkOrder = new Map((state.orderedSparks?.blue || []).map((name, index) => [name, index]));
             const pinkSparkOrder = new Map((state.orderedSparks?.pink || []).map((name, index) => [name, index]));
             const maxSortVal = blueSparkOrder.size + pinkSparkOrder.size;
@@ -870,9 +843,8 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             const sortedSparkValues = Object.values(aggregatedSparks).sort((a, b) => {
                 const colorA = colorSortOrder[a.color];
                 const colorB = colorSortOrder[b.color];
-                if (colorA !== colorB) return colorA - colorB; // Sort by color
+                if (colorA !== colorB) return colorA - colorB; 
 
-                // Sort by data-file order
                 const getSortVal = (spark) => {
                     if (spark.color === 'blue') return blueSparkOrder.get(spark.name) ?? maxSortVal;
                     if (spark.color === 'pink') return pinkSparkOrder.get(spark.name) ?? maxSortVal;
@@ -883,7 +855,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                 const sortB = getSortVal(b);
                 if (sortA !== sortB) return sortA - sortB;
 
-                return b.totalCount - a.totalCount; // Fallback to total count
+                return b.totalCount - a.totalCount;
             });
 
             let blueSparksStr = '';
@@ -892,7 +864,6 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
                 const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                // Format: Speed 6(3)★
                 const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
                 
                 if (spark.color === 'blue') {
@@ -902,12 +873,9 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                 }
             });
 
-            // Trim trailing spaces
             blueSparksStr = blueSparksStr.trim();
             pinkSparksStr = pinkSparksStr.trim();
 
-            // 4. Format the final label
-            // Build the label, only adding sections if they exist
             let labelParts = [`Score: ${entry.score}`];
             if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
             if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
@@ -915,16 +883,13 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             
             const label = labelParts.join(' | ');
             
-            // --- End of new logic ---
-            
             return `<option value="${entry.entry_id}">${label}</option>`;
         }).join('');
         entrySelect.style.display = 'block';
     } else {
         entrySelect.style.display = 'none';
     }
-    
-    // Clear details and re-render the planner to update calculations
+
     detailsDiv.innerHTML = '';
     renderLegaciesPlanner();
 }
@@ -1000,17 +965,14 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity) {
     addSparksToPool(gp2_1, parent2.gp1 || 'P2-GP1');
     addSparksToPool(gp2_2, parent2.gp2 || 'P2-GP2');
     
-    // Define color sort order
     const colorSortOrder = { 'blue': 1, 'pink': 2, 'green': 3, 'white': 4 };
 
-    // Sort by color, then by number of instances (highest first)
     const sortedSparks = Object.values(sparkPool).sort((a, b) => {
         const colorA = colorSortOrder[a.color] || 5;
         const colorB = colorSortOrder[b.color] || 5;
         if (colorA !== colorB) {
             return colorA - colorB;
         }
-        // Fallback to sorting by most contributors
         return b.instances.length - a.instances.length; 
     });
 
@@ -1018,22 +980,19 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity) {
 
     let html = sortedSparks.map(spark => {
         let totalStars = 0;
-        let individualChances = []; // To store individual %
+        let individualChances = [];
 
         spark.instances.forEach(instance => {
             const isParent = instance.role.startsWith('Parent');
             const baseChance = getBaseChance(spark.color, instance.stars);
-            // Grandparent chances are halved
             const effectiveChance = isParent ? baseChance : (baseChance / 2); 
             
-            // Calculate the probability of this single spark hitting over 3 events
             const probOverThreeEvents_Individual = (1 - Math.pow(1 - effectiveChance, 3));
             individualChances.push(probOverThreeEvents_Individual);
             
             totalStars += instance.stars;
         });
 
-        // Calculate combined probability: P(A or B) = 1 - P(not A) * P(not B)
         let combinedProbOfNotInheriting = 1.0;
         individualChances.forEach(chance => {
             combinedProbOfNotInheriting *= (1 - chance);
@@ -1041,12 +1000,8 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity) {
         const finalCombinedChance = 1 - combinedProbOfNotInheriting;
         const chancePercent = (finalCombinedChance * 100).toFixed(1);
 
-        // Create the (X% + Y%) string
         let chanceBreakdown = '';
         if (individualChances.length > 1) {
-            // Summing percentages is not statistically accurate, but it matches the user request format.
-            // The *actual* calculation (finalCombinedChance) is what's displayed as the total.
-            // This breakdown shows the components.
             chanceBreakdown = ` (${individualChances.map(c => (c*100).toFixed(1) + '%').join(' + ')})`;
         }
 
