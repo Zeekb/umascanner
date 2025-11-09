@@ -39,6 +39,7 @@
 .link-resource p:last-of-type {
     margin-top: auto; 
     padding-top: 8px; /* Reduced padding */
+    display: inline-flex;
 }
 .link-resource a {
     color: var(--uma-accent-blue);
