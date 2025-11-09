@@ -2,6 +2,15 @@
 import { state, CONSTANTS } from './state.js';
 import { renderActiveTab } from './ui-renderer.js';
 
+export function sortAndRender() {
+    const sortBy = state.elements.filterElements.sort.value;
+    const sortDir = state.elements.filterElements.sortDir.value;
+    sortData(state.lastFilteredData, sortBy, sortDir);
+    const allSparkCriteria = getAllSparkFilterCriteria();
+    const activeTabId = document.querySelector('.tab-content.active')?.id;
+    renderActiveTab(activeTabId, state.lastFilteredData, allSparkCriteria);
+}
+
 export function filterAndRender() {
     state.allRunners.forEach(r => delete r._passingWhiteSparks);
 
@@ -96,13 +105,8 @@ export function filterAndRender() {
             filteredData = filteredData.filter(r => (CONSTANTS.APTITUDE_RANK_MAP[r[dataKey]?.toUpperCase() || ''] || -100) >= minRankValue);
         }
     }
-
-    sortData(filteredData, baseFilters.sort, baseFilters.sortDir);
-
-    const allSparkCriteria = getAllSparkFilterCriteria();
-    const activeTabId = document.querySelector('.tab-content.active')?.id;
-    
-    renderActiveTab(activeTabId, filteredData, allSparkCriteria);
+    state.lastFilteredData = filteredData;
+    sortAndRender();
 }
 
 

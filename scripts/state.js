@@ -8,6 +8,8 @@ export const state = {
     orderedSparks: {},
     inspirationData: {},
 
+    lastFilteredData: [],
+
     // Derived Data
     blueSparkNames: [],
     greenSparkNames: [],

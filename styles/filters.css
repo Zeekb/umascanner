@@ -363,7 +363,7 @@ input[type="range"]::-moz-range-track {
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 50%);
-    z-index: 10;
+    z-index: 16;
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);

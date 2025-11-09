@@ -1,20 +1,25 @@
 // scripts/ui-interactions.js
+
 import { state } from './state.js';
 import { debounce, findRunnerByDetails, showTimedMessage, cleanName } from './utils.js';
-import { filterAndRender } from './filter.js';
+import { filterAndRender, sortAndRender } from './filter.js';
 import { showDetailModal } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
 
 export function setupEventListeners() {
-    const debouncedFilterAndRender = debounce(filterAndRender, 250);
+    const debouncedFilterAndRender = debounce(filterAndRender, 150);
+
+    const debouncedSortAndRender = debounce(sortAndRender, 50);
 
     const handleSelectWheelScroll = (event) => {
         const select = event.currentTarget;
         if (document.activeElement === select) {
+            event.stopPropagation();
             return;
         }
         
         event.preventDefault(); 
+        event.stopPropagation()
         
         let newIndex = select.selectedIndex;
         
@@ -31,7 +36,11 @@ export function setupEventListeners() {
     };
 
     Object.values(state.elements.filterElements).forEach(el => {
-        if (el.type !== 'range') el.addEventListener('change', filterAndRender);
+        if (el.id === 'filter-sort' || el.id === 'filter-sort-direction') {
+            el.addEventListener('change', debouncedSortAndRender); 
+        } else {
+            if (el.type !== 'range') el.addEventListener('change', filterAndRender);
+        }
         if (el.tagName === 'SELECT') {
             el.addEventListener('wheel', handleSelectWheelScroll, { passive: false });
         }
@@ -151,6 +160,11 @@ export function setupEventListeners() {
     window.addEventListener('resize', closeAllDropdowns);
 
     document.addEventListener('click', (e) => {
+        const isSearchableSelect = e.target.closest('.searchable-select-container');
+        if (!isSearchableSelect) {
+            closeAllDropdowns();
+        }
+
         document.querySelectorAll('.options-container').forEach(container => {
             if (!container.parentElement.contains(e.target)) {
                 container.style.display = 'none';
@@ -176,7 +190,7 @@ export function setupEventListeners() {
         inheritanceContent.addEventListener('click', handleInheritanceNodeClick);
     }
 
-    document.querySelectorAll('#affinity-selection, #spark-select, .runner-select').forEach(sel => {
+    document.querySelectorAll('#affinity-selection, #spark-select, .runner-select, .min-spark-select, .spark-count-select').forEach(sel => {
         sel.addEventListener('wheel', handleSelectWheelScroll, { passive: false });
     });
     
@@ -230,6 +244,10 @@ export function createSearchableSelect(inputElement, optionsArray) {
     const optionsContainer = container.querySelector('.options-container');
     if (!optionsContainer) return;
 
+    optionsContainer.addEventListener('wheel', (event) => {
+        event.stopPropagation();
+    }, { passive: false });
+
     const populateOptions = (filter = '') => {
         const lowerCaseFilter = filter.toLowerCase();
         optionsContainer.innerHTML = '';
@@ -248,11 +266,11 @@ export function createSearchableSelect(inputElement, optionsArray) {
             }
         });
 
-        const rect = inputElement.getBoundingClientRect();
-        optionsContainer.style.position = 'fixed';
-        optionsContainer.style.top = `${rect.bottom}px`;
-        optionsContainer.style.left = `${rect.left}px`;
-        optionsContainer.style.width = `${rect.width}px`;
+        optionsContainer.style.position = 'absolute';
+        optionsContainer.style.top = '100%'; 
+        optionsContainer.style.left = '0';
+        optionsContainer.style.width = 'auto'; 
+        optionsContainer.style.minWidth = `${container.getBoundingClientRect().width}px`;
 
         optionsContainer.style.display = optionsContainer.children.length > 1 ? 'block' : 'none';
     };
@@ -269,11 +287,15 @@ export function createSearchableSelect(inputElement, optionsArray) {
     });
 
     inputElement.addEventListener('wheel', (event) => {
+        
         if (optionsContainer.style.display === 'block') {
+            event.preventDefault(); 
+            event.stopPropagation(); 
             return;
         }
         
         event.preventDefault(); 
+        event.stopPropagation();
 
         const currentValue = inputElement.value;
         let currentIndex = optionsArray.indexOf(currentValue);
@@ -292,12 +314,12 @@ export function createSearchableSelect(inputElement, optionsArray) {
         if (newIndex !== currentIndex) {
             const newValue = (newIndex === -1) ? '' : optionsArray[newIndex];
             inputElement.value = newValue;
-            inputElement.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+            
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }, { passive: false });
 }
 
-// FIXED: Added 'export' so main.js can import and use this export function
 export function handleTabChange(activeTabId) {
     state.elements.tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTabId));
     state.elements.tabContents.forEach(c => c.classList.toggle('active', c.id === activeTabId));
@@ -310,7 +332,6 @@ export function handleTabChange(activeTabId) {
 export function handleDetailView(event) {
     const clickedCell = event.target.closest('td');
     if (!clickedCell) return;
-
     let runnerNameForLookup = null;
     let sparksToFind = null;
     let isClickable = false;
@@ -323,7 +344,6 @@ export function handleDetailView(event) {
         showDetailModal(mainRunner);
         return;
     }
-
     if (clickedCell.classList.contains('gp-skills-link')) {
         runnerNameForLookup = clickedCell.dataset.gpName; 
         isClickable = true;
@@ -341,7 +361,6 @@ export function handleDetailView(event) {
         showTimedMessage("Borrowed or not in data");
         return;
     }
-
     if (isClickable && runnerNameForLookup && runnerNameForLookup !== 'N/A') {
         const nameToCompare = cleanName(runnerNameForLookup);
         
@@ -350,14 +369,11 @@ export function handleDetailView(event) {
         } else if (cleanName(mainRunner.gp2) === nameToCompare) {
              sparksToFind = mainRunner.sparks?.gp2;
         }
-
         if (!sparksToFind) {
              showTimedMessage("Could not find entry");
              return;
         }
-
         const targetRunner = findRunnerByDetails(runnerNameForLookup, sparksToFind); 
-        
         if (targetRunner) {
             showDetailModal(targetRunner, runnerNameForLookup);
         } else {
@@ -553,8 +569,6 @@ export function resetFilters() {
     document.querySelectorAll('.aptitude-select').forEach(updateSelectPlaceholder);
     filterAndRender();
 }
-
-// --- UI Helper export functions ---
 
 export function updateRemoveButtonVisibility() {
     const allSparkRows = state.elements.sparkFiltersContainer.querySelectorAll('.spark-filters');

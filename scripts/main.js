@@ -244,16 +244,21 @@ export function lastUpdated() {
   }
 
   let latestDate = null;
+  let currentDateCount = 0;
 
   try {
     for (const runner of state.allRunners) {
-      if (runner.last_updated) {
+        if (runner.last_updated) {
         const currentDate = new Date(runner.last_updated);
 
         if (!latestDate || currentDate > latestDate) {
-          latestDate = currentDate;
+            latestDate = currentDate;
+            currentDateCount = 1;
         }
-      }
+        else if (currentDate.getTime() === latestDate.getTime()) {
+            currentDateCount++;
+        }
+        }
     }
 
     const h = String(latestDate.getHours()).padStart(2, '0');
@@ -263,7 +268,7 @@ export function lastUpdated() {
     const mm = String(latestDate.getMonth() + 1).padStart(2, '0');
     const yyyy = latestDate.getFullYear();
 
-    return `${h}:${m}${period} ${dd}/${mm}/${yyyy}`;
+    return `${h}:${m}${period} ${dd}/${mm}/${yyyy}, ${currentDateCount} added`;
 
   } catch (error) {
     console.error("Error in lastUpdated function:", error);
