@@ -278,7 +278,7 @@ export function lastUpdated() {
 
 export function updateLastUpdated() {
     if (state.elements.lastUpdatedDisplay) {
-        state.elements.lastUpdatedDisplay.textContent = `Last Updated: ${lastUpdated()}`;
+        state.elements.lastUpdatedDisplay.textContent = `Umas Last Updated: ${lastUpdated()}`;
     }
 }
 
