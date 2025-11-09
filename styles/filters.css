@@ -39,7 +39,7 @@
   margin-right: 2px;
 }
 
-.filter-group label {
+.dark-mode .filter-group label {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
@@ -359,9 +359,6 @@ input[type="range"]::-moz-range-track {
     border: 1px solid var(--uma-border-color);
     border-radius: 5px;
     width: 40px;
-}
-.dark-mode #toggle-filter-panel {
-    font-weight:800;
 }
 
 #toggle-filter-panel:hover {

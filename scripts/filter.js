@@ -199,8 +199,6 @@ function sortData(data, sortBy, sortDir) {
         let valA, valB;
         const whiteSortKeys = {
             'whites (parent)': ['parent'],
-            'whites (gp1)': ['gp1'],
-            'whites (gp2)': ['gp2'],
             'whites (total)': ['parent', 'gp1', 'gp2']
         };
         if (whiteSortKeys[sortBy]) {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>UmaCyclopedia</title>
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="icon" type="image/png" href="assets/gui_icons/icon.png">
 </head>
 <body>
     <div id="uploader-container" class="app-container" style="padding: 40px; text-align: center;">
@@ -49,14 +49,14 @@
             <span id="entries-count-display"></span>
             
             <button id="dark-mode-toggle" title="Toggle Light Mode" class="icon-button">
-                <img id="dark-mode-icon" src="assets/day-icon.png" alt="Toggle Dark Light">
+                <img id="dark-mode-icon" src="assets/gui_icons/day-icon.png" alt="Toggle Dark Light">
             </button>
             <button id="save-data-button" title="Save changes to file" class="icon-button">
-                <img id="save-file-icon" src="assets/save-icon.png" alt="Toggle Save">
+                <img id="save-file-icon" src="assets/gui_icons/save-icon.png" alt="Toggle Save">
             </button>
             <span class="tab-help help-top-right" data-tooltip="Saves all current data, including any transfers (deletions), into a new 'all_runners.json' file for you to download.">?</span>
             <button id="load-new-file-button" title="Load a new file" class="icon-button">
-                <img id="load-file-icon" src="assets/load-icon.png" alt="Toggle Load">
+                <img id="load-file-icon" src="assets/gui_icons/load-icon.png" alt="Toggle Load">
             </button>
         </div>
         
@@ -246,11 +246,9 @@
                            <th>Name</th>
                            <th>Score</th>
                            <th>Whites</th>
-                           <th>Whites (Parent)</th>
+                           <th>White Sparks</th>
                            <th>GP1</th>
-                           <th>Whites (GP1)</th>
                            <th>GP2</th>
-                           <th>Whites (GP2)</th>
                         </tr>
                     </thead>
                     <tbody id="white-sparks-body"></tbody>
@@ -263,11 +261,7 @@
                            <th>Entry Id</th>
                            <th>Name</th>
                            <th>Score</th>
-                           <th>Recovery</th>
-                           <th>Passive</th>
-                           <th>Speed/Accel</th>
-                           <th>Debuff</th>
-                           <th>Detrimental</th>
+                           <th>Skills</th>
                         </tr>
                     </thead>
                     <tbody id="skills-summary-body"></tbody>

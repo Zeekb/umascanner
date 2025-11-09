@@ -149,11 +149,11 @@ export function setupDarkMode() {
     
     if (isDarkMode) {
         body.classList.add('dark-mode');
-        if (iconImg) iconImg.src = 'assets/day-icon.png';
+        if (iconImg) iconImg.src = 'assets/gui_icons/day-icon.png';
         if (toggleButton) toggleButton.title = 'Toggle Light Mode';
     } else {
         body.classList.remove('dark-mode');
-        if (iconImg) iconImg.src = 'assets/night-icon.png';
+        if (iconImg) iconImg.src = 'assets/gui_icons/night-icon.png';
         if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
     }
 
@@ -163,10 +163,10 @@ export function setupDarkMode() {
             localStorage.setItem('darkMode', currentlyDark);
             
             if (currentlyDark) {
-                if (iconImg) iconImg.src = 'assets/day-icon.png';
+                if (iconImg) iconImg.src = 'assets/gui_icons/day-icon.png';
                 if (toggleButton) toggleButton.title = 'Toggle Light Mode';
             } else {
-                if (iconImg) iconImg.src = 'assets/night-icon.png';
+                if (iconImg) iconImg.src = 'assets/gui_icons/night-icon.png';
                 if (toggleButton) toggleButton.title = 'Toggle Dark Mode';
             }
             if (state.allRunners.length > 0) {

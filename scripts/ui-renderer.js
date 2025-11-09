@@ -73,183 +73,252 @@ function renderParentSummary(runners, allSparkCriteria) {
 }
 
 function renderWhiteSparksSummary(runners, allSparkCriteria) {
-   if (!runners.length) {
-      state.elements.whiteSparksBody.innerHTML = '<tr><td colspan="9">No runners match filters.</td></tr>';
-      return;
-   }
-   const html = runners.map(r => {
-       let totalCounts = { parent: 0, gp1: 0, gp2: 0 };
-       let individualCounts = { parent: {}, gp1: {}, gp2: {} };
+    if (!runners.length) {
+       state.elements.whiteSparksBody.innerHTML = '<tr><td colspan="7">No runners match filters.</td></tr>';
+       return;
+    }
+ 
+    // [START] NEW SORTING LOGIC SETUP
+    // Create lookup maps for Race/Skill spark order
+    // This is done once, outside the loop, for efficiency.
+    const raceSparks = state.orderedSparks?.white?.race || [];
+    const skillSparks = state.orderedSparks?.white?.skill || [];
+    
+    // Create a Map for O(1) lookups of a spark's sort index
+    const raceSparkOrder = new Map(raceSparks.map((name, index) => [name, index]));
+    const skillSparkOffset = raceSparks.length;
+    const skillSparkOrder = new Map(skillSparks.map((name, index) => [name, index + skillSparkOffset]));
+    
+    // Sparks not in either list will get this high value + alphabetical sort
+    const unknownSparkOffset = skillSparkOffset + skillSparks.length;
 
-       if (r.sparks){
-           ['parent', 'gp1', 'gp2'].forEach(source => {
-               if(Array.isArray(r.sparks[source])) {
-                  r.sparks[source].forEach(spark => {
-                      if (spark?.color === 'white' && spark.spark_name) {
-                           const sparkCount = parseInt(spark.count, 10) || 1; 
-                           totalCounts[source] += 1;
-                           const name = spark.spark_name;
-                           individualCounts[source][name] = (individualCounts[source][name] || 0) + sparkCount;
-                      }
-                  });
-               }
-           });
-       }
-       const whiteDisplay = `${totalCounts.parent + totalCounts.gp1 + totalCounts.gp2}(${totalCounts.parent})`;
-       
-       const formatWhiteSparkDisplay = (sourceTotal, sourceDetails, runner) => {
-           
-           if (sourceTotal === 0) {
-               return '';
-           }
-           
-           let shouldHighlightTotal = false;
-           for (const criteria of allSparkCriteria) {
-               if (criteria.minTotalWhite > 0 && sourceTotal >= criteria.minTotalWhite) {
-                   shouldHighlightTotal = true;
-                   break;
-               }
-           }
+    // Helper function to get the numeric sort value for a spark name
+    const getSparkSortValue = (sparkName) => {
+        if (raceSparkOrder.has(sparkName)) {
+            return raceSparkOrder.get(sparkName);
+        }
+        if (skillSparkOrder.has(sparkName)) {
+            return skillSparkOrder.get(sparkName);
+        }
+        return unknownSparkOffset; // Will be sorted alphabetically after skills
+    };
+    // [END] NEW SORTING LOGIC SETUP
 
-           const totalDisplay = shouldHighlightTotal 
-               ? `<b class="text-highlight">${sourceTotal}</b>` 
-               : `<b>${sourceTotal}</b>`; 
+    const html = runners.map(r => {
+        let totalWhiteEntries = 0;
+        let parentWhiteEntries = 0;
+        
+        // 1. Create a lookup for parent sparks (for the (x) display)
+        const parentWhiteSparksLookup = {};
+        if (Array.isArray(r.sparks?.parent)) {
+            r.sparks.parent.forEach(spark => {
+                if (spark?.color === 'white' && spark.spark_name) {
+                    const name = spark.spark_name;
+                    const count = parseInt(spark.count, 10) || 1;
+                    parentWhiteSparksLookup[name] = (parentWhiteSparksLookup[name] || 0) + count;
+                    parentWhiteEntries++;
+                }
+            });
+        }
+ 
+        // 2. Create a flat list of *all* individual white sparks from all sources
+        const allWhiteSparksList = [];
+        totalWhiteEntries = parentWhiteEntries;
+ 
+        ['parent', 'gp1', 'gp2'].forEach(source => {
+            if (Array.isArray(r.sparks?.[source])) {
+                r.sparks[source].forEach(spark => {
+                    if (spark?.color === 'white' && spark.spark_name) {
+                        if (source !== 'parent') {
+                            totalWhiteEntries++;
+                        }
+                        allWhiteSparksList.push({
+                            name: spark.spark_name,
+                            count: parseInt(spark.count, 10) || 1,
+                            source: source 
+                        });
+                    }
+                });
+            }
+        });
+ 
+        // [START] MODIFIED SORT LOGIC
+        // 3. Sort sparks: Parent > GP1 > GP2, then Race > Skill > Alpha, then Stars
+        const sourceOrder = { 'parent': 0, 'gp1': 1, 'gp2': 2 };
+        allWhiteSparksList.sort((a, b) => {
+            // Primary: Sort by source (parent < gp1 < gp2)
+            const aSourceOrder = sourceOrder[a.source];
+            const bSourceOrder = sourceOrder[b.source];
+            if (aSourceOrder !== bSourceOrder) {
+                return aSourceOrder - bSourceOrder;
+            }
+ 
+            // Secondary: Sort by spark type (Race < Skill < Unknown)
+            const aSortVal = getSparkSortValue(a.name);
+            const bSortVal = getSparkSortValue(b.name);
+            if (aSortVal !== bSortVal) {
+                return aSortVal - bSortVal;
+            }
+            
+            // If both are "unknown" type, sort alphabetically
+            if (aSortVal === unknownSparkOffset && a.name !== b.name) {
+                 return a.name.localeCompare(b.name);
+            }
+ 
+            // Tertiary: Sort by star count (descending)
+            return b.count - a.count;
+        });
+        // [END] MODIFIED SORT LOGIC
+ 
+        // 4. Generate the HTML for the spark bubbles, now with separators
+        let whiteSparksHtml = '';
+        let previousSource = '';
+        allWhiteSparksList.forEach(spark => {
+            // Check if we need to add a separator
+            if (previousSource && spark.source !== previousSource) {
+                whiteSparksHtml += '<div class="spark-separator"></div>';
+            }
+            previousSource = spark.source;
 
-           const detailsStr = Object.entries(sourceDetails)
-               .map(([name, value]) => { 
-                   let shouldHighlightName = false;
-                   if (runner._passingWhiteSparks && runner._passingWhiteSparks.has(name)) {
-                       shouldHighlightName = true;
-                   }
-                   
-                   const formattedText = `${name} ${value}`; 
-                   return shouldHighlightName ? `<b class="text-highlight">${formattedText}</b>` : formattedText;
-               })
-               .join(', ');
-
-           return `(${totalDisplay})${detailsStr ? ` ${detailsStr}` : ''}`;
-       };
-
-       const parentDisplay = formatWhiteSparkDisplay(totalCounts.parent, individualCounts.parent, r);
-       const gp1Display = formatWhiteSparkDisplay(totalCounts.gp1, individualCounts.gp1, r);
-       const gp2Display = formatWhiteSparkDisplay(totalCounts.gp2, individualCounts.gp2, r);
-
-       const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
-       const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
-
-       const gp1NameClass = gp1Exists ? 'gp-link' : 'gp-borrowed';
-       const gp2NameClass = gp2Exists ? 'gp-link' : 'gp-borrowed';
-       const gp1SkillsClass = gp1Exists ? '' : 'gp-borrowed';
-       const gp2SkillsClass = gp2Exists ? '' : 'gp-borrowed';
-
-      return `
-      <tr data-entry-id="${r.entry_id || ''}">
-          <td>${r.entry_id || 'N/A'}</td>
-          <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
-          <td >${(r.score || 0).toLocaleString()}</td>
-          <td>${whiteDisplay}</td>
-          <td class="left-align spark-cell gp-skills-link">${parentDisplay}</td>
-          <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
-          <td class="left-align spark-cell ${gp1SkillsClass}" data-gp-name="${r.gp1 || ''}">${gp1Display}</td>
-          <td class="${gp2NameClass}">${cleanName(r.gp2 || 'N/A')}</td>
-          <td class="left-align spark-cell ${gp2SkillsClass}" data-gp-name="${r.gp2 || ''}">${gp2Display}</td>
-      </tr>
-  `}).join('');
-  state.elements.whiteSparksBody.innerHTML = html;
-  hideEntryIdColumn('white-sparks');
+             let shouldHighlightName = false;
+             if (r._passingWhiteSparks && r._passingWhiteSparks.has(spark.name)) {
+                 shouldHighlightName = true;
+             }
+             const highlightClass = shouldHighlightName ? ' highlight' : '';
+ 
+             let parentClass = '';
+             let parentCountDisplay = '';
+             let titleText = '';
+ 
+             if (spark.source === 'parent') {
+                 const parentTotalCount = parentWhiteSparksLookup[spark.name] || 0; 
+                 parentClass = ' parent-spark';
+                 parentCountDisplay = ` <span class="parent-count">(${parentTotalCount})</span>`;
+                 titleText = `${r.name} (runner)`;
+             } else if (spark.source === 'gp1') {
+                titleText = `${cleanName(r.gp1) || 'Unknown'} (grandparent)`;
+             } else if (spark.source === 'gp2') {
+                titleText = `${cleanName(r.gp2) || 'Unknown'} (grandparent)`;
+             }
+ 
+             // Append the spark button HTML
+             whiteSparksHtml += `
+             <div class="spark-button white${highlightClass}" title="${titleText}">
+                 <span>${spark.count}</span>
+                 <span class="star${parentClass}">★</span>
+                 <span class="spark-name">${spark.name}</span>
+                 ${parentCountDisplay}
+             </div>
+             `;
+         });
+ 
+        // This is the (Total) / (Parent) count of *entries*
+        const whiteDisplay = `${totalWhiteEntries}(${parentWhiteEntries})`;
+ 
+        const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
+        const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
+ 
+        const gp1NameClass = gp1Exists ? 'gp-link' : 'gp-borrowed';
+        const gp2NameClass = gp2Exists ? 'gp-link' : 'gp-borrowed';
+ 
+       // 5. Build the final table row
+       return `
+       <tr data-entry-id="${r.entry_id || ''}">
+           <td>${r.entry_id || 'N/A'}</td>
+           <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
+           <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
+           <td class="whites-cell">${whiteDisplay}</td>
+           <td class="spark-cell">
+           <div class="spark-cell-container">${whiteSparksHtml || ''}</div>
+           </td>
+           <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
+           <td class="${gp2NameClass}">${cleanName(r.gp2 || 'N/A')}</td>
+       </tr>
+   `}).join('');
+   state.elements.whiteSparksBody.innerHTML = html;
+   hideEntryIdColumn('white-sparks');
 }
 
 function renderSkillsSummary(runners) {
     if (!runners.length) {
-        state.elements.skillsSummaryBody.innerHTML = '<tr><td colspan="8">No runners match filters.</td></tr>';
+        state.elements.skillsSummaryBody.innerHTML = '<tr><td colspan="4">No runners match filters.</td></tr>';
         return;
     }
-    const formatSkillCell = (skillsArray, category) => {
-        if (!skillsArray || skillsArray.length === 0) {
+
+    // Helper function to format skills into bubbles
+    const formatSkillBubbles = (runner) => {
+        if (!runner.skills || runner.skills.length === 0) {
             return '';
         }
-        skillsArray.sort((a, b) => {
-            const getPriority = (skillName) => {
-                const type = state.skillData[skillName] || '';
-                if (type.endsWith('_gold')) return 0;
-                if (type.startsWith('unique_')) return 1;
-                return 2;
-            };
-            const priorityA = getPriority(a);
-            const priorityB = getPriority(b);
-            if (priorityA !== priorityB) {
-                return priorityA - priorityB;
-            }
-            return a.localeCompare(b);
-        });
 
-        return skillsArray.map(skillName => {
-            const skillType = state.skillData[skillName] || '';
-            let content = formatSkillName(skillName);
-            const baseClassName = `skill-${category}`;
-            let tierClassName = '';
+        const categorizedSkills = [];
+        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
+        const categorySortOrder = {
+            'recovery': 1,
+            'passive': 2,
+            'speed': 3,
+            'debuff': 4,
+            'detrimental': 5,
+            'unknown': 6
+        };
 
-            if (skillType.endsWith('_gold')) {
-                tierClassName = 'skill-gold';
-                content = `<b>${content}</b>`; 
-            } else if (skillType.startsWith('unique_')) {
-                tierClassName = 'skill-unique';
-                content = `<b>${content}</b>`;
+        // 1. Categorize all skills
+        runner.skills.forEach(skillName => {
+            const skillType = state.skillData[skillName];
+            let category = 'unknown';
+            let tier = 'normal';
+
+            if (skillType) {
+                if (skillType.includes('detrimental')) category = 'detrimental';
+                else if (skillType.includes('debuff')) category = 'debuff';
+                else if (skillType.startsWith('recovery') || skillType.startsWith('unique_recovery')) category = 'recovery';
+                else if (skillType.includes('passive')) category = 'passive';
+                else if (speedCats.some(cat => skillType.startsWith(cat))) category = 'speed';
+                
+                if (skillType.endsWith('_gold')) tier = 'gold';
+                else if (skillType.startsWith('unique_')) tier = 'unique';
             }
             
-            const combinedClassName = tierClassName ? `${baseClassName} ${tierClassName}` : baseClassName;
-            return `<span class="${combinedClassName}">${content}</span>`;
-        }).join(', ');
+            categorizedSkills.push({
+                name: skillName,
+                category: category,
+                tier: tier,
+                sortOrder: categorySortOrder[category]
+            });
+        });
+
+        // 2. Sort skills by category, then tier (unique/gold first), then name
+        categorizedSkills.sort((a, b) => {
+            if (a.sortOrder !== b.sortOrder) {
+                return a.sortOrder - b.sortOrder; // Sort by category
+            }
+            // Put unique/gold skills first within their category
+            const aTierSort = (a.tier === 'unique' || a.tier === 'gold') ? 0 : 1;
+            const bTierSort = (b.tier === 'unique' || b.tier === 'gold') ? 0 : 1;
+            if (aTierSort !== bTierSort) {
+                return aTierSort - bTierSort;
+            }
+            return a.name.localeCompare(b.name); // Alphabetical fallback
+        });
+
+        // 3. Build the bubble HTML
+        return categorizedSkills.map(skill => {
+            const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier}`;
+            const formattedName = formatSkillName(skill.name); // formatSkillName adds the ◎○× spans
+            return `<div class="${bubbleClasses}">${formattedName}</div>`;
+        }).join('');
     };
 
+    // Build the final table rows
     const html = runners.map(r => {
-        const categorizedSkills = {
-            recovery: [],
-            passive: [],
-            speed: [],
-            debuff: [],
-            detrimental: []
-        };
-        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
-
-        if (r.skills) {
-            r.skills.forEach(skillName => {
-                const skillType = state.skillData[skillName];
-                if (!skillType) return;
-                const parts = skillType.split('_');
-                const category = parts[0];
-                const type = parts.length > 1 ? parts[1] : '';
-
-                if (skillType.includes('detrimental')) {
-                    categorizedSkills.detrimental.push(skillName);
-                } else if (skillType.includes('debuff')) {
-                    categorizedSkills.debuff.push(skillName);
-                } else if (category === 'recovery' || skillType.startsWith('unique_recovery')) {
-                    categorizedSkills.recovery.push(skillName);
-                } else if (type === 'passive') {
-                    categorizedSkills.passive.push(skillName);
-                } else if (speedCats.includes(category)) {
-                    categorizedSkills.speed.push(skillName);
-                }
-            });
-        }
-
-        const recoveryCell = categorizedSkills.recovery.length > 0 ? `(<b>${categorizedSkills.recovery.length}</b>) ${formatSkillCell(categorizedSkills.recovery, 'recovery')}` : '';
-        const passiveCell = categorizedSkills.passive.length > 0 ? `(<b>${categorizedSkills.passive.length}</b>) ${formatSkillCell(categorizedSkills.passive, 'passive')}` : '';
-        const speedCell = categorizedSkills.speed.length > 0 ? `(<b>${categorizedSkills.speed.length}</b>) ${formatSkillCell(categorizedSkills.speed, 'speed')}` : '';
-        const debuffCell = categorizedSkills.debuff.length > 0 ? `(<b>${categorizedSkills.debuff.length}</b>) ${formatSkillCell(categorizedSkills.debuff, 'debuff')}` : '';
-        const detrimentalCell = categorizedSkills.detrimental.length > 0 ? `(<b>${categorizedSkills.detrimental.length}</b>) ${formatSkillCell(categorizedSkills.detrimental, 'detrimental')}` : '';
+        const skillsHtml = formatSkillBubbles(r);
 
         return `
             <tr data-entry-id="${r.entry_id || ''}">
                 <td>${r.entry_id || 'N/A'}</td>
                 <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-                <td>${(r.score || 0).toLocaleString()}</td>
-                <td class="left-align skill-cell">${recoveryCell}</td>
-                <td class="left-align skill-cell">${passiveCell}</td>
-                <td class="left-align skill-cell">${speedCell}</td>
-                <td class="left-align skill-cell">${debuffCell}</td>
-                <td class="left-align skill-cell">${detrimentalCell}</td>
+                <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
+                <td class="left-align skill-cell">${skillsHtml}</td>
             </tr>
         `;
     }).join('');
@@ -549,10 +618,39 @@ function hideEntryIdColumn(tabId) {
 } 
 
 function formatSparks(runner, allSparkCriteria) {
+    // [START] NEW SORTING LOGIC SETUP
+    // Create lookup maps from state.orderedSparks for fast, ordered sorting
+    const blueSparks = state.orderedSparks?.blue || [];
+    const pinkSparks = state.orderedSparks?.pink || [];
+    const greenSparks = state.orderedSparks?.green || [];
+
+    const blueSparkOrder = new Map(blueSparks.map((name, index) => [name, index]));
+    const pinkSparkOrder = new Map(pinkSparks.map((name, index) => [name, index]));
+    const greenSparkOrder = new Map(greenSparks.map((name, index) => [name, index]));
+
+    const colorOrder = { 'blue': 0, 'pink': 1, 'green': 2 };
+    // Get a high value to push unknown sparks to the end of their group
+    const maxSortVal = blueSparks.length + pinkSparks.length + greenSparks.length;
+
+    // Helper to get the numeric sort index for a spark
+    const getSparkSortValue = (spark) => {
+        if (spark.color === 'blue' && blueSparkOrder.has(spark.name)) {
+            return blueSparkOrder.get(spark.name);
+        }
+        if (spark.color === 'pink' && pinkSparkOrder.has(spark.name)) {
+            return pinkSparkOrder.get(spark.name);
+        }
+        if (spark.color === 'green' && greenSparkOrder.has(spark.name)) {
+            return greenSparkOrder.get(spark.name);
+        }
+        return maxSortVal; // Unknown sparks go last
+    };
+    // [END] NEW SORTING LOGIC SETUP
+    
     const allSparks = [];
     const parentSparksLookup = {};
 
-    // First, collect all parent sparks for quick lookup
+    // 1. First, collect all parent sparks for quick lookup
     if (Array.isArray(runner.sparks?.parent)) {
         runner.sparks.parent.forEach(spark => {
             if (spark?.spark_name) {
@@ -566,7 +664,7 @@ function formatSparks(runner, allSparkCriteria) {
         });
     }
 
-    // Collect and aggregate all sparks from parent and grandparents
+    // 2. Collect and aggregate all sparks from parent and grandparents
     const aggregatedSparks = {};
     ['parent', 'gp1', 'gp2'].forEach(source => {
         if (Array.isArray(runner.sparks?.[source])) {
@@ -578,7 +676,9 @@ function formatSparks(runner, allSparkCriteria) {
                             name: name,
                             color: spark.color,
                             totalCount: 0,
-                            parentCount: parentSparksLookup[name] || 0
+                            parentCount: parentSparksLookup[name] || 0,
+                            // This new property is key for sorting
+                            isParent: (parentSparksLookup[name] || 0) > 0
                         };
                     }
                     aggregatedSparks[name].totalCount += parseInt(spark.count || 0);
@@ -587,7 +687,7 @@ function formatSparks(runner, allSparkCriteria) {
         }
     });
 
-    // Determine highlighting and convert to array
+    // 3. Determine highlighting and convert to array
     for (const spark of Object.values(aggregatedSparks)) {
         let shouldHighlight = false;
         for (const criteria of allSparkCriteria) {
@@ -595,34 +695,51 @@ function formatSparks(runner, allSparkCriteria) {
             const nameFilter = criteria[`${spark.color}Spark`];
             const minCount = criteria[`min${spark.color.charAt(0).toUpperCase() + spark.color.slice(1)}`];
 
-            // --- FIX START ---
-            // Changed logic to correctly highlight based on filter criteria
             if (nameFilter) {
-                // Use 'includes' to match partial text, just like the filter logic
                 if (spark.name.toLowerCase().includes(nameFilter.toLowerCase()) && countToCheck >= (minCount === 0 ? 1 : minCount)) {
                     shouldHighlight = true;
                     break;
                 }
             } else if (minCount > 0 && countToCheck >= minCount) {
-                // This part remains the same
                 shouldHighlight = true;
                 break;
             }
-            // --- FIX END ---
         }
         spark.highlight = shouldHighlight;
         allSparks.push(spark);
     }
     
-    // Sort sparks by color (blue, pink, green) and then by name
+    // [START] REPLACED SORT LOGIC
+    // This is the new sorting logic based on your request
     allSparks.sort((a, b) => {
-        const colorOrder = { 'blue': 0, 'pink': 1, 'green': 2 };
-        if (colorOrder[a.color] !== colorOrder[b.color]) {
-            return colorOrder[a.color] - colorOrder[b.color];
+        // 1. By Color (Blue, Pink, Green)
+        const colorA = colorOrder[a.color];
+        const colorB = colorOrder[b.color];
+        if (colorA !== colorB) {
+            return colorA - colorB;
         }
+
+        // 2. By Source (Parent sparks first)
+        if (a.isParent && !b.isParent) {
+            return -1; // 'a' is parent, comes first
+        }
+        if (!a.isParent && b.isParent) {
+            return 1; // 'b' is parent, comes first
+        }
+
+        // 3. By Data File Order (using the maps created above)
+        const aSortVal = getSparkSortValue(a);
+        const bSortVal = getSparkSortValue(b);
+        if (aSortVal !== bSortVal) {
+            return aSortVal - bSortVal;
+        }
+
+        // 4. Fallback: Alphabetical (for sparks not in data files)
         return a.name.localeCompare(b.name);
     });
+    // [END] REPLACED SORT LOGIC
 
+    // 4. Build the HTML (this part is unchanged)
     const nameMap = {
         'Front Runner': 'Front',
         'Pace Chaser': 'Pace',
@@ -634,7 +751,6 @@ function formatSparks(runner, allSparkCriteria) {
         const highlightClass = spark.highlight ? ' highlight' : '';
         const parentCountDisplay = spark.parentCount > 0 ? ` <span class="parent-count">(${spark.parentCount})</span>` : '';
         
-        // Check the map for a short label; if it doesn't exist, use the original spark.name
         const displayName = nameMap[spark.name] || spark.name;
 
         return `
@@ -665,7 +781,7 @@ function displayParentDetails(selectElement, detailsElement) {
         }
 
         detailsElement.innerHTML = `
-            <img src="${runnerImgPath}" class="breeder-image" onerror="this.onerror=null; this.src='./assets/icon.png'; this.style.opacity=0.5;">
+            <img src="${runnerImgPath}" class="breeder-image" onerror="this.onerror=null; this.src='./assets/gui_icons/icon.png'; this.style.opacity=0.5;">
             <p><b>Score:</b> ${(runner.score || 0).toLocaleString()}</p>
             <div><b>Sparks:</b> ${sparksHtml || 'None'}</div>
         `;
@@ -970,7 +1086,7 @@ function generateSparksHtml(runner) {
     const createSection = (sourceRunner, sparks, fallbackName) => {
         if (!sparks || sparks.length === 0) return '';
 
-        let sourceImgPath = './assets/icon.png';
+        let sourceImgPath = './assets/gui_icons/icon.png';
         let nameForImage = '';
 
         if (sourceRunner) {

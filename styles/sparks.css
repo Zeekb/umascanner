@@ -24,9 +24,10 @@
 .dark-mode .spark-cell-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 2px;
+    gap: 4px 2px;
     justify-content: flex-start;
     align-items: center;
+    padding: 2px 0px;
     overflow-x: auto;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
@@ -51,9 +52,12 @@
     line-height: 1.1;
 }
 
+/* [START] MODIFIED SECTION: Removed star shadow in dark mode */
 .dark-mode .spark-button .star {
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+    /* text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); */
+    text-shadow: none;
 }
+/* [END] MODIFIED SECTION */
 
 .parent-spark {
     color: #f0bd1a;
@@ -129,7 +133,29 @@
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+.dark-mode .spark-button.white {
+    background-color: #343434; /* dark gray inside */
+    border-color: var(--spark-white-border); /* white outline */
+    color: var(--dark-text-color); /* white text */
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); /* 0.7 rgba shadow */
+}
+
 .spark-button.highlight {
     color: #f0bd1a !important;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+/* --- Spark Separator Style --- */
+.spark-separator {
+    display: inline-block;
+    width: 2px;
+    height: 20px; /* Adjust height as needed */
+    background-color: #ddd;
+    margin: 0 4px; /* Gives it some space */
+    align-self: center;
+    border-radius: 1px;
+}
+
+.dark-mode .spark-separator {
+    background-color: #555;
 }

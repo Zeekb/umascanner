@@ -138,6 +138,7 @@
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
+    font-size: 0.75em;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7), -1px -1px 0 rgba(255, 255, 255, 0.7), 1px -1px 0 rgba(255, 255, 255, 0.7), -1px 1px 0 rgba(255, 255, 255, 0.7);
 }
 
@@ -151,6 +152,7 @@
 
 .gp-borrowed {
     color: #6c757d;
+    font-size: 0.75em;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7), -1px -1px 0 rgba(255, 255, 255, 0.7), 1px -1px 0 rgba(255, 255, 255, 0.7), -1px 1px 0 rgba(255, 255, 255, 0.7);
 }
 

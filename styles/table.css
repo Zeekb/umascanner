@@ -117,6 +117,7 @@ td.aptitude {
   color: var(--uma-text-dark);
   text-decoration: underline;
   text-underline-offset: 3px;
+  font-size: 0.85em;
 }
 
 .dark-mode .outline-label {
@@ -136,7 +137,7 @@ td.score-cell {
 td.spark-cell {
   text-align: left;
   white-space: normal;
-  font-size: 0.85em;
+  font-size: 0.75em;
   min-width: 185px;
 }
 
@@ -163,7 +164,7 @@ td.whites-cell {
 td.skill-cell {
   text-align: left;
   white-space: normal;
-  font-size: 0.85em;
+  font-size: 0.75em;
   min-width: 80px;
 }
 td.skill-cell b {
@@ -196,3 +197,103 @@ td.skill-cell b {
 .delete-button:hover {
     background-color: #539e16;
 }
+
+/* --- Skill Bubble Styles --- */
+td.skill-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: flex-start;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.skill-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  padding: 4px 5px;
+  border-radius: 12px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+/* Light Mode Skill Bubbles */
+/* Light Mode Skill Bubbles */
+.skill-bubble.recovery {
+  color: #0069c0; /* Darker Blue */
+  border-color: #0069c0;
+  background-color: aliceblue;
+}
+.skill-bubble.passive {
+  color: #338a3e; /* Darker Green */
+  border-color: #338a3e;
+  background-color: aliceblue;
+}
+.skill-bubble.speed {
+  color: #c66900; /* Darker Orange */
+  border-color: #c66900;
+  background-color: blanchedalmond;
+}
+.skill-bubble.debuff {
+  color: #cb203f;
+  border-color: #b00020;
+  background-color: #ff757569;
+}
+.skill-bubble.detrimental {
+  color: #7b1fa2; /* Darker Purple */
+  border-color: #7b1fa2;
+  background-color: var(--uma-alt-row-bg);
+}
+
+/* Dark Mode Skill Bubbles */
+.dark-mode td.skill-cell {
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark-mode .skill-bubble {
+  background-color: #343434;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .skill-bubble.recovery {
+  color: var(--skill-color-recovery);
+  border-color: var(--skill-color-recovery);
+}
+.dark-mode .skill-bubble.passive {
+  color: var(--skill-color-passive);
+  border-color: var(--skill-color-passive);
+}
+.dark-mode .skill-bubble.speed {
+  color: var(--skill-color-speed);
+  border-color: var(--skill-color-speed);
+}
+.dark-mode .skill-bubble.debuff {
+  color: var(--skill-color-debuff);
+  border-color: var(--skill-color-debuff);
+}
+.dark-mode .skill-bubble.detrimental {
+  color: var(--skill-color-detrimental);
+  border-color: var(--skill-color-detrimental);
+}
+
+.skill-bubble.unique, .skill-bubble.gold {
+  font-weight: 500;
+}
+
+/* --- Gold Skill Category Glows (Light Mode) --- */
+/* Uses the darker text colors we set for light mode */
+.skill-bubble.gold.recovery    { box-shadow: 0 0 5px 2px #0069c0; }
+.skill-bubble.gold.passive     { box-shadow: 0 0 5px 2px #338a3e; }
+.skill-bubble.gold.speed       { box-shadow: 0 0 5px 2px #c66900; }
+.skill-bubble.gold.debuff      { box-shadow: 0 0 5px 2px #b00020; }
+.skill-bubble.gold.detrimental { box-shadow: 0 0 5px 2px #7b1fa2; }
+
+/* --- Gold Skill Category Glows (Dark Mode) --- */
+/* Uses the bright CSS variables from theme.css */
+.dark-mode .skill-bubble.gold.recovery    { box-shadow: 0 0 5px 2px var(--skill-color-recovery); }
+.dark-mode .skill-bubble.gold.passive     { box-shadow: 0 0 5px 2px var(--skill-color-passive); }
+.dark-mode .skill-bubble.gold.speed       { box-shadow: 0 0 5px 2px var(--skill-color-speed); }
+.dark-mode .skill-bubble.gold.debuff      { box-shadow: 0 0 5px 2px var(--skill-color-debuff); }
+.dark-mode .skill-bubble.gold.detrimental { box-shadow: 0 0 5px 2px var(--skill-color-detrimental); }
