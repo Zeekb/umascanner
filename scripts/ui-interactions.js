@@ -170,6 +170,16 @@ export function setupEventListeners() {
                 container.style.display = 'none';
             }
         });
+
+        const tableBody = document.getElementById('grandparent-summary-body');
+        if (tableBody && !e.target.closest('#grandparent-summary-body')) {
+            tableBody.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
+            
+            const descendantList = document.getElementById('descendant-list-body');
+            if (descendantList) {
+                descendantList.innerHTML = 'Click a grandparent to see their descendants.';
+            }
+        }
     });
 
     state.elements.parentSummaryBody.addEventListener('click', handleDeleteRunner);

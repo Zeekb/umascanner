@@ -151,6 +151,16 @@
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+li.gp-link {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-size: 0.75em;
+    text-shadow: 0 0 black;
+}
+.dark-mode li.gp-link {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
 .offspring-header {
     display: flex;
     justify-content: space-between;
@@ -169,6 +179,7 @@
 .gp-borrowed {
     color: #6c757d;
     font-size: 0.75em;
+    cursor: text;
     text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7), -1px -1px 0 rgba(255, 255, 255, 0.7), 1px -1px 0 rgba(255, 255, 255, 0.7), -1px 1px 0 rgba(255, 255, 255, 0.7);
 }
 
@@ -350,6 +361,45 @@ td.skill-cell .skill-gold b {
     padding: 15px;
     border: 1px solid var(--uma-border-color);
     border-radius: 5px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    max-height: calc(100vh - 375px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #c0c0c0 #f0f0f0;
+    transition: max-height 0.4s ease 0.1s;
+}
+.filter-panel.collapsed + .table-container .descendant-list {
+    /* ~125px = 375px (your offset) - 250px (an estimate of the collapsed filters' height).
+       Adjust 125px up or down slightly to get your perfect bottom padding!
+    */
+    max-height: calc(100vh - 190px);
+}
+
+/* --- Scrollbar for Sticky Descendant List --- */
+.descendant-list::-webkit-scrollbar { 
+    width: 6px; 
+}
+.descendant-list::-webkit-scrollbar-track { 
+    background: #f0f0f0; 
+    border-radius: 3px;
+}
+.descendant-list::-webkit-scrollbar-thumb { 
+    background-color: #c0c0c0; 
+    border-radius: 3px; 
+    border: 1px solid #9E9E9E;
+}
+
+.dark-mode .descendant-list {
+    scrollbar-color: #888 #555;
+}
+.dark-mode .descendant-list::-webkit-scrollbar-track { 
+    background: #555; 
+}
+.dark-mode .descendant-list::-webkit-scrollbar-thumb { 
+    background-color: #888; 
+    border-color: #666;
 }
 
 /* --- Inheritance Log --- */
@@ -379,11 +429,11 @@ td.skill-cell .skill-gold b {
     border-top: 1px dashed #ccc;
 }
 
-.inheritance-tree:nth-child(1) {
-    border-top: 1px dashed #ccc;
+.inheritance-tree:nth-child(-n+3) {
+    border-top: 0px !important;
 }
-.dark-mode .inheritance-tree:nth-child(1) {
-    border-top-color: #555;
+.dark-mode .inheritance-tree:nth-child(-n+3) {
+    border-top: 0px !important;
 }
 
 .inheritance-tree li {

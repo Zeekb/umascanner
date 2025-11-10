@@ -3,8 +3,7 @@ import { state, CONSTANTS } from './state.js';
 import { isDarkModeActive } from './ui-interactions.js';
 import { 
     cleanName, findRunnerByDetails, getStatGrade, calculateRank, getAptitudeColor, 
-    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName
-    // Removed getBaseChance as it's no longer used
+    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage
 } from './utils.js';
 
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
@@ -389,7 +388,7 @@ function renderLegaciesPlanner() {
 function renderGrandparentAnalysis(filteredRunners) {
     const grandparentData = {};
 
-    (filteredRunners || state.allRunners).forEach(runner => {
+    state.allRunners.forEach(runner => {
         const processGrandparent = (gpName, gpSparks, role) => {
             if (!gpName || gpName === 'N/A') return;
             const cleanedName = cleanName(gpName);
@@ -414,11 +413,69 @@ function renderGrandparentAnalysis(filteredRunners) {
     const sortedGrandparents = Object.values(grandparentData).sort((a, b) => b.total - a.total);
     const tableBody = document.getElementById('grandparent-summary-body');
     
+    const blueSparks = state.orderedSparks?.blue || [];
+    const pinkSparks = state.orderedSparks?.pink || [];
+    const greenSparks = state.orderedSparks?.green || [];
+    const whiteRaceSparks = state.orderedSparks?.white?.race || [];
+    const whiteSkillSparks = state.orderedSparks?.white?.skill || [];
+    
+    const blueSparkOrder = new Map(blueSparks.map((name, index) => [name, index]));
+    const pinkSparkOrder = new Map(pinkSparks.map((name, index) => [name, index + blueSparks.length]));
+    const greenSparkOrder = new Map(greenSparks.map((name, index) => [name, index + blueSparks.length + pinkSparks.length]));
+    const whiteRaceSparkOrder = new Map(whiteRaceSparks.map((name, index) => [name, index + blueSparks.length + pinkSparks.length + greenSparks.length]));
+    const whiteSkillSparkOrder = new Map(whiteSkillSparks.map((name, index) => [name, index + blueSparks.length + pinkSparks.length + greenSparks.length + whiteRaceSparks.length]));
+    
+    const maxSortVal = blueSparks.length + pinkSparks.length + greenSparks.length + whiteRaceSparks.length + whiteSkillSparks.length;
+    const colorOrder = { 'blue': 1, 'pink': 2, 'green': 3, 'white': 4 };
+
+    const getSparkSortValue = (spark) => {
+        if (spark.color === 'blue' && blueSparkOrder.has(spark.name)) return blueSparkOrder.get(spark.name);
+        if (spark.color === 'pink' && pinkSparkOrder.has(spark.name)) return pinkSparkOrder.get(spark.name);
+        if (spark.color === 'green' && greenSparkOrder.has(spark.name)) return greenSparkOrder.get(spark.name);
+        if (spark.color === 'white') {
+            if (whiteRaceSparkOrder.has(spark.name)) return whiteRaceSparkOrder.get(spark.name);
+            if (whiteSkillSparkOrder.has(spark.name)) return whiteSkillSparkOrder.get(spark.name);
+        }
+        return maxSortVal;
+    };
+
+    const nameMap = {
+        'Front Runner': 'Front',
+        'Pace Chaser': 'Pace',
+        'Late Surger': 'Late',
+        'End Closer': 'End'
+    };
     let html = sortedGrandparents.map(gp => {
-        const topSparks = (gp.sparks)
-            .filter(s => parseInt(s.count, 10) >= 3 || s.color === 'white')
-            .map(s => `${s.spark_name} ${s.count}★`)
-            .join(', ');
+        const sortedGpSparks = [...gp.sparks].sort((a, b) => {
+            if (!a || !b) return 0;
+
+            const colorA = colorOrder[a.color] || 4;
+            const colorB = colorOrder[b.color] || 4;
+            if (colorA !== colorB) {
+                return colorA - colorB;
+            }
+            
+            const aSortVal = getSparkSortValue(a);
+            const bSortVal = getSparkSortValue(b);
+            if (aSortVal !== bSortVal) {
+                return aSortVal - bSortVal;
+            }
+
+            const nameA = a.spark_name || '';
+            const nameB = b.spark_name || '';
+            return nameA.localeCompare(nameB);
+        });
+        
+        const sparksHtml = sortedGpSparks.map(s => {
+            const displayName = nameMap[s.spark_name] || s.spark_name;
+            return `
+                <div class="spark-button ${s.color}">
+                    <span>${s.count}</span>
+                    <span class="star">★</span>
+                    <span class="spark-name">${displayName}</span>
+                </div>
+            `;
+        }).join('');
         
         const nameClass = gp.runner ? 'gp-link' : 'gp-borrowed';
         const entryIdAttr = gp.runner ? `data-entry-id="${gp.runner.entry_id}"` : '';
@@ -427,9 +484,9 @@ function renderGrandparentAnalysis(filteredRunners) {
             <tr data-gp-name="${gp.name}" style="cursor: pointer;">
                 <td class="${nameClass}" ${entryIdAttr}>${gp.name}</td>
                 <td>${gp.total}</td>
-                <td>${gp.asGP1}</td>
-                <td>${gp.asGP2}</td>
-                <td class="left-align">${topSparks}</td>
+                <td class="spark-cell">
+                    <div class="spark-cell-container">${sparksHtml || 'N/A'}</div>
+                </td> 
             </tr>
         `;
     }).join('');
@@ -448,6 +505,11 @@ function renderGrandparentAnalysis(filteredRunners) {
                 return;
             }
 
+            if (e.target.matches('.gp-borrowed')) {
+                showTimedMessage("Borrowed or not in data");
+                return;
+            }
+
             tableBody.querySelectorAll('tr').forEach(r => r.classList.remove('selected'));
             row.classList.add('selected');
 
@@ -458,7 +520,7 @@ function renderGrandparentAnalysis(filteredRunners) {
                     ${d.name} (Score: ${(d.score || 0).toLocaleString()})
                 </li>`
             ).join('');
-            document.getElementById('descendant-list-body').innerHTML = `<h5>Descendants of ${gpName}</h5><ul>${descendantHtml || '<li>None found in data.</li>'}</ul>`;
+            document.getElementById('descendant-list-body').innerHTML = `<h3>Descendants of ${gpName}</h3><ul>${descendantHtml || '<li>None found in data.</li>'}</ul>`;
         });
         tableBody.dataset.initialized = 'true';
     }
@@ -530,7 +592,40 @@ function renderInheritanceLog() {
         });
     });
 
-    const sortedSparks = [...allSparks].sort();
+    // 1. Create the master ordered list from state.orderedSparks
+    const masterSparkOrderList = [
+        ...(state.orderedSparks?.blue || []),
+        ...(state.orderedSparks?.pink || []),
+        ...(state.orderedSparks?.white?.race || []),
+        ...(state.orderedSparks?.white?.skill || []),
+        ...(state.orderedSparks?.green || []) // Greens last
+    ];
+
+    // 2. Create a lookup map for fast sorting
+    const sparkSortMap = new Map();
+    masterSparkOrderList.forEach((sparkName, index) => {
+        sparkSortMap.set(sparkName, index);
+    });
+
+    // 3. Define a "max" value for sparks not found in the list
+    const maxSortIndex = masterSparkOrderList.length;
+
+    // 4. Get the sort value for a spark
+    const getSortValue = (sparkName) => {
+        return sparkSortMap.has(sparkName) ? sparkSortMap.get(sparkName) : maxSortIndex;
+    };
+
+    // 5. Apply the new sort
+    const sortedSparks = [...allSparks].sort((a, b) => {
+        const sortA = getSortValue(a);
+        const sortB = getSortValue(b);
+        
+        if (sortA !== sortB) {
+            return sortA - sortB; // Sort by the master list order
+        }
+        // If both are "unknown" (not in the list), sort them alphabetically
+        return a.localeCompare(b);
+    });
     const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
         const chains = traceInheritance(sparkName);
         if (!chains || chains.length === 0) {
@@ -543,7 +638,7 @@ function renderInheritanceLog() {
     const sparkSelect = document.getElementById('spark-select');
     
     const currentVal = sparkSelect.value;
-    sparkSelect.innerHTML = '<option value="">Select a deep-rooted spark</option>' + sparksWithSufficientDepth.map(s => `<option value="${s}">${s}</option>`).join('');
+    sparkSelect.innerHTML = '<option value="">Select a spark (minimum 3 connections)</option>' + sparksWithSufficientDepth.map(s => `<option value="${s}">${s}</option>`).join('');
     if (sparksWithSufficientDepth.includes(currentVal)) {
         sparkSelect.value = currentVal;
     }
