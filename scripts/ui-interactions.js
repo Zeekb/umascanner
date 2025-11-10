@@ -1,4 +1,4 @@
-// scripts/ui-interactions.js
+﻿
 
 import { state } from './state.js';
 import { debounce, findRunnerByDetails, showTimedMessage, cleanName, createSearchableSelect } from './utils.js';
@@ -123,7 +123,7 @@ export function setupEventListeners() {
     if (toggleFilterButton && filterPanel) {
         toggleFilterButton.addEventListener('click', () => {
             const isCollapsed = filterPanel.classList.toggle('collapsed');
-            toggleFilterButton.textContent = isCollapsed ? '+' : '−';
+            toggleFilterButton.textContent = isCollapsed ? '+' : 'âˆ’';
             toggleFilterButton.title = isCollapsed ? 'Show Filters' : 'Collapse Filters';
         });
     }
@@ -141,7 +141,7 @@ export function setupEventListeners() {
             filterAndRender();
         } else if (target.classList.contains('disable-spark-filter-button')) {
             const isDisabled = row.classList.toggle('disabled');
-            target.textContent = isDisabled ? '-' : '✓';
+            target.textContent = isDisabled ? '-' : 'âœ“';
             target.title = isDisabled ? 'Enable this filter row' : 'Disable this filter row';
             filterAndRender();
         }
@@ -408,7 +408,7 @@ export function addSparkFilterRow() {
     newRow.classList.remove('disabled');
     const disableBtn = newRow.querySelector('.disable-spark-filter-button');
     if (disableBtn) {
-        disableBtn.textContent = '✓';
+        disableBtn.textContent = 'âœ“';
         disableBtn.title = 'Disable this filter row';
     }
 
@@ -504,7 +504,7 @@ export function resetFilters() {
             row.classList.remove('disabled');
             const disableBtn = row.querySelector('.disable-spark-filter-button');
             if(disableBtn) {
-                disableBtn.textContent = '✓';
+                disableBtn.textContent = 'âœ“';
                 disableBtn.title = 'Disable this filter row';
             }
             updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), 9);
@@ -550,7 +550,7 @@ export function updateSparkCountDropdown(selectElement, maxStars) {
     const currentValue = selectElement.value;
     let optionsHtml = '<option value="0"></option>';
     for (let i = 1; i <= maxStars; i++) {
-        optionsHtml += `<option value="${i}">${i}★</option>`;
+        optionsHtml += `<option value="${i}">${i}â˜…</option>`;
     }
     selectElement.innerHTML = optionsHtml;
     if (parseInt(currentValue, 10) <= maxStars) {

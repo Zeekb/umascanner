@@ -1,11 +1,11 @@
-/* styles/sparks.css */
+﻿
 :root {
     --spark-blue-bg: #82B1FF;
     --spark-pink-bg: #FF80AB;
     --spark-green-bg: #71d71c;
     --spark-white-bg: #f0f0f0;
 
-    /* Lighter shades for borders */
+    
     --spark-blue-border: #a7c8ff;
     --spark-pink-border: #ff9fbb;
     --spark-green-border: #92e046;
@@ -125,10 +125,10 @@
 }
 
 .dark-mode .spark-button.white {
-    background-color: #343434; /* dark gray inside */
-    border-color: var(--spark-white-border); /* white outline */
-    color: var(--dark-text-color); /* white text */
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); /* 0.7 rgba shadow */
+    background-color: #343434; 
+    border-color: var(--spark-white-border); 
+    color: var(--dark-text-color); 
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); 
 }
 
 .spark-button.highlight .spark-name,
@@ -138,13 +138,13 @@
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
-/* --- Spark Separator Style --- */
+
 .spark-separator {
     display: inline-block;
     width: 2px;
-    height: 20px; /* Adjust height as needed */
+    height: 20px; 
     background-color: #ddd;
-    margin: 0 4px; /* Gives it some space */
+    margin: 0 4px; 
     align-self: center;
     border-radius: 1px;
 }

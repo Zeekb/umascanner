@@ -1,7 +1,7 @@
-// scripts/state.js
+﻿
 
 export const state = {
-    // Core Data
+    
     allRunners: [],
     skillData: {},
     runnerUniqueSkills: {},
@@ -10,7 +10,7 @@ export const state = {
 
     lastFilteredData: [],
 
-    // Derived Data
+    
     blueSparkNames: [],
     greenSparkNames: [],
     pinkSparkNames: [],
@@ -18,18 +18,18 @@ export const state = {
     orderedSkills: [],
     allRunnerNamesSet: new Set(),
     
-    // Caches & Counters
+    
     gpExistenceCache: new Map(),
     sparkFilterCounter: 1,
     skillFilterCounter: 1,
     maxTotalWhiteSparks: 0,
     maxParentWhiteSparks: 0,
 
-    // DOM Element References
+    
     elements: {},
 };
 
-// Constants
+
 export const CONSTANTS = {
     APTITUDE_RANK_MAP: {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100},
     UMA_TEXT_DARK: '#8C4410',

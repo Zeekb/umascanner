@@ -1,10 +1,10 @@
-/* --- Theme & Variables --- */
+﻿
 :root {
   --uma-light-bg: #FEFEFE;
   --uma-medium-bg: #FFFFFF;
   --uma-dark-accent: #71d71c;
-  --uma-accent-pink: #e56487; /* MODIFIED */
-  --uma-accent-blue: #82B1FF; /* MODIFIED */
+  --uma-accent-pink: #e56487; 
+  --uma-accent-blue: #82B1FF; 
   --uma-text-dark: #333;
   --uma-text-light: #FFFFFF;
   --uma-border-color: var(--uma-dark-accent);
@@ -46,8 +46,8 @@
   --dark-bg-alt-row: #353535;
   --dark-text-color: #f0f0f0;
   --dark-uma-dark-accent: #385628;
-  --dark-uma-accent-pink: #e56487; /* MODIFIED */
-  --dark-uma-accent-blue: #82B1FF; /* MODIFIED */
+  --dark-uma-accent-pink: #e56487; 
+  --dark-uma-accent-blue: #82B1FF; 
   --dark-uma-border-color: #555555;
   --dark-uma-selection-bg: #4c6d93;
 

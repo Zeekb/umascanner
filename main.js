@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+﻿const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
 const fsSync = require('fs');
@@ -6,7 +6,7 @@ const { spawn } = require('child_process');
 
 const isPackaged = app.isPackaged;
 
-// Define a single root for the 'data' directory, handling both packaged and dev environments
+
 const dataDir = isPackaged
   ? path.join(process.resourcesPath, 'data')
   : path.join(__dirname, '..', 'data');
@@ -26,15 +26,15 @@ function createWindow() {
   });
 
   win.loadFile('index.html');
-  // Optional: Open DevTools for debugging
-  // win.webContents.openDevTools();
+  
+  
 }
 
 app.whenReady().then(() => {
   ipcMain.handle('load-runners', async () => {
     try {
       const data = fsSync.readFileSync(dataFilePath, 'utf-8');
-      console.log(`Loading runners from: ${dataFilePath}`); // Optional: for debugging
+      console.log(`Loading runners from: ${dataFilePath}`); 
       return JSON.parse(data);
     } catch (err) {
       console.error(`Failed to read or parse runners file at ${dataFilePath}:`, err);
@@ -60,7 +60,7 @@ app.whenReady().then(() => {
       return JSON.parse(data);
     } catch (error) {
       console.error('Failed to load runner_skills.json:', error);
-      return null; // Return null on error
+      return null; 
     }
   });
 
@@ -71,7 +71,7 @@ app.whenReady().then(() => {
       return JSON.parse(data);
     } catch (error) {
       console.error('Failed to load sparks.json:', error);
-      return null; // Return null on error
+      return null; 
     }
   });
 
@@ -82,20 +82,20 @@ app.whenReady().then(() => {
       return JSON.parse(data);
     } catch (error) {
       console.error('Failed to load runner_affinity.json:', error);
-      return null; // Return null on error
+      return null; 
     }
   });
   ipcMain.handle('save-runners', async (event, runnersData) => {
-  // Assumes 'python' or 'python3' is in the system's PATH.
-  // You may need to change 'python' to 'python3' depending on your system.
+  
+  
   const pythonExecutable = 'python'; 
 
   const resourcesPath = isPackaged
-      ? path.join(process.resourcesPath, 'python_scripts') // Path when packaged
-      : path.join(__dirname, '..', 'image processor');    // Path during development
+      ? path.join(process.resourcesPath, 'python_scripts') 
+      : path.join(__dirname, '..', 'image processor');    
   
   const scriptPath = path.join(resourcesPath, 'save_formatted_json.py');
-  const dataUpdaterPath = path.join(resourcesPath, 'data_updater.py'); // Needed by save_formatted_json
+  const dataUpdaterPath = path.join(resourcesPath, 'data_updater.py'); 
 
   if (!fsSync.existsSync(scriptPath) || !fsSync.existsSync(dataUpdaterPath)) {
     console.error(`Error: Python save scripts not found at expected location: ${resourcesPath}`);
@@ -105,8 +105,8 @@ app.whenReady().then(() => {
   const dataString = JSON.stringify(runnersData);
 
   return new Promise((resolve, reject) => {
-    const pyProcess = spawn(pythonExecutable, [scriptPath, dataFilePath], { // <-- Pass dataFilePath here
-      cwd: resourcesPath, // Keep CWD so it can import data_updater
+    const pyProcess = spawn(pythonExecutable, [scriptPath, dataFilePath], { 
+      cwd: resourcesPath, 
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env, PYTHONIOENCODING: 'UTF-8' }
     });
@@ -122,25 +122,25 @@ app.whenReady().then(() => {
       stderr += data.toString();
     });
 
-    // Handle the script's exit
+    
     pyProcess.on('close', (code) => {
       if (code === 0) {
-        // Success
+        
         console.log(`Python script stdout: ${stdout}`);
         resolve({ success: true, message: stdout });
       } else {
-        // Failure
+        
         console.error(`Python script exited with code ${code}`);
         console.error(`Python script stderr: ${stderr}`);
-        // Reject the promise, which will be caught by renderer.js
+        
         reject(new Error(`Save failed (Python script error): ${stderr}`));
       }
     });
 
-    // Handle errors in spawning the process itself
+    
     pyProcess.on('error', (err) => {
         console.error('Failed to start Python process:', err);
-        // Provide a more user-friendly error if Python isn't found
+        
         if (err.code === 'ENOENT') {
             reject(new Error(`Failed to save: Python executable ('${pythonExecutable}') not found in PATH. Please ensure Python is installed and accessible.`));
         } else {
@@ -148,7 +148,7 @@ app.whenReady().then(() => {
         }
     });
 
-    // Write the JSON data string to the Python script's standard input
+    
     pyProcess.stdin.write(dataString, 'utf-8');
     pyProcess.stdin.end();
   });
@@ -169,9 +169,9 @@ app.on('window-all-closed', () => {
   }
 });
 
-// --- Function Definitions ---
 
-// This is your original 'load-runners' handler, now as a named function
+
+
 function loadRunners() {
   
   

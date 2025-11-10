@@ -1,4 +1,4 @@
-// scripts/main.js
+﻿
 import { state } from './state.js';
 import { handleFileLoad, handleTestFileLoad, loadFromSavedData, extractSparkNames } from './data-loader.js';
 import { createSearchableSelect } from './utils.js';
@@ -7,9 +7,9 @@ import {
     updateTotalWhiteDropdown, updateSelectPlaceholder, handleTabChange
 } from './ui-interactions.js';
 
-// --- App Initialization ---
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial element references
+    
     state.elements.uploaderContainer = document.getElementById('uploader-container');
     state.elements.fileInput = document.getElementById('file-input');
     state.elements.loadDataButton = document.getElementById('load-data-button');
@@ -39,7 +39,7 @@ export function showError(message) {
 }
 
 export function initializeApp() {
-    // Get all necessary element references for the main app
+    
     state.elements.filterElements = {
         runner: document.getElementById('filter-runner'),
         sort: document.getElementById('filter-sort'),
@@ -84,14 +84,14 @@ export function initializeApp() {
         return;
     }
 
-    // Process loaded data
+    
     state.allRunners.forEach(runner => {
         if (runner.name) state.allRunnerNamesSet.add(runner.name);
         runner.sparks = (typeof runner.sparks === 'string') ? JSON.parse(runner.sparks) : runner.sparks || {};
         runner.skills = (typeof runner.skills === 'string') ? runner.skills.split('|').map(s => s.trim()).filter(s => s) : runner.skills || [];
     });
     
-    // Calculate max white sparks for filters
+    
     state.allRunners.forEach(runner => {
         let totalCount = 0;
         let parentCount = 0;
@@ -200,7 +200,7 @@ export function returnToFileUploader() {
 
     localStorage.removeItem('savedRunnerData');
 
-    // Reset state
+    
     state.allRunners = [];
     state.blueSparkNames = [];
     state.greenSparkNames = [];

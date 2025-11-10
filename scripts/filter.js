@@ -1,4 +1,4 @@
-// scripts/filter.js
+﻿
 import { state, CONSTANTS } from './state.js';
 import { renderActiveTab } from './ui-renderer.js';
 

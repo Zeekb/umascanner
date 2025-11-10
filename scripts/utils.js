@@ -1,4 +1,4 @@
-// scripts/utils.js
+﻿
 import { state, CONSTANTS } from './state.js';
 import { filterAndRender } from './filter.js';
 
@@ -178,7 +178,7 @@ export function getGradeColors(grade) {
 
 export function formatSkillName(skillName) {
     if (!skillName) return "";
-    return skillName.replace(/(◎|○|×)/g, '<span style="font-size: 1.1em;">$1</span>');
+    return skillName.replace(/(â—Ž|â—‹|Ã—)/g, '<span style="font-size: 1.1em;">$1</span>');
 }
 
 export function formatGradeForDisplay(grade) {

@@ -1,4 +1,4 @@
-/* --- Global & Base Styles --- */
+﻿
 body {
   background-color: var(--uma-medium-bg);
   color: var(--uma-text-dark);
@@ -18,7 +18,7 @@ body {
   border-radius: 5px;
 }
 
-/* --- Uploader View --- */
+
 .example-screenshots {
     display: flex;
     justify-content: center;
@@ -33,7 +33,7 @@ body {
     border-radius: 4px;
 }
 
-/* --- Layout & Tabs --- */
+
 .tab-buttons {
   display: flex;
   padding-left: 5px;

@@ -1,4 +1,4 @@
-/* --- Affinity Calculator --- */
+﻿
 .affinity-calculator-controls {
     display: flex;
     flex-wrap: wrap;
@@ -63,7 +63,7 @@
 }
 
 
-/* --- Tooltips --- */
+
 .tab-help {
     position: relative;
     white-space: pre-line;
@@ -138,7 +138,7 @@
   margin-left: 0px;
 }
 
-/* --- Utility & Helper Classes --- */
+
 .gp-link {
     cursor: pointer;
     text-decoration: underline;
@@ -225,7 +225,7 @@ td.skill-cell .skill-gold b {
     font-weight: 600;
 }
 
-/* --- Career Planner --- */
+
 #career-planner-content {
     display: flex;
     flex-direction: column;
@@ -346,7 +346,7 @@ td.skill-cell .skill-gold b {
     object-fit: cover;
 }
 
-/* --- Legacy Analysis --- */
+
 #legacy-analysis-content {
     display: flex;
     gap: 20px;
@@ -372,13 +372,11 @@ td.skill-cell .skill-gold b {
     transition: max-height 0.4s ease 0.1s;
 }
 .filter-panel.collapsed + .table-container .descendant-list {
-    /* ~125px = 375px (your offset) - 250px (an estimate of the collapsed filters' height).
-       Adjust 125px up or down slightly to get your perfect bottom padding!
-    */
+    
     max-height: calc(100vh - 190px);
 }
 
-/* --- Scrollbar for Sticky Descendant List --- */
+
 .descendant-list::-webkit-scrollbar { 
     width: 6px; 
 }
@@ -403,7 +401,7 @@ td.skill-cell .skill-gold b {
     border-color: #666;
 }
 
-/* --- Spark Tracer --- */
+
 #spark-tracer {
     overflow-y: scroll;
 }
@@ -568,46 +566,46 @@ td.skill-cell .skill-gold b {
     gap: 2px;
     justify-content: flex-start;
     align-items: center;
-    font-size: 0.75em; /* Match table spark cell font size */
-    margin-top: 5px; /* Add some space */
+    font-size: 0.75em; 
+    margin-top: 5px; 
 }
 
 .spark-cell-style .no-sparks {
-    font-size: 1.2em; /* Make 'None' readable */
+    font-size: 1.2em; 
     font-style: italic;
     opacity: 0.7;
     color: var(--uma-text-dark);
 }
 
-/* (Item 7 & 8) Parent Header Spacing & Centering */
+
 .career-planner-breeder-selection {
-    padding: 10px 15px 15px 15px; /* Reduced top padding */
+    padding: 10px 15px 15px 15px; 
 }
 .career-planner-breeder-selection h3 {
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 10px;
-    text-align: center; /* Centered header */
+    text-align: center; 
 }
 
-/* (Item 9) Runner Name Select Width */
+
 #career-planner-content .runner-name-select {
     width: max-content;
     max-width: 100%;
 }
 
-/* (Item 10 & 12) Profile Image Container */
+
 .career-planner-breeder-selection .profile-image-container {
-    border: 1px solid var(--uma-border-color); /* Item 10 */
+    border: 1px solid var(--uma-border-color); 
     border-radius: 5px;
     padding: 5px;
     display: flex; 
-    align-items: center; /* Item 12 */
+    align-items: center; 
     justify-content: center;
     align-self: center;
 }
 
-/* (Item 11) Clickable Profile Image Cursor */
+
 .career-planner-breeder-selection .clickable-profile-image {
     cursor: pointer;
 }
@@ -618,17 +616,17 @@ td.skill-cell .skill-gold b {
     border-color: var(--uma-accent-blue);
 }
 
-/* Override inline style from old JS */
+
 .career-planner-breeder-image {
     margin-top: 0 !important;
 }
 
-/* (Item 1 & 2) Offspring Potential Bubble Style */
+
 .spark-potential .spark-label-container {
     display: flex;
     margin-bottom: 8px;
-    justify-content: space-between; /* Added to push elements apart */
-    align-items: center; /* Added to vertically align them */
+    justify-content: space-between; 
+    align-items: center; 
     gap: 10px;
 }
 
@@ -644,14 +642,14 @@ td.skill-cell .skill-gold b {
 
 
 
-/* Use existing .spark-button styles */
+
 .spark-potential .spark-button {
     padding: 4px 8px;
-    font-size: 0.9em; /* Match table font size */
+    font-size: 0.9em; 
 }
 
 .spark-potential .spark-button .spark-name {
-    margin-right: 8px; /* Space before stars */
+    margin-right: 8px; 
 }
 
 .spark-potential .spark-button .stars-right {
@@ -681,7 +679,7 @@ td.skill-cell .skill-gold b {
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* (Item 3) Offspring Potential Multi-line Sources */
+
 .spark-potential .sources {
     display: flex;
     flex-direction: column;
@@ -711,7 +709,7 @@ td.skill-cell .skill-gold b {
     font-weight: bold;
     color: var(--uma-accent-pink);
     white-space: nowrap;
-    margin-left: auto; /* Push stars and chance to the right */
+    margin-left: auto; 
     margin-right: 10px;
 }
 
@@ -726,7 +724,7 @@ td.skill-cell .skill-gold b {
     text-align: right;
 }
 
-/* --- Sparks Planner Parent Source Indicator --- */
+
 .spark-potential .source-name {
     display: flex;
     align-items: center;
@@ -756,10 +754,10 @@ td.skill-cell .skill-gold b {
     color: var(--dark-bg-element);
 }
 
-/* --- Sparks Planner Info Note --- */
+
 .spark-info-note {
     grid-column: 1 / -1;
-    border-left: 4px solid #aaa; /* Neutral color */
+    border-left: 4px solid #aaa; 
     background-color: var(--uma-alt-row-bg);
 }
 
@@ -792,7 +790,7 @@ td.skill-cell .skill-gold b {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10; /* Ensures it's above other header elements */
+    z-index: 10; 
     background-color: var(--uma-accent-pink);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -805,20 +803,20 @@ td.skill-cell .skill-gold b {
     background-color: var(--uma-accent-blue);
 }
 
-/* --- Sparks Planner Affinity Slider --- */
+
 .offspring-header {
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 10px; /* Add gap for wrapped items */
+    flex-wrap: wrap; 
+    gap: 10px; 
 }
 
 .affinity-slider-container {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto; /* Push slider to the left of the dropdown */
+    margin-left: auto; 
 }
 
-/* Make slider and number input consistent with filter panel */
+
 #affinity-slider {
     -webkit-appearance: none;
     appearance: none;

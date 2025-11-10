@@ -1,4 +1,4 @@
-/* --- Modal: Base & Overlay --- */
+﻿
 #detail-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -29,13 +29,13 @@
   overflow-y: hidden;
   display: flex;
   flex-direction: column;
-  /* gap: 15px; */
+  
   flex-grow: 1;
   min-height: 0;
 }
 
 
-/* --- Modal: Header --- */
+
 .modal-header {
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
   position: relative;
   width: 100px;
   height: 120px;
-  /* margin-top: -20px; */
+  
   border-radius: 120px 120px 200px 200px;
   overflow: hidden;
 }
@@ -218,7 +218,7 @@
 }
 
 
-/* --- Modal: Stats & Aptitudes --- */
+
 .modal-stats-bar {
   display: flex;
   flex-direction: row;
@@ -399,7 +399,7 @@
 }
 
 
-/* --- Modal: Skills --- */
+
 .modal-skills-section {
   display: flex;
   flex-direction: column;
@@ -507,7 +507,7 @@
 }
 
 
-/* --- Modal: Footer --- */
+
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -614,7 +614,7 @@
 .dark-mode .modal-tab-panel::-webkit-scrollbar-thumb { background-color: #888; border-color: #666;}
 
 
-/* --- Modal: Inspiration Panel Styling (Definitive Fix) --- */
+
 .modal-sparks-list {
     display: flex;
     flex-direction: column;
@@ -629,18 +629,18 @@
 
 .spark-legacy-image-container {
     flex-shrink: 0;
-    width: 64px;        /* Original 100px * 0.64 */
-    height: 77px;       /* Original 120px * 0.64 = 76.8px */
-    margin-top: -13px;  /* Original -20px * 0.64 = -12.8px */
+    width: 64px;        
+    height: 77px;       
+    margin-top: -13px;  
     position: relative;
-    overflow: hidden;   /* Added to be safe */
+    overflow: hidden;   
 }
 
 .spark-legacy-frame-scaler {
     transform: scale(0.64);
     transform-origin: top left;
-    width: 100px;  /* Original width of .modal-profile-frame */
-    height: 120px; /* Original height of .modal-profile-frame */
+    width: 100px;  
+    height: 120px; 
     position: absolute;
     top: 0;
     left: 0;
@@ -713,7 +713,7 @@
   border: 1px solid rgb(100, 100, 100, .2);
 }
 
-/* Define new variables for the specific spark colors */
+
 :root {
   --spark-blue-bg:  #82B1FF;
   --spark-pink-bg:  #FF80AB;
@@ -721,12 +721,12 @@
   --spark-white-bg: #e0e0e0;
 }
 
-/* FIX: Use the new variables. These will be the same for light and dark mode. */
+
 .spark-blue { background-color: var(--spark-blue-bg); }
 .spark-pink { background-color: var(--spark-pink-bg); }
 .spark-green { background-color: var(--spark-green-bg); }
 
-/* The white spark cell needs to adapt, as its text color changes. */
+
 .spark-white {
     background-color: var(--spark-white-bg);
     color: var(--uma-text-dark);
@@ -739,7 +739,7 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 .dark-mode .spark-white {
-    background-color: #666666; /* A slightly different grey for dark mode is okay */
+    background-color: #666666; 
     color: var(--dark-text-color);
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }

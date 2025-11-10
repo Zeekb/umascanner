@@ -1,4 +1,4 @@
-// scripts/ui-renderer.js
+﻿
 import { state, CONSTANTS } from './state.js';
 import { isDarkModeActive } from './ui-interactions.js';
 import { 
@@ -196,7 +196,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
                whiteSparksHtml += `
                <div class="spark-button white${highlightClass}" title="${titleText}">
                    <span>${spark.count}</span>
-                   <span class="star${parentClass}">★</span>
+                   <span class="star${parentClass}">â˜…</span>
                    <span class="spark-name">${spark.name}</span>
                    ${parentCountDisplay}
                </div>
@@ -315,7 +315,7 @@ function getNewBaseChance(color, stars) {
     const chances = state.inheritanceModel.base_activation_chances;
     const starKey = `${stars}_star`;
 
-    // Map color names from data (pink) to model (red_aptitude)
+    
     let colorKey;
     switch (color) {
         case 'blue': colorKey = 'blue_stat'; break;
@@ -409,7 +409,7 @@ function renderCareerPlanner() {
 
             let score = parseInt(scoreStr, 10);
 
-            if (isNaN(score)) return; // Do nothing if not a number
+            if (isNaN(score)) return; 
 
             if (score < 1) score = 1; 
             if (score > 300) score = 300;
@@ -424,16 +424,16 @@ function renderCareerPlanner() {
                 affinitySelect.value = 'double_circle';
             }
             
-            // Only re-render when the user clicks away or presses Enter
+            
         });
 
         affinityNumber.addEventListener('change', () => {
-            // This event fires on blur or Enter
+            
             let score = parseInt(affinityNumber.value, 10);
             if (isNaN(score) || score < 1) score = 1;
             if (score > 300) score = 300;
             
-            // Correct the box value if it was invalid
+            
             affinityNumber.value = score; 
 
             renderCareerPlanner();
@@ -463,20 +463,20 @@ function syncParentNameSelects() {
     const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
     const parent2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
     
-    if (!parent1NameSelect || !parent2NameSelect) return; // Safety check
+    if (!parent1NameSelect || !parent2NameSelect) return; 
 
     const parent1Value = parent1NameSelect.value;
     const parent2Value = parent2NameSelect.value;
 
-    // Sync Parent 1 dropdown (disable what's in Parent 2)
+    
     for (const option of parent1NameSelect.options) {
-        // Disable if it's not empty and matches the *other* dropdown's value
+        
         option.disabled = (option.value && option.value === parent2Value);
     }
 
-    // Sync Parent 2 dropdown (disable what's in Parent 1)
+    
     for (const option of parent2NameSelect.options) {
-        // Disable if it's not empty and matches the *other* dropdown's value
+        
         option.disabled = (option.value && option.value === parent1Value);
     }
 }
@@ -563,7 +563,7 @@ function renderLegacyAnalysis(filteredRunners) {
         });
         
         const sparksHtml = sortedGpSparks.map(s => {
-            if (!s || !s.spark_name) return ''; // Safety check
+            if (!s || !s.spark_name) return ''; 
             
             const displayName = nameMap[s.spark_name] || s.spark_name;
             const count = s.count || 1;
@@ -571,7 +571,7 @@ function renderLegacyAnalysis(filteredRunners) {
             return `
                 <div class="spark-button ${s.color}">
                     <span>${count}</span>
-                    <span class="star">★</span>
+                    <span class="star">â˜…</span>
                     <span class="spark-name">${displayName}</span>
                 </div>
             `;
@@ -645,38 +645,38 @@ function getSparksWithSufficientDepth() {
         });
     });
 
-    // 1. Create the master ordered list from state.orderedSparks
+    
     const masterSparkOrderList = [
         ...(state.orderedSparks?.blue || []),
         ...(state.orderedSparks?.pink || []),
         ...(state.orderedSparks?.white?.race || []),
         ...(state.orderedSparks?.white?.skill || []),
-        ...(state.orderedSparks?.green || []) // Greens last
+        ...(state.orderedSparks?.green || []) 
     ];
 
-    // 2. Create a lookup map for fast sorting
+    
     const sparkSortMap = new Map();
     masterSparkOrderList.forEach((sparkName, index) => {
         sparkSortMap.set(sparkName, index);
     });
 
-    // 3. Define a "max" value for sparks not found in the list
+    
     const maxSortIndex = masterSparkOrderList.length;
 
-    // 4. Get the sort value for a spark
+    
     const getSortValue = (sparkName) => {
         return sparkSortMap.has(sparkName) ? sparkSortMap.get(sparkName) : maxSortIndex;
     };
 
-    // 5. Apply the new sort
+    
     const sortedSparks = [...allSparks].sort((a, b) => {
         const sortA = getSortValue(a);
         const sortB = getSortValue(b);
         
         if (sortA !== sortB) {
-            return sortA - sortB; // Sort by the master list order
+            return sortA - sortB; 
         }
-        // If both are "unknown" (not in the list), sort them alphabetically
+        
         return a.localeCompare(b);
     });
     const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
@@ -756,7 +756,7 @@ function renderSparkTracer() {
     const searchInput = document.getElementById('spark-tracer-search');
     const graphContainer = document.getElementById('spark-tracer-graph');
 
-    // Define what happens when a user selects a spark
+    
     const onSparkSelect = () => {
         const selectedSpark = searchInput.value;
         if (selectedSpark) {
@@ -767,10 +767,10 @@ function renderSparkTracer() {
         }
     };
 
-    // Create the searchable select, passing our custom function
+    
     createSearchableSelect(searchInput, sparksWithSufficientDepth, onSparkSelect);
 
-    // Render the graph based on the input's current value
+    
     onSparkSelect();
 }
 
@@ -809,7 +809,7 @@ export function resetCareerPlannerParents() {
 }
 
 export function resetTabSpecificFilters() {
-    // 1. Reset Sparks Planner (Career Planner)
+    
     resetCareerPlannerParents();
 
     const searchInput = document.getElementById('spark-tracer-search');
@@ -894,7 +894,7 @@ function buildSparkTreeHtml(node, parentNode = null) {
 
     let html = `<li>
         <span class="gp-link" data-entry-id="${r.entry_id}">
-            ${r.name} (Score: ${(r.score || 0).toLocaleString()}) - <b>${sl}★</b>
+            ${r.name} (Score: ${(r.score || 0).toLocaleString()}) - <b>${sl}â˜…</b>
         </span>`;
     
     if (node.children && node.children.length > 0) {
@@ -926,7 +926,7 @@ function renderSparkTraceGraph(sources, container) {
     container.innerHTML = html;
 }
 
-// --- Helper functions for rendering ---
+
 
 function hideEntryIdColumn(tabId) {
     const table = document.querySelector(`#${tabId} table`);
@@ -937,11 +937,7 @@ function hideEntryIdColumn(tabId) {
     bodyCells.forEach(cell => cell.style.display = 'none');
 } 
 
-/**
- * Formats an array of spark objects into HTML bubbles for the planner.
- * @param {Array} sparksArray - An array of spark objects.
- * @returns {string} HTML string of spark bubbles.
- */
+
 function formatSparksForPlanner(sparksArray) {
     if (!sparksArray || sparksArray.length === 0) {
         return '<span class="no-sparks">None</span>';
@@ -954,23 +950,23 @@ function formatSparksForPlanner(sparksArray) {
         'End Closer': 'End'
     };
 
-    // Sort sparks to match table order: Blue, Pink, Green, White
+    
     const colorOrder = { 'blue': 1, 'pink': 2, 'green': 3, 'white': 4 };
     sparksArray.sort((a, b) => {
         const orderA = colorOrder[a.color] || 5;
         const orderB = colorOrder[b.color] || 5;
         if (orderA !== orderB) return orderA - orderB;
-        return (a.count > b.count) ? -1 : 1; // Higher star first
+        return (a.count > b.count) ? -1 : 1; 
     });
 
     return sparksArray.map(spark => {
-        if (!spark || !spark.spark_name) return ''; // Safety check
+        if (!spark || !spark.spark_name) return ''; 
         const displayName = nameMap[spark.spark_name] || spark.spark_name;
         
         return `
             <div class="spark-button ${spark.color}">
                 <span>${spark.count}</span>
-                <span class="star">★</span>
+                <span class="star">â˜…</span>
                 <span class="spark-name">${displayName}</span>
             </div>
         `;
@@ -1097,7 +1093,7 @@ function formatSparks(runner, allSparkCriteria) {
         return `
             <div class="spark-button ${spark.color}${highlightClass}">
                 <span>${spark.totalCount}</span>
-                <span class="star${spark.parentCount > 0 ? ' parent-spark' : ''}">★</span>
+                <span class="star${spark.parentCount > 0 ? ' parent-spark' : ''}">â˜…</span>
                 <span class="spark-name">${displayName}</span>
                 ${parentCountDisplay}
             </div>
@@ -1191,7 +1187,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
                 const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
+                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}â˜…`;
                 
                 if (spark.color === 'blue') {
                     blueSparksStr += `${formattedSpark} `;
@@ -1206,7 +1202,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             let labelParts = [`Score: ${entry.score}`];
             if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
             if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
-            labelParts.push(`Whites: x${whiteParent}★`);
+            labelParts.push(`Whites: x${whiteParent}â˜…`);
             
             const label = labelParts.join(' | ');
             
@@ -1235,7 +1231,7 @@ function displayParentDetails(entrySelect, detailsElement) {
         const legacySparks = (runner.sparks?.gp1 || []).concat(runner.sparks?.gp2 || []);
         const legacySparksHtml = formatSparksForPlanner(legacySparks);
 
-        // (Item 11) Added clickable-profile-image class and data-entry-id
+        
         detailsElement.innerHTML = `
             <div style="display: flex; align-items: flex-start; gap: 15px;">
                 <div class="profile-image-container clickable-profile-image" data-entry-id="${runner.entry_id}">
@@ -1262,7 +1258,7 @@ function displayParentDetails(entrySelect, detailsElement) {
     }
 }
 
-function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinityScore) { // Affinity is now a number
+function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinityScore) { 
     const parent1 = state.allRunners.find(r => String(r.entry_id) === String(parent1EntryId));
     const parent2 = state.allRunners.find(r => String(r.entry_id) === String(parent2EntryId));
     if (!parent1 || !parent2 || !state.inheritanceModel) {
@@ -1274,10 +1270,10 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     const ancestorList = {};
     let totalInitialStatGains = { speed: 0, stamina: 0, power: 0, guts: 0, wit: 0 };
     
-    // --- REVERTED: Back to Min/Max calculation ---
+    
     let totalRandomStatGains = { speed: {min: 0, max: 0}, stamina: {min: 0, max: 0}, power: {min: 0, max: 0}, guts: {min: 0, max: 0}, wit: {min: 0, max: 0} };
 
-    // --- REVERTED: Get both guaranteed and random gain tables ---
+    
     const { initial_guaranteed_gain, april_event_random_gain } = state.inheritanceModel.stat_gain_logic;
 
     const statMap = {
@@ -1285,7 +1281,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     };
     const nameMap = { 'Front Runner': 'Front', 'Pace Chaser': 'Pace', 'Late Surger': 'Late', 'End Closer': 'End' };
 
-    // --- NEW: Simplified function to process a spark array ---
+    
     const processSparkArray = (sparksArray, role) => {
         if (!sparksArray || sparksArray.length === 0) return;
 
@@ -1296,14 +1292,14 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             const isParent = role.startsWith('Parent');
             const starKey = `${stars}_star`;
 
-            // 1. Add to stat calculations
+            
             if (spark.color === 'blue' && statMap[spark.spark_name]) {
                 const statKey = statMap[spark.spark_name];
                 
-                // Add to initial guaranteed gain
+                
                 totalInitialStatGains[statKey] += initial_guaranteed_gain[starKey] || 0;
                 
-                // Add to potential random gain
+                
                 const randomGain = april_event_random_gain[starKey];
                 if (randomGain) {
                     totalRandomStatGains[statKey].min += randomGain.min;
@@ -1311,7 +1307,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
                 }
             }
             
-            // 2. Add to display pool
+            
             if (!sparkPool[spark.spark_name]) {
                 sparkPool[spark.spark_name] = { 
                     name: spark.spark_name, 
@@ -1327,8 +1323,8 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
         });
     };
     
-    // --- NEW: Process all 6 spark arrays directly ---
-    // This correctly includes all 6 ancestors, even if they are "not in data"
+    
+    
     processSparkArray(parent1.sparks?.parent, 'Parent 1');
     processSparkArray(parent1.sparks?.gp1, parent1.gp1 || 'P1-GP1');
     processSparkArray(parent1.sparks?.gp2, parent1.gp2 || 'P1-GP2');
@@ -1336,7 +1332,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     processSparkArray(parent2.sparks?.gp1, parent2.gp1 || 'P2-GP1');
     processSparkArray(parent2.sparks?.gp2, parent2.gp2 || 'P2-GP2');
     
-    // --- Update Ancestor List for display names (best effort) ---
+    
     const ancestorRoles = {
         'Parent 1': parent1, 'Parent 2': parent2,
         [parent1.gp1 || 'P1-GP1']: findRunnerByDetails(parent1.gp1, parent1.sparks?.gp1),
@@ -1351,9 +1347,9 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             found: !!runner
         };
     });
-    // --- END NEW LOGIC ---
     
-    // Sort sparks for display
+    
+    
     const sparkSortMap = new Map();
     let sortIndex = 0;
     (state.orderedSparks?.blue || []).forEach(name => sparkSortMap.set(name, sortIndex++));
@@ -1416,7 +1412,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
 
         chanceBreakdownDetails.sort((a, b) => b.prob - a.prob);
         
-        const starsBySource = chanceBreakdownDetails.map(detail => Array(detail.stars).fill('★').join(''));
+        const starsBySource = chanceBreakdownDetails.map(detail => Array(detail.stars).fill('â˜…').join(''));
         const combinedStarsHtml = starsBySource.join('<span class="star-separator"> </span>');
 
         const sourcesHtml = chanceBreakdownDetails.map(detail => {
@@ -1424,7 +1420,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             return `
                 <div class="source-item">
                     <span class="source-name">${cleanName(detail.contributor)}:${parentIndicator}</span> 
-                    <span class="source-stars">${detail.stars}★</span> 
+                    <span class="source-stars">${detail.stars}â˜…</span> 
                     <span class="chance-value">${formatPercent(detail.prob)}%</span>
                 </div>
             `;
@@ -1733,9 +1729,9 @@ function generateSparksHtml(runner) {
 
         sparks.forEach(spark => {
             const count = parseInt(spark.count, 10) || 1;
-            const solidStars = '★'.repeat(count);
+            const solidStars = 'â˜…'.repeat(count);
             const emptyCount = Math.max(0, 3 - count);
-            const emptyStars = '☆'.repeat(emptyCount);
+            const emptyStars = 'â˜†'.repeat(emptyCount);
             const starsHtml = `<span class="solid-stars">${solidStars}</span><span class="empty-stars">${emptyStars}</span>`
 
             sectionHtml += `

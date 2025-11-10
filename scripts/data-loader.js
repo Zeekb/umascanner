@@ -1,4 +1,4 @@
-// scripts/data-loader.js
+﻿
 import { state } from './state.js';
 import { initializeApp, showError } from './main.js';
 

@@ -1,4 +1,4 @@
-/* --- Filter Panel & Form Elements --- */
+﻿
 .filter-panel {
     position: relative;
     display: flex;
@@ -390,7 +390,7 @@ input[type="range"]::-moz-range-track {
     background-color: var(--uma-accent-pink);
 }
 
-/* --- Spark Filters --- */
+
 .filter-group-container {
     display: flex;
     flex-direction: column;
@@ -525,7 +525,7 @@ input[type="range"]::-moz-range-track {
 .inheritance-search-container {
   display: flex;
 }
-/* --- Searchable Select Component --- */
+
 .searchable-select-container {
     position: relative;
     min-width: 50px;
@@ -548,7 +548,7 @@ input[type="range"]::-moz-range-track {
     border-radius: 3px;
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #f0f0f0;
-    z-index: 20; /* [FIX] Increased z-index */
+    z-index: 20; 
 }
 
 .options-container::-webkit-scrollbar { width: 6px; }

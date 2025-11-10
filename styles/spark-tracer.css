@@ -1,21 +1,21 @@
-/* styles/spark-tracer.css */
+﻿
 
 #spark-tracer-graph {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px; /* This creates space between columns */
+    gap: 20px; 
     padding: 10px;
-    align-items: stretch; /* Ensure all items in a row stretch to the same height */
+    align-items: stretch; 
 }
 
-/* Add a border to the right of the first two columns in each row */
+
 #spark-tracer-graph > .spark-trace-tree:nth-child(3n+1),
 #spark-tracer-graph > .spark-trace-tree:nth-child(3n+2) {
     border-right: 1px dashed #ccc;
-    padding-right: 10px; /* Space between content and border */
+    padding-right: 10px; 
 }
 
-/* Handle dark mode */
+
 .dark-mode #spark-tracer-graph > .spark-trace-tree:nth-child(3n+1),
 .dark-mode #spark-tracer-graph > .spark-trace-tree:nth-child(3n+2) {
     border-right-color: var(--dark-uma-border-color);
@@ -23,7 +23,7 @@
 
 #spark-tracer-graph > .spark-trace-tree:nth-child(n+4) {
     position: relative;
-    padding-top: 10px; /* Space for the pseudo-element border */
+    padding-top: 10px; 
 }
 
 #spark-tracer-graph > .spark-trace-tree:nth-child(n+4)::before {
@@ -40,12 +40,12 @@
     border-top-color: var(--dark-uma-border-color);
 }
 
-/* Basic styling for the tree structure */
+
 .spark-trace-tree {
     list-style-type: none;
     padding-left: 0;
     margin: 0;
-    height: 100%; /* Make the tree take up the full height of the grid cell */
+    height: 100%; 
 }
 
 .spark-trace-tree ul {
@@ -61,3 +61,4 @@
 .spark-trace-tree li {
     padding: 5px 0;
 }
+
