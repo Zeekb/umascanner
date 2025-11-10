@@ -172,18 +172,19 @@ export function setupEventListeners() {
         });
 
         const tableBody = document.getElementById('legacy-summary-body');
-        const descendantListContainer = document.querySelector('.descendant-list');
+        if (tableBody) {
+            const descendantListContainer = document.querySelector('.descendant-list');
 
-        if (tableBody && 
-            !e.target.closest('#legacy-summary-body') &&
-            (!descendantListContainer || !e.target.closest('.descendant-list')) && 
-            !e.target.closest('#detail-modal-overlay')
-        ) {
-            tableBody.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
-            
-            const descendantList = document.getElementById('descendant-list-body');
-            if (descendantList) {
-                descendantList.innerHTML = 'Click a grandparent to see their descendants.';
+            if (!e.target.closest('#legacy-summary-body') &&
+                (!descendantListContainer || !e.target.closest('.descendant-list')) &&
+                !e.target.closest('#detail-modal-overlay')
+            ) {
+                tableBody.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
+
+                const descendantList = document.getElementById('descendant-list-body');
+                if (descendantList) {
+                    descendantList.innerHTML = 'Click a grandparent to see their descendants.';
+                }
             }
         }
     });

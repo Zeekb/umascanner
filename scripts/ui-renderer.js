@@ -332,13 +332,13 @@ function getNewBaseChance(color, stars) {
 function renderCareerPlanner() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
     
-    const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
-    const parent1EntrySelect = document.querySelector('#parent1-selection .runner-entry-select');
-    const parent1Details = document.querySelector('#parent1-selection .runner-details');
+    const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
+    const parent1EntrySelect = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
+    const parent1Details = document.querySelector('#career-planner-parent1-selection .career-planner-runner-details');
 
-    const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
-    const parent2EntrySelect = document.querySelector('#parent2-selection .runner-entry-select');
-    const parent2Details = document.querySelector('#parent2-selection .runner-details');
+    const parent2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
+    const parent2EntrySelect = document.querySelector('#career-planner-parent2-selection .runner-entry-select');
+    const parent2Details = document.querySelector('#career-planner-parent2-selection .career-planner-runner-details');
 
     const affinitySelect = document.querySelector('#affinity-selection');
     const affinitySlider = document.querySelector('#affinity-slider');
@@ -460,8 +460,8 @@ function renderCareerPlanner() {
 }
 
 function syncParentNameSelects() {
-    const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
-    const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
+    const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
+    const parent2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
     
     if (!parent1NameSelect || !parent2NameSelect) return; // Safety check
 
@@ -632,6 +632,65 @@ function renderLegacyAnalysis(filteredRunners) {
     }
 }
 
+function getSparksWithSufficientDepth() {
+    const allSparks = new Set();
+    state.allRunners.forEach(runner => {
+        if (!runner.sparks) return;
+        ['parent', 'gp1', 'gp2'].forEach(source => {
+            if (Array.isArray(runner.sparks[source])) {
+                runner.sparks[source].forEach(spark => {
+                    if(spark.spark_name) allSparks.add(spark.spark_name);
+                });
+            }
+        });
+    });
+
+    // 1. Create the master ordered list from state.orderedSparks
+    const masterSparkOrderList = [
+        ...(state.orderedSparks?.blue || []),
+        ...(state.orderedSparks?.pink || []),
+        ...(state.orderedSparks?.white?.race || []),
+        ...(state.orderedSparks?.white?.skill || []),
+        ...(state.orderedSparks?.green || []) // Greens last
+    ];
+
+    // 2. Create a lookup map for fast sorting
+    const sparkSortMap = new Map();
+    masterSparkOrderList.forEach((sparkName, index) => {
+        sparkSortMap.set(sparkName, index);
+    });
+
+    // 3. Define a "max" value for sparks not found in the list
+    const maxSortIndex = masterSparkOrderList.length;
+
+    // 4. Get the sort value for a spark
+    const getSortValue = (sparkName) => {
+        return sparkSortMap.has(sparkName) ? sparkSortMap.get(sparkName) : maxSortIndex;
+    };
+
+    // 5. Apply the new sort
+    const sortedSparks = [...allSparks].sort((a, b) => {
+        const sortA = getSortValue(a);
+        const sortB = getSortValue(b);
+        
+        if (sortA !== sortB) {
+            return sortA - sortB; // Sort by the master list order
+        }
+        // If both are "unknown" (not in the list), sort them alphabetically
+        return a.localeCompare(b);
+    });
+    const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
+        const chains = traceSpark(sparkName);
+        if (!chains || chains.length === 0) {
+            return false;
+        }
+        const maxDepth = Math.max(...chains.map(sourceNode => calculateMaxDepth(sourceNode)));
+        return maxDepth >= 3;
+    });
+
+    return sparksWithSufficientDepth;
+}
+
 function renderSparkTracer() {
     const contentContainer = document.getElementById('spark-tracer-content');
     
@@ -692,60 +751,7 @@ function renderSparkTracer() {
         contentContainer.appendChild(explanationDiv);
     }
 
-    const allSparks = new Set();
-    state.allRunners.forEach(runner => {
-        if (!runner.sparks) return;
-        ['parent', 'gp1', 'gp2'].forEach(source => {
-            if (Array.isArray(runner.sparks[source])) {
-                runner.sparks[source].forEach(spark => {
-                    if(spark.spark_name) allSparks.add(spark.spark_name);
-                });
-            }
-        });
-    });
-
-    // 1. Create the master ordered list from state.orderedSparks
-    const masterSparkOrderList = [
-        ...(state.orderedSparks?.blue || []),
-        ...(state.orderedSparks?.pink || []),
-        ...(state.orderedSparks?.white?.race || []),
-        ...(state.orderedSparks?.white?.skill || []),
-        ...(state.orderedSparks?.green || []) // Greens last
-    ];
-
-    // 2. Create a lookup map for fast sorting
-    const sparkSortMap = new Map();
-    masterSparkOrderList.forEach((sparkName, index) => {
-        sparkSortMap.set(sparkName, index);
-    });
-
-    // 3. Define a "max" value for sparks not found in the list
-    const maxSortIndex = masterSparkOrderList.length;
-
-    // 4. Get the sort value for a spark
-    const getSortValue = (sparkName) => {
-        return sparkSortMap.has(sparkName) ? sparkSortMap.get(sparkName) : maxSortIndex;
-    };
-
-    // 5. Apply the new sort
-    const sortedSparks = [...allSparks].sort((a, b) => {
-        const sortA = getSortValue(a);
-        const sortB = getSortValue(b);
-        
-        if (sortA !== sortB) {
-            return sortA - sortB; // Sort by the master list order
-        }
-        // If both are "unknown" (not in the list), sort them alphabetically
-        return a.localeCompare(b);
-    });
-    const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
-        const chains = traceSpark(sparkName);
-        if (!chains || chains.length === 0) {
-            return false;
-        }
-        const maxDepth = Math.max(...chains.map(sourceNode => calculateMaxDepth(sourceNode)));
-        return maxDepth >= 3;
-    });
+    const sparksWithSufficientDepth = getSparksWithSufficientDepth();
 
     const searchInput = document.getElementById('spark-tracer-search');
     const graphContainer = document.getElementById('spark-tracer-graph');
@@ -773,13 +779,13 @@ function renderUsefulLinks() {
 }
 
 export function resetCareerPlannerParents() {
-    const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
-    const parent1EntrySelect = document.querySelector('#parent1-selection .runner-entry-select');
-    const parent1Details = document.querySelector('#parent1-selection .runner-details');
+    const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
+    const parent1EntrySelect = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
+    const parent1Details = document.querySelector('#career-planner-parent1-selection .career-planner-runner-details');
 
-    const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
-    const parent2EntrySelect = document.querySelector('#parent2-selection .runner-entry-select');
-    const parent2Details = document.querySelector('#parent2-selection .runner-details');
+    const parent2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
+    const parent2EntrySelect = document.querySelector('#career-planner-parent2-selection .runner-entry-select');
+    const parent2Details = document.querySelector('#career-planner-parent2-selection .career-planner-runner-details');
 
     if (parent1NameSelect) parent1NameSelect.value = "";
     if (parent1EntrySelect)  {
@@ -819,6 +825,7 @@ export function resetTabSpecificFilters() {
         }
     };
 
+    const sparksWithSufficientDepth = getSparksWithSufficientDepth();
     createSearchableSelect(searchInput, sparksWithSufficientDepth, onSparkSelect);
 
     onSparkSelect();
@@ -1232,7 +1239,7 @@ function displayParentDetails(entrySelect, detailsElement) {
         detailsElement.innerHTML = `
             <div style="display: flex; align-items: flex-start; gap: 15px;">
                 <div class="profile-image-container clickable-profile-image" data-entry-id="${runner.entry_id}">
-                    <img src="${runnerImgPath}" class="breeder-image" onerror="this.onerror=null; this.src='./assets/gui_icons/icon.png'; this.style.opacity=0.5;">
+                    <img src="${runnerImgPath}" class="career-planner-breeder-image" onerror="this.onerror=null; this.src='./assets/gui_icons/icon.png'; this.style.opacity=0.5;">
                 </div>
                 <div style="flex: 1;">
                     <p class="score-cell-style" style="margin-top: 5px; margin-bottom: 8px;">

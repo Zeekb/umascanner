@@ -320,26 +320,26 @@ td.skill-cell .skill-gold b {
     padding-inline-start: 0px;
 }
 
-.legacies-pair {
+.career-pair {
     display: flex;
     gap: 20px;
 }
 
-.breeder-selection {
+.career-planner-breeder-selection {
     flex: 1;
     padding: 15px;
     border: 1px solid var(--uma-border-color);
     border-radius: 5px;
 }
 
-.breeder-selection h3 {
+.career-planner-breeder-selection h3 {
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 0;
     margin-bottom: 0;
 }
 
-.breeder-image {
+.career-planner-breeder-image {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -431,7 +431,6 @@ td.skill-cell .skill-gold b {
     padding-left: 0;
     padding-top: 16px;
     margin-top: 16px;
-    border-top: 1px dashed #ccc;
 }
 
 .spark-trace-tree:nth-child(-n+3) {
@@ -480,7 +479,6 @@ td.skill-cell .skill-gold b {
 .spark-trace-tree + .spark-trace-tree {
     margin-top: 16px;
     padding-top: 16px;
-    border-top: 1px dashed #ccc;
 }
 
 .dark-mode .spark-trace-tree + .spark-trace-tree {
@@ -582,10 +580,10 @@ td.skill-cell .skill-gold b {
 }
 
 /* (Item 7 & 8) Parent Header Spacing & Centering */
-.breeder-selection {
+.career-planner-breeder-selection {
     padding: 10px 15px 15px 15px; /* Reduced top padding */
 }
-.breeder-selection h3 {
+.career-planner-breeder-selection h3 {
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 10px;
@@ -599,7 +597,7 @@ td.skill-cell .skill-gold b {
 }
 
 /* (Item 10 & 12) Profile Image Container */
-.breeder-selection .profile-image-container {
+.career-planner-breeder-selection .profile-image-container {
     border: 1px solid var(--uma-border-color); /* Item 10 */
     border-radius: 5px;
     padding: 5px;
@@ -610,18 +608,18 @@ td.skill-cell .skill-gold b {
 }
 
 /* (Item 11) Clickable Profile Image Cursor */
-.breeder-selection .clickable-profile-image {
+.career-planner-breeder-selection .clickable-profile-image {
     cursor: pointer;
 }
-.breeder-selection .clickable-profile-image:hover {
+.career-planner-breeder-selection .clickable-profile-image:hover {
     border-color: var(--uma-accent-pink);
 }
-.dark-mode .breeder-selection .clickable-profile-image:hover {
+.dark-mode .career-planner-breeder-selection .clickable-profile-image:hover {
     border-color: var(--uma-accent-blue);
 }
 
 /* Override inline style from old JS */
-.breeder-image {
+.career-planner-breeder-image {
     margin-top: 0 !important;
 }
 
