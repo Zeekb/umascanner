@@ -190,7 +190,7 @@ export function getGradeColors(grade) {
 // Formats a skill name for display, handling special characters.
 export function formatSkillName(skillName) {
     if (!skillName) return "";
-    return skillName.replace(/(â—Ž|â—‹|Ã—)/g, '<span style="font-size: 1.1em;">$1</span>');
+    return skillName.replace(/(◎|○|×)/g, '<span style="font-size: 1.1em;">$1</span>');
 }
 
 // Formats a grade string for display, converting '+' to superscript.
