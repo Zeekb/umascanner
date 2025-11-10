@@ -359,9 +359,11 @@ function renderLegaciesPlanner() {
 
         parent1NameSelect.addEventListener('change', () => {
             populateEntrySelect(parent1NameSelect, parent1EntrySelect, parent1Details);
+            syncParentNameSelects();
         });
         parent2NameSelect.addEventListener('change', () => {
             populateEntrySelect(parent2NameSelect, parent2EntrySelect, parent2Details);
+            syncParentNameSelects();
         });
         
         parent1EntrySelect.addEventListener('change', () => {
@@ -455,12 +457,37 @@ function renderLegaciesPlanner() {
 
     displayParentDetails(parent1EntrySelect, parent1Details);
     displayParentDetails(parent2EntrySelect, parent2Details);
+
+    syncParentNameSelects();
+
     const affinity = parseInt(affinityNumber.value, 10) || 150;
 
     if (parent1EntryId && parent2EntryId) {
         calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity);
     } else {
         document.querySelector('.offspring-potential .spark-pool').innerHTML = '';
+    }
+}
+
+function syncParentNameSelects() {
+    const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
+    const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
+    
+    if (!parent1NameSelect || !parent2NameSelect) return; // Safety check
+
+    const parent1Value = parent1NameSelect.value;
+    const parent2Value = parent2NameSelect.value;
+
+    // Sync Parent 1 dropdown (disable what's in Parent 2)
+    for (const option of parent1NameSelect.options) {
+        // Disable if it's not empty and matches the *other* dropdown's value
+        option.disabled = (option.value && option.value === parent2Value);
+    }
+
+    // Sync Parent 2 dropdown (disable what's in Parent 1)
+    for (const option of parent2NameSelect.options) {
+        // Disable if it's not empty and matches the *other* dropdown's value
+        option.disabled = (option.value && option.value === parent1Value);
     }
 }
 
@@ -781,6 +808,8 @@ export function resetLegaciesPlannerParents() {
     if (state.elements.legaciesPlannerBody?.dataset.initialized) {
         renderLegaciesPlanner();
     }
+    
+    syncParentNameSelects();
 }
 
 export function resetTabSpecificFilters() {

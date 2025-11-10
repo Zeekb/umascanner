@@ -557,9 +557,6 @@ td.skill-cell .skill-gold b {
 }
 
 .score-cell-style {
-    font-weight: 400; 
-    letter-spacing: 1px; 
-    font-size: 0.9em; /* Match table font size */
     color: var(--uma-text-dark);
 }
 
