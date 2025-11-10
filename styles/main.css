@@ -1,4 +1,6 @@
-﻿@import url('theme.css');
+﻿/* main.css - Main stylesheet for the application, importing all other component-specific and utility stylesheets. */
+
+@import url('theme.css');
 @import url('base.css');
 @import url('filters.css');
 @import url('table.css');

@@ -1,4 +1,4 @@
-﻿
+﻿// ui-interactions.js - Manages all user interactions with the UI, including setting up event listeners, handling dynamic UI updates, and managing dark mode.
 
 import { state } from './state.js';
 import { debounce, findRunnerByDetails, showTimedMessage, cleanName, createSearchableSelect } from './utils.js';
@@ -6,6 +6,7 @@ import { filterAndRender, sortAndRender } from './filter.js';
 import { showDetailModal, resetTabSpecificFilters, resetCareerPlannerParents } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
 
+// Sets up all global event listeners for UI interactions.
 export function setupEventListeners() {
     const debouncedFilterAndRender = debounce(filterAndRender, 150);
 
@@ -123,7 +124,7 @@ export function setupEventListeners() {
     if (toggleFilterButton && filterPanel) {
         toggleFilterButton.addEventListener('click', () => {
             const isCollapsed = filterPanel.classList.toggle('collapsed');
-            toggleFilterButton.textContent = isCollapsed ? '+' : 'âˆ’';
+            toggleFilterButton.textContent = isCollapsed ? '+' : '−';
             toggleFilterButton.title = isCollapsed ? 'Show Filters' : 'Collapse Filters';
         });
     }
@@ -141,7 +142,7 @@ export function setupEventListeners() {
             filterAndRender();
         } else if (target.classList.contains('disable-spark-filter-button')) {
             const isDisabled = row.classList.toggle('disabled');
-            target.textContent = isDisabled ? '-' : 'âœ“';
+            target.textContent = isDisabled ? '−' : '+';
             target.title = isDisabled ? 'Enable this filter row' : 'Disable this filter row';
             filterAndRender();
         }
@@ -233,10 +234,12 @@ export function setupEventListeners() {
     });
 }
 
+// Checks if dark mode is currently active.
 export function isDarkModeActive() {
     return document.body.classList.contains('dark-mode');
 }
 
+// Initializes and toggles dark mode functionality.
 export function setupDarkMode() {
     const isDarkMode = localStorage.getItem('darkMode') === 'true';
     const body = document.body;
@@ -272,6 +275,7 @@ export function setupDarkMode() {
     }
 }
 
+// Handles the changing of active tabs in the UI.
 export function handleTabChange(activeTabId) {
     state.elements.tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === activeTabId));
     state.elements.tabContents.forEach(c => c.classList.toggle('active', c.id === activeTabId));
@@ -281,6 +285,7 @@ export function handleTabChange(activeTabId) {
     }
 }
 
+// Handles clicks on table rows to display detailed runner information in a modal.
 export function handleDetailView(event) {
     const clickedCell = event.target.closest('td');
     if (!clickedCell) return;
@@ -345,6 +350,7 @@ export function handleDetailView(event) {
     }
 }
 
+// Handles clicks within the legacy analysis section, typically for navigating to runner details.
 export function handleLegacyClick(event) {
     const target = event.target;
     if (target.matches('.descendant-list .gp-link[data-entry-id]')) {
@@ -356,6 +362,7 @@ export function handleLegacyClick(event) {
     }
 }
 
+// Handles clicks on nodes within the spark tracer graph to display runner details.
 export function handleSparkTracerNodeClick(event) {
     const target = event.target;
     if (target.matches('#spark-tracer-graph .gp-link[data-entry-id]')) {
@@ -367,6 +374,7 @@ export function handleSparkTracerNodeClick(event) {
     }
 }
 
+// Handles the deletion (transfer) of a runner from the dataset.
 export function handleDeleteRunner(event) {
     const target = event.target;
     if (target.classList.contains('delete-button')) {
@@ -399,6 +407,7 @@ export function handleDeleteRunner(event) {
     }
 }
 
+// Adds a new row of spark filter inputs to the UI.
 export function addSparkFilterRow() {
     const firstRow = document.querySelector('#spark-filters-container .spark-filters');
     if (!firstRow) return;
@@ -408,7 +417,7 @@ export function addSparkFilterRow() {
     newRow.classList.remove('disabled');
     const disableBtn = newRow.querySelector('.disable-spark-filter-button');
     if (disableBtn) {
-        disableBtn.textContent = 'âœ“';
+        disableBtn.textContent = '✓';
         disableBtn.title = 'Disable this filter row';
     }
 
@@ -441,6 +450,7 @@ export function addSparkFilterRow() {
     updateRemoveButtonVisibility(); 
 }
 
+// Adds a new row of skill filter inputs to the UI.
 export function addSkillFilterRow() {
     const firstRow = document.querySelector('#skill-filters-container .skill-filters');
     if (!firstRow) return;
@@ -466,6 +476,7 @@ export function addSkillFilterRow() {
     updateRemoveSkillButtonVisibility();
 }
 
+// Resets all filter inputs to their default states.
 export function resetFilters() {
     for (const key in state.elements.filterElements) {
         const el = state.elements.filterElements[key];
@@ -504,7 +515,7 @@ export function resetFilters() {
             row.classList.remove('disabled');
             const disableBtn = row.querySelector('.disable-spark-filter-button');
             if(disableBtn) {
-                disableBtn.textContent = 'âœ“';
+                disableBtn.textContent = '✓';
                 disableBtn.title = 'Disable this filter row';
             }
             updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), 9);
@@ -523,6 +534,7 @@ export function resetFilters() {
     filterAndRender();
 }
 
+// Updates the visibility of 'remove' buttons for spark filter rows.
 export function updateRemoveButtonVisibility() {
     const allSparkRows = state.elements.sparkFiltersContainer.querySelectorAll('.spark-filters');
     const shouldShowRemove = allSparkRows.length > 1;
@@ -534,6 +546,7 @@ export function updateRemoveButtonVisibility() {
     });
 }
 
+// Updates the visibility of 'remove' buttons for skill filter rows.
 export function updateRemoveSkillButtonVisibility() {
     const allSkillRows = state.elements.skillFiltersContainer.querySelectorAll('.skill-filters');
     const shouldShowRemove = allSkillRows.length > 1;
@@ -545,12 +558,13 @@ export function updateRemoveSkillButtonVisibility() {
     });
 }
 
+// Populates a spark count dropdown with options up to a maximum number of stars.
 export function updateSparkCountDropdown(selectElement, maxStars) {
     if (!selectElement) return;
     const currentValue = selectElement.value;
     let optionsHtml = '<option value="0"></option>';
     for (let i = 1; i <= maxStars; i++) {
-        optionsHtml += `<option value="${i}">${i}â˜…</option>`;
+        optionsHtml += `<option value="${i}">${i}★</option>`;
     }
     selectElement.innerHTML = optionsHtml;
     if (parseInt(currentValue, 10) <= maxStars) {
@@ -563,6 +577,7 @@ export function updateSparkCountDropdown(selectElement, maxStars) {
     }
 }
 
+// Updates the total white spark count dropdown based on parent-only filtering.
 export function updateTotalWhiteDropdown(rowElement, isParentOnly) {
     const select = rowElement.querySelector('[id^="min-total-white"]');
     if (!select) return;
@@ -580,11 +595,13 @@ export function updateTotalWhiteDropdown(rowElement, isParentOnly) {
     }
 }
 
+// Toggles a placeholder class for select elements based on their value.
 export function updateSelectPlaceholder(selectElement) {
     if (!selectElement) return;
     selectElement.classList.toggle('placeholder-selected', selectElement.value === "");
 }
 
+// Toggles a placeholder class for stat input elements based on their value.
 export function updateStatInputPlaceholder(inputElement) {
     if (!inputElement) return;
     inputElement.classList.toggle('placeholder-value', inputElement.value === '0');

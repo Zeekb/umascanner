@@ -1,9 +1,12 @@
-﻿
+﻿// scripts/utils.js - Provides a collection of utility functions used across the application for common tasks like data manipulation, UI helpers, and calculations.
+
 import { state, CONSTANTS } from './state.js';
 import { filterAndRender } from './filter.js';
 
+// Cleans a runner's name by removing trailing ' c' and trimming whitespace.
 export const cleanName = (name) => name ? name.replace(/ c$/, '').trim() : '';
 
+// Debounces a function call, ensuring it's only executed after a specified delay.
 export const debounce = (func, delay) => {
     let timeoutId;
     return (...args) => {
@@ -12,6 +15,7 @@ export const debounce = (func, delay) => {
     };
 };
 
+// Finds a runner by name and a comparable set of grandparent sparks, utilizing a cache for performance.
 export function findRunnerByDetails(name, gpSparksArray) {
     if (!name || !gpSparksArray || gpSparksArray.length === 0) {
         return null;
@@ -59,6 +63,7 @@ export function findRunnerByDetails(name, gpSparksArray) {
     return result;
 }
 
+// Displays a temporary, timed message popup to the user.
 export function showTimedMessage(message) {
     const existingPopup = document.getElementById('timed-message-popup');
     if (existingPopup) {
@@ -76,6 +81,7 @@ export function showTimedMessage(message) {
     }, 2000);
 }
 
+// Determines the grade (e.g., S+, A) for a given stat value.
 export function getStatGrade(value) {
     value = parseInt(value || 0);
     if (value >= 1150) return 'SS+';
@@ -97,6 +103,7 @@ export function getStatGrade(value) {
     return 'G';
 }
 
+// Calculates the overall rank (e.g., SS+, A) for a given runner score.
 export function calculateRank(score) {
     if (score >= 19200) return 'SS<sup>+</sup>';
     if (score >= 17500) return 'SS';
@@ -118,11 +125,13 @@ export function calculateRank(score) {
     return 'G';
 }
 
+// Retrieves the color associated with a given aptitude grade.
 export function getAptitudeColor(grade) {
     const baseGrade = grade?.replace('<sup>+</sup>', '').replace('+', '').replace('SS', 'S');
     return CONSTANTS.APTITUDE_COLORS[baseGrade] || '#b3b2b3';
 }
 
+// Adjusts the brightness of a given hexadecimal color by a percentage.
 export function adjustColor(hex, percent) {
      const hexToRgb = (hex) => {
         const r = parseInt(hex.slice(1, 3), 16);
@@ -145,6 +154,7 @@ export function adjustColor(hex, percent) {
     }
 }
 
+// Mixes two hexadecimal colors by a given ratio.
 export function mixColors(color1, color2, ratio = 0.5) {
     const hexToRgb = (hex) => {
         const r = parseInt(hex.slice(1, 3), 16);
@@ -168,6 +178,7 @@ export function mixColors(color1, color2, ratio = 0.5) {
     }
 }
 
+// Returns a set of colors (base, top, bottom, outline) for a given grade.
 export function getGradeColors(grade) {
     const gradeColor = getAptitudeColor(grade);
     const outlineColor = 'rgba(0, 0, 0, 0.9)'; 
@@ -176,11 +187,13 @@ export function getGradeColors(grade) {
     return { gradeColor, topColor, bottomColor, outlineColor };
 }
 
+// Formats a skill name for display, handling special characters.
 export function formatSkillName(skillName) {
     if (!skillName) return "";
     return skillName.replace(/(â—Ž|â—‹|Ã—)/g, '<span style="font-size: 1.1em;">$1</span>');
 }
 
+// Formats a grade string for display, converting '+' to superscript.
 export function formatGradeForDisplay(grade) {
     if (!grade) return 'G';
     if (grade.endsWith('+')) {
@@ -189,6 +202,7 @@ export function formatGradeForDisplay(grade) {
     return grade;
 }
 
+// Retrieves the base chance for inspiration based on spark color and stars.
 export function getBaseChance(color, stars) {
     if (!state.inspirationData.base_chances) return 0;
     
@@ -203,6 +217,7 @@ export function getBaseChance(color, stars) {
     return chances[stars - 1] || 0;
 }
 
+// Creates a searchable select dropdown component.
 export function createSearchableSelect(inputElement, optionsArray, onSelectCallback = null) {
     const container = inputElement.closest('.searchable-select-container');
     if (!container) return;

@@ -1,4 +1,6 @@
-﻿const { app, BrowserWindow, ipcMain } = require('electron');
+﻿// main.js - Main process for the Electron application. Handles window creation, application lifecycle, and IPC communication with the renderer process.
+
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require('fs').promises;
 const fsSync = require('fs');
@@ -163,6 +165,9 @@ app.whenReady().then(() => {
   });
 });
 
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();

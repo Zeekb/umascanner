@@ -1,16 +1,13 @@
-﻿
+﻿// scripts/state.js - Defines the global state object and constants for the application, managing data, UI element references, and configuration.
 
 export const state = {
-    
     allRunners: [],
     skillData: {},
     runnerUniqueSkills: {},
     orderedSparks: {},
     inheritanceModel: {},
-
     lastFilteredData: [],
 
-    
     blueSparkNames: [],
     greenSparkNames: [],
     pinkSparkNames: [],
@@ -18,17 +15,14 @@ export const state = {
     orderedSkills: [],
     allRunnerNamesSet: new Set(),
     
-    
     gpExistenceCache: new Map(),
     sparkFilterCounter: 1,
     skillFilterCounter: 1,
     maxTotalWhiteSparks: 0,
     maxParentWhiteSparks: 0,
 
-    
     elements: {},
 };
-
 
 export const CONSTANTS = {
     APTITUDE_RANK_MAP: {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100},

@@ -1,5 +1,6 @@
-﻿
+﻿/* spark-tracer.css - Contains styles for the spark tracer graph, including grid layout, border styling, and tree structure visualization. */
 
+/* Styles for the main spark tracer graph grid */
 #spark-tracer-graph {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -8,7 +9,7 @@
     align-items: stretch; 
 }
 
-
+/* Adds a vertical border to the right of the first two columns in each row */
 #spark-tracer-graph > .spark-trace-tree:nth-child(3n+1),
 #spark-tracer-graph > .spark-trace-tree:nth-child(3n+2) {
     border-right: 1px dashed #ccc;
@@ -16,11 +17,13 @@
 }
 
 
+/* Handle dark mode for vertical borders */
 .dark-mode #spark-tracer-graph > .spark-trace-tree:nth-child(3n+1),
 .dark-mode #spark-tracer-graph > .spark-trace-tree:nth-child(3n+2) {
     border-right-color: var(--dark-uma-border-color);
 }
 
+/* Styles for the horizontal border between rows, implemented using a pseudo-element for partial width */
 #spark-tracer-graph > .spark-trace-tree:nth-child(n+4) {
     position: relative;
     padding-top: 10px; 
@@ -40,7 +43,7 @@
     border-top-color: var(--dark-uma-border-color);
 }
 
-
+/* Basic styling for the tree structure within each grid cell */
 .spark-trace-tree {
     list-style-type: none;
     padding-left: 0;

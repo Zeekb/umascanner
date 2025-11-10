@@ -1,4 +1,6 @@
-﻿
+﻿/* modal.css - Contains styles for the detail modal, including its layout, header, stats, aptitudes, skills, and inspiration panels. */
+
+/* Base styles for the modal overlay and container */
 #detail-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -36,6 +38,7 @@
 
 
 
+/* Styles for the modal header, including runner profile image, score, and rank */
 .modal-header {
   display: flex;
   align-items: center;
@@ -219,6 +222,7 @@
 
 
 
+/* Styles for the runner's stats bar */
 .modal-stats-bar {
   display: flex;
   flex-direction: row;
@@ -326,6 +330,7 @@
   -webkit-text-stroke-color: var(--stat-outline-color);
 }
 
+/* Styles for the runner's aptitudes display */
 .modal-aptitudes {
   display: grid;
   grid-template-columns: 70px repeat(4, 1fr);
@@ -400,6 +405,7 @@
 
 
 
+/* Styles for the skills display section */
 .modal-skills-section {
   display: flex;
   flex-direction: column;
@@ -508,6 +514,7 @@
 
 
 
+/* Styles for the modal footer */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -535,6 +542,7 @@
   background-color: var(--uma-accent-blue);
 }
 
+/* Styles for the modal's tab navigation */
 .modal-tabs {
     display: flex;
     justify-content: center;
@@ -615,6 +623,7 @@
 
 
 
+/* Styles for the inspiration (sparks) panel within the modal */
 .modal-sparks-list {
     display: flex;
     flex-direction: column;

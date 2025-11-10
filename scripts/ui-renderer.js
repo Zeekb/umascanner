@@ -1,11 +1,12 @@
-﻿
+﻿// ui-renderer.js - Responsible for rendering various views and components of the application's user interface, including tables, modals, and dynamic content based on filtered data.
+
 import { state, CONSTANTS } from './state.js';
-import { isDarkModeActive } from './ui-interactions.js';
 import { 
     cleanName, findRunnerByDetails, getStatGrade, calculateRank, getAptitudeColor, 
     adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage, createSearchableSelect
 } from './utils.js';
 
+// Renders the content for the currently active tab.
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
     if (activeTabId === 'runner-overview') {
         renderRunnerOverview(filteredData, allSparkCriteria);
@@ -30,6 +31,7 @@ export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
     }
 }
 
+// Recursively calculates the maximum depth of a given spark inheritance tree node.
 function calculateMaxDepth(node) {
     if (!node.children || node.children.length === 0) {
         return 1;
@@ -39,6 +41,7 @@ function calculateMaxDepth(node) {
     return 1 + Math.max(...childDepths);
 }
 
+// Renders the main runner overview table.
 function renderRunnerOverview(runners, allSparkCriteria) {
     if (!runners.length) {
         state.elements.runnerOverviewBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>';
@@ -84,6 +87,7 @@ function renderRunnerOverview(runners, allSparkCriteria) {
     hideEntryIdColumn('runner-overview');
 }
 
+// Renders the summary table for white sparks.
 function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
     if (!runners.length) {
        state.elements.runnerWhiteSparksBody.innerHTML = '<tr><td colspan="7">No runners match filters.</td></tr>';
@@ -196,7 +200,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
                whiteSparksHtml += `
                <div class="spark-button white${highlightClass}" title="${titleText}">
                    <span>${spark.count}</span>
-                   <span class="star${parentClass}">â˜…</span>
+                   <span class="star${parentClass}">★</span>
                    <span class="spark-name">${spark.name}</span>
                    ${parentCountDisplay}
                </div>
@@ -226,6 +230,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
    hideEntryIdColumn('runner-white-sparks');
 }
 
+// Renders the skills overview table.
 function renderSkillsOverview(runners) {
     if (!runners.length) {
         state.elements.skillsOverviewBody.innerHTML = '<tr><td colspan="4">No runners match filters.</td></tr>';
@@ -307,6 +312,7 @@ function renderSkillsOverview(runners) {
     hideEntryIdColumn('skills-overview');
 }
 
+// Retrieves the base activation chance for a spark based on its color and stars.
 function getNewBaseChance(color, stars) {
     if (!state.inheritanceModel || !state.inheritanceModel.base_activation_chances) {
         console.error("Inheritance model is not loaded.");
@@ -329,6 +335,7 @@ function getNewBaseChance(color, stars) {
 }
 
 
+// Renders the career planner interface, allowing users to select parents and view offspring potential.
 function renderCareerPlanner() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
     
@@ -459,6 +466,7 @@ function renderCareerPlanner() {
     }
 }
 
+// Synchronizes the parent name select dropdowns to prevent selecting the same runner for both parents.
 function syncParentNameSelects() {
     const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
     const parent2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
@@ -481,6 +489,7 @@ function syncParentNameSelects() {
     }
 }
 
+// Renders the legacy analysis view, summarizing grandparent data and descendants.
 function renderLegacyAnalysis(filteredRunners) {
     const grandparentData = {};
 
@@ -571,7 +580,7 @@ function renderLegacyAnalysis(filteredRunners) {
             return `
                 <div class="spark-button ${s.color}">
                     <span>${count}</span>
-                    <span class="star">â˜…</span>
+                    <span class="star">★</span>
                     <span class="spark-name">${displayName}</span>
                 </div>
             `;
@@ -632,6 +641,7 @@ function renderLegacyAnalysis(filteredRunners) {
     }
 }
 
+// Filters sparks to only include those with inheritance chains of at least 3 generations.
 function getSparksWithSufficientDepth() {
     const allSparks = new Set();
     state.allRunners.forEach(runner => {
@@ -691,6 +701,7 @@ function getSparksWithSufficientDepth() {
     return sparksWithSufficientDepth;
 }
 
+// Renders the spark tracer interface, visualizing spark inheritance lineages.
 function renderSparkTracer() {
     const contentContainer = document.getElementById('spark-tracer-content');
     
@@ -774,10 +785,12 @@ function renderSparkTracer() {
     onSparkSelect();
 }
 
+// Renders the useful links tab content.
 function renderUsefulLinks() {
     
 }
 
+// Resets the selected parents in the career planner.
 export function resetCareerPlannerParents() {
     const parent1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
     const parent1EntrySelect = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
@@ -808,6 +821,7 @@ export function resetCareerPlannerParents() {
     syncParentNameSelects();
 }
 
+// Resets filters specific to certain tabs, like the career planner and spark tracer.
 export function resetTabSpecificFilters() {
     
     resetCareerPlannerParents();
@@ -831,6 +845,7 @@ export function resetTabSpecificFilters() {
     onSparkSelect();
 }
 
+// Traces the inheritance chain for a given spark through the runner collection.
 function traceSpark(sparkName) {
     const nodes = new Map();
     state.allRunners.forEach(r => {
@@ -871,6 +886,7 @@ function traceSpark(sparkName) {
     return sources;
 }
 
+// Recursively builds the HTML for a spark inheritance tree.
 function buildSparkTreeHtml(node, parentNode = null) {
     const r = node.runner;
     const sl = node.sparkLevel;
@@ -894,7 +910,7 @@ function buildSparkTreeHtml(node, parentNode = null) {
 
     let html = `<li>
         <span class="gp-link" data-entry-id="${r.entry_id}">
-            ${r.name} (Score: ${(r.score || 0).toLocaleString()}) - <b>${sl}â˜…</b>
+            ${r.name} (Score: ${(r.score || 0).toLocaleString()}) - <b>${sl}★</b>
         </span>`;
     
     if (node.children && node.children.length > 0) {
@@ -910,6 +926,7 @@ function buildSparkTreeHtml(node, parentNode = null) {
     return html;
 }
 
+// Renders the spark inheritance graph in the UI.
 function renderSparkTraceGraph(sources, container) {
 
     const deepChains = sources.filter(sourceNode => calculateMaxDepth(sourceNode) >= 3);
@@ -928,6 +945,7 @@ function renderSparkTraceGraph(sources, container) {
 
 
 
+// Helper function to hide the Entry Id column in tables.
 function hideEntryIdColumn(tabId) {
     const table = document.querySelector(`#${tabId} table`);
     if (!table) return;
@@ -938,6 +956,7 @@ function hideEntryIdColumn(tabId) {
 } 
 
 
+// Formats an array of spark objects into HTML bubbles for the career planner.
 function formatSparksForPlanner(sparksArray) {
     if (!sparksArray || sparksArray.length === 0) {
         return '<span class="no-sparks">None</span>';
@@ -966,13 +985,14 @@ function formatSparksForPlanner(sparksArray) {
         return `
             <div class="spark-button ${spark.color}">
                 <span>${spark.count}</span>
-                <span class="star">â˜…</span>
+                <span class="star">★</span>
                 <span class="spark-name">${displayName}</span>
             </div>
         `;
     }).join('');
 }
 
+// Formats an array of spark objects into HTML bubbles for display in tables.
 function formatSparks(runner, allSparkCriteria) {
     const blueSparks = state.orderedSparks?.blue || [];
     const pinkSparks = state.orderedSparks?.pink || [];
@@ -1093,7 +1113,7 @@ function formatSparks(runner, allSparkCriteria) {
         return `
             <div class="spark-button ${spark.color}${highlightClass}">
                 <span>${spark.totalCount}</span>
-                <span class="star${spark.parentCount > 0 ? ' parent-spark' : ''}">â˜…</span>
+                <span class="star${spark.parentCount > 0 ? ' parent-spark' : ''}">★</span>
                 <span class="spark-name">${displayName}</span>
                 ${parentCountDisplay}
             </div>
@@ -1103,6 +1123,7 @@ function formatSparks(runner, allSparkCriteria) {
     return parts.length > 0 ? `<div class="spark-cell-container">${parts.join('')}</div>` : '';
 }
 
+// Populates the entry select dropdown for a given runner name in the career planner.
 function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     const runnerName = nameSelect.value;
     
@@ -1187,7 +1208,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
                 const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}â˜…`;
+                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
                 
                 if (spark.color === 'blue') {
                     blueSparksStr += `${formattedSpark} `;
@@ -1202,7 +1223,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             let labelParts = [`Score: ${entry.score}`];
             if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
             if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
-            labelParts.push(`Whites: x${whiteParent}â˜…`);
+            labelParts.push(`Whites: x${whiteParent}★`);
             
             const label = labelParts.join(' | ');
             
@@ -1217,6 +1238,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     renderCareerPlanner();
 }
 
+// Displays the details of a selected parent in the career planner.
 function displayParentDetails(entrySelect, detailsElement) {
     const entryId = entrySelect.value;
     const runner = state.allRunners.find(r => String(r.entry_id) === String(entryId));
@@ -1258,6 +1280,7 @@ function displayParentDetails(entrySelect, detailsElement) {
     }
 }
 
+// Calculates and displays the potential sparks and stat gains for offspring based on two selected parents.
 function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinityScore) { 
     const parent1 = state.allRunners.find(r => String(r.entry_id) === String(parent1EntryId));
     const parent2 = state.allRunners.find(r => String(r.entry_id) === String(parent2EntryId));
@@ -1412,7 +1435,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
 
         chanceBreakdownDetails.sort((a, b) => b.prob - a.prob);
         
-        const starsBySource = chanceBreakdownDetails.map(detail => Array(detail.stars).fill('â˜…').join(''));
+        const starsBySource = chanceBreakdownDetails.map(detail => Array(detail.stars).fill('★').join(''));
         const combinedStarsHtml = starsBySource.join('<span class="star-separator"> </span>');
 
         const sourcesHtml = chanceBreakdownDetails.map(detail => {
@@ -1420,7 +1443,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             return `
                 <div class="source-item">
                     <span class="source-name">${cleanName(detail.contributor)}:${parentIndicator}</span> 
-                    <span class="source-stars">${detail.stars}â˜…</span> 
+                    <span class="source-stars">${detail.stars}★</span> 
                     <span class="chance-value">${formatPercent(detail.prob)}%</span>
                 </div>
             `;
@@ -1482,7 +1505,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     document.querySelector('.spark-pool').innerHTML = `${affinityNote}${statHtml}${infoHtml}${html || '<p>No inheritable sparks found from parents or known grandparents.</p>'}`;
 }
 
-
+// Displays a detailed modal view for a selected runner.
 export function showDetailModal(runner, displayName) {
     const existingModal = document.getElementById('detail-modal-overlay');
     if (existingModal) existingModal.remove();
@@ -1689,6 +1712,7 @@ export function showDetailModal(runner, displayName) {
     });
 }
 
+// Generates the HTML content for displaying sparks within the detail modal.
 function generateSparksHtml(runner) {
     let html = '<div class="modal-sparks-list">';
 
@@ -1729,9 +1753,9 @@ function generateSparksHtml(runner) {
 
         sparks.forEach(spark => {
             const count = parseInt(spark.count, 10) || 1;
-            const solidStars = 'â˜…'.repeat(count);
+            const solidStars = '★'.repeat(count);
             const emptyCount = Math.max(0, 3 - count);
-            const emptyStars = 'â˜†'.repeat(emptyCount);
+            const emptyStars = '☆'.repeat(emptyCount);
             const starsHtml = `<span class="solid-stars">${solidStars}</span><span class="empty-stars">${emptyStars}</span>`
 
             sectionHtml += `

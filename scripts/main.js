@@ -1,4 +1,6 @@
 ﻿
+// scripts/main.js - Main entry point for the renderer process. Initializes the application, sets up event listeners, and manages the overall UI flow.
+
 import { state } from './state.js';
 import { handleFileLoad, handleTestFileLoad, loadFromSavedData, extractSparkNames } from './data-loader.js';
 import { createSearchableSelect } from './utils.js';
@@ -8,6 +10,7 @@ import {
 } from './ui-interactions.js';
 
 
+// Initializes the application when the DOM is fully loaded.
 document.addEventListener('DOMContentLoaded', () => {
     
     state.elements.uploaderContainer = document.getElementById('uploader-container');
@@ -32,12 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
 });
 
+// Displays an error message in the UI.
 export function showError(message) {
     state.elements.loadingMessage.style.display = 'none';
     state.elements.errorMessage.innerHTML = message;
     state.elements.errorMessage.style.display = 'block';
 }
 
+// Initializes the main application interface after data is loaded.
 export function initializeApp() {
     
     state.elements.filterElements = {
@@ -130,6 +135,7 @@ export function initializeApp() {
     preloadRunnerImages(); 
 }
 
+// Populates the filter dropdowns and elements with data.
 function populateFilters() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
     state.elements.filterElements.runner.innerHTML = '<option value="">All Runners</option>' + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
@@ -176,6 +182,7 @@ function populateFilters() {
     state.elements.filterElements.sortDir.value = 'desc';
 }
 
+// Preloads runner profile images to improve UI responsiveness.
 function preloadRunnerImages() {
     const preloadedImages = new Set();
     
@@ -193,6 +200,7 @@ function preloadRunnerImages() {
     });
 }
 
+// Resets the application state and returns to the file uploader interface.
 export function returnToFileUploader() {
     if (!window.confirm("Are you sure you want to load a new file?\n\nThis will clear the current data.")) {
         return; 
@@ -220,6 +228,7 @@ export function returnToFileUploader() {
     if (state.elements.entriesDisplay) state.elements.entriesDisplay.textContent = '';
 }
 
+// Saves the current runner data to a JSON file for download.
 export function saveDataToFile() {
     try {
         const jsonData = JSON.stringify(state.allRunners, null, 2);
@@ -237,6 +246,7 @@ export function saveDataToFile() {
     }
 }
 
+// Calculates and formats the last updated date and count of runners.
 export function lastUpdated() {
     if (!state.allRunners || state.allRunners.length === 0) {
     return "No data loaded";
@@ -275,12 +285,14 @@ export function lastUpdated() {
   }
 }
 
+// Updates the 'Last Updated' display in the UI.
 export function updateLastUpdated() {
     if (state.elements.lastUpdatedDisplay) {
         state.elements.lastUpdatedDisplay.textContent = `Umas Last Updated: ${lastUpdated()}`;
     }
 }
 
+// Updates the displayed count of runner entries.
 export function updateEntriesCount() {
     if (state.elements.entriesDisplay) {
         state.elements.entriesDisplay.textContent = `Entries count: ${state.allRunners.length}/230`;

@@ -1,7 +1,9 @@
-﻿
+﻿// data-loader.js - Handles loading of runner data from user-selected files or test data, and essential game data from JSON files.
+
 import { state } from './state.js';
 import { initializeApp, showError } from './main.js';
 
+// Handles loading runner data from a user-selected file.
 export async function handleFileLoad() {
     const file = state.elements.fileInput.files[0];
 
@@ -36,6 +38,7 @@ export async function handleFileLoad() {
     await loadGameDataAndInitialize();
 }
 
+// Handles loading test runner data from a predefined JSON file.
 export async function handleTestFileLoad() {
     state.elements.loadingMessage.style.display = 'block';
     state.elements.errorMessage.style.display = 'none';
@@ -60,6 +63,7 @@ export async function handleTestFileLoad() {
     await loadGameDataAndInitialize();
 }
 
+// Loads runner data from previously saved data in local storage.
 export async function loadFromSavedData(jsonData) {
     state.elements.loadingMessage.style.display = 'block';
     state.elements.errorMessage.style.display = 'none';
@@ -76,6 +80,7 @@ export async function loadFromSavedData(jsonData) {
     await loadGameDataAndInitialize();
 }
 
+// Loads essential game data (skills, sparks, inheritance model) and initializes the application.
 async function loadGameDataAndInitialize() {
     try {
         const [skillData, uniqueSkillsData, orderedSparks, inheritanceModel] = await Promise.all([
@@ -97,6 +102,7 @@ async function loadGameDataAndInitialize() {
     }
 }
 
+// Extracts and categorizes all unique spark names from the loaded runner data.
 export function extractSparkNames() {
     const extracted = { blue: new Set(), green: new Set(), pink: new Set(), white: new Set() };
     state.allRunners.forEach(runner => {

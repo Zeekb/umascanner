@@ -1,4 +1,6 @@
-﻿
+﻿/* theme.css - Defines color variables and dark mode specific styles for the application, ensuring a consistent visual theme. */
+
+/* Light mode color variables */
 :root {
   --uma-light-bg: #FEFEFE;
   --uma-medium-bg: #FFFFFF;
@@ -41,6 +43,7 @@
   --skill-color-debuff: #e53935;
   --skill-color-detrimental: #aa00ff;
 
+  /* Dark mode specific color variables */
   --dark-bg-body: #222222;
   --dark-bg-element: #3c3c3c;
   --dark-bg-alt-row: #353535;
@@ -62,6 +65,7 @@
   --dark-apt-n-a-base: #555555;
 }
 
+/* Dark mode styles, overriding light mode variables */
 .dark-mode {
   color: var(--dark-text-color);
   background-color: var(--dark-bg-body);

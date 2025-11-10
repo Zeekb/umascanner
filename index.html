@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<!-- index.html - Defines the main structure of the application's user interface. -->
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -7,6 +8,7 @@
     <link rel="icon" type="image/png" href="assets/gui_icons/icon.png">
 </head>
 <body class="dark-mode">
+    <!-- Initial view for file uploading -->
     <div id="uploader-container" class="app-container" style="padding: 40px; text-align: center;">
         <h2>UmaScanner Web Visualizer</h2>
         <p>Please upload your <strong>all_runners.json</strong> file to begin.</p>
@@ -25,8 +27,10 @@
         </div>
     </div>
 
+    <!-- Main container for the application's interface after data is loaded -->
     <div id="app-wrapper" class="app-container" style="display: none;">
         
+        <!-- Main navigation tabs -->
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="runner-overview">Runner Overview</button>
             <span class="tab-help" data-tooltip="Main overview for finding runners. &#10;&#10;&bull;  Use the filters to find runners with high stats or specific sparks (Blue, Green, Pink, White). &#10;&bull;  Sparks matching your filters will be highlighted. &#10;&bull;  Double-click any row for full details, or double-click a grandparent's name (if not grayed out) to jump to their entry.">?</span>
@@ -63,6 +67,7 @@
             </button>
         </div>
         
+        <!-- Contains all the controls for filtering and sorting the data -->
         <div class="filter-panel">
             <div class="filter-top-row">
                 <div class="filter-section">
@@ -173,7 +178,7 @@
                                     <input type="text" id="filter-blue-spark" placeholder="Any Blue" class="spark-search-input spark-select-shorter" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <select id="min-blue" class="min-spark-select spark-count-select aptitude-select"><option value="">â˜…</option></select>
+                                <select id="min-blue" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-pink-spark">Pink Sparks</label>
@@ -181,7 +186,7 @@
                                     <input type="text" id="filter-pink-spark" placeholder="Any Pink" class="spark-search-input spark-select-short" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <select id="min-pink" class="min-spark-select spark-count-select aptitude-select"><option value="">â˜…</option></select>
+                                <select id="min-pink" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-green-spark">Green Sparks</label>
@@ -189,7 +194,7 @@
                                     <input type="text" id="filter-green-spark" placeholder="Any Green" class="spark-search-input spark-select-long" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <select id="min-green" class="min-spark-select spark-count-select aptitude-select"><option value="">â˜…</option></select>
+                                <select id="min-green" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="filter-white-spark">White Sparks</label>
@@ -197,14 +202,14 @@
                                     <input type="text" id="filter-white-spark" placeholder="Any White" class="spark-search-input spark-select-long" autocomplete="off">
                                     <div class="options-container"></div>
                                 </div>
-                                <select id="min-white" class="min-spark-select spark-count-select aptitude-select"><option value="">â˜…</option></select>
+                                <select id="min-white" class="min-spark-select spark-count-select aptitude-select"><option value="">★</option></select>
                             </div>
                             <div class="filter-group">
                                 <label for="min-total-white">Total White Sparks</label>
                                 <select id="min-total-white" class="min-spark-select spark-count-select aptitude-select"></select>
                             </div>
                         </div>
-                        <button class="disable-spark-filter-button" title="Disable this filter row">âœ“</button>
+                        <button class="disable-spark-filter-button" title="Disable this filter row">✓</button>
                         <button class="remove-spark-filter-button" title="Remove this filter row" style="display: none;">X</button>
                     </div>
                 </div>
@@ -215,9 +220,10 @@
                 </div>
             </div>
             
-            <button id="toggle-filter-panel" title="Collapse Filters">âˆ’</button>
+            <button id="toggle-filter-panel" title="Collapse Filters">−</button>
         </div>
 
+        <!-- Displays the main data tables for each tab -->
         <div class="table-container">
             <div class="tab-content active" id="runner-overview">
                 <table>
@@ -297,9 +303,9 @@
                             <div class="affinity-selector-container">
                                 <label for="affinity-selection" style="margin-right: 10px;"><b>Affinity:</b></label>
                                 <select id="affinity-selection">
-                                <option value="triangle">â–³</option>
-                                <option value="circle">ã€‡</option>
-                                <option value="double_circle" selected>â—Ž</option>
+                                <option value="triangle">△</option>
+                                <option value="circle">〇</option>
+                                <option value="double_circle" selected>◎</option>
                                 </select>
                             </div>
                         </div>

@@ -1,4 +1,6 @@
-﻿
+﻿/* table.css - Contains styles for the main data tables, including headers, cells, and aptitude-based styling. */
+
+/* Styles for the table container */
 .table-container {
   flex-grow: 1;
   background-color: var(--uma-light-bg);
@@ -7,15 +9,18 @@
   min-height: 0;
 }
 
+/* General table styles */
 table {
   width: 100%;
   background-color: var(--uma-light-bg);
 }
 
+/* Table header styles */
 thead {
   z-index: 2;
 }
 
+/* Styles for table header cells */
 th {
   background-color: var(--uma-header-bg);
   color: var(--uma-header-text);
@@ -48,6 +53,7 @@ td:not(:last-child) {
   border-right: 1px solid var(--uma-table-border-color);
 }
 
+/* Styles for table body rows */
 tbody tr:nth-child(even) {
   background-color: var(--uma-alt-row-bg);
 }
@@ -67,6 +73,7 @@ td.left-align {
   white-space: normal;
 }
 
+/* Styles for stat cells */
 .stat-cell {
   min-width: 44px;
   text-align: center;
@@ -78,6 +85,7 @@ td.left-align {
   box-shadow: inset 0px 0px 0px 2px rgba(255, 255, 255, 0.1);
 }
 
+/* Styles for aptitude cells */
 td.aptitude {
   font-weight: bold;
   color: #333;
@@ -88,6 +96,7 @@ td.aptitude {
 }
 
 
+/* Aptitude grade specific colors and styling */
 .aptitude-SS\+, .aptitude-SS  { letter-spacing: 1px; color: var(--apt-ss); font-weight:bold;}
 .aptitude-S\+,  .aptitude-S   { letter-spacing: 1px; color: var(--apt-s);  font-weight:bold;}
 .aptitude-A\+,  .aptitude-A   { letter-spacing: 1px; color: var(--apt-a);  font-weight:bold;}
@@ -112,6 +121,7 @@ td.aptitude {
 .dark-mode .aptitude-G                             { letter-spacing: 1px; text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); color: var(--apt-g);  font-weight:normal;}
 .dark-mode .aptitude-N\/A                          { letter-spacing: 1px; text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7); color: var(--apt-n-a); }
 
+/* Styles for outline labels */
 .outline-label {
   color: var(--uma-text-dark);
   text-decoration: underline;
@@ -123,6 +133,7 @@ td.aptitude {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for score cells */
 td.score-cell {
   font-weight: 400; 
   letter-spacing: 1px; 
@@ -133,6 +144,7 @@ td.score-cell {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for spark cells */
 td.spark-cell {
   text-align: left;
   white-space: normal;
@@ -152,6 +164,7 @@ td.spark-cell b {
   font-weight: normal;
 }
 
+/* Styles for white sparks count cells */
 td.whites-cell {
   font-weight: 400;
 }
@@ -160,6 +173,7 @@ td.whites-cell {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for skill cells */
 td.skill-cell {
   text-align: left;
   white-space: normal;
@@ -173,6 +187,7 @@ td.skill-cell b {
   color: var(--uma-text-dark);
 }
 
+/* Styles for text highlighting */
 .text-highlight {
     color: #f0bd1a !important;
   }
@@ -182,6 +197,7 @@ td.skill-cell b {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for the delete (transfer) button */
 .delete-button {
     background-color: #71d71c;
     color: white;
@@ -207,6 +223,7 @@ td.skill-cell {
   overflow-x: auto;
 }
 
+/* Styles for skill bubbles */
 .skill-bubble {
   display: inline-flex;
   align-items: center;
@@ -277,6 +294,7 @@ td.skill-cell {
   border-color: var(--skill-color-detrimental);
 }
 
+/* Styles for gold and unique skill bubbles */
 .skill-bubble.unique, .skill-bubble.gold {
   font-weight: 500;
 }

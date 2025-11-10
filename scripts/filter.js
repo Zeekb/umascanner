@@ -1,7 +1,9 @@
-﻿
+﻿// filter.js - Contains core logic for filtering and sorting runner data based on user-defined criteria.
+
 import { state, CONSTANTS } from './state.js';
 import { renderActiveTab } from './ui-renderer.js';
 
+// Sorts the current filtered data and re-renders the active tab.
 export function sortAndRender() {
     const sortBy = state.elements.filterElements.sort.value;
     const sortDir = state.elements.filterElements.sortDir.value;
@@ -11,6 +13,7 @@ export function sortAndRender() {
     renderActiveTab(activeTabId, state.lastFilteredData, allSparkCriteria);
 }
 
+// Applies all active filters to the runner data and then triggers sorting and rendering.
 export function filterAndRender() {
     state.allRunners.forEach(r => delete r._passingWhiteSparks);
 
@@ -110,6 +113,7 @@ export function filterAndRender() {
 }
 
 
+// Helper function to check if a runner meets the criteria for a specific colored spark.
 function checkSpark(runner, color, nameFilter, minStars, repOnly) {
     if (!nameFilter && minStars === 0) return true;
 
@@ -145,6 +149,7 @@ function checkSpark(runner, color, nameFilter, minStars, repOnly) {
     }
 }
 
+// Helper function to check if a runner meets the criteria for a specific white spark.
 function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
     const result = { pass: false, passingSparks: new Set() };
 
@@ -188,6 +193,7 @@ function checkWhiteSpark(runner, nameFilter, minCount, repOnly) {
     return result;
 }
 
+// Sorts the provided data array based on the specified key and direction.
 function sortData(data, sortBy, sortDir) {
     const getWhiteCount = (runner, sources) => {
         if (!runner.sparks || typeof runner.sparks !== 'object') return 0;
@@ -225,6 +231,7 @@ function sortData(data, sortBy, sortDir) {
     });
 }
 
+// Gathers all active spark filter criteria from the UI.
 export function getAllSparkFilterCriteria() {
     const criteria = [];
     document.querySelectorAll('#spark-filters-container .spark-filters').forEach(row => {

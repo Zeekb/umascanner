@@ -1,4 +1,6 @@
-﻿
+﻿/* utils.css - Contains utility styles for various components, including affinity calculator controls, help tooltips, and general layout helpers. */
+
+/* Styles for the affinity calculator controls */
 .affinity-calculator-controls {
     display: flex;
     flex-wrap: wrap;
@@ -44,6 +46,7 @@
     box-sizing: border-box;
 }
 
+/* Styles for the affinity score display */
 .affinity-score-display {
     display: flex;
     align-items: center;
@@ -62,8 +65,7 @@
     text-align: right !important;
 }
 
-
-
+/* Styles for tab-specific help icons and tooltips */
 .tab-help {
     position: relative;
     white-space: pre-line;
@@ -138,8 +140,9 @@
   margin-left: 0px;
 }
 
-
+/* Styles for clickable grandparent links */
 .gp-link {
+
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
@@ -161,6 +164,7 @@ li.gp-link {
 .dark-mode li.gp-link {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
+/* Styles for the offspring potential header */
 .offspring-header {
     display: flex;
     justify-content: space-between;
@@ -173,10 +177,12 @@ li.gp-link {
     margin: 0;
 }
 
+/* Styles for grandparent skills link */
 .gp-skills-link:hover {
     background-color: var(--uma-selection-bg);
 }
 
+/* Styles for borrowed (not in data) grandparent links */
 .gp-borrowed {
     color: #6c757d;
     font-size: 0.75em;
@@ -188,6 +194,7 @@ li.gp-link {
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for the timed message popup */
 #timed-message-popup {
     position: fixed;
     top: 50%;
@@ -203,6 +210,7 @@ li.gp-link {
     transition: opacity 0.5s ease-out;
 }
 
+/* Skill-specific color styles */
 .skill-recovery { color: var(--skill-color-recovery); }
 .skill-passive { color: var(--skill-color-passive); }
 .skill-speed { color: var(--skill-color-speed); }
@@ -225,13 +233,14 @@ td.skill-cell .skill-gold b {
     font-weight: 600;
 }
 
-
+/* Styles for the career planner content area */
 #career-planner-content {
     display: flex;
     flex-direction: column;
     gap: 20px;
     padding: 20px;
 }
+/* Styles for runner name and entry select dropdowns */
 .runner-name-select,
 .runner-entry-select {
     background-color: var(--uma-light-bg);
@@ -268,6 +277,7 @@ td.skill-cell .skill-gold b {
     color: var(--dark-text-color);
 }
 
+/* Styles for the spark pool display in the career planner */
 #career-planner .spark-pool {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -316,10 +326,12 @@ td.skill-cell .skill-gold b {
     border-left: 4px solid #999;
 }
 
+/* Styles for the descendant list body */
 #descendant-list-body {
     padding-inline-start: 0px;
 }
 
+/* Styles for career planner parent selection pairs */
 .career-pair {
     display: flex;
     gap: 20px;
@@ -346,7 +358,7 @@ td.skill-cell .skill-gold b {
     object-fit: cover;
 }
 
-
+/* Styles for the legacy analysis content area */
 #legacy-analysis-content {
     display: flex;
     gap: 20px;
@@ -401,7 +413,7 @@ td.skill-cell .skill-gold b {
     border-color: #666;
 }
 
-
+/* Styles for the spark tracer tab content */
 #spark-tracer {
     overflow-y: scroll;
 }
@@ -419,6 +431,7 @@ td.skill-cell .skill-gold b {
     box-sizing: border-box;
 }
 
+/* Styles for the spark trace tree structure */
 .spark-trace-tree, .spark-trace-tree ul {
     list-style-type: none;
     position: relative;
@@ -488,6 +501,7 @@ td.skill-cell .skill-gold b {
     border-color: #555;
 }
 
+/* Styles for the spark tracer explanation panel */
 .spark-tracer-explanation {
     position: sticky;
     top: 20px;
@@ -539,6 +553,7 @@ td.skill-cell .skill-gold b {
     color: #aaa;
 }
 
+/* Styles for spark chance breakdown details */
 .spark-chance-breakdown {
     font-size: 0.9em;
     color: #555;
@@ -552,6 +567,7 @@ td.skill-cell .skill-gold b {
     color: #bbb;
 }
 
+/* Styles for score cell text */
 .score-cell-style {
     color: var(--uma-text-dark);
 }
@@ -560,6 +576,7 @@ td.skill-cell .skill-gold b {
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Styles for spark cell content */
 .spark-cell-style {
     display: flex;
     flex-wrap: wrap;
@@ -622,6 +639,7 @@ td.skill-cell .skill-gold b {
 }
 
 
+/* Styles for the spark potential label container */
 .spark-potential .spark-label-container {
     display: flex;
     margin-bottom: 8px;
@@ -630,8 +648,6 @@ td.skill-cell .skill-gold b {
     gap: 10px;
 }
 
-
-
 .combined-spark-chance {
     color: var(--uma-accent-pink);
 }
@@ -639,9 +655,6 @@ td.skill-cell .skill-gold b {
 .dark-mode .combined-spark-chance{
     color: var(--uma-accent-blue);
 }
-
-
-
 
 .spark-potential .spark-button {
     padding: 4px 8px;
@@ -679,7 +692,7 @@ td.skill-cell .skill-gold b {
     background: rgba(255, 255, 255, 0.3);
 }
 
-
+/* Styles for the sources of spark inheritance */
 .spark-potential .sources {
     display: flex;
     flex-direction: column;
@@ -731,6 +744,7 @@ td.skill-cell .skill-gold b {
     gap: 4px;
 }
 
+/* Styles for the parent indicator in spark details */
 .parent-indicator {
     display: inline-flex;
     align-items: center;
@@ -754,7 +768,7 @@ td.skill-cell .skill-gold b {
     color: var(--dark-bg-element);
 }
 
-
+/* Styles for informational notes within spark potential */
 .spark-info-note {
     grid-column: 1 / -1;
     border-left: 4px solid #aaa; 
@@ -785,6 +799,7 @@ td.skill-cell .skill-gold b {
     opacity: 1;
 }
 
+/* Styles for the clear parent selections button */
 #clear-parent-selections {
     position: absolute;
     top: 50%;
@@ -809,6 +824,7 @@ td.skill-cell .skill-gold b {
     gap: 10px; 
 }
 
+/* Styles for the affinity slider container */
 .affinity-slider-container {
     display: flex;
     align-items: center;
@@ -816,7 +832,7 @@ td.skill-cell .skill-gold b {
     margin-left: auto; 
 }
 
-
+/* Styles for the affinity slider input */
 #affinity-slider {
     -webkit-appearance: none;
     appearance: none;
@@ -867,6 +883,7 @@ td.skill-cell .skill-gold b {
     background: var(--dark-uma-accent-blue);
 }
 
+/* Styles for the affinity number input field */
 #affinity-number-input {
     width: 50px;
     padding: 3px 5px;

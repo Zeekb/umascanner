@@ -1,17 +1,21 @@
 ﻿
+/* sparks.css - Contains styles for spark elements, including their colors, layout, and highlight effects, used in various tables and displays. */
+
+/* Define new variables for the specific spark colors */
 :root {
     --spark-blue-bg: #82B1FF;
     --spark-pink-bg: #FF80AB;
     --spark-green-bg: #71d71c;
     --spark-white-bg: #f0f0f0;
 
-    
+    /* Lighter shades for borders */
     --spark-blue-border: #a7c8ff;
     --spark-pink-border: #ff9fbb;
     --spark-green-border: #92e046;
     --spark-white-border: #ffffff;
 }
 
+/* Container for spark buttons within a cell */
 .spark-cell-container {
     display: flex;
     flex-wrap: wrap;
@@ -32,6 +36,7 @@
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
 
+/* Styling for individual spark buttons */
 .spark-button {
     display: inline-flex;
     align-items: center;
@@ -138,7 +143,7 @@
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
-
+/* Styles for spark separators */
 .spark-separator {
     display: inline-block;
     width: 2px;

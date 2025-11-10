@@ -1,9 +1,12 @@
-﻿#useful-links {
+﻿/* links.css - Contains styles for the useful links page, including the layout of link resources. */
+
+#useful-links {
     padding: 10px;
     box-sizing: border-box;
     line-height: 1.5; 
 }
 
+/* Container for the grid of link resources */
 .links-container {
     display: grid;
     grid-template-columns: repeat(3, 1fr); 
@@ -11,6 +14,7 @@
     padding: 5px 10px; 
 }
 
+/* Styling for individual link resource cards */
 .link-resource {
     margin-bottom: 0;
     padding: 10px 12px; 

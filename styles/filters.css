@@ -1,4 +1,5 @@
-﻿
+﻿/* filters.css - Contains styles for the filter panel and its various form elements, including sliders, dropdowns, and buttons. */
+
 .filter-panel {
     position: relative;
     display: flex;
@@ -391,6 +392,7 @@ input[type="range"]::-moz-range-track {
 }
 
 
+/* Styles for filter group containers */
 .filter-group-container {
     display: flex;
     flex-direction: column;
@@ -526,6 +528,7 @@ input[type="range"]::-moz-range-track {
   display: flex;
 }
 
+/* Styles for the searchable select component */
 .searchable-select-container {
     position: relative;
     min-width: 50px;
