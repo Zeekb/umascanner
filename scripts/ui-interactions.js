@@ -172,7 +172,13 @@ export function setupEventListeners() {
         });
 
         const tableBody = document.getElementById('grandparent-summary-body');
-        if (tableBody && !e.target.closest('#grandparent-summary-body')) {
+        const descendantListContainer = document.querySelector('.descendant-list');
+
+        if (tableBody && 
+            !e.target.closest('#grandparent-summary-body') &&
+            (!descendantListContainer || !e.target.closest('.descendant-list')) && 
+            !e.target.closest('#detail-modal-overlay')
+        ) {
             tableBody.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
             
             const descendantList = document.getElementById('descendant-list-body');
