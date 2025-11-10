@@ -62,12 +62,12 @@ export function initializeApp() {
     };
     state.elements.tabButtons = document.querySelectorAll('.tab-button');
     state.elements.tabContents = document.querySelectorAll('.tab-content');
-    state.elements.parentSummaryBody = document.getElementById('parent-summary-body');
-    state.elements.whiteSparksBody = document.getElementById('white-sparks-body');
-    state.elements.skillsSummaryBody = document.getElementById('skills-summary-body');
-    state.elements.legaciesPlannerBody = document.getElementById('legacies-planner-content');
-    state.elements.grandparentAnalysisBody = document.getElementById('grandparent-summary-body');
-    state.elements.inheritanceLogBody = document.getElementById('inheritance-log-content');
+    state.elements.runnerOverviewBody = document.getElementById('runner-overview-body');
+    state.elements.runnerWhiteSparksBody = document.getElementById('runner-white-sparks-body');
+    state.elements.skillsOverviewBody = document.getElementById('skills-overview-body');
+    state.elements.careerPlannerBody = document.getElementById('career-planner-content');
+    state.elements.legacyAnalysisBody = document.getElementById('legacy-summary-body');
+    state.elements.sparkTracerBody = document.getElementById('spark-tracer-content');
     state.elements.resetFiltersButton = document.getElementById('reset-filters-button');
     state.elements.addSparkFilterButton = document.getElementById('add-spark-filter-button');
     state.elements.sparkFiltersContainer = document.getElementById('spark-filters-container');
@@ -80,7 +80,7 @@ export function initializeApp() {
 
     if (!state.allRunners || state.allRunners.length === 0) {
         const noDataMsg = '<tr><td colspan="18">No runner data found.</td></tr>';
-        [state.elements.parentSummaryBody, state.elements.whiteSparksBody, state.elements.skillsSummaryBody].forEach(body => body.innerHTML = noDataMsg);
+        [state.elements.runnerOverviewBody, state.elements.runnerWhiteSparksBody, state.elements.skillsOverviewBody].forEach(body => body.innerHTML = noDataMsg);
         return;
     }
 
@@ -118,7 +118,7 @@ export function initializeApp() {
     }
     
     setupEventListeners();
-    handleTabChange('parent-summary');
+    handleTabChange('runner-overview');
 
     state.elements.uploaderContainer.style.display = 'none';
     state.elements.appWrapper.style.display = 'flex';
@@ -163,8 +163,8 @@ function populateFilters() {
     for (let i = 1; i <= state.maxTotalWhiteSparks; i++) { totalWhiteSparkOptions += `<option value="${i}">${i}</option>`; }
     firstSparkRow.querySelector('#min-total-white').innerHTML = '<option value="0"></option>' + totalWhiteSparkOptions;
 
-    const aptGrades = ['S', 'A', 'B', 'C', 'D'];
-    const aptGradeOptions = aptGrades.map(g => `<option value="${g}">${g !== 'S' ? g + '+' : g}</option>`).join('');
+    const aptGrades = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
+    const aptGradeOptions = aptGrades.map(g => `<option value="${g}">${g}</option>`).join('');
     
     Object.values(state.elements.filterElements)
     .filter(el => el.id.startsWith('apt-min-'))

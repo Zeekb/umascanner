@@ -7,23 +7,23 @@ import {
 } from './utils.js';
 
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
-    if (activeTabId === 'parent-summary') {
-        renderParentSummary(filteredData, allSparkCriteria);
+    if (activeTabId === 'runner-overview') {
+        renderRunnerOverview(filteredData, allSparkCriteria);
     } 
-    else if (activeTabId === 'white-sparks') {
-        renderWhiteSparksSummary(filteredData, allSparkCriteria);
+    else if (activeTabId === 'runner-white-sparks') {
+        renderRunnerWhiteSparksSummary(filteredData, allSparkCriteria);
     }
-    else if (activeTabId === 'skills-summary') {
-        renderSkillsSummary(filteredData);
+    else if (activeTabId === 'skills-overview') {
+        renderSkillsOverview(filteredData);
     }
-    else if (activeTabId === 'legacies-planner') {
-        renderLegaciesPlanner();
+    else if (activeTabId === 'career-planner') {
+        renderCareerPlanner();
     }
-    else if (activeTabId === 'grandparent-analysis') {
-        renderGrandparentAnalysis(filteredData);
+    else if (activeTabId === 'legacy-analysis') {
+        renderLegacyAnalysis(filteredData);
     }
-    else if (activeTabId === 'inheritance-log') {
-        renderInheritanceLog();
+    else if (activeTabId === 'spark-tracer') {
+        renderSparkTracer();
     }
     else if (activeTabId === 'useful-links') {
         renderUsefulLinks();
@@ -39,9 +39,9 @@ function calculateMaxDepth(node) {
     return 1 + Math.max(...childDepths);
 }
 
-function renderParentSummary(runners, allSparkCriteria) {
+function renderRunnerOverview(runners, allSparkCriteria) {
     if (!runners.length) {
-        state.elements.parentSummaryBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>';
+        state.elements.runnerOverviewBody.innerHTML = '<tr><td colspan="14">No runners match filters.</td></tr>';
         return;
     }
     const html = runners.map(r => {
@@ -80,13 +80,13 @@ function renderParentSummary(runners, allSparkCriteria) {
             <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
             </tr>
     `}).join('');
-    state.elements.parentSummaryBody.innerHTML = html;
-    hideEntryIdColumn('parent-summary');
+    state.elements.runnerOverviewBody.innerHTML = html;
+    hideEntryIdColumn('runner-overview');
 }
 
-function renderWhiteSparksSummary(runners, allSparkCriteria) {
+function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
     if (!runners.length) {
-       state.elements.whiteSparksBody.innerHTML = '<tr><td colspan="7">No runners match filters.</td></tr>';
+       state.elements.runnerWhiteSparksBody.innerHTML = '<tr><td colspan="7">No runners match filters.</td></tr>';
        return;
     }
 
@@ -222,13 +222,13 @@ function renderWhiteSparksSummary(runners, allSparkCriteria) {
            <td class="${gp2NameClass}">${cleanName(r.gp2 || 'N/A')}</td>
        </tr>
    `}).join('');
-   state.elements.whiteSparksBody.innerHTML = html;
-   hideEntryIdColumn('white-sparks');
+   state.elements.runnerWhiteSparksBody.innerHTML = html;
+   hideEntryIdColumn('runner-white-sparks');
 }
 
-function renderSkillsSummary(runners) {
+function renderSkillsOverview(runners) {
     if (!runners.length) {
-        state.elements.skillsSummaryBody.innerHTML = '<tr><td colspan="4">No runners match filters.</td></tr>';
+        state.elements.skillsOverviewBody.innerHTML = '<tr><td colspan="4">No runners match filters.</td></tr>';
         return;
     }
 
@@ -303,8 +303,8 @@ function renderSkillsSummary(runners) {
         `;
     }).join('');
 
-    state.elements.skillsSummaryBody.innerHTML = html;
-    hideEntryIdColumn('skills-summary');
+    state.elements.skillsOverviewBody.innerHTML = html;
+    hideEntryIdColumn('skills-overview');
 }
 
 function getNewBaseChance(color, stars) {
@@ -329,7 +329,7 @@ function getNewBaseChance(color, stars) {
 }
 
 
-function renderLegaciesPlanner() {
+function renderCareerPlanner() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
     
     const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
@@ -351,7 +351,7 @@ function renderLegaciesPlanner() {
     };
     const reverseAffinityMap = { 49: 'triangle', 100: 'circle', 150: 'double_circle' };
 
-    if (!state.elements.legaciesPlannerBody.dataset.initialized) {
+    if (!state.elements.careerPlannerBody.dataset.initialized) {
         const defaultOption = '<option value="">Select a runner</option>';
         
         parent1NameSelect.innerHTML = defaultOption + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
@@ -368,11 +368,11 @@ function renderLegaciesPlanner() {
         
         parent1EntrySelect.addEventListener('change', () => {
             displayParentDetails(parent1EntrySelect, parent1Details);
-            renderLegaciesPlanner(); 
+            renderCareerPlanner(); 
         });
         parent2EntrySelect.addEventListener('change', () => {
             displayParentDetails(parent2EntrySelect, parent2Details);
-            renderLegaciesPlanner(); 
+            renderCareerPlanner(); 
         });
 
         affinitySelect.addEventListener('change', () => {
@@ -381,7 +381,7 @@ function renderLegaciesPlanner() {
                 const score = affinityMap[valueKey];
                 affinitySlider.value = score;
                 affinityNumber.value = score;
-                renderLegaciesPlanner();
+                renderCareerPlanner();
             }
         });
 
@@ -399,7 +399,7 @@ function renderLegaciesPlanner() {
         });
 
         affinitySlider.addEventListener('change', () => {
-            renderLegaciesPlanner();
+            renderCareerPlanner();
         });
 
 
@@ -435,21 +435,11 @@ function renderLegaciesPlanner() {
             
             // Correct the box value if it was invalid
             affinityNumber.value = score; 
-            affinitySlider.value = score;
 
-            // Set dropdown one last time
-            if (score <= 49) {
-                affinitySelect.value = 'triangle';
-            } else if (score <= 149) {
-                affinitySelect.value = 'circle';
-            } else {
-                affinitySelect.value = 'double_circle';
-            }
-
-            renderLegaciesPlanner();
+            renderCareerPlanner();
         });
         
-        state.elements.legaciesPlannerBody.dataset.initialized = 'true';
+        state.elements.careerPlannerBody.dataset.initialized = 'true';
     }
     
     const parent1EntryId = parent1EntrySelect.value;
@@ -491,7 +481,7 @@ function syncParentNameSelects() {
     }
 }
 
-function renderGrandparentAnalysis(filteredRunners) {
+function renderLegacyAnalysis(filteredRunners) {
     const grandparentData = {};
 
     state.allRunners.forEach(runner => {
@@ -517,7 +507,7 @@ function renderGrandparentAnalysis(filteredRunners) {
     });
 
     const sortedGrandparents = Object.values(grandparentData).sort((a, b) => b.total - a.total);
-    const tableBody = document.getElementById('grandparent-summary-body');
+    const tableBody = document.getElementById('legacy-summary-body');
     
     const blueSparks = state.orderedSparks?.blue || [];
     const pinkSparks = state.orderedSparks?.pink || [];
@@ -642,19 +632,19 @@ function renderGrandparentAnalysis(filteredRunners) {
     }
 }
 
-function renderInheritanceLog() {
-    const contentContainer = document.getElementById('inheritance-log-content');
+function renderSparkTracer() {
+    const contentContainer = document.getElementById('spark-tracer-content');
     
-    if (!contentContainer.querySelector('.inheritance-explanation')) {
+    if (!contentContainer.querySelector('.spark-tracer-explanation')) {
         contentContainer.style.display = 'flex';
         contentContainer.style.gap = '20px';
 
         const mainContent = document.createElement('div');
-        mainContent.className = 'inheritance-main';
+        mainContent.className = 'spark-tracer-main';
         mainContent.style.flex = '3';
 
         const selectorWrapper = document.createElement('div');
-        selectorWrapper.className = 'inheritance-search-container';
+        selectorWrapper.className = 'spark-tracer-search-container';
         
         selectorWrapper.innerHTML = `
             <div class="searchable-select-container">
@@ -666,14 +656,14 @@ function renderInheritanceLog() {
         mainContent.appendChild(selectorWrapper);
         
         const graph = document.createElement('div');
-        graph.id = 'inheritance-graph';
+        graph.id = 'spark-tracer-graph';
         mainContent.appendChild(graph);
 
         contentContainer.innerHTML = '';
         contentContainer.appendChild(mainContent);
 
         const explanationDiv = document.createElement('div');
-        explanationDiv.className = 'inheritance-explanation';
+        explanationDiv.className = 'spark-tracer-explanation';
         explanationDiv.style.flex = '0 0 300px';
         explanationDiv.style.minWidth = '250px';
         explanationDiv.style.padding = '15px';
@@ -749,7 +739,7 @@ function renderInheritanceLog() {
         return a.localeCompare(b);
     });
     const sparksWithSufficientDepth = sortedSparks.filter(sparkName => {
-        const chains = traceInheritance(sparkName);
+        const chains = traceSpark(sparkName);
         if (!chains || chains.length === 0) {
             return false;
         }
@@ -758,14 +748,14 @@ function renderInheritanceLog() {
     });
 
     const searchInput = document.getElementById('spark-tracer-search');
-    const graphContainer = document.getElementById('inheritance-graph');
+    const graphContainer = document.getElementById('spark-tracer-graph');
 
     // Define what happens when a user selects a spark
     const onSparkSelect = () => {
         const selectedSpark = searchInput.value;
         if (selectedSpark) {
-            const chains = traceInheritance(selectedSpark);
-            renderInheritanceGraph(chains, graphContainer);
+            const chains = traceSpark(selectedSpark);
+            renderSparkTraceGraph(chains, graphContainer);
         } else {
             graphContainer.innerHTML = '';
         }
@@ -782,7 +772,7 @@ function renderUsefulLinks() {
     
 }
 
-export function resetLegaciesPlannerParents() {
+export function resetCareerPlannerParents() {
     const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
     const parent1EntrySelect = document.querySelector('#parent1-selection .runner-entry-select');
     const parent1Details = document.querySelector('#parent1-selection .runner-details');
@@ -805,25 +795,25 @@ export function resetLegaciesPlannerParents() {
     }
     if (parent2Details) parent2Details.innerHTML = "";
     
-    if (state.elements.legaciesPlannerBody?.dataset.initialized) {
-        renderLegaciesPlanner();
+    if (state.elements.careerPlannerBody?.dataset.initialized) {
+        renderCareerPlanner();
     }
     
     syncParentNameSelects();
 }
 
 export function resetTabSpecificFilters() {
-    // 1. Reset Sparks Planner (Legacies Planner)
-    resetLegaciesPlannerParents();
+    // 1. Reset Sparks Planner (Career Planner)
+    resetCareerPlannerParents();
 
     const searchInput = document.getElementById('spark-tracer-search');
-    const graphContainer = document.getElementById('inheritance-graph');
+    const graphContainer = document.getElementById('spark-tracer-graph');
 
     const onSparkSelect = () => {
         const selectedSpark = searchInput.value;
         if (selectedSpark) {
-            const chains = traceInheritance(selectedSpark);
-            renderInheritanceGraph(chains, graphContainer);
+            const chains = traceSpark(selectedSpark);
+            renderSparkTraceGraph(chains, graphContainer);
         } else {
             graphContainer.innerHTML = 'Select a spark to see its inheritance tree.';
         }
@@ -834,7 +824,7 @@ export function resetTabSpecificFilters() {
     onSparkSelect();
 }
 
-function traceInheritance(sparkName) {
+function traceSpark(sparkName) {
     const nodes = new Map();
     state.allRunners.forEach(r => {
         const parentSparks = r.sparks?.parent || [];
@@ -874,7 +864,7 @@ function traceInheritance(sparkName) {
     return sources;
 }
 
-function buildTreeHtml(node, parentNode = null) {
+function buildSparkTreeHtml(node, parentNode = null) {
     const r = node.runner;
     const sl = node.sparkLevel;
 
@@ -904,7 +894,7 @@ function buildTreeHtml(node, parentNode = null) {
         html += `<ul>`;
         node.children.sort((a, b) => (b.runner.score || 0) - (a.runner.score || 0));
         for (const child of node.children) {
-            html += buildTreeHtml(child, node);
+            html += buildSparkTreeHtml(child, node);
         }
         html += `</ul>`;
     }
@@ -913,7 +903,7 @@ function buildTreeHtml(node, parentNode = null) {
     return html;
 }
 
-function renderInheritanceGraph(sources, container) {
+function renderSparkTraceGraph(sources, container) {
 
     const deepChains = sources.filter(sourceNode => calculateMaxDepth(sourceNode) >= 3);
 
@@ -923,7 +913,7 @@ function renderInheritanceGraph(sources, container) {
     }
 
     let html = deepChains.map(sourceNode => {
-        return `<ul class="inheritance-tree">${buildTreeHtml(sourceNode)}</ul>`;
+        return `<ul class="spark-trace-tree">${buildSparkTreeHtml(sourceNode)}</ul>`;
     }).join('');
 
     container.innerHTML = html;
@@ -1221,7 +1211,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     }
 
     detailsDiv.innerHTML = '';
-    renderLegaciesPlanner();
+    renderCareerPlanner();
 }
 
 function displayParentDetails(entrySelect, detailsElement) {

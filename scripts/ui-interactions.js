@@ -3,7 +3,7 @@
 import { state } from './state.js';
 import { debounce, findRunnerByDetails, showTimedMessage, cleanName, createSearchableSelect } from './utils.js';
 import { filterAndRender, sortAndRender } from './filter.js';
-import { showDetailModal, resetTabSpecificFilters, resetLegaciesPlannerParents } from './ui-renderer.js';
+import { showDetailModal, resetTabSpecificFilters, resetCareerPlannerParents } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
 
 export function setupEventListeners() {
@@ -171,11 +171,11 @@ export function setupEventListeners() {
             }
         });
 
-        const tableBody = document.getElementById('grandparent-summary-body');
+        const tableBody = document.getElementById('legacy-summary-body');
         const descendantListContainer = document.querySelector('.descendant-list');
 
         if (tableBody && 
-            !e.target.closest('#grandparent-summary-body') &&
+            !e.target.closest('#legacy-summary-body') &&
             (!descendantListContainer || !e.target.closest('.descendant-list')) && 
             !e.target.closest('#detail-modal-overlay')
         ) {
@@ -188,9 +188,9 @@ export function setupEventListeners() {
         }
     });
 
-    state.elements.parentSummaryBody.addEventListener('click', handleDeleteRunner);
+    state.elements.runnerOverviewBody.addEventListener('click', handleDeleteRunner);
 
-    [state.elements.parentSummaryBody, state.elements.whiteSparksBody, state.elements.skillsSummaryBody].forEach(body => {
+    [state.elements.runnerOverviewBody, state.elements.runnerWhiteSparksBody, state.elements.skillsOverviewBody].forEach(body => {
         body.addEventListener('click', handleDetailView);
     });
 
@@ -198,17 +198,17 @@ export function setupEventListeners() {
 
     const clearParentsButton = document.getElementById('clear-parent-selections');
     if(clearParentsButton) {
-        clearParentsButton.addEventListener('click', resetLegaciesPlannerParents);
+        clearParentsButton.addEventListener('click', resetCareerPlannerParents);
     }
 
-    const grandparentContent = document.getElementById('grandparent-analysis-content');
-    if (grandparentContent) {
-        grandparentContent.addEventListener('click', handleGrandparentClick);
+    const legacyContent = document.getElementById('legacy-analysis-content');
+    if (legacyContent) {
+        legacyContent.addEventListener('click', handleLegacyClick);
     }
 
-    const inheritanceContent = document.getElementById('inheritance-log-content');
-    if (inheritanceContent) {
-        inheritanceContent.addEventListener('click', handleInheritanceNodeClick);
+    const sparkTracerContent = document.getElementById('spark-tracer-content');
+    if (sparkTracerContent) {
+        sparkTracerContent.addEventListener('click', handleSparkTracerNodeClick);
     }
 
     document.querySelectorAll('#affinity-selection, #spark-select, .runner-select, .min-spark-select, .spark-count-select').forEach(sel => {
@@ -218,7 +218,7 @@ export function setupEventListeners() {
     updateRemoveButtonVisibility();
     updateRemoveSkillButtonVisibility();
 
-    document.getElementById('legacies-planner-content').addEventListener('click', (e) => {
+    document.getElementById('career-planner-content').addEventListener('click', (e) => {
         const profileContainer = e.target.closest('.clickable-profile-image');
         if (profileContainer) {
             const entryId = profileContainer.dataset.entryId;
@@ -291,7 +291,7 @@ export function handleDetailView(event) {
     const mainRunner = state.allRunners.find(r => String(r.entry_id) === tableRow?.dataset.entryId);
     if (!mainRunner) return;
 
-    if (tableRow.closest('#white-sparks') && clickedCell.classList.contains('gp-link') && clickedCell.textContent.trim() === cleanName(mainRunner.name)) {
+    if (tableRow.closest('#runner-white-sparks') && clickedCell.classList.contains('gp-link') && clickedCell.textContent.trim() === cleanName(mainRunner.name)) {
         showDetailModal(mainRunner);
         return;
     }
@@ -344,7 +344,7 @@ export function handleDetailView(event) {
     }
 }
 
-export function handleGrandparentClick(event) {
+export function handleLegacyClick(event) {
     const target = event.target;
     if (target.matches('.descendant-list .gp-link[data-entry-id]')) {
         const entryId = target.dataset.entryId;
@@ -355,9 +355,9 @@ export function handleGrandparentClick(event) {
     }
 }
 
-export function handleInheritanceNodeClick(event) {
+export function handleSparkTracerNodeClick(event) {
     const target = event.target;
-    if (target.matches('#inheritance-graph .gp-link[data-entry-id]')) {
+    if (target.matches('#spark-tracer-graph .gp-link[data-entry-id]')) {
         const entryId = target.dataset.entryId;
         const runner = state.allRunners.find(r => String(r.entry_id) === entryId);
         if (runner) {

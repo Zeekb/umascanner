@@ -225,8 +225,8 @@ td.skill-cell .skill-gold b {
     font-weight: 600;
 }
 
-/* --- legacies Planner --- */
-#legacies-planner-content {
+/* --- Career Planner --- */
+#career-planner-content {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -268,14 +268,14 @@ td.skill-cell .skill-gold b {
     color: var(--dark-text-color);
 }
 
-#legacies-planner .spark-pool {
+#career-planner .spark-pool {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 10px;
     width: 100%;
 }
 
-#legacies-planner .spark-potential {
+#career-planner .spark-potential {
     border: 1px solid var(--uma-border-color);
     border-radius: 5px;
     padding: 8px;
@@ -285,34 +285,34 @@ td.skill-cell .skill-gold b {
     gap: 4px;
 }
 
-.dark-mode #legacies-planner .spark-potential {
+.dark-mode #career-planner .spark-potential {
     background-color: var(--dark-bg-alt-row);
 }
 
-#legacies-planner .spark-details {
+#career-planner .spark-details {
     font-size: 0.85em;
     color: var(--uma-text-dark);
 }
 
-.dark-mode #legacies-planner .spark-details {
+.dark-mode #career-planner .spark-details {
     color: var(--dark-text-color);
 }
 
-#legacies-planner .spark-details b {
+#career-planner .spark-details b {
     font-size: 1em;
     color: var(--uma-accent-pink);
 }
 
-.dark-mode #legacies-planner .spark-details b {
+.dark-mode #career-planner .spark-details b {
     color: var(--uma-accent-blue);
 }
 
-#legacies-planner .spark-color-blue { border-left: 4px solid var(--spark-blue-bg); }
-#legacies-planner .spark-color-pink { border-left: 4px solid var(--spark-pink-bg); }
-#legacies-planner .spark-color-green { border-left: 4px solid var(--spark-green-bg); }
-#legacies-planner .spark-color-white { border-left: 4px solid #ddd; }
+#career-planner .spark-color-blue { border-left: 4px solid var(--spark-blue-bg); }
+#career-planner .spark-color-pink { border-left: 4px solid var(--spark-pink-bg); }
+#career-planner .spark-color-green { border-left: 4px solid var(--spark-green-bg); }
+#career-planner .spark-color-white { border-left: 4px solid #ddd; }
 
-.dark-mode #legacies-planner .spark-color-white { 
+.dark-mode #career-planner .spark-color-white { 
     border-left: 4px solid #999;
 }
 
@@ -346,14 +346,14 @@ td.skill-cell .skill-gold b {
     object-fit: cover;
 }
 
-/* --- Grandparent Analysis --- */
-#grandparent-analysis-content {
+/* --- Legacy Analysis --- */
+#legacy-analysis-content {
     display: flex;
     gap: 20px;
     padding: 20px;
 }
 
-.grandparent-summary {
+.legacy-summary {
     flex: 4;
 }
 
@@ -403,16 +403,16 @@ td.skill-cell .skill-gold b {
     border-color: #666;
 }
 
-/* --- Inheritance Log --- */
-#inheritance-log {
+/* --- Spark Tracer --- */
+#spark-tracer {
     overflow-y: scroll;
 }
 
-#inheritance-log-content {
+#spark-tracer-content {
     padding: 20px;
 }
 
-#inheritance-graph {
+#spark-tracer-graph {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
@@ -421,82 +421,82 @@ td.skill-cell .skill-gold b {
     box-sizing: border-box;
 }
 
-.inheritance-tree, .inheritance-tree ul {
+.spark-trace-tree, .spark-trace-tree ul {
     list-style-type: none;
     position: relative;
     padding-left: 30px; 
 }
 
-.inheritance-tree {
+.spark-trace-tree {
     padding-left: 0;
     padding-top: 16px;
     margin-top: 16px;
     border-top: 1px dashed #ccc;
 }
 
-.inheritance-tree:nth-child(-n+3) {
+.spark-trace-tree:nth-child(-n+3) {
     border-top: 0px !important;
 }
-.dark-mode .inheritance-tree:nth-child(-n+3) {
+.dark-mode .spark-trace-tree:nth-child(-n+3) {
     border-top: 0px !important;
 }
 
-.inheritance-tree li {
+.spark-trace-tree li {
     margin: 0;
     padding: 4px 0;
     position: relative;
     align-self: center;
 }
 
-.inheritance-tree li::before, .inheritance-tree li::after {
+.spark-trace-tree li::before, .spark-trace-tree li::after {
     content: '';
     position: absolute;
     left: -15px;
 }
 
-.inheritance-tree li::before {
+.spark-trace-tree li::before {
     border-left: 1px solid #ccc;
     height: 100%;
     width: 0;
     top: -2px; 
 }
 
-.inheritance-tree li::after {
+.spark-trace-tree li::after {
     border-top: 1px solid #ccc;
     height: 0;
     width: 15px;
     top: 22px;
 }
 
-.inheritance-tree li:last-child::before {
+.spark-trace-tree li:last-child::before {
     height: 24px;
 }
 
-.inheritance-tree > li::before,
-.inheritance-tree > li::after {
+.spark-trace-tree > li::before,
+.spark-trace-tree > li::after {
     display: none;
 }
 
-.inheritance-tree + .inheritance-tree {
+.spark-trace-tree + .spark-trace-tree {
     margin-top: 16px;
     padding-top: 16px;
     border-top: 1px dashed #ccc;
 }
 
-.dark-mode .inheritance-tree + .inheritance-tree {
+.dark-mode .spark-trace-tree + .spark-trace-tree {
     border-top-color: #555;
 }
 
-.dark-mode .inheritance-tree li::before,
-.dark-mode .inheritance-tree li::after {
+.dark-mode .spark-trace-tree li::before,
+.dark-mode .spark-trace-tree li::after {
     border-color: #555;
 }
 
-.inheritance-explanation {
+.spark-tracer-explanation {
     position: sticky;
     top: 20px;
 }
-.inheritance-tree .gp-link {
+.spark-trace-tree .gp-link {
     display: inline-block;
     padding: 6px 10px;
     border-radius: 6px;
@@ -513,33 +513,33 @@ td.skill-cell .skill-gold b {
     white-space: nowrap;
 }
 
-.inheritance-tree .gp-link:hover {
+.spark-trace-tree .gp-link:hover {
     background-color: var(--uma-selection-bg);
     border-color: var(--uma-accent-pink);
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.inheritance-via {
+.spark-trace-via {
     font-size: 0.8em;
     color: #888;
     margin-top: 4px;
     font-style: italic;
 }
 
-.dark-mode .inheritance-tree .gp-link {
+.dark-mode .spark-trace-tree .gp-link {
     background-color: var(--dark-bg-element);
     border-color: var(--dark-uma-border-color);
     color: var(--dark-text-color);
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }
 
-.dark-mode .inheritance-tree .gp-link:hover {
+.dark-mode .spark-trace-tree .gp-link:hover {
     border-color: var(--uma-accent-blue);
     background-color: var(--dark-bg-hover);
 }
 
-.dark-mode .inheritance-via {
+.dark-mode .spark-trace-via {
     color: #aaa;
 }
 
@@ -593,7 +593,7 @@ td.skill-cell .skill-gold b {
 }
 
 /* (Item 9) Runner Name Select Width */
-#legacies-planner-content .runner-name-select {
+#career-planner-content .runner-name-select {
     width: max-content;
     max-width: 100%;
 }

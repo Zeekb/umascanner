@@ -28,22 +28,22 @@
     <div id="app-wrapper" class="app-container" style="display: none;">
         
         <div class="tab-buttons">
-            <button class="tab-button active" data-tab="parent-summary">Runner Overview</button>
+            <button class="tab-button active" data-tab="runner-overview">Runner Overview</button>
             <span class="tab-help" data-tooltip="Main overview for finding runners. &#10;&#10;&bull;  Use the filters to find runners with high stats or specific sparks (Blue, Green, Pink, White). &#10;&bull;  Sparks matching your filters will be highlighted. &#10;&bull;  Double-click any row for full details, or double-click a grandparent's name (if not grayed out) to jump to their entry.">?</span>
 
-            <button class="tab-button" data-tab="white-sparks">Runner White Sparks</button>
+            <button class="tab-button" data-tab="runner-white-sparks">Runner White Sparks</button>
             <span class="tab-help" data-tooltip="Focuses on White Sparks to trace their lineage. &#10;&#10;&bull;  It shows the total count, then breaks down the specific sparks for the runner (Parent), their first grandparent (GP1), and their second grandparent (GP2). &#10;&bull;  Sparks that match your White Spark filters will be highlighted.">?</span>
 
-            <button class="tab-button" data-tab="skills-summary">Skills Overview</button>
+            <button class="tab-button" data-tab="skills-overview">Skills Overview</button>
             <span class="tab-help" data-tooltip="Summarizes all of a runner's skills. &#10;&#10;&bull;  Skills are categorized into types like Recovery, Passive, and Speed. &#10;&bull;  Important skills are highlighted: Gold skills have a gold color, and Unique skills are bold.">?</span>
             
-            <button class="tab-button" data-tab="legacies-planner">Career Planner</button>
+            <button class="tab-button" data-tab="career-planner">Career Planner</button>
             <span class="tab-help" data-tooltip="Select two parents to see their combined inheritance potential.">?</span>
             
-            <button class="tab-button" data-tab="grandparent-analysis">Legacy Analysis</button>
+            <button class="tab-button" data-tab="legacy-analysis">Legacy Analysis</button>
             <span class="tab-help" data-tooltip="Analyze the most influential grandparents in your collection.">?</span>
             
-            <button class="tab-button" data-tab="inheritance-log">Spark Tracer</button>
+            <button class="tab-button" data-tab="spark-tracer">Spark Tracer</button>
             <span class="tab-help" data-tooltip="Trace the lineage of a specific spark through your collection.">?</span>
             
             <button class="tab-button" data-tab="useful-links">Useful Links</button>
@@ -128,22 +128,22 @@
                     <div class="filter-section aptitude-filters" id="aptitude-filters">
                         <div class="filter-group">
                             <label>Track</label>
-                            <select id="apt-min-turf"class="aptitude-select"><option value="">All Turf</option></select>
-                            <select id="apt-min-dirt" class="aptitude-select"><option value="">All Dirt</option></select>
+                            <select id="apt-min-turf"class="aptitude-select"><option value="">Min Turf</option></select>
+                            <select id="apt-min-dirt" class="aptitude-select"><option value="">Min Dirt</option></select>
                         </div>
                         <div class="filter-group">
                             <label>Distance</label>
-                            <select id="apt-min-sprint" class="aptitude-select"><option value="">All Sprint</option></select>
-                            <select id="apt-min-mile" class="aptitude-select"><option value="">All Mile</option></select>
-                            <select id="apt-min-medium" class="aptitude-select"><option value="">All Med.</option></select>
-                            <select id="apt-min-long" class="aptitude-select"><option value="">All Long</option></select>
+                            <select id="apt-min-sprint" class="aptitude-select"><option value="">Min Sprint</option></select>
+                            <select id="apt-min-mile" class="aptitude-select"><option value="">Min Mile</option></select>
+                            <select id="apt-min-medium" class="aptitude-select"><option value="">Min Med.</option></select>
+                            <select id="apt-min-long" class="aptitude-select"><option value="">Min Long</option></select>
                         </div>
                         <div class="filter-group">
                             <label>Style</label>
-                            <select id="apt-min-front" class="aptitude-select"><option value="">All Front</option></select>
-                            <select id="apt-min-pace"class="aptitude-select"><option value="">All Pace</option></select>
-                            <select id="apt-min-late" class="aptitude-select"><option value="">All Late</option></select>
-                            <select id="apt-min-end" class="aptitude-select"><option value="">All End</option></select>
+                            <select id="apt-min-front" class="aptitude-select"><option value="">Min Front</option></select>
+                            <select id="apt-min-pace"class="aptitude-select"><option value="">Min Pace</option></select>
+                            <select id="apt-min-late" class="aptitude-select"><option value="">Min Late</option></select>
+                            <select id="apt-min-end" class="aptitude-select"><option value="">Min End</option></select>
                         </div>
                     </div>
                 </div>                
@@ -219,7 +219,7 @@
         </div>
 
         <div class="table-container">
-            <div class="tab-content active" id="parent-summary">
+            <div class="tab-content active" id="runner-overview">
                 <table>
                     <thead>
                         <tr>
@@ -238,10 +238,10 @@
                             <th><span class="tab-help help-top-right transfer-help" data-tooltip="Clicking 'Transfer' will permanently delete this runner from the loaded data. &#10;&#10;This action can't be undone unless you reload the original file. Use the 'Save' (沈) button to download your edited data.">?</span></th>
                         </tr>
                     </thead>
-                    <tbody id="parent-summary-body"></tbody>
+                    <tbody id="runner-overview-body"></tbody>
                 </table>
             </div>
-            <div class="tab-content" id="white-sparks">
+            <div class="tab-content" id="runner-white-sparks">
                 <table>
                     <thead>
                         <tr>
@@ -254,10 +254,10 @@
                            <th>GP2</th>
                         </tr>
                     </thead>
-                    <tbody id="white-sparks-body"></tbody>
+                    <tbody id="runner-white-sparks-body"></tbody>
                 </table>
             </div>
-            <div class="tab-content" id="skills-summary">
+            <div class="tab-content" id="skills-overview">
                 <table>
                     <thead>
                         <tr>
@@ -267,11 +267,11 @@
                            <th>Skills</th>
                         </tr>
                     </thead>
-                    <tbody id="skills-summary-body"></tbody>
+                    <tbody id="skills-overview-body"></tbody>
                 </table>
             </div>
-            <div class="tab-content" id="legacies-planner">
-                <div id="legacies-planner-content">
+            <div class="tab-content" id="career-planner">
+                <div id="career-planner-content">
                     <div class="legacies-pair">
                         <div class="breeder-selection" id="parent1-selection">
                             <h3>Parent 1</h3>
@@ -307,9 +307,9 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-content" id="grandparent-analysis">
-                <div id="grandparent-analysis-content">
-                    <div class="grandparent-summary">
+            <div class="tab-content" id="legacy-analysis">
+                <div id="legacy-analysis-content">
+                    <div class="legacy-summary">
                         <table>
                             <thead>
                                 <tr>
@@ -318,7 +318,7 @@
                                     <th>Parent Sparks</th>
                                 </tr>
                             </thead>
-                            <tbody id="grandparent-summary-body"></tbody>
+                            <tbody id="legacy-summary-body"></tbody>
                         </table>
                     </div>
                     <div class="descendant-list">
@@ -326,8 +326,8 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-content" id="inheritance-log">
-                <div id="inheritance-log-content">
+            <div class="tab-content" id="spark-tracer">
+                <div id="spark-tracer-content">
                     <h3>Inheritance Log</h3>
                     <div class="spark-selector">
                         <div class="searchable-select-container">
@@ -335,7 +335,7 @@
                             <div class="options-container"></div>
                         </div>
                     </div>
-                    <div id="inheritance-graph"></div>
+                    <div id="spark-tracer-graph"></div>
                 </div>
             </div>
             <div class="tab-content" id="useful-links">
