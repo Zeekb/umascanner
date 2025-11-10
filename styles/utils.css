@@ -365,7 +365,7 @@ td.skill-cell .skill-gold b {
     position: sticky;
     top: 20px;
     align-self: flex-start;
-    max-height: calc(100vh - 375px);
+    max-height: calc(100vh - 45vh);
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #c0c0c0 #f0f0f0;
