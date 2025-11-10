@@ -647,7 +647,9 @@ function renderInheritanceLog() {
 
         const explanationDiv = document.createElement('div');
         explanationDiv.className = 'inheritance-explanation';
-        explanationDiv.style.flex = '1';
+        explanationDiv.style.flex = '0 0 300px';
+        explanationDiv.style.minWidth = '250px';
+        explanationDiv.style.padding = '15px';
         explanationDiv.style.padding = '15px';
         explanationDiv.style.border = '1px solid var(--uma-border-color)';
         explanationDiv.style.borderRadius = '5px';
@@ -1223,7 +1225,7 @@ function displayParentDetails(entrySelect, detailsElement) {
                     </div>
                     <div>
                         <b>Legacy Sparks:</b>
-                        <div class="spark-cell-style">${runner.gp1} & ${runner.gp2} ${legacySparksHtml}</div>
+                        <div class="spark-cell-style">${cleanName(runner.gp1)} & ${cleanName(runner.gp2)} ${legacySparksHtml}</div>
                     </div>
                 </div>
             </div>

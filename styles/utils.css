@@ -404,6 +404,10 @@ td.skill-cell .skill-gold b {
 }
 
 /* --- Inheritance Log --- */
+#inheritance-log {
+    overflow-y: scroll;
+}
+
 #inheritance-log-content {
     padding: 20px;
 }
@@ -490,6 +494,7 @@ td.skill-cell .skill-gold b {
 
 .inheritance-explanation {
     position: sticky;
+    top: 20px;
 }
 .inheritance-tree .gp-link {
     display: inline-block;

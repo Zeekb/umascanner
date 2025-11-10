@@ -286,6 +286,11 @@ export function createSearchableSelect(inputElement, optionsArray, onSelectCallb
             inputElement.value = newValue;
             
             inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+            if (onSelectCallback) {
+                onSelectCallback();
+            } else {
+                filterAndRender();
+            }
         }
     }, { passive: false });
 }

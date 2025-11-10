@@ -344,9 +344,22 @@ input[type="range"]::-moz-range-track {
     opacity: 1;
     transform: translateY(0);
     position: relative;
-    z-index: 15;
+    z-index: 17;
+    pointer-events: none;
+}
+#collapsible-filters > #stat-filters-container,
+#collapsible-filters > #aptitude-filters-container,
+#collapsible-filters > #skill-filters-container,
+#collapsible-filters > #spark-filters-container {
+    pointer-events: auto;
+}
+#add-filters-container {
+    pointer-events: none;
 }
 
+#add-spark-filter-button {
+    pointer-events: auto;
+}
 .filter-panel.collapsed #collapsible-filters {
     max-height: 0;
     padding: 0;
@@ -369,6 +382,8 @@ input[type="range"]::-moz-range-track {
     border: 1px solid var(--uma-border-color);
     border-radius: 5px;
     width: 40px;
+    cursor: pointer;
+    pointer-events: auto;
 }
 
 #toggle-filter-panel:hover {
