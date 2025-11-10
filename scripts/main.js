@@ -138,7 +138,7 @@ function populateFilters() {
     const currentSort = state.elements.filterElements.sort.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
-        'whites (total)', 'whites (parent)', 'whites (gp1)', 'whites (gp2)'
+        'whites (parent)', 'whites (total)'
     ];
 
     state.elements.filterElements.sort.innerHTML = allSortOptions.map(o => {

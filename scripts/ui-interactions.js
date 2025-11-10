@@ -206,6 +206,19 @@ export function setupEventListeners() {
     
     updateRemoveButtonVisibility();
     updateRemoveSkillButtonVisibility();
+
+    document.getElementById('legacies-planner-content').addEventListener('click', (e) => {
+        const profileContainer = e.target.closest('.clickable-profile-image');
+        if (profileContainer) {
+            const entryId = profileContainer.dataset.entryId;
+            if (entryId) {
+                const runner = state.allRunners.find(r => String(r.entry_id) === entryId);
+                if (runner) {
+                    showDetailModal(runner);
+                }
+            }
+        }
+    });
 }
 
 export function isDarkModeActive() {
