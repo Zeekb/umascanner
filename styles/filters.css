@@ -540,7 +540,7 @@ input[type="range"]::-moz-range-track {
     min-width: 100%;
     max-width: 550px;
     box-sizing: border-box;
-    max-height: 70vh;
+    max-height: calc(100vh-60vh);
     overflow-y: auto;
     background-color: var(--uma-light-bg);
     border: 1px solid var(--uma-border-color);
