@@ -241,7 +241,7 @@ export function isDarkModeActive() {
 
 // Initializes and toggles dark mode functionality.
 export function setupDarkMode() {
-    const isDarkMode = localStorage.getItem('darkMode') || isDarkModeActive() === 'true';
+    const isDarkMode = localStorage.getItem('darkMode') !== 'false';
     const body = document.body;
     const toggleButton = document.getElementById('dark-mode-toggle');
     const iconImg = document.getElementById('dark-mode-icon');
