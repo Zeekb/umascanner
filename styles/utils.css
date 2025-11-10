@@ -805,7 +805,6 @@ td.skill-cell .skill-gold b {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 10; 
     background-color: var(--uma-accent-pink);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
