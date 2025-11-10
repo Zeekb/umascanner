@@ -515,11 +515,17 @@ function renderGrandparentAnalysis(filteredRunners) {
 
             const gpName = row.dataset.gpName;
             const descendants = state.allRunners.filter(r => cleanName(r.gp1) === gpName || cleanName(r.gp2) === gpName);
-            let descendantHtml = descendants.map(d => 
-                `<li class="gp-link" data-entry-id="${d.entry_id}">
-                    ${d.name} (Score: ${(d.score || 0).toLocaleString()})
-                </li>`
-            ).join('');
+            let descendantHtml = descendants
+                .sort((a, b) => {
+                    const nameCompare = a.name.localeCompare(b.name);
+                    if (nameCompare !== 0) { return nameCompare; } 
+                    else { return (b.score || 0) - (a.score || 0); }
+                }) 
+                .map(d => 
+                    `<li class="gp-link" data-entry-id="${d.entry_id}">
+                        ${d.name} (Score: ${(d.score || 0).toLocaleString()})
+                    </li>`
+                ).join('');
             document.getElementById('descendant-list-body').innerHTML = `<h3>Descendants of ${gpName}</h3><ul>${descendantHtml || '<li>None found in data.</li>'}</ul>`;
         });
         tableBody.dataset.initialized = 'true';
