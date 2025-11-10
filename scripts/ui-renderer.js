@@ -3,7 +3,7 @@ import { state, CONSTANTS } from './state.js';
 import { isDarkModeActive } from './ui-interactions.js';
 import { 
     cleanName, findRunnerByDetails, getStatGrade, calculateRank, getAptitudeColor, 
-    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage
+    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage, createSearchableSelect
 } from './utils.js';
 
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
@@ -630,7 +630,11 @@ function renderInheritanceLog() {
         selectorWrapper.className = 'inheritance-search-container';
         
         selectorWrapper.innerHTML = `
-            <select id="spark-select" class="runner-name-select"></select>
+            <div class="searchable-select-container">
+                <input type="text" id="spark-tracer-search" placeholder="Search Spark (Min 3 Connections)" class="spark-search-input" autocomplete="off" style="width: 250px;">
+                <div class="options-container"></div>
+            </div>
+            <span style="padding-left: 10px;">Select a spark to see its inheritance trees.</span>
         `;
         mainContent.appendChild(selectorWrapper);
         
@@ -724,27 +728,25 @@ function renderInheritanceLog() {
         return maxDepth >= 3;
     });
 
-    const sparkSelect = document.getElementById('spark-select');
-    
-    const currentVal = sparkSelect.value;
-    sparkSelect.innerHTML = '<option value="">Select a spark (minimum 3 connections)</option>' + sparksWithSufficientDepth.map(s => `<option value="${s}">${s}</option>`).join('');
-    if (sparksWithSufficientDepth.includes(currentVal)) {
-        sparkSelect.value = currentVal;
-    }
-
-    if (!sparkSelect.dataset.initialized) {
-        sparkSelect.addEventListener('change', renderInheritanceLog);
-        sparkSelect.dataset.initialized = 'true';
-    }
-    
-    const selectedSpark = sparkSelect.value;
+    const searchInput = document.getElementById('spark-tracer-search');
     const graphContainer = document.getElementById('inheritance-graph');
-    if (selectedSpark) {
-        const chains = traceInheritance(selectedSpark);
-        renderInheritanceGraph(chains, graphContainer);
-    } else {
-        graphContainer.innerHTML = 'Select a spark to see its inheritance tree.';
-    }
+
+    // Define what happens when a user selects a spark
+    const onSparkSelect = () => {
+        const selectedSpark = searchInput.value;
+        if (selectedSpark) {
+            const chains = traceInheritance(selectedSpark);
+            renderInheritanceGraph(chains, graphContainer);
+        } else {
+            graphContainer.innerHTML = '';
+        }
+    };
+
+    // Create the searchable select, passing our custom function
+    createSearchableSelect(searchInput, sparksWithSufficientDepth, onSparkSelect);
+
+    // Render the graph based on the input's current value
+    onSparkSelect();
 }
 
 function renderUsefulLinks() {
@@ -783,24 +785,22 @@ export function resetTabSpecificFilters() {
     // 1. Reset Sparks Planner (Legacies Planner)
     resetLegaciesPlannerParents();
 
-    // 2. Reset Spark Tracer (Inheritance Log)
-    const sparkSelect = document.getElementById('spark-select');
-    // Only re-render if a selection was actually cleared
-    if (sparkSelect && sparkSelect.value !== "") {
-        sparkSelect.value = "";
-        renderInheritanceLog(); // Re-rendering will clear the graph
-    }
+    const searchInput = document.getElementById('spark-tracer-search');
+    const graphContainer = document.getElementById('inheritance-graph');
 
-    // 3. Reset Legacy Analysis (Grandparent Analysis)
-    const descendantListBody = document.getElementById('descendant-list-body');
-    if (descendantListBody) {
-        descendantListBody.innerHTML = 'Click a grandparent to see their descendants.';
-    }
-    const gpSummaryBody = document.getElementById('grandparent-summary-body');
-    if (gpSummaryBody) {
-        // Remove the .selected class from any highlighted row
-        gpSummaryBody.querySelectorAll('tr.selected').forEach(r => r.classList.remove('selected'));
-    }
+    const onSparkSelect = () => {
+        const selectedSpark = searchInput.value;
+        if (selectedSpark) {
+            const chains = traceInheritance(selectedSpark);
+            renderInheritanceGraph(chains, graphContainer);
+        } else {
+            graphContainer.innerHTML = 'Select a spark to see its inheritance tree.';
+        }
+    };
+
+    createSearchableSelect(searchInput, sparksWithSufficientDepth, onSparkSelect);
+
+    onSparkSelect();
 }
 
 function traceInheritance(sparkName) {

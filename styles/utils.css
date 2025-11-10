@@ -316,6 +316,10 @@ td.skill-cell .skill-gold b {
     border-left: 4px solid #999;
 }
 
+#descendant-list-body {
+    padding-inline-start: 0px;
+}
+
 .legacies-pair {
     display: flex;
     gap: 20px;
@@ -350,7 +354,7 @@ td.skill-cell .skill-gold b {
 }
 
 .grandparent-summary {
-    flex: 2;
+    flex: 4;
 }
 
 .descendant-list {

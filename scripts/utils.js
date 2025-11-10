@@ -1,5 +1,6 @@
 // scripts/utils.js
 import { state, CONSTANTS } from './state.js';
+import { filterAndRender } from './filter.js';
 
 export const cleanName = (name) => name ? name.replace(/ c$/, '').trim() : '';
 
@@ -200,4 +201,91 @@ export function getBaseChance(color, stars) {
     if (!chances) return 0;
     
     return chances[stars - 1] || 0;
+}
+
+export function createSearchableSelect(inputElement, optionsArray, onSelectCallback = null) {
+    const container = inputElement.closest('.searchable-select-container');
+    if (!container) return;
+
+    const optionsContainer = container.querySelector('.options-container');
+    if (!optionsContainer) return;
+
+    optionsContainer.addEventListener('wheel', (event) => {
+        event.stopPropagation();
+    }, { passive: false });
+
+    const populateOptions = (filter = '') => {
+        const lowerCaseFilter = filter.toLowerCase();
+        optionsContainer.innerHTML = '';
+        const anyOption = document.createElement('div');
+        anyOption.className = 'option-item';
+        anyOption.textContent = inputElement.placeholder;
+        anyOption.dataset.value = '';
+        optionsContainer.appendChild(anyOption);
+        optionsArray.forEach(option => {
+            if (option.toLowerCase().includes(lowerCaseFilter)) {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option-item';
+                optionEl.textContent = option;
+                optionEl.dataset.value = option;
+                optionsContainer.appendChild(optionEl);
+            }
+        });
+
+        optionsContainer.style.position = 'absolute';
+        optionsContainer.style.top = '100%'; 
+        optionsContainer.style.left = '0';
+        optionsContainer.style.width = 'auto'; 
+        optionsContainer.style.minWidth = `${container.getBoundingClientRect().width}px`;
+
+        optionsContainer.style.display = optionsContainer.children.length > 1 ? 'block' : 'none';
+    };
+
+    inputElement.addEventListener('focus', () => populateOptions(''));
+    inputElement.addEventListener('input', () => populateOptions(inputElement.value));
+    
+    optionsContainer.addEventListener('mousedown', (e) => {
+        if (e.target.classList.contains('option-item')) {
+            inputElement.value = e.target.dataset.value;
+            optionsContainer.style.display = 'none';
+            if (onSelectCallback) {
+                onSelectCallback();
+            } else {
+                filterAndRender();
+            }
+        }
+    });
+
+    inputElement.addEventListener('wheel', (event) => {
+        
+        if (optionsContainer.style.display === 'block') {
+            event.preventDefault(); 
+            event.stopPropagation(); 
+            return;
+        }
+        
+        event.preventDefault(); 
+        event.stopPropagation();
+
+        const currentValue = inputElement.value;
+        let currentIndex = optionsArray.indexOf(currentValue);
+        
+        if (currentIndex === -1) {
+            currentIndex = -1;
+        }
+
+        let newIndex;
+        if (event.deltaY < 0) { 
+            newIndex = Math.max(-1, currentIndex - 1); 
+        } else { 
+            newIndex = Math.min(optionsArray.length - 1, currentIndex + 1); 
+        }
+        
+        if (newIndex !== currentIndex) {
+            const newValue = (newIndex === -1) ? '' : optionsArray[newIndex];
+            inputElement.value = newValue;
+            
+            inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }, { passive: false });
 }

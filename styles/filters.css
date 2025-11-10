@@ -507,13 +507,13 @@ input[type="range"]::-moz-range-track {
 .disable-spark-filter-button:hover {
   background-color: #bbbbbb;
 }
-
+.inheritance-search-container {
+  display: flex;
+}
 /* --- Searchable Select Component --- */
 .searchable-select-container {
     position: relative;
-    max-width: 160px;
-    width: 100%;
-    min-width: 60px;
+    min-width: 50px;
 }
 
 .options-container {

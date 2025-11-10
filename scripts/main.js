@@ -1,11 +1,10 @@
 // scripts/main.js
 import { state } from './state.js';
 import { handleFileLoad, handleTestFileLoad, loadFromSavedData, extractSparkNames } from './data-loader.js';
-import { filterAndRender } from './filter.js';
-import { handleTabChange } from './ui-interactions.js';
+import { createSearchableSelect } from './utils.js';
 import { 
-    setupEventListeners, setupDarkMode, createSearchableSelect, updateSparkCountDropdown, 
-    updateTotalWhiteDropdown, updateSelectPlaceholder
+    setupEventListeners, setupDarkMode, updateSparkCountDropdown, 
+    updateTotalWhiteDropdown, updateSelectPlaceholder, handleTabChange
 } from './ui-interactions.js';
 
 // --- App Initialization ---
