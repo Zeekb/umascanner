@@ -546,14 +546,34 @@ function renderGrandparentAnalysis(filteredRunners) {
         });
         
         const sparksHtml = sortedGpSparks.map(s => {
-            const displayName = nameMap[s.spark_name] || s.spark_name;
-            return `
-                <div class="spark-button ${s.color}">
-                    <span>${s.count}</span>
-                    <span class="star">★</span>
+        const displayName = nameMap[s.spark_name] || s.spark_name;
+        // 1. Get just the percentage string (e.g., "75.0")
+        const finalPercent = formatPercent(finalCombinedChance); 
+
+        // 2. Build sourcesHtml without the "Combined." prefix for individual sources
+        const sourcesHtml = spark.sources.map(source => {
+            const sourceName = nameMap[source.name] || source.name;
+            const sourceStars = Array(source.stars).fill('★').join('');
+            const sourcePercent = formatPercent(source.chance);
+            return `<div class="source-item">
+                        <span class="source-name">${sourceName}:</span>
+                        <span class="source-stars">${sourceStars}</span>
+                        <span class="source-percent">${sourcePercent}%</span>
+                    </div>`;
+        }).join('');
+
+        return `
+        <div class="spark-potential spark-color-${spark.color}">
+            <div class="spark-label-container">
+                <div class="spark-button ${spark.color}">
                     <span class="spark-name">${displayName}</span>
+                    <span class="stars-right">${combinedStarsHtml}</span>
                 </div>
-            `;
+                <div class="combined-chance-inline">${finalPercent}%</div> </div>
+            <div class="sources">
+                ${sourcesHtml}
+            </div>
+        </div>`;
         }).join('');
         
         const nameClass = gp.runner ? 'gp-link' : 'gp-borrowed';
@@ -747,22 +767,37 @@ function renderUsefulLinks() {
     
 }
 
-export function resetTabSpecificFilters() {
-    // 1. Reset Sparks Planner (Legacies Planner)
+export function resetLegaciesPlannerParents() {
     const parent1NameSelect = document.querySelector('#parent1-selection .runner-name-select');
     const parent1EntrySelect = document.querySelector('#parent1-selection .runner-entry-select');
-    if (parent1NameSelect) parent1NameSelect.value = "";
-    if (parent1EntrySelect) parent1EntrySelect.value = "";
+    const parent1Details = document.querySelector('#parent1-selection .runner-details');
 
     const parent2NameSelect = document.querySelector('#parent2-selection .runner-name-select');
     const parent2EntrySelect = document.querySelector('#parent2-selection .runner-entry-select');
-    if (parent2NameSelect) parent2NameSelect.value = "";
-    if (parent2EntrySelect) parent2EntrySelect.value = "";
+    const parent2Details = document.querySelector('#parent2-selection .runner-details');
 
-    // Re-rendering the planner will handle clearing details and the offspring pool
+    if (parent1NameSelect) parent1NameSelect.value = "";
+    if (parent1EntrySelect)  {
+        parent1EntrySelect.value = "";
+        parent1EntrySelect.style.display = 'none';
+    }
+    if (parent1Details) parent1Details.innerHTML = "";
+
+    if (parent2NameSelect) parent2NameSelect.value = "";
+    if (parent2EntrySelect)  {
+        parent2EntrySelect.value = "";
+        parent2EntrySelect.style.display = 'none';
+    }
+    if (parent2Details) parent2Details.innerHTML = "";
+    
     if (state.elements.legaciesPlannerBody?.dataset.initialized) {
         renderLegaciesPlanner();
     }
+}
+
+export function resetTabSpecificFilters() {
+    // 1. Reset Sparks Planner (Legacies Planner)
+    resetLegaciesPlannerParents();
 
     // 2. Reset Spark Tracer (Inheritance Log)
     const sparkSelect = document.getElementById('spark-select');
@@ -1331,7 +1366,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
 
     const formatPercent = (value) => {
         const percent = value * 100;
-        return percent.toFixed(1).replace(/\.0$/, '');
+        return percent.toFixed(2).replace(/\.00$/, '');
     };
 
     let html = sortedSparks.map(spark => {
@@ -1392,12 +1427,10 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
                     <span class="spark-name">${displayName}</span>
                     <span class="stars-right">${combinedStarsHtml}</span>
                 </div>
+                <b class="combined-spark-chance">${formatPercent(finalCombinedChance)}%</b>
             </div>
             <div class="sources">
                 ${sourcesHtml}
-            </div>
-            <div class="combined-chance">
-                Combined: <b>${formatPercent(finalCombinedChance)}%</b>
             </div>
         </div>`;
     }).join('');
@@ -1414,16 +1447,16 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
         const gain = totalInitialStatGains[stat];
         if (gain > 0) guaranteedGains.push(`${stat.charAt(0).toUpperCase() + stat.slice(1)} +${gain}`);
     }
-    statHtml += guaranteedGains.length > 0 ? guaranteedGains.join(', ') : 'None';
+    statHtml += guaranteedGains.length > 0 ? guaranteedGains.join('  |  ') : 'None';
     statHtml += '</div><div class="spark-details">';
     statHtml += `<b>Potential Inspiration Gain (per Inspiration):</b> `;
     
     let randomGains = [];
     for (const stat of statOrder) {
         const gain = totalRandomStatGains[stat];
-        if (gain.max > 0) randomGains.push(`${stat.charAt(0).toUpperCase() + stat.slice(1)} +${(gain.min).toFixed(0)} to +${(gain.max).toFixed(0)}`);
+        if (gain.max > 0) randomGains.push(`${stat.charAt(0).toUpperCase() + stat.slice(1)} ${(gain.min).toFixed(0)} - ${(gain.max).toFixed(0)}`);
     }
-    statHtml += randomGains.length > 0 ? randomGains.join(', ') : 'None';
+    statHtml += randomGains.length > 0 ? randomGains.join('  |  ') : 'None';
     statHtml += '</div></div>';
 
     let infoHtml = `

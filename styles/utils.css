@@ -166,6 +166,7 @@ li.gp-link {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    position: relative;
 }
 
 .offspring-header h3 {
@@ -286,10 +287,6 @@ td.skill-cell .skill-gold b {
 
 .dark-mode #legacies-planner .spark-potential {
     background-color: var(--dark-bg-alt-row);
-}
-
-#legacies-planner .spark-potential b {
-    font-size: 1.1em;
 }
 
 #legacies-planner .spark-details {
@@ -626,7 +623,22 @@ td.skill-cell .skill-gold b {
 .spark-potential .spark-label-container {
     display: flex;
     margin-bottom: 8px;
+    justify-content: space-between; /* Added to push elements apart */
+    align-items: center; /* Added to vertically align them */
+    gap: 10px;
 }
+
+
+
+.combined-spark-chance {
+    color: var(--uma-accent-pink);
+}
+
+.dark-mode .combined-spark-chance{
+    color: var(--uma-accent-blue);
+}
+
+
 
 /* Use existing .spark-button styles */
 .spark-potential .spark-button {
@@ -636,13 +648,11 @@ td.skill-cell .skill-gold b {
 
 .spark-potential .spark-button .spark-name {
     margin-right: 8px; /* Space before stars */
-    font-size: 1.1em;
 }
 
 .spark-potential .spark-button .stars-right {
     font-weight: bold;
     letter-spacing: 0.5px;
-    font-size: 1.1em;
 }
 
 .spark-potential .spark-button .star-separator {
@@ -711,27 +721,6 @@ td.skill-cell .skill-gold b {
     min-width: 50px;
     text-align: right;
 }
-.spark-potential .combined-chance {
-    margin-top: auto;
-    padding-top: 8px;
-    border-top: 1px dashed var(--uma-border-color);
-    font-size: 0.95em;
-    text-align: right;
-    color: var(--uma-text-dark);
-}
-
-.dark-mode .spark-potential .combined-chance {
-    border-top-color: var(--dark-uma-border-color);
-}
-
-.spark-potential .combined-chance b {
-    font-size: 1.1em;
-    color: var(--uma-accent-pink);
-}
-
-.dark-mode .spark-potential .combined-chance b {
-    color: var(--uma-accent-blue);
-}
 
 /* --- Sparks Planner Parent Source Indicator --- */
 .spark-potential .source-name {
@@ -792,6 +781,24 @@ td.skill-cell .skill-gold b {
     font-style: normal;
     font-weight: bold;
     opacity: 1;
+}
+
+#clear-parent-selections {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10; /* Ensures it's above other header elements */
+    background-color: var(--uma-accent-pink);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#clear-parent-selections:hover {
+    background-color: var(--uma-accent-blue);
 }
 
 /* --- Sparks Planner Affinity Slider --- */
