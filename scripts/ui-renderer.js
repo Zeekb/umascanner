@@ -546,34 +546,18 @@ function renderGrandparentAnalysis(filteredRunners) {
         });
         
         const sparksHtml = sortedGpSparks.map(s => {
-        const displayName = nameMap[s.spark_name] || s.spark_name;
-        // 1. Get just the percentage string (e.g., "75.0")
-        const finalPercent = formatPercent(finalCombinedChance); 
-
-        // 2. Build sourcesHtml without the "Combined." prefix for individual sources
-        const sourcesHtml = spark.sources.map(source => {
-            const sourceName = nameMap[source.name] || source.name;
-            const sourceStars = Array(source.stars).fill('★').join('');
-            const sourcePercent = formatPercent(source.chance);
-            return `<div class="source-item">
-                        <span class="source-name">${sourceName}:</span>
-                        <span class="source-stars">${sourceStars}</span>
-                        <span class="source-percent">${sourcePercent}%</span>
-                    </div>`;
-        }).join('');
-
-        return `
-        <div class="spark-potential spark-color-${spark.color}">
-            <div class="spark-label-container">
-                <div class="spark-button ${spark.color}">
+            if (!s || !s.spark_name) return ''; // Safety check
+            
+            const displayName = nameMap[s.spark_name] || s.spark_name;
+            const count = s.count || 1;
+            
+            return `
+                <div class="spark-button ${s.color}">
+                    <span>${count}</span>
+                    <span class="star">★</span>
                     <span class="spark-name">${displayName}</span>
-                    <span class="stars-right">${combinedStarsHtml}</span>
                 </div>
-                <div class="combined-chance-inline">${finalPercent}%</div> </div>
-            <div class="sources">
-                ${sourcesHtml}
-            </div>
-        </div>`;
+            `;
         }).join('');
         
         const nameClass = gp.runner ? 'gp-link' : 'gp-borrowed';
