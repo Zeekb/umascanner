@@ -1449,7 +1449,8 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
         <div class="spark-potential spark-info-note">
             <b>Note</b>
             <div class="spark-details">
-                All percentages shown below are the calculated chance per <b>individual</b> inspiration event.
+                All percentages shown below are the calculated chance per <b>individual</b> inspiration event.<br>
+                Take these chances with a grain of salt I don't know how accurate they are.
             </div>
         </div>
     `;
