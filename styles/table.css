@@ -12,6 +12,7 @@
 /* General table styles */
 table {
   width: 100%;
+  margin-top: -2px;
   background-color: var(--uma-light-bg);
 }
 
