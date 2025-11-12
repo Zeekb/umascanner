@@ -1123,16 +1123,15 @@ function formatSparks(runner, allSparkCriteria) {
     return parts.length > 0 ? `<div class="spark-cell-container">${parts.join('')}</div>` : '';
 }
 
-// Populates the entry select dropdown for a given runner name in the career planner.
 function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
     const runnerName = nameSelect.value;
-    
+
     const entries = state.allRunners
         .filter(r => r.name === runnerName)
-        .sort((a,b) => b.score - a.score);
-    
+        .sort((a, b) => b.score - a.score);
+
     entrySelect.innerHTML = '<option value="">Select an entry</option>';
-    
+
     if (entries.length > 0) {
         const nameMap = {
             'Front Runner': 'Front',
@@ -1141,9 +1140,12 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             'End Closer': 'End'
         };
 
-        entrySelect.innerHTML += entries.map(entry => {
+        // 1. Process data first to get raw strings for each column
+        const processedRows = entries.map(entry => {
             const parentSparksLookup = {};
             let whiteParent = 0;
+
+            // --- Spark Calculation Logic (Preserved) ---
             if (Array.isArray(entry.sparks?.parent)) {
                 entry.sparks.parent.forEach(spark => {
                     if (spark?.spark_name) {
@@ -1152,7 +1154,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                             const count = parseInt(spark.count || 0, 10);
                             parentSparksLookup[name] = (parentSparksLookup[name] || 0) + count;
                         } else if (spark.color === 'white') {
-                            whiteParent++; 
+                            whiteParent++;
                         }
                     }
                 });
@@ -1169,7 +1171,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                                     name: name,
                                     color: spark.color,
                                     totalCount: 0,
-                                    parentCount: parentSparksLookup[name] || 0 
+                                    parentCount: parentSparksLookup[name] || 0
                                 };
                             }
                             aggregatedSparks[name].totalCount += parseInt(spark.count || 0, 10);
@@ -1177,17 +1179,16 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                     });
                 }
             });
-            
+
             const blueSparkOrder = new Map((state.orderedSparks?.blue || []).map((name, index) => [name, index]));
             const pinkSparkOrder = new Map((state.orderedSparks?.pink || []).map((name, index) => [name, index]));
             const maxSortVal = blueSparkOrder.size + pinkSparkOrder.size;
-            
-            const colorSortOrder = { 'blue': 1, 'pink': 2};
-            
+            const colorSortOrder = { 'blue': 1, 'pink': 2 };
+
             const sortedSparkValues = Object.values(aggregatedSparks).sort((a, b) => {
                 const colorA = colorSortOrder[a.color];
                 const colorB = colorSortOrder[b.color];
-                if (colorA !== colorB) return colorA - colorB; 
+                if (colorA !== colorB) return colorA - colorB;
 
                 const getSortVal = (spark) => {
                     if (spark.color === 'blue') return blueSparkOrder.get(spark.name) ?? maxSortVal;
@@ -1208,27 +1209,48 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
                 const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
-                
+                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}`;
+
                 if (spark.color === 'blue') {
                     blueSparksStr += `${formattedSpark} `;
                 } else if (spark.color === 'pink') {
                     pinkSparksStr += `${formattedSpark} `;
                 }
             });
-
-            blueSparksStr = blueSparksStr.trim();
-            pinkSparksStr = pinkSparksStr.trim();
-
-            let labelParts = [`Score: ${entry.score}`];
-            if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
-            if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
-            labelParts.push(`Whites: x${whiteParent}★`);
             
-            const label = labelParts.join(' | ');
-            
-            return `<option value="${entry.entry_id}">${label}</option>`;
+            // --- Return object with raw strings for columns ---
+            return {
+                id: entry.entry_id,
+                score: `${entry.score}`,
+                blue: blueSparksStr.trim(),
+                pink: pinkSparksStr.trim(),
+                white: `Whites: x${whiteParent}`
+            };
+        });
+
+        // 2. Calculate Max Widths for alignment
+        const maxScoreLen = Math.max(...processedRows.map(r => r.score.length));
+        const maxBlueLen = Math.max(...processedRows.map(r => r.blue.length));
+        const maxPinkLen = Math.max(...processedRows.map(r => r.pink.length));
+        
+        // 3. Build the HTML with padding
+        const optionsHtml = processedRows.map(row => {
+            // padEnd adds spaces to the right. We use \u00A0 (Non-breaking space)
+            // We add +2 to the length for visual separation between columns
+            const c1 = row.score.padEnd(maxScoreLen + 2, '\u00A0');
+            const c2 = row.blue.padEnd(maxBlueLen + 2, '\u00A0');
+            const c3 = row.pink.padEnd(maxPinkLen + 2, '\u00A0');
+            const c4 = row.white; // Last column doesn't need padding
+
+            const label = `${c1}| ${c2}| ${c3}| ${c4}`;
+            return `<option value="${row.id}">${label}</option>`;
         }).join('');
+
+        // 4. Apply Styles programmatically (Crucial for alignment)
+        entrySelect.style.fontFamily = 'monospace'; // Ensures letters are same width
+        entrySelect.style.whiteSpace = 'pre';       // Respects the spaces
+        
+        entrySelect.innerHTML += optionsHtml;
         entrySelect.style.display = 'block';
     } else {
         entrySelect.style.display = 'none';
