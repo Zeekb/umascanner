@@ -262,6 +262,7 @@ td.skill-cell .skill-gold b {
     background-color: var(--uma-light-bg);
     color: var(--uma-text-dark);
     padding: 4px;
+    width: 100%;
 }
 
 .dark-mode .runner-name-select,
