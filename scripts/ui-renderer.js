@@ -459,7 +459,7 @@ function renderCareerPlanner() {
 
     const affinity = parseInt(affinityNumber.value, 10) || 150;
 
-    if (parent1EntryId && parent2EntryId) {
+    if (parent1EntryId || parent2EntryId) {
         calculateOffspringPotential(parent1EntryId, parent2EntryId, affinity);
     } else {
         document.querySelector('.offspring-potential .spark-pool').innerHTML = '';
@@ -1304,10 +1304,11 @@ function displayParentDetails(entrySelect, detailsElement) {
 
 // Calculates and displays the potential sparks and stat gains for offspring based on two selected parents.
 function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinityScore) { 
-    const parent1 = state.allRunners.find(r => String(r.entry_id) === String(parent1EntryId));
-    const parent2 = state.allRunners.find(r => String(r.entry_id) === String(parent2EntryId));
-    if (!parent1 || !parent2 || !state.inheritanceModel) {
-        document.querySelector('.spark-pool').innerHTML = '<p>Please select two parents and ensure inheritance model is loaded.</p>';
+    const parent1 = parent1EntryId ? state.allRunners.find(r => String(r.entry_id) === String(parent1EntryId)) : null;
+    const parent2 = parent2EntryId ? state.allRunners.find(r => String(r.entry_id) === String(parent2EntryId)) : null;
+    
+    if ((!parent1 && !parent2) || !state.inheritanceModel) {
+        document.querySelector('.spark-pool').innerHTML = '<p>Please select at least one parent and ensure inheritance model is loaded.</p>';
         return;
     }
 
@@ -1367,33 +1368,38 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             });
         });
     };
+
+    if (parent1) {
+        processSparkArray(parent1.sparks?.parent, 'Parent 1');
+        processSparkArray(parent1.sparks?.gp1, parent1.gp1 || 'P1-GP1');
+        processSparkArray(parent1.sparks?.gp2, parent1.gp2 || 'P1-GP2');
+    }
+
+    if (parent2) {
+        processSparkArray(parent2.sparks?.parent, 'Parent 2');
+        processSparkArray(parent2.sparks?.gp1, parent2.gp1 || 'P2-GP1');
+        processSparkArray(parent2.sparks?.gp2, parent2.gp2 || 'P2-GP2');
+    }
     
-    
-    
-    processSparkArray(parent1.sparks?.parent, 'Parent 1');
-    processSparkArray(parent1.sparks?.gp1, parent1.gp1 || 'P1-GP1');
-    processSparkArray(parent1.sparks?.gp2, parent1.gp2 || 'P1-GP2');
-    processSparkArray(parent2.sparks?.parent, 'Parent 2');
-    processSparkArray(parent2.sparks?.gp1, parent2.gp1 || 'P2-GP1');
-    processSparkArray(parent2.sparks?.gp2, parent2.gp2 || 'P2-GP2');
-    
-    
-    const ancestorRoles = {
-        'Parent 1': parent1, 'Parent 2': parent2,
-        [parent1.gp1 || 'P1-GP1']: findRunnerByDetails(parent1.gp1, parent1.sparks?.gp1),
-        [parent1.gp2 || 'P1-GP2']: findRunnerByDetails(parent1.gp2, parent1.sparks?.gp2),
-        [parent2.gp1 || 'P2-GP1']: findRunnerByDetails(parent2.gp1, parent2.sparks?.gp1),
-        [parent2.gp2 || 'P2-GP2']: findRunnerByDetails(parent2.gp2, parent2.sparks?.gp2)
-    };
+    const ancestorRoles = {};
+    if (parent1) {
+        ancestorRoles['Parent 1'] = parent1;
+        ancestorRoles[parent1.gp1 || 'P1-GP1'] = findRunnerByDetails(parent1.gp1, parent1.sparks?.gp1);
+        ancestorRoles[parent1.gp2 || 'P1-GP2'] = findRunnerByDetails(parent1.gp2, parent1.sparks?.gp2);
+    }
+    if (parent2) {
+        ancestorRoles['Parent 2'] = parent2;
+        ancestorRoles[parent2.gp1 || 'P2-GP1'] = findRunnerByDetails(parent2.gp1, parent2.sparks?.gp1);
+        ancestorRoles[parent2.gp2 || 'P2-GP2'] = findRunnerByDetails(parent2.gp2, parent2.sparks?.gp2);
+    }
+
     Object.keys(ancestorRoles).forEach(role => {
         const runner = ancestorRoles[role];
         ancestorList[role] = {
             name: runner ? runner.name : role,
             found: !!runner
         };
-    });
-    
-    
+    });       
     
     const sparkSortMap = new Map();
     let sortIndex = 0;
