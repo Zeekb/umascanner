@@ -251,6 +251,20 @@ td.skill-cell .skill-gold b {
     width: 100%;
     padding: 3px 5px;
     box-sizing: border-box;
+
+    /* === FIX FOR FIREFOX BUG === */
+    /* 1. Remove native browser appearance, including the problematic dropdown arrow */
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+
+    /* 2. Add a custom arrow back using a background SVG that doesn't interfere with the options */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23555555'%3E%3Cpath d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+
+    /* 3. Add padding on the right to prevent text from overlapping our new custom arrow */
+    padding-right: 30px !important;
 }
 
 .runner-entry-select {
@@ -270,6 +284,8 @@ td.skill-cell .skill-gold b {
     background-color: var(--dark-bg-element);
     color: var(--dark-text-color);
     border-color: var(--dark-uma-border-color);
+    /* Use a lighter arrow for dark mode */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23bbbbbb'%3E%3Cpath d='M0 0l6 6 6-6z'/%3E%3C/svg%3E");
 }
 
 .dark-mode .runner-name-select option,
@@ -898,25 +914,4 @@ td.skill-cell .skill-gold b {
     background-color: var(--dark-bg-element);
     color: var(--dark-text-color);
     border-color: var(--dark-uma-border-color);
-}
-
-/* Fix for Career Planner Entry Select Text Length */
-#career-planner-content .runner-entry-select {
-    font-size: 0.75em;       /* Significantly reduce font size */
-    padding-left: 2px;       /* Maximize horizontal space */
-    padding-right: 2px;
-    text-overflow: ellipsis; /* Add ... if text is still too long */
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-/* Specific fix for Firefox to allow the dropdown option list to be wider than the box */
-@-moz-document url-prefix() { 
-    #career-planner-content .runner-entry-select {
-        text-overflow: clip; /* Firefox handles ellipsis poorly on selects sometimes */
-        width: 100%;
-    }
-    #career-planner-content .runner-entry-select option {
-        font-size: 0.9rem; /* Keep the expanded list readable */
-    }
 }
