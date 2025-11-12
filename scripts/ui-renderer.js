@@ -1138,18 +1138,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             'Front Runner': 'Front',
             'Pace Chaser': 'Pace',
             'Late Surger': 'Late',
-            'End Closer': 'End',
-            'Speed': 'Spd',
-            'Stamina': 'Sta',
-            'Power': 'Pow',
-            'Guts': 'Gut',
-            'Wit': 'Wit',
-            'Turf': 'Turf',
-            'Dirt': 'Dirt',
-            'Sprint': 'Spr',
-            'Mile': 'Mile',
-            'Medium': 'Med',
-            'Long': 'Lng'
+            'End Closer': 'End'
         };
 
         entrySelect.innerHTML += entries.map(entry => {
@@ -1219,7 +1208,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
                 const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}`;
+                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}★`;
                 
                 if (spark.color === 'blue') {
                     blueSparksStr += `${formattedSpark} `;
@@ -1231,10 +1220,10 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
             blueSparksStr = blueSparksStr.trim();
             pinkSparksStr = pinkSparksStr.trim();
 
-            let labelParts = [`${entry.score}`];
+            let labelParts = [`Score: ${entry.score}`];
             if (blueSparksStr) labelParts.push(`${blueSparksStr}`);
             if (pinkSparksStr) labelParts.push(`${pinkSparksStr}`);
-            labelParts.push(`W:${whiteParent}`); 
+            labelParts.push(`Whites: x${whiteParent}★`);
             
             const label = labelParts.join(' | ');
             

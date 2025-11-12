@@ -899,3 +899,24 @@ td.skill-cell .skill-gold b {
     color: var(--dark-text-color);
     border-color: var(--dark-uma-border-color);
 }
+
+/* Fix for Career Planner Entry Select Text Length */
+#career-planner-content .runner-entry-select {
+    font-size: 0.75em;       /* Significantly reduce font size */
+    padding-left: 2px;       /* Maximize horizontal space */
+    padding-right: 2px;
+    text-overflow: ellipsis; /* Add ... if text is still too long */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+/* Specific fix for Firefox to allow the dropdown option list to be wider than the box */
+@-moz-document url-prefix() { 
+    #career-planner-content .runner-entry-select {
+        text-overflow: clip; /* Firefox handles ellipsis poorly on selects sometimes */
+        width: 100%;
+    }
+    #career-planner-content .runner-entry-select option {
+        font-size: 0.9rem; /* Keep the expanded list readable */
+    }
+}
