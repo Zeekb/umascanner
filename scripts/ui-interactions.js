@@ -6,8 +6,218 @@ import { filterAndRender, sortAndRender } from './filter.js';
 import { showDetailModal, resetTabSpecificFilters, resetCareerPlannerParents } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
 
+// Helper to load saved setups from local storage
+function loadSavedSetups() {
+    const stored = localStorage.getItem('savedParentSetups');
+    if (stored) {
+        try {
+            state.savedParentSetups = JSON.parse(stored);
+        } catch (e) {
+            console.error("Failed to parse saved parent setups", e);
+            state.savedParentSetups = [];
+        }
+    }
+    updateSavedSetupsDropdown();
+}
+
+// Helper to update the dropdown UI
+function updateSavedSetupsDropdown() {
+    const select = document.getElementById('saved-setups-select');
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">Load Saved Setup...</option>';
+    
+    state.savedParentSetups.forEach((setup, index) => {
+        const option = document.createElement('option');
+        option.value = index; // Use index as ID for simplicity
+        option.textContent = setup.name;
+        select.appendChild(option);
+    });
+
+    // Restore selection if it still exists (and name matches, ideally ID based but index is ok for simple list)
+    if (currentValue !== "" && state.savedParentSetups[currentValue]) {
+        select.value = currentValue;
+    }
+}
+
 // Sets up all global event listeners for UI interactions.
 export function setupEventListeners() {
+    loadSavedSetups(); // Initialize saved setups on load
+
+    // --- Career Planner Save/Load Logic ---
+
+    const saveSetupBtn = document.getElementById('save-setup-button');
+    const setupNameInput = document.getElementById('setup-name-input');
+    const savedSetupsSelect = document.getElementById('saved-setups-select');
+    const deleteSetupBtn = document.getElementById('delete-setup-button');
+    const overwriteSetupBtn = document.getElementById('overwrite-setup-button');
+
+    // SAVE NEW
+    if (saveSetupBtn) {
+        saveSetupBtn.addEventListener('click', () => {
+            const parent1Select = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
+            const parent2Select = document.querySelector('#career-planner-parent2-selection .runner-entry-select');
+            const affinityInput = document.getElementById('affinity-number-input');
+            
+            const p1 = parent1Select ? parent1Select.value : "";
+            const p2 = parent2Select ? parent2Select.value : "";
+            const aff = affinityInput ? affinityInput.value : 150;
+            const name = setupNameInput.value.trim();
+
+            if (!p1 && !p2) {
+                showTimedMessage("Select at least one parent.");
+                return;
+            }
+            if (!name) {
+                showTimedMessage("Enter a name.");
+                return;
+            }
+
+            // Always create new
+            state.savedParentSetups.push({
+                name: name,
+                parent1Id: p1,
+                parent2Id: p2,
+                affinity: aff
+            });
+
+            localStorage.setItem('savedParentSetups', JSON.stringify(state.savedParentSetups));
+            updateSavedSetupsDropdown();
+            // Select the new item (last one)
+            savedSetupsSelect.value = state.savedParentSetups.length - 1;
+            
+            showTimedMessage("Saved as new setup!");
+        });
+    }
+
+    // OVERWRITE (formerly Rename)
+    if (overwriteSetupBtn) {
+        overwriteSetupBtn.addEventListener('click', () => {
+            const index = savedSetupsSelect.value;
+            if (index === "") {
+                showTimedMessage("Select a setup to overwrite.");
+                return;
+            }
+
+            const parent1Select = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
+            const parent2Select = document.querySelector('#career-planner-parent2-selection .runner-entry-select');
+            const affinityInput = document.getElementById('affinity-number-input');
+            
+            const p1 = parent1Select ? parent1Select.value : "";
+            const p2 = parent2Select ? parent2Select.value : "";
+            const aff = affinityInput ? affinityInput.value : 150;
+            const name = setupNameInput.value.trim();
+
+            if (!name) {
+                showTimedMessage("Setup name cannot be empty.");
+                return;
+            }
+
+            if (confirm(`Overwrite "${state.savedParentSetups[index].name}" with current settings?`)) {
+                state.savedParentSetups[index] = {
+                    name: name,
+                    parent1Id: p1,
+                    parent2Id: p2,
+                    affinity: aff
+                };
+                localStorage.setItem('savedParentSetups', JSON.stringify(state.savedParentSetups));
+                updateSavedSetupsDropdown();
+                savedSetupsSelect.value = index; // Keep selected
+                showTimedMessage("Setup overwritten!");
+            }
+        });
+    }
+
+    // LOAD
+    if (savedSetupsSelect) {
+        savedSetupsSelect.addEventListener('change', () => {
+            const index = savedSetupsSelect.value;
+
+            if (index === "") {
+                resetCareerPlannerParents();
+                setupNameInput.value = "";
+                return;
+            }
+
+            const setup = state.savedParentSetups[index];
+            if (!setup) return;
+
+            // 1. Set Affinity
+            const affinitySlider = document.getElementById('affinity-slider');
+            const affinityNumber = document.getElementById('affinity-number-input');
+            const affinitySelect = document.getElementById('affinity-selection');
+            
+            if (affinityNumber) {
+                affinityNumber.value = setup.affinity;
+                affinityNumber.dispatchEvent(new Event('change')); // Triggers slider/select updates in other listener
+            }
+
+            // 2. Set Parents
+            // We need to find the runners first to set the name dropdowns, then the entry dropdowns
+            const p1Runner = state.allRunners.find(r => String(r.entry_id) === String(setup.parent1Id));
+            const p2Runner = state.allRunners.find(r => String(r.entry_id) === String(setup.parent2Id));
+
+            const p1NameSelect = document.querySelector('#career-planner-parent1-selection .runner-name-select');
+            const p1EntrySelect = document.querySelector('#career-planner-parent1-selection .runner-entry-select');
+            
+            const p2NameSelect = document.querySelector('#career-planner-parent2-selection .runner-name-select');
+            const p2EntrySelect = document.querySelector('#career-planner-parent2-selection .runner-entry-select');
+
+            // Helper to set a parent set
+            const setParent = (runner, nameSel, entrySel) => {
+                if (runner && nameSel && entrySel) {
+                    nameSel.value = runner.name;
+                    nameSel.dispatchEvent(new Event('change')); // Populates entry select
+                    entrySel.value = runner.entry_id;
+                    entrySel.dispatchEvent(new Event('change')); // Triggers details rendering
+                } else if (nameSel && entrySel) {
+                    nameSel.value = "";
+                    entrySel.style.display = 'none';
+                    entrySel.value = "";
+                    // Clear details manually or via event if needed, usually change event handles it
+                    nameSel.dispatchEvent(new Event('change'));
+                }
+            };
+
+            setParent(p1Runner, p1NameSelect, p1EntrySelect);
+            setParent(p2Runner, p2NameSelect, p2EntrySelect);
+
+            // Populate input name
+            setupNameInput.value = setup.name;
+        });
+    }
+
+    // CLEAR (Updated to reset dropdown)
+    const clearParentsButton = document.getElementById('clear-parent-selections');
+    if(clearParentsButton) {
+        clearParentsButton.addEventListener('click', () => {
+            resetCareerPlannerParents();
+            if (savedSetupsSelect) savedSetupsSelect.value = "";
+            if (setupNameInput) setupNameInput.value = "";
+        });
+    }
+
+    // DELETE
+    if (deleteSetupBtn) {
+        deleteSetupBtn.addEventListener('click', () => {
+            const index = savedSetupsSelect.value;
+            if (index === "") {
+                showTimedMessage("Select a setup to delete.");
+                return;
+            }
+            
+            const setupName = state.savedParentSetups[index].name;
+            if(confirm(`Delete saved setup "${setupName}"?`)) {
+                state.savedParentSetups.splice(index, 1);
+                localStorage.setItem('savedParentSetups', JSON.stringify(state.savedParentSetups));
+                updateSavedSetupsDropdown();
+                setupNameInput.value = "";
+                showTimedMessage("Setup deleted.");
+            }
+        });
+    }
+
     const debouncedFilterAndRender = debounce(filterAndRender, 150);
 
     const debouncedSortAndRender = debounce(sortAndRender, 50);
@@ -197,11 +407,6 @@ export function setupEventListeners() {
     });
 
     state.elements.saveDataButton.addEventListener('click', saveDataToFile); 
-
-    const clearParentsButton = document.getElementById('clear-parent-selections');
-    if(clearParentsButton) {
-        clearParentsButton.addEventListener('click', resetCareerPlannerParents);
-    }
 
     const legacyContent = document.getElementById('legacy-analysis-content');
     if (legacyContent) {
@@ -525,6 +730,11 @@ export function resetFilters() {
             updateTotalWhiteDropdown(row, false);
         }
     });
+
+    const savedSetupsSelect = document.getElementById('saved-setups-select');
+    const setupNameInput = document.getElementById('setup-name-input');
+    if (savedSetupsSelect) savedSetupsSelect.value = "";
+    if (setupNameInput) setupNameInput.value = "";
 
     updateRemoveButtonVisibility();
     state.elements.filterElements.sortDir.value = 'desc';

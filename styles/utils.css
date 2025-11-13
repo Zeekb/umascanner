@@ -171,10 +171,129 @@ li.gp-link {
     align-items: center;
     margin-bottom: 15px;
     position: relative;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .offspring-header h3 {
     margin: 0;
+    margin-right: 10px;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 5px;
+}
+
+/* Styles for the Save/Load controls */
+.save-load-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 4vw;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+#overwrite-setup-button, #save-setup-button {
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: var(--uma-medium-bg);
+    border: 1px solid var(--uma-border-color);
+    color: var(--uma-text-dark);
+    transition: background-color 0.2s;
+    padding: 0;
+}
+
+.dark-mode #overwrite-setup-button, #save-setup-button {
+    background-color: var(--dark-bg-element);
+    color: var(--dark-text-color);
+    border-color: var(--dark-uma-border-color);
+}
+
+#overwrite-setup-button:hover {
+    background-color: var(--uma-selection-bg);
+}
+
+#setup-name-input {
+    padding: 4px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--uma-border-color);
+    background-color: var(--uma-text-light);
+    color: var(--uma-text-dark);
+    width: 140px;
+}
+
+.dark-mode #setup-name-input {
+    background-color: var(--dark-bg-element);
+    color: var(--dark-text-color);
+    border-color: var(--dark-uma-border-color);
+}
+
+#saved-setups-select {
+    padding: 4px 24px 4px 6px; /* Extra right padding for arrow */
+    border-radius: 4px;
+    border: 1px solid var(--uma-border-color);
+    background-color: var(--uma-text-light);
+    color: var(--uma-text-dark);
+    max-width: 180px;
+}
+
+.dark-mode #saved-setups-select {
+    background-color: var(--dark-bg-element);
+    color: var(--dark-text-color);
+    border-color: var(--dark-uma-border-color);
+}
+
+#rename-setup-icon {
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--uma-text-dark);
+    transition: background-color 0.2s;
+}
+
+.dark-mode #rename-setup-icon {
+    color: var(--dark-text-color);
+}
+
+#rename-setup-icon:hover {
+    background-color: var(--uma-selection-bg);
+}
+
+#save-setup-button {
+    background-color: var(--uma-accent-blue);
+    color: var(--uma-text-light);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#save-setup-button:hover {
+    background-color: var(--uma-accent-pink);
+}
+
+/* Reposition Clear button to align with Save */
+#clear-parent-selections {
+    position: static;
+    transform: none;
 }
 
 /* Styles for grandparent skills link */
@@ -810,10 +929,6 @@ td.skill-cell .skill-gold b {
 
 /* Styles for the clear parent selections button */
 #clear-parent-selections {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background-color: var(--uma-accent-pink);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -829,6 +944,7 @@ td.skill-cell .skill-gold b {
 
 .offspring-header {
     flex-wrap: wrap; 
+    align-items: center;
     gap: 10px; 
 }
 
@@ -837,7 +953,6 @@ td.skill-cell .skill-gold b {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: auto; 
 }
 
 /* Styles for the affinity slider input */

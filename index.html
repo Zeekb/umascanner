@@ -295,17 +295,34 @@
                     <div class="offspring-potential">
                         <div class="offspring-header">
                             <h3>Offspring Potential</h3>
-                            <button id="clear-parent-selections" title="Clear selected runners">Clear</button>
+                            <div class="save-load-controls">
+                                <div class="input-group">
+                                    <button id="save-setup-button" title="Save new setup">
+                                        <img id="save-setup-icon" src="assets/gui_icons/save-icon.png" alt="Save">
+                                    </button>
+                                    <button id="overwrite-setup-button" class="icon-button small-icon" title="Overwrite selected setup">
+                                        <img id="overwrite-icon" src="assets/gui_icons/overwrite-icon.png" alt="Overwrite">
+                                    </button>
+                                    <input type="text" id="setup-name-input" placeholder="Setup Name">
+                                </div>
+                                <div class="select-group">
+                                    <select id="saved-setups-select">
+                                        <option value="">Load Saved Setup...</option>
+                                    </select>
+                                    <button id="delete-setup-button" class="delete-button" title="Delete selected setup">X</button>
+                                </div>
+                                <div class="header-buttons">
+                                    <button id="clear-parent-selections" title="Clear selected runners">Clear</button>
+                                </div>
+                            </div>
                             <div class="affinity-slider-container">
                                 <input type="range" id="affinity-slider" min="1" max="300" value="150" title="Affinity Score">
                                 <input type="number" id="affinity-number-input" min="1" max="300" value="150">
-                            </div>
-                            <div class="affinity-selector-container">
-                                <label for="affinity-selection" style="margin-right: 10px;"><b>Affinity:</b></label>
+                                <label for="affinity-selection" style="margin-right: 10px; margin-left: 10px;"><b>Affinity:</b></label>
                                 <select id="affinity-selection">
-                                <option value="triangle">△</option>
-                                <option value="circle">〇</option>
-                                <option value="double_circle" selected>◎</option>
+                                    <option value="triangle">△</option>
+                                    <option value="circle">〇</option>
+                                    <option value="double_circle" selected>◎</option>
                                 </select>
                             </div>
                         </div>

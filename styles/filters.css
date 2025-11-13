@@ -237,6 +237,14 @@ input[type="range"]::-moz-range-track {
   height: 20px;
   object-fit: contain;
 }
+#overwrite-icon {
+  width: 20px;
+  object-fit: contain;
+}
+#save-setup-icon {
+  width: 20px;
+  object-fit: contain;
+}
 
 #save-data-button, #load-new-file-button {
     background-color: var(--uma-accent-blue);

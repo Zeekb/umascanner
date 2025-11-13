@@ -14,6 +14,8 @@ export const state = {
     whiteSparkNames: [],
     orderedSkills: [],
     allRunnerNamesSet: new Set(),
+
+    savedParentSetups: [],
     
     gpExistenceCache: new Map(),
     sparkFilterCounter: 1,
