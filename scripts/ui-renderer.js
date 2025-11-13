@@ -969,16 +969,45 @@ function formatSparksForPlanner(sparksArray) {
         'End Closer': 'End'
     };
 
-    
     const colorOrder = { 'blue': 1, 'pink': 2, 'green': 3, 'white': 4 };
-    sparksArray.sort((a, b) => {
+    const blueSparks = state.orderedSparks?.blue || [];
+    const pinkSparks = state.orderedSparks?.pink || [];
+    const greenSparks = state.orderedSparks?.green || [];
+    const whiteRaceSparks = state.orderedSparks?.white?.race || [];
+    const whiteSkillSparks = state.orderedSparks?.white?.skill || [];
+    const blueSparkOrder = new Map(blueSparks.map((name, index) => [name, index]));
+    const pinkSparkOrder = new Map(pinkSparks.map((name, index) => [name, index]));
+    const greenSparkOrder = new Map(greenSparks.map((name, index) => [name, index]));
+    
+    const whiteSparkOrder = new Map();
+    whiteRaceSparks.forEach((name, index) => whiteSparkOrder.set(name, index));
+    const whiteSkillOffset = whiteRaceSparks.length;
+    whiteSkillSparks.forEach((name, index) => whiteSparkOrder.set(name, index + whiteSkillOffset));
+
+    const maxSortVal = 9999;
+
+    const getSparkSortValue = (spark) => {
+        const name = spark.spark_name;
+        if (spark.color === 'blue' && blueSparkOrder.has(name)) return blueSparkOrder.get(name);
+        if (spark.color === 'pink' && pinkSparkOrder.has(name)) return pinkSparkOrder.get(name);
+        if (spark.color === 'green' && greenSparkOrder.has(name)) return greenSparkOrder.get(name);
+        if (spark.color === 'white' && whiteSparkOrder.has(name)) return whiteSparkOrder.get(name);
+        return maxSortVal;
+    };
+
+    const sortedSparks = [...sparksArray].sort((a, b) => {
         const orderA = colorOrder[a.color] || 5;
         const orderB = colorOrder[b.color] || 5;
         if (orderA !== orderB) return orderA - orderB;
-        return (a.count > b.count) ? -1 : 1; 
+
+        const sortValA = getSparkSortValue(a);
+        const sortValB = getSparkSortValue(b);
+        if (sortValA !== sortValB) return sortValA - sortValB;
+
+        return (parseInt(b.count) || 0) - (parseInt(a.count) || 0); 
     });
 
-    return sparksArray.map(spark => {
+    return sortedSparks.map(spark => {
         if (!spark || !spark.spark_name) return ''; 
         const displayName = nameMap[spark.spark_name] || spark.spark_name;
         
@@ -1144,6 +1173,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
         const processedRows = entries.map(entry => {
             const parentSparksLookup = {};
             let whiteParent = 0;
+            let whiteTotal = 0;
 
             // --- Spark Calculation Logic (Preserved) ---
             if (Array.isArray(entry.sparks?.parent)) {
@@ -1175,6 +1205,9 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                                 };
                             }
                             aggregatedSparks[name].totalCount += parseInt(spark.count || 0, 10);
+                        }
+                        else if (spark.color === 'white') {
+                            whiteTotal++;
                         }
                     });
                 }
@@ -1224,7 +1257,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                 score: `${entry.score}`,
                 blue: blueSparksStr.trim(),
                 pink: pinkSparksStr.trim(),
-                white: `Whites: x${whiteParent}`
+                white: `Whites: ${whiteTotal}(${whiteParent})`
             };
         });
 
@@ -1291,7 +1324,7 @@ function displayParentDetails(entrySelect, detailsElement) {
                     </div>
                     <div>
                         <b>Legacy Sparks:</b>
-                        <div class="spark-cell-style">${cleanName(runner.gp1)} & ${cleanName(runner.gp2)} ${legacySparksHtml}</div>
+                        <div class="spark-cell-style"><p>${cleanName(runner.gp1)} & ${cleanName(runner.gp2)}</p> ${legacySparksHtml}</div>
                     </div>
                 </div>
             </div>
@@ -1462,17 +1495,19 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
         const finalCombinedChance = 1 - combinedProbOfNotInheriting;
 
         chanceBreakdownDetails.sort((a, b) => b.prob - a.prob);
-        
-        const starsBySource = chanceBreakdownDetails.map(detail => Array(detail.stars).fill('★').join(''));
-        const combinedStarsHtml = starsBySource.join('<span class="star-separator"> </span>');
 
         const sourcesHtml = chanceBreakdownDetails.map(detail => {
             const parentIndicator = detail.isParent ? '<span class="parent-indicator" title="Direct Parent (Full Chance)">P</span>' : '';
+            const starString = '★'.repeat(detail.stars); '☆'
+            const emptyCount = Math.max(0, 3 - detail.stars);
+            const emptyStarsString = '<span style="color:white;">' + '☆'.repeat(emptyCount) + '</span>';
             return `
                 <div class="source-item">
-                    <span class="source-name">${cleanName(detail.contributor)}:${parentIndicator}</span> 
-                    <span class="source-stars">${detail.stars}★</span> 
-                    <span class="chance-value">${formatPercent(detail.prob)}%</span>
+                    <div class="source-left-wrapper">
+                        <span class="source-stars">${starString}${emptyStarsString}</span>
+                        <span class="source-name">${cleanName(detail.contributor)}</span>
+                    </div>
+                    <span class="chance-value">${parentIndicator}${formatPercent(detail.prob)}%</span>
                 </div>
             `;
         }).join('');
@@ -1484,7 +1519,6 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
             <div class="spark-label-container">
                 <div class="spark-button ${spark.color}">
                     <span class="spark-name">${displayName}</span>
-                    <span class="stars-right">${combinedStarsHtml}</span>
                 </div>
                 <b class="combined-spark-chance">${formatPercent(finalCombinedChance)}%</b>
             </div>
@@ -1496,10 +1530,10 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
 
     const statOrder = ['speed', 'stamina', 'power', 'guts', 'wit'];
     
-    let statHtml = '<div class="spark-potential spark-color-blue" style="grid-column: 1 / -1; border-left-width: 8px;">';
+    let statHtml = '<div class="spark-potential spark-color-blue" style="grid-column: 1 / -1; border-left-width: 8px; display:ruby;">';
     statHtml += '<b>Stat Gains (from all 6 ancestors)</b>';
     statHtml += '<div class="spark-details">';
-    statHtml += `<b>Initial Guaranteed Gain:</b> `;
+    statHtml += `<b class="initial-gain">Initial Guaranteed Gain:</b> `;
     
     let guaranteedGains = [];
     for (const stat of statOrder) {
@@ -1508,7 +1542,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     }
     statHtml += guaranteedGains.length > 0 ? guaranteedGains.join('  |  ') : 'None';
     statHtml += '</div><div class="spark-details">';
-    statHtml += `<b>Potential Inspiration Gain (per Inspiration):</b> `;
+    statHtml += `<b class="initial-gain">Potential Inspiration Gain (per Inspiration):</b> `;
     
     let randomGains = [];
     for (const stat of statOrder) {
@@ -1519,11 +1553,10 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
     statHtml += '</div></div>';
 
     let infoHtml = `
-        <div class="spark-potential spark-info-note">
+        <div class="spark-potential spark-info-note" style="display:ruby">
             <b>Note</b>
             <div class="spark-details">
-                All percentages shown below are the calculated chance per <b>individual</b> inspiration event.<br>
-                Take these chances with a grain of salt I don't know how accurate they are.
+                All percentages shown below are the calculated chance per <b>individual</b> inspiration event.  Take these chances with a grain of salt I don't know how accurate they are.
             </div>
         </div>
     `;

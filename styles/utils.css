@@ -281,8 +281,8 @@ td.skill-cell .skill-gold b {
 /* Styles for the spark pool display in the career planner */
 #career-planner .spark-pool {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(237px, 1fr));
+    gap: 4px;
     width: 100%;
 }
 
@@ -317,6 +317,11 @@ td.skill-cell .skill-gold b {
 .dark-mode #career-planner .spark-details b {
     color: var(--uma-accent-blue);
 }
+
+.initial-gain {
+    padding-left: 20px;
+}
+
 
 #career-planner .spark-color-blue { border-left: 4px solid var(--spark-blue-bg); }
 #career-planner .spark-color-pink { border-left: 4px solid var(--spark-pink-bg); }
@@ -587,6 +592,11 @@ td.skill-cell .skill-gold b {
     margin-top: 5px; 
 }
 
+.spark-cell-style p {
+    padding-right: 5px;
+    margin: 0;
+}
+
 .spark-cell-style .no-sparks {
     font-size: 1.2em; 
     font-style: italic;
@@ -644,7 +654,7 @@ td.skill-cell .skill-gold b {
     margin-bottom: 8px;
     justify-content: space-between; 
     align-items: center; 
-    gap: 10px;
+    gap: 3px;
 }
 
 .combined-spark-chance {
@@ -657,11 +667,9 @@ td.skill-cell .skill-gold b {
 
 .spark-potential .spark-button {
     padding: 4px 8px;
-    font-size: 0.9em; 
-}
-
-.spark-potential .spark-button .spark-name {
-    margin-right: 8px; 
+    font-size: 0.8em;
+    max-width: 70%;
+    overflow: clip; 
 }
 
 .spark-potential .spark-button .stars-right {
@@ -696,7 +704,6 @@ td.skill-cell .skill-gold b {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    padding-left: 8px;
 }
 
 .spark-potential .source-item {
@@ -706,6 +713,12 @@ td.skill-cell .skill-gold b {
     font-size: 0.9em;
     gap: 10px;
     line-height: 0.8;
+}
+
+.source-left-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .spark-potential .source-name {
@@ -721,8 +734,9 @@ td.skill-cell .skill-gold b {
     font-weight: bold;
     color: var(--uma-accent-pink);
     white-space: nowrap;
-    margin-left: auto; 
-    margin-right: 10px;
+    font-size: 1.1em; /* Make stars slightly visible */
+    line-height: 1;
+    width: 40px;
 }
 
 .dark-mode .spark-potential .source-stars {
@@ -732,15 +746,7 @@ td.skill-cell .skill-gold b {
 .spark-potential .chance-value {
     font-weight: bold;
     color: var(--uma-text-dark);
-    min-width: 50px;
     text-align: right;
-}
-
-
-.spark-potential .source-name {
-    display: flex;
-    align-items: center;
-    gap: 4px;
 }
 
 /* Styles for the parent indicator in spark details */
@@ -751,6 +757,7 @@ td.skill-cell .skill-gold b {
     width: 14px;
     height: 14px;
     font-size: 10px;
+    margin-right: 5px;
     font-weight: bold;
     color: white;
     background-color: var(--uma-accent-pink);
