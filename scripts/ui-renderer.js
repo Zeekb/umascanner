@@ -1498,7 +1498,7 @@ function calculateOffspringPotential(parent1EntryId, parent2EntryId, affinitySco
 
         const sourcesHtml = chanceBreakdownDetails.map(detail => {
             const parentIndicator = detail.isParent ? '<span class="parent-indicator" title="Direct Parent (Full Chance)">P</span>' : '';
-            const starString = '★'.repeat(detail.stars); '☆'
+            const starString = '<span class="star-color-' + spark.color + '">' + '★'.repeat(detail.stars); + '</span>';
             const emptyCount = Math.max(0, 3 - detail.stars);
             const emptyStarsString = '<span style="color:white;">' + '☆'.repeat(emptyCount) + '</span>';
             return `

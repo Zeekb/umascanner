@@ -101,6 +101,19 @@
     text-shadow: none;
 }
 
+.star-color-blue {
+    color: var(--spark-blue-bg);
+}
+.star-color-pink {
+    color: var(--spark-pink-bg);
+}
+.star-color-green {
+    color: var(--spark-green-bg);
+}
+.star-color-white {
+    color: #f0bd1a;
+}
+
 .dark-mode .spark-button.blue {
     color: var(--spark-blue-bg);
     background-color: #343434;
