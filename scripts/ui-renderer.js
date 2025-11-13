@@ -1163,10 +1163,21 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
 
     if (entries.length > 0) {
         const nameMap = {
-            'Front Runner': 'Front',
-            'Pace Chaser': 'Pace',
-            'Late Surger': 'Late',
-            'End Closer': 'End'
+            'Front Runner': 'Fro',
+            'Pace Chaser': 'Pac',
+            'Late Surger': 'Lat',
+            'End Closer': 'End',
+            'Medium': 'Med',
+            'Sprint': 'Spr',
+            'Mile': 'Mil',
+            'Long': 'Lon',
+            'Stamina': 'Sta',
+            'Power': 'Pow',
+            'Speed': 'Spe',
+            'Guts': 'Gut',
+            'Turf': 'Tur',
+            'Dirt': 'Dir'
+
         };
 
         // 1. Process data first to get raw strings for each column
@@ -1241,8 +1252,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
 
             sortedSparkValues.forEach(spark => {
                 const displayName = nameMap[spark.name] || spark.name;
-                const parentDisplay = spark.parentCount > 0 ? `(${spark.parentCount})` : '';
-                const formattedSpark = `${displayName} ${spark.totalCount}${parentDisplay}`;
+                const formattedSpark = `${displayName} ${spark.totalCount}`;
 
                 if (spark.color === 'blue') {
                     blueSparksStr += `${formattedSpark} `;
@@ -1257,7 +1267,7 @@ function populateEntrySelect(nameSelect, entrySelect, detailsDiv) {
                 score: `${entry.score}`,
                 blue: blueSparksStr.trim(),
                 pink: pinkSparksStr.trim(),
-                white: `Whites: ${whiteTotal}(${whiteParent})`
+                white: `Whi: ${whiteTotal}(${whiteParent})`
             };
         });
 
