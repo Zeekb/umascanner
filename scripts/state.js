@@ -22,6 +22,7 @@ export const state = {
     skillFilterCounter: 1,
     maxTotalWhiteSparks: 0,
     maxParentWhiteSparks: 0,
+    showParentSparksOnly: false,
 
     elements: {},
 };

@@ -409,6 +409,20 @@ export function setupEventListeners() {
 
     state.elements.saveDataButton.addEventListener('click', saveDataToFile); 
 
+    // White sparks parent-only toggle
+    const whiteSparksToggle = document.getElementById('white-sparks-parent-only-toggle');
+    if (whiteSparksToggle) {
+        whiteSparksToggle.addEventListener('click', () => {
+            state.showParentSparksOnly = !state.showParentSparksOnly;
+            whiteSparksToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+            whiteSparksToggle.classList.toggle('active', state.showParentSparksOnly);
+            whiteSparksToggle.title = state.showParentSparksOnly 
+                ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
+                : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
+            filterAndRender();
+        });
+    }
+
     const legacyContent = document.getElementById('legacy-analysis-content');
     if (legacyContent) {
         legacyContent.addEventListener('click', handleLegacyClick);

@@ -170,6 +170,10 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
         let whiteSparksHtml = '';
         let previousSource = '';
         allWhiteSparksList.forEach(spark => {
+            if (state.showParentSparksOnly && spark.source !== 'parent') {
+                return;
+            }
+
             if (previousSource && spark.source !== previousSource) {
                 whiteSparksHtml += '<div class="spark-separator"></div>';
             }
