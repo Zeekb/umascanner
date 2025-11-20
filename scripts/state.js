@@ -27,7 +27,7 @@ export const state = {
 };
 
 export const CONSTANTS = {
-    APTITUDE_RANK_MAP: {'S': 5, 'A': 4, 'B': 3, 'C': 2, 'D': 1, 'E': 0, 'F': -1, 'G': -2, '': -100, 'N/A': -100},
+    APTITUDE_RANK_MAP: {'S': 9, 'A': 8, 'B': 7, 'C': 6, 'D': 5, 'E': 4, 'F': 3, 'G': 2, '': -100, 'N/A': -100},
     UMA_TEXT_DARK: '#8C4410',
     APTITUDE_COLORS: {
         'S': '#f0bd1a', 'A': '#f48337', 'B': '#e56487', 'C': '#61c340',
