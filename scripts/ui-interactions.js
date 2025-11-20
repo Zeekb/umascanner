@@ -469,7 +469,6 @@ function addFilter(type, value, color) {
             }
             
             filterAndRender();
-            showTimedMessage(`Removed filter: ${value}`);
             return;
         }
 
@@ -519,7 +518,6 @@ function addFilter(type, value, color) {
             }
 
             filterAndRender();
-            showTimedMessage(`Removed spark filter: ${value}`);
             return;
         }
 
