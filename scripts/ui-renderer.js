@@ -198,8 +198,10 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
 
                const tooltipText = `${titleText}\nClick to filter by ${spark.name}`;
                
+               const colorTypeClass = ' ' + getWhiteSparkColorClass(spark.name);
+
                whiteSparksHtml += `
-               <div class="spark-button white${highlightClass} add-filter-click" title="${titleText}" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="white">
+               <div class="spark-button white${highlightClass}${colorTypeClass} add-filter-click" title="${titleText}" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="white">
                    <span>${spark.count}</span>
                    <span class="star${parentClass}">★</span>
                    <span class="spark-name">${spark.name}</span>
@@ -228,6 +230,27 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
    `}).join('');
    state.elements.runnerWhiteSparksBody.innerHTML = html;
    hideEntryIdColumn('runner-white-sparks');
+}
+
+// Helper to determine CSS class for white sparks based on skill type
+function getWhiteSparkColorClass(sparkName) {
+    const skillType = state.skillData[sparkName]; // Lookup in loaded skill data
+
+    if (!skillType) {
+        return 'skill-unknown'; // Not found = Brown
+    }
+
+    // Logic matches renderSkillsOverview categories
+    if (skillType.includes('detrimental')) return 'skill-detrimental';
+    if (skillType.includes('debuff')) return 'skill-debuff';
+    if (skillType.startsWith('recovery') || skillType.startsWith('unique_recovery')) return 'skill-recovery';
+    if (skillType.includes('passive')) return 'skill-passive';
+    
+    // Speed, acceleration, and others fall under "speed" color usually
+    const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
+    if (speedCats.some(cat => skillType.startsWith(cat))) return 'skill-speed';
+
+    return 'skill-unknown'; // Fallback
 }
 
 // Renders the skills overview table.
@@ -1138,8 +1161,13 @@ function formatSparks(runner, allSparkCriteria) {
         
         const displayName = nameMap[spark.name] || spark.name;
 
+        let colorTypeClass = '';
+        if (spark.color === 'white') {
+            colorTypeClass = ' ' + getWhiteSparkColorClass(spark.name);
+        }
+
         return `
-            <div class="spark-button ${spark.color}${highlightClass} add-filter-click" 
+            <div class="spark-button ${spark.color}${highlightClass}${colorTypeClass} add-filter-click" 
                 title="Click to filter by ${displayName}" 
                 data-filter-type="spark" 
                 data-filter-value="${spark.name}" 

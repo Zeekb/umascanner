@@ -170,3 +170,28 @@
 .dark-mode .spark-separator {
     background-color: #555;
 }
+
+/* 1. Default / Not Found in Skill Data (Brown) */
+.spark-button.white.skill-unknown {
+    border-color: #8d6e63;
+}
+
+.spark-button.white.skill-recovery {
+    border-color: var(--skill-color-recovery);
+}
+
+.spark-button.white.skill-passive {
+    border-color: var(--skill-color-passive);
+}
+
+.spark-button.white.skill-speed {
+    border-color: var(--skill-color-speed);
+}
+
+.spark-button.white.skill-debuff {
+    border-color: var(--skill-color-debuff);
+}
+
+.spark-button.white.skill-detrimental {
+    border-color: var(--skill-color-detrimental);
+}
