@@ -23,6 +23,7 @@ export const state = {
     maxTotalWhiteSparks: 0,
     maxParentWhiteSparks: 0,
     showParentSparksOnly: false,
+    skillCategoryFilter: 'all',
 
     elements: {},
 };

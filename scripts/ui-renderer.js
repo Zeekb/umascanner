@@ -315,7 +315,13 @@ function renderSkillsOverview(runners) {
             return a.name.localeCompare(b.name); 
         });
 
-        return categorizedSkills.map(skill => {
+        // Filter skills based on selected category
+        let filteredSkills = categorizedSkills;
+        if (state.skillCategoryFilter && state.skillCategoryFilter !== 'all') {
+            filteredSkills = categorizedSkills.filter(skill => skill.category === state.skillCategoryFilter);
+        }
+
+        return filteredSkills.map(skill => {
             const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier} add-filter-click`;
             const formattedName = formatSkillName(skill.name); 
             return `<div class="${bubbleClasses}" title="Click to filter by ${skill.name}" data-filter-type="skill" data-filter-value="${skill.name}">${formattedName}</div>`;

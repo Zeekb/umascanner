@@ -453,6 +453,31 @@ export function setupEventListeners() {
         });
     }
 
+    // Skills category filter cycling button
+    const skillsCategoryFilter = document.getElementById('skills-category-filter');
+    if (skillsCategoryFilter) {
+        const categories = ['all', 'recovery', 'passive', 'speed', 'debuff', 'detrimental'];
+        const categoryLabels = {
+            'all': 'All',
+            'recovery': 'Recovery',
+            'passive': 'Passive',
+            'speed': 'Speed/Acceleration/Observation/StartingGate/LaneChange',
+            'debuff': 'Debuff',
+            'detrimental': 'Detrimental'
+        };
+        
+        skillsCategoryFilter.addEventListener('click', () => {
+            const currentIndex = categories.indexOf(state.skillCategoryFilter);
+            const nextIndex = (currentIndex + 1) % categories.length;
+            state.skillCategoryFilter = categories[nextIndex];
+            
+            skillsCategoryFilter.textContent = `[${categoryLabels[state.skillCategoryFilter]}]`;
+            skillsCategoryFilter.classList.toggle('active', state.skillCategoryFilter !== 'all');
+            
+            filterAndRender();
+        });
+    }
+
     const legacyContent = document.getElementById('legacy-analysis-content');
     if (legacyContent) {
         legacyContent.addEventListener('click', handleLegacyClick);

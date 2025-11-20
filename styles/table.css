@@ -180,6 +180,7 @@ td.skill-cell {
   white-space: normal;
   font-size: 0.75em;
   min-width: 80px;
+  min-height: 28px;
 }
 td.skill-cell b {
   color: black;
@@ -214,7 +215,6 @@ td.skill-cell b {
     background-color: #539e16;
 }
 
-
 td.skill-cell {
   display: flex;
   flex-wrap: wrap;
@@ -223,6 +223,28 @@ td.skill-cell {
   align-items: center;
   overflow-x: auto;
 }
+
+/* Skills overview table layout - make skills column flexible */
+#skills-overview table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+#skills-overview th:nth-child(2),
+#skills-overview td:nth-child(2) {
+  width: 150px; /* Name - minimal but readable */
+}
+
+#skills-overview th:nth-child(3),
+#skills-overview td:nth-child(3) {
+  width: 80px; /* Score - minimal */
+}
+
+#skills-overview th:nth-child(4),
+#skills-overview td:nth-child(4) {
+  width: auto; /* Skills - takes remaining space */
+}
+
 
 /* Styles for skill bubbles */
 .skill-bubble {
@@ -347,4 +369,35 @@ td.skill-cell {
     background-color: var(--uma-accent-blue);
     border-color: var(--uma-accent-blue);
 }
+
+/* Styles for header filter dropdown */
+.header-filter-dropdown {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 3px;
+    padding: 2px 6px;
+    margin-left: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+}
+
+.header-filter-dropdown:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.header-filter-dropdown:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.35);
+    border-color: var(--uma-accent-pink);
+}
+
+.dark-mode .header-filter-dropdown:focus {
+    border-color: var(--uma-accent-blue);
+}
+
 
