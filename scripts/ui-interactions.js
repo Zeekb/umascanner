@@ -419,6 +419,36 @@ export function setupEventListeners() {
             whiteSparksToggle.title = state.showParentSparksOnly 
                 ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
                 : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
+            
+            // Sync overview toggle if it exists
+            const overviewToggle = document.getElementById('overview-sparks-parent-only-toggle');
+            if (overviewToggle) {
+                overviewToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+                overviewToggle.classList.toggle('active', state.showParentSparksOnly);
+            }
+            
+            filterAndRender();
+        });
+    }
+
+    // Overview sparks parent-only toggle
+    const overviewSparksToggle = document.getElementById('overview-sparks-parent-only-toggle');
+    if (overviewSparksToggle) {
+        overviewSparksToggle.addEventListener('click', () => {
+            state.showParentSparksOnly = !state.showParentSparksOnly;
+            overviewSparksToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+            overviewSparksToggle.classList.toggle('active', state.showParentSparksOnly);
+            overviewSparksToggle.title = state.showParentSparksOnly 
+                ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
+                : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
+            
+            // Sync white sparks toggle if it exists
+            const whiteToggle = document.getElementById('white-sparks-parent-only-toggle');
+            if (whiteToggle) {
+                whiteToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+                whiteToggle.classList.toggle('active', state.showParentSparksOnly);
+            }
+            
             filterAndRender();
         });
     }

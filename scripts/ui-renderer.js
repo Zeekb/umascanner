@@ -1088,7 +1088,9 @@ function formatSparks(runner, allSparkCriteria) {
     }
 
     const aggregatedSparks = {};
-    ['parent', 'gp1', 'gp2'].forEach(source => {
+    // Filter sources based on parent-only toggle
+    const sources = state.showParentSparksOnly ? ['parent'] : ['parent', 'gp1', 'gp2'];
+    sources.forEach(source => {
         if (Array.isArray(runner.sparks?.[source])) {
             runner.sparks[source].forEach(spark => {
                 if (spark?.color && ['blue', 'pink', 'green'].includes(spark.color) && spark.spark_name) {
