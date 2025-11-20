@@ -1787,8 +1787,50 @@ export function showDetailModal(runner, displayName) {
 function generateSparksHtml(runner) {
     let html = '<div class="modal-sparks-list">';
 
-    const createSection = (sourceRunner, sparks, fallbackName) => {
-        if (!sparks || sparks.length === 0) return '';
+    const createSection = (sourceRunner, inputSparks, fallbackName) => {
+        if (!inputSparks || inputSparks.length === 0) return '';
+
+        const sparks = [...inputSparks];
+        const whiteIndices = [];
+        const whiteSparks = [];
+        
+        sparks.forEach((s, i) => {
+            if (s.color === 'white') {
+                whiteIndices.push(i);
+                whiteSparks.push(s);
+            }
+        });
+
+        if (whiteSparks.length > 0 && state.orderedSparks?.white) {
+            const raceSparks = state.orderedSparks.white.race || [];
+            const skillSparks = state.orderedSparks.white.skill || [];
+            const specialSparks = ['URA Finale', 'Unity Cup'];
+
+            whiteSparks.sort((a, b) => {
+                const getPriority = (name) => {
+                    if (specialSparks.includes(name)) return 3;
+                    if (raceSparks.includes(name)) return 1;
+                    if (skillSparks.includes(name)) return 2;
+                    return 4;
+                };
+
+                const pA = getPriority(a.spark_name);
+                const pB = getPriority(b.spark_name);
+
+                if (pA !== pB) return pA - pB;
+
+                const getIndex = (name, priority) => {
+                    if (priority === 2) return skillSparks.indexOf(name);
+                    return raceSparks.indexOf(name);
+                };
+
+                return getIndex(a.spark_name, pA) - getIndex(b.spark_name, pB);
+            });
+
+            whiteIndices.forEach((originalIndex, i) => {
+                sparks[originalIndex] = whiteSparks[i];
+            });
+        }
 
         let sourceImgPath = './assets/gui_icons/icon.png';
         let nameForImage = '';

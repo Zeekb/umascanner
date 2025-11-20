@@ -101,48 +101,6 @@
     }
   },
   {
-    "entry_id": "3", "last_updated": "2025-10-23 23:50:42", "entry_hash": "c690dd3ad79192d3cef8674f299e9247",
-    "name": "Agnes Tachyon",
-    "score": 8021,
-    "speed": 729, "stamina": 413, "power": 720, "guts": 292, "wit": 626,
-    "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "F",
-    "gp1": "Mejiro McQueen", "gp2": "Tokai Teio",
-    "skills": [
-      "Introduction to Physiology",    "Sky-High Teio Step",
-      "The Duty of Dignity Calls",     "Standard Distance ◎",
-      "Corner Adept ○",                "Swinging Maestro",
-      "Straightaway Adept",            "Medium Straightaways ◎",
-      "Medium Corners ◎",              "Pace Chaser Corners ◎",
-      "Lone Wolf"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Power", "count": 1},
-        {"color": "pink", "spark_name": "Turf", "count": 1},
-        {"color": "white", "spark_name": "Corner Adept ○", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Power", "count": 3},
-        {"color": "pink", "spark_name": "Medium", "count": 3},
-        {"color": "green", "spark_name": "The Duty of Dignity Calls", "count": 1},
-        {"color": "white", "spark_name": "Lucky Seven", "count": 1}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Power", "count": 2},
-        {"color": "pink", "spark_name": "Turf", "count": 2},
-        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 1},
-        {"color": "white", "spark_name": "Tenno Sho (Spring)", "count": 1},
-        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
-        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 1},
-        {"color": "white", "spark_name": "Pace Chaser Straightaways ○", "count": 1},
-        {"color": "white", "spark_name": "Satsuki Sho", "count": 1},
-        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
-        {"color": "white", "spark_name": "Medium Straightaways ○", "count": 1}
-      ]
-    }
-  },
-  {
     "entry_id": "4", "last_updated": "2025-10-23 23:50:42", "entry_hash": "7697517873bb2952c7fd257be85c8cd2",
     "name": "Agnes Tachyon",
     "score": 9144,
@@ -1242,86 +1200,6 @@
     }
   },
   {
-    "entry_id": "27", "last_updated": "2025-10-23 23:50:42", "entry_hash": "de4f9584ed76b55f3694169cd78e81d6",
-    "name": "El Condor Pasa",
-    "score": 7746,
-    "speed": 886, "stamina": 681, "power": 770, "guts": 254, "wit": 303,
-    "turf": "A", "dirt": "B", "sprint": "F", "mile": "A", "medium": "A", "long": "B", "front": "A", "pace": "A", "late": "A", "end": "C",
-    "gp1": "Daiwa Scarlet c", "gp2": "Maruzensky",
-    "skills": [
-      "Victoria por plancha ☆",          "Left-Handed ◎",
-      "Corner Adept ○",                  "Fast-Paced",
-      "Front Runner Straightaways ◎",    "Leader's Pride",
-      "Front Runner Savvy ◎",            "Sympathy"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Wit", "count": 1},
-        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
-        {"color": "green", "spark_name": "Victoria por plancha ☆", "count": 1},
-        {"color": "white", "spark_name": "Front Runner Savvy ○", "count": 2},
-        {"color": "white", "spark_name": "Japan Cup", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Stamina", "count": 2},
-        {"color": "pink", "spark_name": "Front Runner", "count": 2},
-        {"color": "white", "spark_name": "Japanese Oaks", "count": 2},
-        {"color": "white", "spark_name": "Early Lead", "count": 1},
-        {"color": "white", "spark_name": "Shuka Sho", "count": 1},
-        {"color": "white", "spark_name": "Final Push", "count": 2}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Stamina", "count": 3},
-        {"color": "pink", "spark_name": "Front Runner", "count": 3},
-        {"color": "green", "spark_name": "Red Shift/LP1211-M", "count": 1},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
-        {"color": "white", "spark_name": "Arima Kinen", "count": 1},
-        {"color": "white", "spark_name": "Early Lead", "count": 1}
-      ]
-    }
-  },
-  {
-    "entry_id": "28", "last_updated": "2025-10-23 23:50:42", "entry_hash": "abd3146adc719e39aa15c67962e358cc",
-    "name": "El Condor Pasa",
-    "score": 8029,
-    "speed": 1036, "stamina": 484, "power": 642, "guts": 286, "wit": 382,
-    "turf": "A", "dirt": "B", "sprint": "F", "mile": "S", "medium": "A", "long": "B", "front": "E", "pace": "A", "late": "A", "end": "B",
-    "gp1": "Nice Nature c", "gp2": "Gold Ship",
-    "skills": [
-      "Corazón ☆ Ardiente",     "Professor of Curvature",
-      "Breath of Fresh Air",    "Prudent Positioning",
-      "Prepared to Pass",       "Pace Chaser Straightaways ◎",
-      "Hydrate"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Power", "count": 2},
-        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
-        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
-        {"color": "white", "spark_name": "Pace Chaser Straightaways ○", "count": 2},
-        {"color": "white", "spark_name": "Straightaway Recovery", "count": 1},
-        {"color": "white", "spark_name": "Hydrate", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Speed", "count": 3},
-        {"color": "pink", "spark_name": "Mile", "count": 2},
-        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
-        {"color": "white", "spark_name": "Murmur", "count": 1},
-        {"color": "white", "spark_name": "Extra Tank", "count": 1},
-        {"color": "white", "spark_name": "A Small Breather", "count": 1}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Stamina", "count": 3},
-        {"color": "pink", "spark_name": "End Closer", "count": 2},
-        {"color": "green", "spark_name": "Anchors Aweigh!", "count": 1},
-        {"color": "white", "spark_name": "Firm Conditions ○", "count": 1},
-        {"color": "white", "spark_name": "URA Finale", "count": 1},
-        {"color": "white", "spark_name": "Satsuki Sho", "count": 2},
-        {"color": "white", "spark_name": "Pressure", "count": 2}
-      ]
-    }
-  },
-  {
     "entry_id": "29", "last_updated": "2025-10-23 23:50:42", "entry_hash": "d6d9c2bf261ad2dab21357ddd89ae0bc",
     "name": "El Condor Pasa",
     "score": 8132,
@@ -2296,49 +2174,6 @@
         {"color": "white", "spark_name": "Murmur", "count": 1},
         {"color": "white", "spark_name": "Extra Tank", "count": 1},
         {"color": "white", "spark_name": "A Small Breather", "count": 1}
-      ]
-    }
-  },
-  {
-    "entry_id": "52", "last_updated": "2025-10-23 23:50:42", "entry_hash": "5850a132ef1d8b193e3917b81127c83a",
-    "name": "Maruzensky",
-    "score": 10123,
-    "speed": 1200, "stamina": 470, "power": 679, "guts": 291, "wit": 466,
-    "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "A", "pace": "D", "late": "F", "end": "G",
-    "gp1": "Sakura Bakushin O", "gp2": "Gold Ship",
-    "skills": [
-      "Red Shift/LP1211-M",          "Shooting Star",
-      "Hanshin Racecourse ◎",        "Standard Distance ◎",
-      "Outer Post Proficiency ◎",    "Straightaway Adept",
-      "Straightaway Recovery",       "Early Lead",
-      "Sprinting Gear",              "Plan X",
-      "Dodging Danger",              "Lucky Seven",
-      "Lone Wolf"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Stamina", "count": 1},
-        {"color": "pink", "spark_name": "Front Runner", "count": 2},
-        {"color": "green", "spark_name": "Red Shift/LP1211-M", "count": 2},
-        {"color": "white", "spark_name": "Standard Distance ○", "count": 2},
-        {"color": "white", "spark_name": "Dodging Danger", "count": 2},
-        {"color": "white", "spark_name": "Osaka Hai", "count": 1},
-        {"color": "white", "spark_name": "Early Lead", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Speed", "count": 3},
-        {"color": "pink", "spark_name": "Sprint", "count": 2},
-        {"color": "green", "spark_name": "Genius x Bakushin = Victory", "count": 1},
-        {"color": "white", "spark_name": "URA Finale", "count": 2}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Stamina", "count": 3},
-        {"color": "pink", "spark_name": "Turf", "count": 2},
-        {"color": "green", "spark_name": "Anchors Aweigh!", "count": 1},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
-        {"color": "white", "spark_name": "Firm Conditions ○", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 1}
       ]
     }
   },
@@ -5733,45 +5568,6 @@
     }
   },
   {
-    "entry_id": "129", "last_updated": "2025-10-23 23:50:42", "entry_hash": "f2db08b15bf9fcad0c5c197234aa9aee",
-    "name": "Tokai Teio",
-    "score": 8105,
-    "speed": 530, "stamina": 569, "power": 1151, "guts": 286, "wit": 288,
-    "turf": "A", "dirt": "G", "sprint": "F", "mile": "D", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "B", "end": "E",
-    "gp1": "Vodka", "gp2": "Mejiro McQueen",
-    "skills": [
-      "Sky-High Teio Step",                     "The Duty of Dignity Calls",
-      "Behold Thine Emperor's Divine Might",    "Corner Acceleration ○",
-      "Hawkeye",                                "Technician",
-      "Pace Chaser Savvy ◎"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Wit", "count": 1},
-        {"color": "pink", "spark_name": "Medium", "count": 3},
-        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 1},
-        {"color": "white", "spark_name": "Japan Cup", "count": 2},
-        {"color": "white", "spark_name": "Shrewd Step", "count": 1},
-        {"color": "white", "spark_name": "Satsuki Sho", "count": 2},
-        {"color": "white", "spark_name": "Corner Acceleration ○", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Power", "count": 2},
-        {"color": "pink", "spark_name": "Mile", "count": 2},
-        {"color": "green", "spark_name": "Cut and Drive!", "count": 2},
-        {"color": "white", "spark_name": "Straightaway Recovery", "count": 1},
-        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
-        {"color": "white", "spark_name": "Slick Surge", "count": 1}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Power", "count": 3},
-        {"color": "pink", "spark_name": "Medium", "count": 3},
-        {"color": "green", "spark_name": "The Duty of Dignity Calls", "count": 1},
-        {"color": "white", "spark_name": "Lucky Seven", "count": 1}
-      ]
-    }
-  },
-  {
     "entry_id": "130", "last_updated": "2025-10-23 23:50:42", "entry_hash": "937e8d1757ef9393b808cd710fb4a881",
     "name": "Tokai Teio",
     "score": 8172,
@@ -7927,53 +7723,6 @@
     }
   },
   {
-    "entry_id": "176", "last_updated": "2025-11-09 02:38:10", "entry_hash": "6c2bab127d72c81263aca38e4c9f7ddc",
-    "name": "Nice Nature",
-    "score": 7450,
-    "speed": 585, "stamina": 465, "power": 441, "guts": 293, "wit": 691,
-    "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
-    "gp1": "Grass Wonder", "gp2": "Agnes Tachyon",
-    "skills": [
-      "Just a Little Farther!",    "Corner Recovery ○",
-      "Straightaway Recovery",     "Trick (Rear)",
-      "Subdued Front Runners",     "Flustered Pace Chasers",
-      "Hesitant Late Surgers",     "Mystifying Murmur",
-      "All-Seeing Eyes",           "Tail Held High"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Speed", "count": 2},
-        {"color": "pink", "spark_name": "Turf", "count": 1},
-        {"color": "green", "spark_name": "Just a Little Farther!", "count": 2},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
-        {"color": "white", "spark_name": "Tail Held High", "count": 1},
-        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Wit", "count": 1},
-        {"color": "pink", "spark_name": "Turf", "count": 1},
-        {"color": "green", "spark_name": "Where There's a Will, There's a Way", "count": 2},
-        {"color": "white", "spark_name": "Trick (Rear)", "count": 2},
-        {"color": "white", "spark_name": "Late Surger Corners ○", "count": 1},
-        {"color": "white", "spark_name": "URA Finale", "count": 2},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
-        {"color": "white", "spark_name": "Flustered Pace Chasers", "count": 1},
-        {"color": "white", "spark_name": "Fighter", "count": 2}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Wit", "count": 3},
-        {"color": "pink", "spark_name": "Turf", "count": 2},
-        {"color": "green", "spark_name": "U=ma2", "count": 1},
-        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
-        {"color": "white", "spark_name": "Hesitant Front Runners", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 1},
-        {"color": "white", "spark_name": "Satsuki Sho", "count": 1},
-        {"color": "white", "spark_name": "Flustered Front Runners", "count": 1},
-        {"color": "white", "spark_name": "Murmur", "count": 2}
-      ]
-    }
-  },
-  {
     "entry_id": "177", "last_updated": "2025-11-09 02:38:10", "entry_hash": "abdfaa5d045b5fef99652e43f2ef76e9",
     "name": "Nice Nature",
     "score": 9177,
@@ -8667,52 +8416,6 @@
     }
   },
   {
-    "entry_id": "192", "last_updated": "2025-11-09 02:38:10", "entry_hash": "5563fd47dc29f9ef55db2c94c2f83af9",
-    "name": "Nice Nature",
-    "score": 6754,
-    "speed": 549, "stamina": 433, "power": 401, "guts": 312, "wit": 717,
-    "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "A", "end": "D",
-    "gp1": "Agnes Tachyon", "gp2": "Special Week",
-    "skills": [
-      "Just a Little Farther!",    "Kyoto Racecourse ◎",
-      "Kokura Racecourse ◎",       "Standard Distance ◎",
-      "Subdued Front Runners",     "Hesitant Late Surgers",
-      "Mystifying Murmur",         "All-Seeing Eyes",
-      "Lucky Seven"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Power", "count": 2},
-        {"color": "pink", "spark_name": "Long", "count": 2},
-        {"color": "green", "spark_name": "Just a Little Farther!", "count": 2},
-        {"color": "white", "spark_name": "Kokura Racecourse ○", "count": 1},
-        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
-        {"color": "white", "spark_name": "Subdued Front Runners", "count": 2},
-        {"color": "white", "spark_name": "Lucky Seven", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Wit", "count": 3},
-        {"color": "pink", "spark_name": "Turf", "count": 2},
-        {"color": "green", "spark_name": "U=ma2", "count": 1},
-        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
-        {"color": "white", "spark_name": "Hesitant Front Runners", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 1},
-        {"color": "white", "spark_name": "Satsuki Sho", "count": 1},
-        {"color": "white", "spark_name": "Flustered Front Runners", "count": 1},
-        {"color": "white", "spark_name": "Murmur", "count": 2}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Speed", "count": 1},
-        {"color": "pink", "spark_name": "Medium", "count": 2},
-        {"color": "green", "spark_name": "Shooting Star", "count": 1},
-        {"color": "white", "spark_name": "Subdued Pace Chasers", "count": 2},
-        {"color": "white", "spark_name": "Murmur", "count": 1},
-        {"color": "white", "spark_name": "Wet Conditions ○", "count": 1},
-        {"color": "white", "spark_name": "Hesitant Pace Chasers", "count": 1}
-      ]
-    }
-  },
-  {
     "entry_id": "193", "last_updated": "2025-11-09 02:38:10", "entry_hash": "22397719616755eb82480c8e8eb2eb93",
     "name": "Nice Nature",
     "score": 8992,
@@ -8936,116 +8639,6 @@
     }
   },
   {
-    "entry_id": "198", "last_updated": "2025-11-09 02:38:10", "entry_hash": "392d87b810424f2060383c4c1fd38dd5",
-    "name": "Winning Ticket",
-    "score": 6594,
-    "speed": 622, "stamina": 639, "power": 542, "guts": 290, "wit": 357,
-    "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "B", "front": "G", "pace": "B", "late": "A", "end": "G",
-    "gp1": "Special Week", "gp2": "Narita Brian",
-    "skills": [
-      "Our Ticket to Win!",      "Nimble Navigator",
-      "Standing By",             "Masterful Gambit",
-      "Straightaway Spurt",      "End Closer Straightaways ◎",
-      "End Closer Corners ◎",    "I Can See Right Through You",
-      "Crusader",                "End Closer Savvy ◎",
-      "Uma Stan"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Wit", "count": 1},
-        {"color": "pink", "spark_name": "Mile", "count": 2},
-        {"color": "green", "spark_name": "Our Ticket to Win!", "count": 1},
-        {"color": "white", "spark_name": "Strategist", "count": 2},
-        {"color": "white", "spark_name": "Nimble Navigator", "count": 2}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Speed", "count": 2},
-        {"color": "pink", "spark_name": "Late Surger", "count": 1},
-        {"color": "green", "spark_name": "Shooting Star", "count": 1},
-        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
-        {"color": "white", "spark_name": "Kyoto Racecourse ○", "count": 1},
-        {"color": "white", "spark_name": "Mile Corners ○", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 1},
-        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
-        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
-        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
-        {"color": "white", "spark_name": "Hydrate", "count": 1}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Wit", "count": 2},
-        {"color": "pink", "spark_name": "Mile", "count": 3},
-        {"color": "green", "spark_name": "Shadow Break", "count": 1},
-        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
-        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
-        {"color": "white", "spark_name": "Straightaway Adept", "count": 2},
-        {"color": "white", "spark_name": "Prepared to Pass", "count": 2},
-        {"color": "white", "spark_name": "End Closer Corners ○", "count": 1},
-        {"color": "white", "spark_name": "NHK Mile C.", "count": 2},
-        {"color": "white", "spark_name": "Mile Ch.", "count": 2},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
-        {"color": "white", "spark_name": "Homestretch Haste", "count": 2},
-        {"color": "white", "spark_name": "Outer Swell", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 2}
-      ]
-    }
-  },
-  {
-    "entry_id": "199", "last_updated": "2025-11-09 02:38:10", "entry_hash": "aeb8433de5e444bf7ae22442693c7ccb",
-    "name": "Winning Ticket",
-    "score": 7736,
-    "speed": 693, "stamina": 764, "power": 640, "guts": 277, "wit": 432,
-    "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "B", "front": "G", "pace": "B", "late": "A", "end": "G",
-    "gp1": "Special Week", "gp2": "Narita Brian",
-    "skills": [
-      "Our Ticket to Win!",            "Nimble Navigator",
-      "Masterful Gambit",              "Straightaway Spurt",
-      "End Closer Straightaways ◎",    "I Can See Right Through You",
-      "Crusader",                      "Intense Gaze",
-      "End Closer Savvy ◎",            "Uma Stan",
-      "Groundwork"
-    ],
-    "sparks": {
-      "parent": [
-        {"color": "blue", "spark_name": "Guts", "count": 1},
-        {"color": "pink", "spark_name": "Medium", "count": 2},
-        {"color": "green", "spark_name": "Our Ticket to Win!", "count": 1},
-        {"color": "white", "spark_name": "Hopeful S.", "count": 1},
-        {"color": "white", "spark_name": "Uma Stan", "count": 1},
-        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
-        {"color": "white", "spark_name": "I Can See Right Through You", "count": 1}
-      ],
-      "gp1": [
-        {"color": "blue", "spark_name": "Speed", "count": 2},
-        {"color": "pink", "spark_name": "Late Surger", "count": 1},
-        {"color": "green", "spark_name": "Shooting Star", "count": 1},
-        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
-        {"color": "white", "spark_name": "Kyoto Racecourse ○", "count": 1},
-        {"color": "white", "spark_name": "Mile Corners ○", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 1},
-        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
-        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
-        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
-        {"color": "white", "spark_name": "Hydrate", "count": 1}
-      ],
-      "gp2": [
-        {"color": "blue", "spark_name": "Wit", "count": 2},
-        {"color": "pink", "spark_name": "Mile", "count": 3},
-        {"color": "green", "spark_name": "Shadow Break", "count": 1},
-        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
-        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
-        {"color": "white", "spark_name": "Straightaway Adept", "count": 2},
-        {"color": "white", "spark_name": "Prepared to Pass", "count": 2},
-        {"color": "white", "spark_name": "End Closer Corners ○", "count": 1},
-        {"color": "white", "spark_name": "NHK Mile C.", "count": 2},
-        {"color": "white", "spark_name": "Mile Ch.", "count": 2},
-        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
-        {"color": "white", "spark_name": "Homestretch Haste", "count": 2},
-        {"color": "white", "spark_name": "Outer Swell", "count": 2},
-        {"color": "white", "spark_name": "URA Finale", "count": 2}
-      ]
-    }
-  },
-  {
     "entry_id": "200", "last_updated": "2025-11-09 02:38:10", "entry_hash": "b37c1b484005419212193d45e5cf8f59",
     "name": "Winning Ticket",
     "score": 8404,
@@ -9128,6 +8721,958 @@
         {"color": "pink", "spark_name": "Mile", "count": 1},
         {"color": "green", "spark_name": "Angling and Scheming", "count": 2},
         {"color": "white", "spark_name": "Japan Cup", "count": 2},
+        {"color": "white", "spark_name": "Hopeful S.", "count": 2},
+        {"color": "white", "spark_name": "Fast-Paced", "count": 1},
+        {"color": "white", "spark_name": "Deep Breaths", "count": 1},
+        {"color": "white", "spark_name": "Japanese Derby", "count": 2},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 2},
+        {"color": "white", "spark_name": "Final Push", "count": 2},
+        {"color": "white", "spark_name": "Front Runner Savvy ○", "count": 2}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 3},
+        {"color": "green", "spark_name": "Shadow Break", "count": 1},
+        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Adept", "count": 2},
+        {"color": "white", "spark_name": "Prepared to Pass", "count": 2},
+        {"color": "white", "spark_name": "End Closer Corners ○", "count": 1},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 2},
+        {"color": "white", "spark_name": "Mile Ch.", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
+        {"color": "white", "spark_name": "Homestretch Haste", "count": 2},
+        {"color": "white", "spark_name": "Outer Swell", "count": 2},
+        {"color": "white", "spark_name": "URA Finale", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "202", "last_updated": "2025-11-19 20:33:34", "entry_hash": "74b1be4aeff0da5723798fb9bbdf1a39",
+    "name": "El Condor Pasa",
+    "score": 13003,
+    "speed": 1110, "stamina": 612, "power": 941, "guts": 360, "wit": 854,
+    "turf": "A", "dirt": "A", "sprint": "D", "mile": "A", "medium": "A", "long": "B", "front": "D", "pace": "A", "late": "A", "end": "C",
+    "gp1": "Haru Urara", "gp2": "Taiki Shuttle",
+    "skills": [
+      "Victoria por plancha ☆",    "Red Shift/LP1211-M",
+      "Professor of Curvature",    "It's On!",
+      "No Stopping Me!",           "Stamina to Spare",
+      "Prepared to Pass",          "Mile Corners ◎",
+      "Pace Chaser Corners ◎",     "Straight Descent",
+      "Hydrate"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Victoria por plancha ☆", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 3},
+        {"color": "white", "spark_name": "Stamina to Spare", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "Japan C.", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 1},
+        {"color": "white", "spark_name": "Prepared to Pass", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Dirt", "count": 2},
+        {"color": "green", "spark_name": "Super-Duper Climax", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Recovery", "count": 2},
+        {"color": "white", "spark_name": "February S.", "count": 2}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Sprint", "count": 2},
+        {"color": "green", "spark_name": "Shooting for Victory!", "count": 1},
+        {"color": "white", "spark_name": "Sprinters S.", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
+        {"color": "white", "spark_name": "Sprinting Gear", "count": 1},
+        {"color": "white", "spark_name": "Oka Sho", "count": 1},
+        {"color": "white", "spark_name": "Champions C.", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Recovery", "count": 1},
+        {"color": "white", "spark_name": "Shifting Gears", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "203", "last_updated": "2025-11-19 20:33:34", "entry_hash": "e3a86f903992729745ad686515961f66",
+    "name": "Fuji Kiseki",
+    "score": 13575,
+    "speed": 1175, "stamina": 591, "power": 0, "guts": 285, "wit": 731,
+    "turf": "A", "dirt": "E", "sprint": "B", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "A", "late": "C", "end": "G",
+    "gp1": "Vodka", "gp2": "Oguri Cap",
+    "skills": [
+      "Lights of Vaudeville",    "Professor of Curvature",
+      "It's On!",                "No Stopping Me!",
+      "Stamina to Spare",        "Preferred Position",
+      "Prepared to Pass",        "Mile Corners ◎",
+      "Big-Sisterly",            "Straight Descent"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Guts", "count": 1},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Lights of Vaudeville", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Preferred Position", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Ramp Up", "count": 2},
+        {"color": "white", "spark_name": "Prepared to Pass", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 2},
+        {"color": "green", "spark_name": "Cut and Drive!", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Recovery", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Slick Surge", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 1},
+        {"color": "white", "spark_name": "Japanese Oaks", "count": 1},
+        {"color": "white", "spark_name": "JBC L. Classic", "count": 2},
+        {"color": "white", "spark_name": "Thunderbolt Step", "count": 3},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 2},
+        {"color": "white", "spark_name": "Yasuda Kinen", "count": 2},
+        {"color": "white", "spark_name": "Standard Distance ○", "count": 1},
+        {"color": "white", "spark_name": "Hydrate", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "204", "last_updated": "2025-11-19 20:33:34", "entry_hash": "e048fe20f3791d4a5203acd37b38703f",
+    "name": "Gold Ship",
+    "score": 13553,
+    "speed": 1200, "stamina": 919, "power": 948, "guts": 478, "wit": 458,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "G", "pace": "A", "late": "A", "end": "A",
+    "gp1": "Hishi Amazon", "gp2": "Special Week",
+    "skills": [
+      "Anchors Aweigh!",           "Shadow Break",
+      "Professor of Curvature",    "Swinging Maestro",
+      "Masterful Gambit",          "End Closer Corners ◎",
+      "The Coast Is Clear!",       "Go-Home Specialist",
+      "Uma Stan"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Guts", "count": 1},
+        {"color": "pink", "spark_name": "Late Surger", "count": 1},
+        {"color": "green", "spark_name": "Anchors Aweigh!", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Spring)", "count": 1},
+        {"color": "white", "spark_name": "Kikuka Sho", "count": 2},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 3},
+        {"color": "white", "spark_name": "End Closer Corners ○", "count": 1},
+        {"color": "white", "spark_name": "Satsuki Sho", "count": 2},
+        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 2},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "After-School Stroll", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Stamina", "count": 1},
+        {"color": "pink", "spark_name": "Long", "count": 1},
+        {"color": "green", "spark_name": "You and Me! One-on-One!", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 2},
+        {"color": "white", "spark_name": "Prudent Positioning", "count": 2},
+        {"color": "white", "spark_name": "Strategist", "count": 2},
+        {"color": "white", "spark_name": "Yasuda Kinen", "count": 2},
+        {"color": "white", "spark_name": "Queen Elizabeth II Cup", "count": 3},
+        {"color": "white", "spark_name": "I Can See Right Through You", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
+        {"color": "green", "spark_name": "Dazzl'n ♪ Diver", "count": 1},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 1},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 3},
+        {"color": "white", "spark_name": "URA Finale", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "205", "last_updated": "2025-11-19 20:33:34", "entry_hash": "016fb126fc847bcf3dcab6af256523e0",
+    "name": "Grass Wonder",
+    "score": 12930,
+    "speed": 1195, "stamina": 554, "power": 1012, "guts": 440, "wit": 603,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "S", "front": "F", "pace": "A", "late": "A", "end": "F",
+    "gp1": "Tokai Teio", "gp2": "Oguri Cap",
+    "skills": [
+      "Where There's a Will, There's a Way",    "Right-Handed ◎",
+      "Professor of Curvature",                 "Rushing Gale!",
+      "No Stopping Me!",                        "Outer Swell",
+      "Updrafters",                             "Shifting Gears",
+      "Late Surger Corners ◎",                  "1,500,000 CC",
+      "Levelheaded"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 1},
+        {"color": "green", "spark_name": "Where There's a Will, There's a Way", "count": 1},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 1},
+        {"color": "white", "spark_name": "Unity Cup", "count": 1},
+        {"color": "white", "spark_name": "Japanese Derby", "count": 2},
+        {"color": "white", "spark_name": "1,500,000 CC", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Long", "count": 2},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 2},
+        {"color": "white", "spark_name": "Queen Elizabeth II Cup", "count": 2},
+        {"color": "white", "spark_name": "Champions C.", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Japan C.", "count": 2},
+        {"color": "white", "spark_name": "Corner Acceleration ○", "count": 1},
+        {"color": "white", "spark_name": "Hydrate", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "206", "last_updated": "2025-11-19 20:33:34", "entry_hash": "fc2f3afaa86ab4ee31a1f9587bbb9590",
+    "name": "Grass Wonder",
+    "score": 14121,
+    "speed": 1200, "stamina": 643, "power": 1064, "guts": 491, "wit": 673,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "A", "late": "A", "end": "F",
+    "gp1": "Tokai Teio", "gp2": "Oguri Cap",
+    "skills": [
+      "Where There's a Will, There's a Way",    "Sky-High Teio Step",
+      "Triumphant Pulse",                       "Right-Handed ◎",
+      "Rushing Gale!",                          "It's On!",
+      "Slick Surge",                            "Updrafters",
+      "Shifting Gears",                         "Unyielding Spirit",
+      "1,500,000 CC",                           "A Small Breather",
+      "Slipstream"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Stamina", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 2},
+        {"color": "green", "spark_name": "Where There's a Will, There's a Way", "count": 1},
+        {"color": "white", "spark_name": "Right-Handed ○", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Long", "count": 2},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 2},
+        {"color": "white", "spark_name": "Queen Elizabeth II Cup", "count": 2},
+        {"color": "white", "spark_name": "Champions C.", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Japan C.", "count": 2},
+        {"color": "white", "spark_name": "Corner Acceleration ○", "count": 1},
+        {"color": "white", "spark_name": "Hydrate", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "207", "last_updated": "2025-11-19 20:33:34", "entry_hash": "d1f8ac109e716787552358301cf0557a",
+    "name": "Haru Urara",
+    "score": 14557,
+    "speed": 1200, "stamina": 681, "power": 1200, "guts": 416, "wit": 424,
+    "turf": "E", "dirt": "A", "sprint": "A", "mile": "A", "medium": "E", "long": "G", "front": "G", "pace": "F", "late": "A", "end": "B",
+    "gp1": "Tokai Teio", "gp2": "Gold Ship",
+    "skills": [
+      "Super-Duper Climax",        "Sky-High Teio Step",
+      "Professor of Curvature",    "Rushing Gale!",
+      "It's On!",                  "Indomitable",
+      "Position Pilfer",           "Outer Swell",
+      "Updrafters",                "Mile Straightaways ◎",
+      "1,500,000 CC",              "Lone Wolf"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Power", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 2},
+        {"color": "green", "spark_name": "Super-Duper Climax", "count": 1},
+        {"color": "white", "spark_name": "Pace Strategy", "count": 2},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Unity Cup", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Late Surger", "count": 2},
+        {"color": "green", "spark_name": "Anchors Aweigh!", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Spring)", "count": 2},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Homestretch Haste", "count": 1},
+        {"color": "white", "spark_name": "Osaka Hai", "count": 1},
+        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "I Can See Right Through You", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "208", "last_updated": "2025-11-19 20:33:34", "entry_hash": "b719b88ced2b243d4468d896ff5041dc",
+    "name": "King Halo",
+    "score": 11328,
+    "speed": 1163, "stamina": 500, "power": 746, "guts": 309, "wit": 745,
+    "turf": "A", "dirt": "G", "sprint": "A", "mile": "A", "medium": "A", "long": "C", "front": "G", "pace": "A", "late": "A", "end": "D",
+    "gp1": "Special Week", "gp2": "Oguri Cap",
+    "skills": [
+      "Prideful King",               "Right-Handed ◎",
+      "Outer Post Proficiency ◎",    "Professor of Curvature",
+      "It's On!",                    "Slick Surge",
+      "Outer Swell",                 "Sprinting Gear",
+      "Meticulous Measures",         "Late Surger Corners ◎",
+      "Fighter",                     "Studious",
+      "Late Surger Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Power", "count": 2},
+        {"color": "pink", "spark_name": "Pace Chaser", "count": 3},
+        {"color": "green", "spark_name": "Prideful King", "count": 2},
+        {"color": "white", "spark_name": "Right-Handed ○", "count": 2},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "Outer Swell", "count": 2},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 2},
+        {"color": "white", "spark_name": "Outer Post Proficiency ○", "count": 2},
+        {"color": "white", "spark_name": "Fighter", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 1},
+        {"color": "green", "spark_name": "Shooting Star", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Kyoto Racecourse ○", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 2},
+        {"color": "white", "spark_name": "URA Finale", "count": 1},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Hydrate", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Medium", "count": 2},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 2},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 2},
+        {"color": "white", "spark_name": "Subdued Front Runners", "count": 1},
+        {"color": "white", "spark_name": "Queen Elizabeth II Cup", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 1},
+        {"color": "white", "spark_name": "Competitive Spirit ○", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "209", "last_updated": "2025-11-19 20:33:34", "entry_hash": "a5b3972dd2325c6409b9b8934897bca7",
+    "name": "King Halo",
+    "score": 13934,
+    "speed": 1200, "stamina": 622, "power": 1200, "guts": 455, "wit": 428,
+    "turf": "A", "dirt": "G", "sprint": "A", "mile": "S", "medium": "B", "long": "B", "front": "G", "pace": "B", "late": "A", "end": "D",
+    "gp1": "Grass Wonder", "gp2": "Special Week",
+    "skills": [
+      "Prideful King",             "Cloudy Days ◎",
+      "Professor of Curvature",    "Focus",
+      "It's On!",                  "No Stopping Me!",
+      "Slick Surge",               "Blinding Flash",
+      "Meticulous Measures",       "1,500,000 CC",
+      "Studious"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Power", "count": 2},
+        {"color": "pink", "spark_name": "Sprint", "count": 1},
+        {"color": "green", "spark_name": "Prideful King", "count": 2},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 1},
+        {"color": "white", "spark_name": "Ramp Up", "count": 2},
+        {"color": "white", "spark_name": "Gap Closer", "count": 3}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 1},
+        {"color": "green", "spark_name": "Where There's a Will, There's a Way", "count": 1},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 1},
+        {"color": "white", "spark_name": "Unity Cup", "count": 1},
+        {"color": "white", "spark_name": "Japanese Derby", "count": 2},
+        {"color": "white", "spark_name": "1,500,000 CC", "count": 2}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 1},
+        {"color": "green", "spark_name": "Shooting Star", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Kyoto Racecourse ○", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 2},
+        {"color": "white", "spark_name": "URA Finale", "count": 1},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Hydrate", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "210", "last_updated": "2025-11-19 20:33:34", "entry_hash": "84ee1470ebfae53d16da8ca0c883786e",
+    "name": "Maruzensky",
+    "score": 11555,
+    "speed": 1079, "stamina": 579, "power": 1029, "guts": 364, "wit": 550,
+    "turf": "A", "dirt": "D", "sprint": "A", "mile": "A", "medium": "B", "long": "C", "front": "A", "pace": "D", "late": "F", "end": "G",
+    "gp1": "King Halo", "gp2": "Gold Ship",
+    "skills": [
+      "Red Shift/LP1211-M",        "Right-Handed ◎",
+      "Professor of Curvature",    "Breath of Fresh Air",
+      "Focus",                     "Early Lead",
+      "Countermeasure",            "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Front Runner Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Speed", "count": 1},
+        {"color": "pink", "spark_name": "Sprint", "count": 3},
+        {"color": "green", "spark_name": "Red Shift/LP1211-M", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Recovery", "count": 2},
+        {"color": "white", "spark_name": "Yasuda Kinen", "count": 1},
+        {"color": "white", "spark_name": "Front Runner Corners ○", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Prideful King", "count": 2},
+        {"color": "white", "spark_name": "Hopeful S.", "count": 3},
+        {"color": "white", "spark_name": "Homestretch Haste", "count": 2},
+        {"color": "white", "spark_name": "Sprinters S.", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 3},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Anchors Aweigh!", "count": 1},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 2},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "211", "last_updated": "2025-11-19 20:33:34", "entry_hash": "a33736305e51e5025373745bd8578d50",
+    "name": "Maruzensky",
+    "score": 13403,
+    "speed": 1200, "stamina": 700, "power": 1023, "guts": 357, "wit": 569,
+    "turf": "A", "dirt": "B", "sprint": "A", "mile": "A", "medium": "B", "long": "C", "front": "A", "pace": "D", "late": "G", "end": "G",
+    "gp1": "King Halo", "gp2": "Oguri Cap",
+    "skills": [
+      "Red Shift/LP1211-M",        "Professor of Curvature",
+      "Straightaway Adept",        "Rushing Gale!",
+      "Focus",                     "Early Lead",
+      "Sprinting Gear",            "Front Runner Straightaways ◎",
+      "Front Runner Corners ◎",    "Second Wind",
+      "Front Runner Savvy ◎",      "Lucky Seven"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Wit", "count": 1},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Red Shift/LP1211-M", "count": 2},
+        {"color": "white", "spark_name": "Satsuki Sho", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Adept", "count": 1},
+        {"color": "white", "spark_name": "Focus", "count": 1},
+        {"color": "white", "spark_name": "Lucky Seven", "count": 2},
+        {"color": "white", "spark_name": "Osaka Hai", "count": 3},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 1},
+        {"color": "white", "spark_name": "Front Runner Savvy ○", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Prideful King", "count": 2},
+        {"color": "white", "spark_name": "Hopeful S.", "count": 3},
+        {"color": "white", "spark_name": "Homestretch Haste", "count": 2},
+        {"color": "white", "spark_name": "Sprinters S.", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 3},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 1},
+        {"color": "white", "spark_name": "Japanese Oaks", "count": 1},
+        {"color": "white", "spark_name": "JBC L. Classic", "count": 2},
+        {"color": "white", "spark_name": "Thunderbolt Step", "count": 3},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 2},
+        {"color": "white", "spark_name": "Yasuda Kinen", "count": 2},
+        {"color": "white", "spark_name": "Standard Distance ○", "count": 1},
+        {"color": "white", "spark_name": "Hydrate", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "212", "last_updated": "2025-11-19 20:33:34", "entry_hash": "fa61cbb05cdf8b4ce69096b068915086",
+    "name": "Mejiro McQueen",
+    "score": 12397,
+    "speed": 1010, "stamina": 1057, "power": 881, "guts": 404, "wit": 362,
+    "turf": "A", "dirt": "E", "sprint": "G", "mile": "F", "medium": "A", "long": "S", "front": "B", "pace": "A", "late": "D", "end": "F",
+    "gp1": "Tokai Teio", "gp2": "Symboli Rudolf",
+    "skills": [
+      "The Duty of Dignity Calls",    "Sky-High Teio Step",
+      "Swinging Maestro",             "Straightaway Adept",
+      "It's On!",                     "No Stopping Me!",
+      "Calm and Collected",           "Pace Chaser Corners ◎",
+      "Straight Descent",             "Highlander"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Guts", "count": 1},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "The Duty of Dignity Calls", "count": 1},
+        {"color": "white", "spark_name": "Stamina to Spare", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Pace Chaser Corners ○", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Long", "count": 3},
+        {"color": "green", "spark_name": "Behold Thine Emperor's Divine Might", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 2},
+        {"color": "white", "spark_name": "Tether", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "213", "last_updated": "2025-11-19 20:33:34", "entry_hash": "0dcd6940ac2fb3bb812ea68acdc9ae3b",
+    "name": "Nice Nature",
+    "score": 11340,
+    "speed": 763, "stamina": 669, "power": 684, "guts": 451, "wit": 1044,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "F", "pace": "B", "late": "S", "end": "D",
+    "gp1": "Special Week", "gp2": "Oguri Cap",
+    "skills": [
+      "Just a Little Farther!",    "Standard Distance ◎",
+      "Long Shot ◎",               "Subdued Front Runners",
+      "Hesitant Front Runners",    "Flustered Pace Chasers",
+      "Hesitant Pace Chasers",     "Hesitant Late Surgers",
+      "Mile Corners ◎",            "Unyielding Spirit",
+      "Opening Gambit",            "A Small Breather",
+      "All-Seeing Eyes",           "Late Surger Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Power", "count": 1},
+        {"color": "pink", "spark_name": "Medium", "count": 3},
+        {"color": "green", "spark_name": "Just a Little Farther!", "count": 1},
+        {"color": "white", "spark_name": "Standard Distance ○", "count": 1},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 1},
+        {"color": "white", "spark_name": "Long Shot ○", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 1},
+        {"color": "green", "spark_name": "Shooting Star", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Kyoto Racecourse ○", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 2},
+        {"color": "white", "spark_name": "URA Finale", "count": 1},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
+        {"color": "white", "spark_name": "Asahi Hai F.S.", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Hydrate", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Mile", "count": 3},
+        {"color": "green", "spark_name": "Triumphant Pulse", "count": 2},
+        {"color": "white", "spark_name": "Hopeful S.", "count": 2},
+        {"color": "white", "spark_name": "Corner Acceleration ○", "count": 3},
+        {"color": "white", "spark_name": "Thunderbolt Step", "count": 1},
+        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 2},
+        {"color": "white", "spark_name": "Standard Distance ○", "count": 1},
+        {"color": "white", "spark_name": "Acceleration", "count": 2},
+        {"color": "white", "spark_name": "Hydrate", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "214", "last_updated": "2025-11-19 20:33:34", "entry_hash": "7f0bf1b6a38a0d6c1ad0923c02a0edc5",
+    "name": "Sakura Bakushin O",
+    "score": 14316,
+    "speed": 1186, "stamina": 462, "power": 1170, "guts": 370, "wit": 815,
+    "turf": "A", "dirt": "G", "sprint": "A", "mile": "B", "medium": "F", "long": "G", "front": "A", "pace": "A", "late": "F", "end": "G",
+    "gp1": "Tokai Teio", "gp2": "Taiki Shuttle",
+    "skills": [
+      "Genius x Bakushin = Victory",    "Right-Handed ◎",
+      "Standard Distance ◎",            "Professor of Curvature",
+      "Corner Recovery ○",              "It's On!",
+      "No Stopping Me!",                "Prepared to Pass",
+      "Sprinting Gear",                 "Pace Chaser Straightaways ◎",
+      "Straight Descent",               "Lone Wolf"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Guts", "count": 1},
+        {"color": "pink", "spark_name": "Sprint", "count": 2},
+        {"color": "green", "spark_name": "Genius x Bakushin = Victory", "count": 2},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Sprinters S.", "count": 1},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Sprint", "count": 2},
+        {"color": "green", "spark_name": "Shooting for Victory!", "count": 1},
+        {"color": "white", "spark_name": "Sprinters S.", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
+        {"color": "white", "spark_name": "Sprinting Gear", "count": 1},
+        {"color": "white", "spark_name": "Oka Sho", "count": 1},
+        {"color": "white", "spark_name": "Champions C.", "count": 2},
+        {"color": "white", "spark_name": "Straightaway Recovery", "count": 1},
+        {"color": "white", "spark_name": "Shifting Gears", "count": 1}
+      ]
+    }
+  },
+  {
+    "entry_id": "215", "last_updated": "2025-11-19 20:33:34", "entry_hash": "ec12424d86b843d404734e04be83357e",
+    "name": "Seiun Sky",
+    "score": 12430,
+    "speed": 1185, "stamina": 897, "power": 851, "guts": 444, "wit": 398,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "C", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "C", "end": "E",
+    "gp1": "Tokai Teio", "gp2": "Special Week",
+    "skills": [
+      "Angling and Scheming",            "Sky-High Teio Step",
+      "Standard Distance ◎",             "Professor of Curvature",
+      "Corner Recovery ○",               "Concentration",
+      "Prudent Positioning",             "It's On!",
+      "Front Runner Straightaways ◎",    "Leader's Pride"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
+        {"color": "green", "spark_name": "Angling and Scheming", "count": 1},
+        {"color": "white", "spark_name": "Focus", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
+        {"color": "green", "spark_name": "Dazzl'n ♪ Diver", "count": 1},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 1},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 3},
+        {"color": "white", "spark_name": "URA Finale", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "216", "last_updated": "2025-11-19 20:33:34", "entry_hash": "d9159256462ad18465f418bc7a2a5ea2",
+    "name": "Seiun Sky",
+    "score": 9504,
+    "speed": 927, "stamina": 528, "power": 565, "guts": 327, "wit": 284,
+    "turf": "A", "dirt": "G", "sprint": "E", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "B", "late": "D", "end": "E",
+    "gp1": "Nice Nature c", "gp2": "Sakura Bakushin O",
+    "skills": [
+      "Angling and Scheming",      "Firm Conditions ◎",
+      "Fall Runner ◎",             "Outer Post Proficiency ◎",
+      "Professor of Curvature",    "Corner Recovery ○",
+      "Straightaway Adept",        "Straightaway Recovery",
+      "No Stopping Me!",           "Fast-Paced",
+      "Rosy Outlook",              "Steadfast",
+      "Shifting Gears",            "Front Runner Straightaways ◎",
+      "Leader's Pride",            "Restart",
+      "Front Runner Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Stamina", "count": 1},
+        {"color": "pink", "spark_name": "Medium", "count": 2},
+        {"color": "green", "spark_name": "Angling and Scheming", "count": 2},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Front Runner Savvy ○", "count": 1},
+        {"color": "white", "spark_name": "Satsuki Sho", "count": 1},
+        {"color": "white", "spark_name": "Straightaway Adept", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Mile", "count": 2},
+        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
+        {"color": "white", "spark_name": "Murmur", "count": 1},
+        {"color": "white", "spark_name": "Extra Tank", "count": 1},
+        {"color": "white", "spark_name": "A Small Breather", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Sprint", "count": 2},
+        {"color": "green", "spark_name": "Genius x Bakushin = Victory", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "217", "last_updated": "2025-11-19 20:33:34", "entry_hash": "3c92e3ffb0910fefc4f8ff435ef9a040",
+    "name": "T.M. Opera O",
+    "score": 12384,
+    "speed": 1019, "stamina": 1018, "power": 848, "guts": 476, "wit": 414,
+    "turf": "A", "dirt": "E", "sprint": "G", "mile": "E", "medium": "A", "long": "A", "front": "C", "pace": "A", "late": "A", "end": "G",
+    "gp1": "Tokai Teio", "gp2": "Special Week",
+    "skills": [
+      "This Dance Is for Vittoria!",    "Non-Standard Distance ◎",
+      "Corner Adept ○",                 "Swinging Maestro",
+      "It's On!",                       "Nimble Navigator",
+      "Slick Surge",                    "Long Straightaways ◎",
+      "Late Surger Corners ◎",          "Fighter",
+      "Studious",                       "Slipstream"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Wit", "count": 1},
+        {"color": "pink", "spark_name": "Turf", "count": 1},
+        {"color": "green", "spark_name": "This Dance Is for Vittoria!", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
+        {"color": "white", "spark_name": "Tenno Sho (Spring)", "count": 1},
+        {"color": "white", "spark_name": "Slick Surge", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Power", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 2},
+        {"color": "white", "spark_name": "Straight Descent", "count": 1},
+        {"color": "white", "spark_name": "Mile Corners ○", "count": 1},
+        {"color": "white", "spark_name": "URA Finale", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Pace Chaser", "count": 2},
+        {"color": "green", "spark_name": "Dazzl'n ♪ Diver", "count": 1},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 1},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 3},
+        {"color": "white", "spark_name": "URA Finale", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 1},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "218", "last_updated": "2025-11-19 20:33:34", "entry_hash": "c322e435afc0ae7b7dc330e3dc4d6913",
+    "name": "Tokai Teio",
+    "score": 11505,
+    "speed": 1084, "stamina": 792, "power": 665, "guts": 499, "wit": 478,
+    "turf": "A", "dirt": "G", "sprint": "F", "mile": "C", "medium": "A", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
+    "gp1": "Nice Nature c", "gp2": "Symboli Rudolf",
+    "skills": [
+      "Sky-High Teio Step",     "Swinging Maestro",
+      "It's On!",               "Nimble Navigator",
+      "Up-Tempo",               "Tether",
+      "Murmur",                 "Pace Chaser Corners ◎",
+      "Shrewd Step",            "Straight Descent",
+      "Pace Chaser Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Stamina", "count": 2},
+        {"color": "pink", "spark_name": "Long", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 3},
+        {"color": "white", "spark_name": "Japan C.", "count": 1},
+        {"color": "white", "spark_name": "Murmur", "count": 2},
+        {"color": "white", "spark_name": "Queen Elizabeth II Cup", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 2},
+        {"color": "white", "spark_name": "Nimble Navigator", "count": 2},
+        {"color": "white", "spark_name": "Shrewd Step", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Mile", "count": 2},
+        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
+        {"color": "white", "spark_name": "Murmur", "count": 1},
+        {"color": "white", "spark_name": "Extra Tank", "count": 1},
+        {"color": "white", "spark_name": "A Small Breather", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Long", "count": 3},
+        {"color": "green", "spark_name": "Behold Thine Emperor's Divine Might", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 2},
+        {"color": "white", "spark_name": "Tether", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "219", "last_updated": "2025-11-19 20:33:34", "entry_hash": "2453e562f6670d903cbd3243955ee4fe",
+    "name": "Tokai Teio",
+    "score": 13411,
+    "speed": 1200, "stamina": 828, "power": 888, "guts": 573, "wit": 413,
+    "turf": "A", "dirt": "G", "sprint": "F", "mile": "C", "medium": "S", "long": "A", "front": "D", "pace": "A", "late": "C", "end": "E",
+    "gp1": "Nice Nature c", "gp2": "Symboli Rudolf",
+    "skills": [
+      "Sky-High Teio Step",             "Fall Runner ◎",
+      "Swinging Maestro",               "It's On!",
+      "Nimble Navigator",               "Prepared to Pass",
+      "Medium Straightaways ◎",         "Medium Corners ◎",
+      "Pace Chaser Straightaways ◎",    "Straight Descent",
+      "Slipstream",                     "Head-On"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Guts", "count": 1},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Sky-High Teio Step", "count": 1},
+        {"color": "white", "spark_name": "Unity Cup", "count": 1},
+        {"color": "white", "spark_name": "Japan C.", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Mile", "count": 2},
+        {"color": "white", "spark_name": "Kikuka Sho", "count": 1},
+        {"color": "white", "spark_name": "Murmur", "count": 1},
+        {"color": "white", "spark_name": "Extra Tank", "count": 1},
+        {"color": "white", "spark_name": "A Small Breather", "count": 1}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Stamina", "count": 3},
+        {"color": "pink", "spark_name": "Long", "count": 3},
+        {"color": "green", "spark_name": "Behold Thine Emperor's Divine Might", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 2},
+        {"color": "white", "spark_name": "Tether", "count": 2}
+      ]
+    }
+  },
+  {
+    "entry_id": "220", "last_updated": "2025-11-19 20:33:34", "entry_hash": "9ae4f4277e11cd2f73c335c750feef9a",
+    "name": "Vodka",
+    "score": 13139,
+    "speed": 1200, "stamina": 780, "power": 958, "guts": 448, "wit": 402,
+    "turf": "A", "dirt": "G", "sprint": "F", "mile": "A", "medium": "A", "long": "F", "front": "A", "pace": "B", "late": "A", "end": "F",
+    "gp1": "Daiwa Scarlet c", "gp2": "El Condor Pasa",
+    "skills": [
+      "Cut and Drive!",                  "Professor of Curvature",
+      "Rushing Gale!",                   "Prudent Positioning",
+      "No Stopping Me!",                 "Early Lead",
+      "Fast-Paced",                      "Mile Straightaways ◎",
+      "Shifting Gears",                  "Unyielding Spirit",
+      "Front Runner Straightaways ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Power", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 1},
+        {"color": "green", "spark_name": "Cut and Drive!", "count": 1},
+        {"color": "white", "spark_name": "Straightaway Acceleration", "count": 1},
+        {"color": "white", "spark_name": "Unyielding Spirit", "count": 2},
+        {"color": "white", "spark_name": "Victoria Mile", "count": 1},
+        {"color": "white", "spark_name": "Early Lead", "count": 2},
+        {"color": "white", "spark_name": "Unity Cup", "count": 1}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Stamina", "count": 2},
+        {"color": "pink", "spark_name": "Front Runner", "count": 2},
+        {"color": "white", "spark_name": "Japanese Oaks", "count": 2},
+        {"color": "white", "spark_name": "Early Lead", "count": 1},
+        {"color": "white", "spark_name": "Shuka Sho", "count": 1},
+        {"color": "white", "spark_name": "Final Push", "count": 2}
+      ],
+      "gp2": [
+        {"color": "blue", "spark_name": "Speed", "count": 3},
+        {"color": "pink", "spark_name": "Turf", "count": 2},
+        {"color": "green", "spark_name": "Victoria por plancha ☆", "count": 1},
+        {"color": "white", "spark_name": "Takarazuka Kinen", "count": 1},
+        {"color": "white", "spark_name": "Arima Kinen", "count": 1},
+        {"color": "white", "spark_name": "Corner Adept ○", "count": 2},
+        {"color": "white", "spark_name": "Lone Wolf", "count": 2},
+        {"color": "white", "spark_name": "NHK Mile C.", "count": 1},
+        {"color": "white", "spark_name": "Tenno Sho (Autumn)", "count": 1},
+        {"color": "white", "spark_name": "Firm Conditions ○", "count": 2},
+        {"color": "white", "spark_name": "Groundwork", "count": 3}
+      ]
+    }
+  },
+  {
+    "entry_id": "221", "last_updated": "2025-11-19 20:33:34", "entry_hash": "e6b1beb321bdfd64d2e1ca91e2902ea5",
+    "name": "Winning Ticket",
+    "score": 10550,
+    "speed": 943, "stamina": 886, "power": 744, "guts": 539, "wit": 433,
+    "turf": "A", "dirt": "G", "sprint": "G", "mile": "B", "medium": "A", "long": "B", "front": "G", "pace": "B", "late": "A", "end": "F",
+    "gp1": "Seiun Sky", "gp2": "Narita Brian",
+    "skills": [
+      "Our Ticket to Win!",             "Swinging Maestro",
+      "It's On!",                       "Nimble Navigator",
+      "Standing By",                    "Masterful Gambit",
+      "End Closer Straightaways ◎",     "End Closer Corners ◎",
+      "I Can See Right Through You",    "End Closer Savvy ◎"
+    ],
+    "sparks": {
+      "parent": [
+        {"color": "blue", "spark_name": "Wit", "count": 2},
+        {"color": "pink", "spark_name": "Late Surger", "count": 2},
+        {"color": "green", "spark_name": "Our Ticket to Win!", "count": 1},
+        {"color": "white", "spark_name": "Japanese Derby", "count": 2},
+        {"color": "white", "spark_name": "Corner Recovery ○", "count": 1},
+        {"color": "white", "spark_name": "End Closer Corners ○", "count": 2},
+        {"color": "white", "spark_name": "Osaka Hai", "count": 2},
+        {"color": "white", "spark_name": "Hopeful S.", "count": 1},
+        {"color": "white", "spark_name": "Unity Cup", "count": 2}
+      ],
+      "gp1": [
+        {"color": "blue", "spark_name": "Stamina", "count": 2},
+        {"color": "pink", "spark_name": "Mile", "count": 1},
+        {"color": "green", "spark_name": "Angling and Scheming", "count": 2},
+        {"color": "white", "spark_name": "Japan C.", "count": 2},
         {"color": "white", "spark_name": "Hopeful S.", "count": 2},
         {"color": "white", "spark_name": "Fast-Paced", "count": 1},
         {"color": "white", "spark_name": "Deep Breaths", "count": 1},
