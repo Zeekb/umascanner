@@ -19,8 +19,9 @@
 .spark-cell-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 2px;
+    gap: 4px 2px;
     justify-content: flex-start;
+    padding: 2px 0px;
     align-items: center;
     overflow-x: auto;
 }
@@ -28,10 +29,8 @@
 .dark-mode .spark-cell-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 2px;
     justify-content: flex-start;
     align-items: center;
-    padding: 2px 0px;
     overflow-x: auto;
     text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3), -1px -1px 0 rgba(0, 0, 0, 0.3), 1px -1px 0 rgba(0, 0, 0, 0.3), -1px 1px 0 rgba(0, 0, 0, 0.3);
 }
