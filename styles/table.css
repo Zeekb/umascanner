@@ -233,6 +233,7 @@ td.skill-cell {
   border-radius: 12px;
   border: 1px solid;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 

@@ -6994,7 +6994,7 @@
     "entry_id": "161", "last_updated": "2025-10-26 21:14:51", "entry_hash": "99b12f6f64971dc1590c7449530b718c",
     "name": "Seiun Sky",
     "score": 10763,
-    "speed": 876, "stamina": 77, "power": 658, "guts": 335, "wit": 612,
+    "speed": 876, "stamina": 777, "power": 658, "guts": 335, "wit": 612,
     "turf": "A", "dirt": "G", "sprint": "G", "mile": "A", "medium": "A", "long": "A", "front": "A", "pace": "A", "late": "D", "end": "E",
     "gp1": "Maruzensky", "gp2": "Grass Wonder c",
     "skills": [
@@ -8800,7 +8800,7 @@
     "entry_id": "203", "last_updated": "2025-11-19 20:33:34", "entry_hash": "e3a86f903992729745ad686515961f66",
     "name": "Fuji Kiseki",
     "score": 13575,
-    "speed": 1175, "stamina": 591, "power": 0, "guts": 285, "wit": 731,
+    "speed": 1175, "stamina": 591, "power": 1111, "guts": 285, "wit": 731,
     "turf": "A", "dirt": "E", "sprint": "B", "mile": "A", "medium": "A", "long": "E", "front": "C", "pace": "A", "late": "C", "end": "G",
     "gp1": "Vodka", "gp2": "Oguri Cap",
     "skills": [

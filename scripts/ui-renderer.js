@@ -198,7 +198,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
                }
 
                whiteSparksHtml += `
-               <div class="spark-button white${highlightClass}" title="${titleText}">
+               <div class="spark-button white${highlightClass} add-filter-click" title="${titleText}" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="white">
                    <span>${spark.count}</span>
                    <span class="star${parentClass}">★</span>
                    <span class="spark-name">${spark.name}</span>
@@ -289,9 +289,9 @@ function renderSkillsOverview(runners) {
         });
 
         return categorizedSkills.map(skill => {
-            const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier}`;
+            const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier} add-filter-click`;
             const formattedName = formatSkillName(skill.name); 
-            return `<div class="${bubbleClasses}">${formattedName}</div>`;
+            return `<div class="${bubbleClasses}" data-filter-type="skill" data-filter-value="${skill.name}">${formattedName}</div>`;
         }).join('');
     };
 
@@ -1140,7 +1140,7 @@ function formatSparks(runner, allSparkCriteria) {
         const displayName = nameMap[spark.name] || spark.name;
 
         return `
-            <div class="spark-button ${spark.color}${highlightClass}">
+            <div class="spark-button ${spark.color}${highlightClass} add-filter-click" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="${spark.color}">
                 <span>${spark.totalCount}</span>
                 <span class="star${spark.parentCount > 0 ? ' parent-spark' : ''}">★</span>
                 <span class="spark-name">${displayName}</span>
@@ -1872,7 +1872,7 @@ function generateSparksHtml(runner) {
             const starsHtml = `<span class="solid-stars">${solidStars}</span><span class="empty-stars">${emptyStars}</span>`
 
             sectionHtml += `
-            <div class="spark-item spark-${spark.color}">
+            <div class="spark-item spark-${spark.color} add-filter-click" data-filter-type="spark" data-filter-value="${spark.spark_name}" data-filter-color="${spark.color}">
                 <span class="spark-item-name">${spark.spark_name}</span>
                 <span class="spark-item-stars">${starsHtml}</span>
             </div>

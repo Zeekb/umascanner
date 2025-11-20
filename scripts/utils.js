@@ -257,7 +257,13 @@ export function createSearchableSelect(inputElement, optionsArray, onSelectCallb
     };
 
     inputElement.addEventListener('focus', () => populateOptions(''));
-    inputElement.addEventListener('input', () => populateOptions(inputElement.value));
+    inputElement.addEventListener('input', () => {
+        if (inputElement._isProgrammatic) {
+            inputElement._isProgrammatic = false;
+            return;
+        }
+        populateOptions(inputElement.value);
+    });
     
     optionsContainer.addEventListener('mousedown', (e) => {
         if (e.target.classList.contains('option-item')) {

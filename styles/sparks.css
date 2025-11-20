@@ -47,6 +47,7 @@
     border-width: 1px;
     color: white;
     white-space: nowrap;
+    cursor: pointer;
 }
 
 .spark-button .star {

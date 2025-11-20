@@ -437,9 +437,115 @@ export function setupEventListeners() {
             }
         }
     });
+
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('.add-filter-click');
+        if (target) {
+            const type = target.dataset.filterType;
+            const value = target.dataset.filterValue;
+            const color = target.dataset.filterColor;
+            if (type && value) {
+                addFilter(type, value, color);
+            }
+        }
+    });
 }
 
-// Checks if dark mode is currently active.
+// Adds a filter based on type and value.
+function addFilter(type, value, color) {
+    if (type === 'skill') {
+        const existingInputs = Array.from(state.elements.skillFiltersContainer.querySelectorAll('.skill-name-input'));
+        const existingInput = existingInputs.find(input => input.value.toLowerCase() === value.toLowerCase());
+        
+        if (existingInput) {
+            existingInput.value = '';
+            const row = existingInput.closest('.skill-filters');
+            const allRows = state.elements.skillFiltersContainer.querySelectorAll('.skill-filters');
+            
+            if (allRows.length > 1) {
+                row.remove();
+                updateRemoveSkillButtonVisibility();
+            }
+            
+            filterAndRender();
+            showTimedMessage(`Removed filter: ${value}`);
+            return;
+        }
+
+        let emptyInput = existingInputs.find(input => input.value.trim() === '');
+        
+        if (!emptyInput) {
+             addSkillFilterRow();
+             const newInputs = Array.from(state.elements.skillFiltersContainer.querySelectorAll('.skill-name-input'));
+             emptyInput = newInputs[newInputs.length - 1];
+        }
+
+        if (emptyInput) {
+            emptyInput.value = value;
+            filterAndRender();
+        }
+    } else if (type === 'spark') {
+        const rows = Array.from(state.elements.sparkFiltersContainer.querySelectorAll('.spark-filters'));
+        
+        // Check if filter already exists
+        let existingInput = null;
+        for (const row of rows) {
+            const inputIdPrefix = `filter-${color}-spark`;
+            const input = row.querySelector(`[id^="${inputIdPrefix}"]`);
+            if (input && input.value.toLowerCase() === value.toLowerCase()) {
+                existingInput = input;
+                break;
+            }
+        }
+
+        if (existingInput) {
+            existingInput.value = '';
+            const row = existingInput.closest('.spark-filters');
+            
+            // Reset the count dropdown for this color
+            const countSelect = row.querySelector(`[id^="min-${color}"]`);
+            if (countSelect) {
+                countSelect.selectedIndex = 0;
+            }
+
+            // Check if row is completely empty
+            const inputs = Array.from(row.querySelectorAll('input[type="text"]'));
+            const isRowEmpty = inputs.every(input => input.value.trim() === '');
+            
+            if (isRowEmpty && rows.length > 1) {
+                row.remove();
+                updateRemoveButtonVisibility();
+            }
+
+            filterAndRender();
+            showTimedMessage(`Removed spark filter: ${value}`);
+            return;
+        }
+
+        let targetRow = rows.find(row => {
+            const inputs = Array.from(row.querySelectorAll('input[type="text"]'));
+            return inputs.every(input => input.value.trim() === '');
+        });
+
+        if (!targetRow) {
+            addSparkFilterRow();
+            const newRows = state.elements.sparkFiltersContainer.querySelectorAll('.spark-filters');
+            targetRow = newRows[newRows.length - 1];
+        }
+
+        if (targetRow && color) {
+            const inputIdPrefix = `filter-${color}-spark`;
+            const input = targetRow.querySelector(`[id^="${inputIdPrefix}"]`);
+            
+            if (input) {
+                input.value = value;
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+                filterAndRender();
+            }
+        }
+    }
+}
+
 export function isDarkModeActive() {
     return document.body.classList.contains('dark-mode');
 }
@@ -494,6 +600,15 @@ export function handleTabChange(activeTabId) {
 export function handleDetailView(event) {
     const clickedCell = event.target.closest('td');
     if (!clickedCell) return;
+    
+    // Prevent modal opening if clicking in filter columns or on filter bubbles
+    if (clickedCell.classList.contains('spark-cell') || 
+        clickedCell.classList.contains('whites-cell') || 
+        clickedCell.classList.contains('skill-cell') ||
+        event.target.closest('.add-filter-click')) {
+        return;
+    }
+
     let runnerNameForLookup = null;
     let sparksToFind = null;
     let isClickable = false;
