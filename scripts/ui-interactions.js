@@ -150,6 +150,7 @@ export function setupEventListeners() {
             
             if (affinityNumber) {
                 affinityNumber.value = setup.affinity;
+                affinityNumber.dispatchEvent(new Event('input'));
                 affinityNumber.dispatchEvent(new Event('change')); // Triggers slider/select updates in other listener
             }
 
