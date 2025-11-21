@@ -208,7 +208,7 @@ td.skill-cell b {
     padding: 2px 6px;
     cursor: pointer;
     font-size: 0.8em;
-    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 0 rgba(0, 120, 0, 0.5), -1px -1px 0 rgba(0, 120, 0, 0.5), 1px -1px 0 rgba(0, 120, 0, 0.5), -1px 1px 0 rgba(0, 120, 0, 0.5);
 }
 
 .delete-button:hover {
@@ -245,6 +245,12 @@ td.skill-cell {
   width: auto; /* Skills - takes remaining space */
 }
 
+/* Skill Category Filter Button Colors */
+#skills-category-filter.skill-recovery { background-color: var(--skill-color-recovery); color: white;}
+#skills-category-filter.skill-passive { background-color: var(--skill-color-passive); color: white;}
+#skills-category-filter.skill-speed { background-color: var(--skill-color-speed); color: white;}
+#skills-category-filter.skill-debuff { background-color: var(--skill-color-debuff); color: white;}
+#skills-category-filter.skill-detrimental { background-color: var(--skill-color-detrimental); color: white;}
 
 /* Styles for skill bubbles */
 .skill-bubble {

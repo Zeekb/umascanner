@@ -287,8 +287,8 @@ export function lastUpdated() {
 
 // Updates the 'Last Updated' display in the UI.
 export function updateLastUpdated() {
-    if (state.elements.lastUpdatedDisplay) {
-        state.elements.lastUpdatedDisplay.textContent = `Umas Last Updated: ${lastUpdated()}`;
+    if (state.elements.entriesDisplay) {
+        state.elements.entriesDisplay.title = `Umas Last Updated: ${lastUpdated()}`;
     }
 }
 

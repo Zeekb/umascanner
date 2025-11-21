@@ -52,7 +52,14 @@
             
             <button class="tab-button" data-tab="useful-links">Useful Links</button>
 
-            <span id="last-updated-display"></span>
+            <button id="help-menu-button" title="Keyboard Shortcuts (?)" class="icon-button" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
+                <span style="font-weight: bold; font-size: 1em;">?</span>
+            </button>
+
+            <div class="global-search-wrapper">
+                <input type="text" id="global-search-input" placeholder="Search (Name, Skills, Sparks)..." title="Search by Runner Name, Skills, or Sparks">
+            </div>
+
             <span id="entries-display"></span>
             
             <button id="dark-mode-toggle" title="Toggle Light Mode" class="icon-button">
@@ -97,7 +104,24 @@
                         </select>
                     </div>
                 </div>
-                <button id="reset-filters-button">Reset Filters</button>
+                <div class="filter-buttons" style="display: flex; gap: 10px; align-items: center;">
+                    <div class="input-group" style="display: flex; gap: 5px;">
+                        <button id="save-filter-preset-button" title="Save new filter preset">
+                            <img src="assets/gui_icons/save-icon.png" alt="Save" style="width: 16px; height: 16px;">
+                        </button>
+                        <button id="overwrite-filter-preset-button" title="Overwrite selected preset">
+                            <img src="assets/gui_icons/overwrite-icon.png" alt="Overwrite" style="width: 16px; height: 16px;">
+                        </button>
+                        <input type="text" id="filter-preset-name-input" placeholder="Filter Preset Name" style="width: 150px;">
+                    </div>
+                    <div class="select-group" style="display: flex; gap: 5px;">
+                        <select id="filter-presets-select" title="Load saved filter preset">
+                            <option value="">Load Filter...</option>
+                        </select>
+                        <button id="delete-filter-preset-button" class="delete-button" title="Delete selected preset">X</button>
+                    </div>
+                    <button id="reset-filters-button">Reset Filters</button>
+                </div>
             </div>
             <div id="collapsible-filters">
                 <div id="stat-filters-container" class="filter-group-container">
@@ -262,7 +286,7 @@
                            <th>
                                White Sparks 
                                <button id="white-sparks-parent-only-toggle" class="header-toggle-button" title="Toggle: Show all sparks / Parent sparks only">
-                                   [All]
+                                   [All Sparks]
                                </button>
                            </th>
                            <th>GP1</th>

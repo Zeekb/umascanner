@@ -35,6 +35,37 @@ export function filterAndRender() {
         (parseInt(r.wit || 0)) >= parseInt(baseFilters.wit)
     );
 
+    // Global Search Filter
+    const globalSearchInput = document.getElementById('global-search-input');
+    if (globalSearchInput && globalSearchInput.value.trim()) {
+        const query = globalSearchInput.value.toLowerCase().trim();
+        filteredData = filteredData.filter(r => {
+            // Check Name
+            if (r.name && r.name.toLowerCase().includes(query)) return true;
+            
+            // Check Grandparents
+            if (r.gp1 && r.gp1.toLowerCase().includes(query)) return true;
+            if (r.gp2 && r.gp2.toLowerCase().includes(query)) return true;
+
+            // Check Skills
+            if (r.skills && r.skills.some(s => s.toLowerCase().includes(query))) return true;
+
+            // Check Sparks
+            if (r.sparks && typeof r.sparks === 'object') {
+                const sources = ['parent', 'gp1', 'gp2'];
+                for (const source of sources) {
+                    if (Array.isArray(r.sparks[source])) {
+                        if (r.sparks[source].some(s => s.spark_name && s.spark_name.toLowerCase().includes(query))) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        });
+    }
+
     const skillNameFilters = Array.from(document.querySelectorAll('.skill-name-input'))
         .map(input => input.value.toLowerCase().trim())
         .filter(val => val);

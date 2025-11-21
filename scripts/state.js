@@ -24,6 +24,7 @@ export const state = {
     maxParentWhiteSparks: 0,
     showParentSparksOnly: false,
     skillCategoryFilter: 'all',
+    filterPresets: [],
 
     elements: {},
 };

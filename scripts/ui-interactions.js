@@ -41,9 +41,254 @@ function updateSavedSetupsDropdown() {
     }
 }
 
+// Helper to load filter presets from localStorage
+function loadFilterPresets() {
+    const stored = localStorage.getItem('filterPresets');
+    if (stored) {
+        try {
+            state.filterPresets = JSON.parse(stored);
+        } catch (e) {
+            console.error("Failed to parse filter presets", e);
+            state.filterPresets = [];
+        }
+    }
+    updateFilterPresetsDropdown();
+}
+
+// Helper to update filter presets dropdown
+function updateFilterPresetsDropdown() {
+    const select = document.getElementById('filter-presets-select');
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">Load Filter...</option>';
+    
+    state.filterPresets.forEach((preset, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = preset.name;
+        select.appendChild(option);
+    });
+
+    if (currentValue !== "" && state.filterPresets[currentValue]) {
+        select.value = currentValue;
+    }
+}
+
+// Capture current filter state
+function captureFilterState() {
+    const filterState = {
+        runner: state.elements.filterElements.runner.value,
+        sort: state.elements.filterElements.sort.value,
+        sortDir: state.elements.filterElements.sortDir.value,
+        stats: {
+            speed: state.elements.filterElements.speed.value,
+            stamina: state.elements.filterElements.stamina.value,
+            power: state.elements.filterElements.power.value,
+            guts: state.elements.filterElements.guts.value,
+            wit: state.elements.filterElements.wit.value
+        },
+        aptitudes: {
+            turf: state.elements.filterElements.aptMinTurf.value,
+            dirt: state.elements.filterElements.aptMinDirt.value,
+            sprint: state.elements.filterElements.aptMinSprint.value,
+            mile: state.elements.filterElements.aptMinMile.value,
+            medium: state.elements.filterElements.aptMinMedium.value,
+            long: state.elements.filterElements.aptMinLong.value,
+            front: state.elements.filterElements.aptMinFront.value,
+            pace: state.elements.filterElements.aptMinPace.value,
+            late: state.elements.filterElements.aptMinLate.value,
+            end: state.elements.filterElements.aptMinEnd.value
+        },
+        skills: [],
+        sparks: [],
+        showParentSparksOnly: state.showParentSparksOnly,
+        showParentSparksOnly: state.showParentSparksOnly,
+        skillCategoryFilter: state.skillCategoryFilter,
+        globalSearch: document.getElementById('global-search-input')?.value || ''
+    };
+
+    // Capture skills
+    document.querySelectorAll('#skill-filters-container .skill-name-input').forEach(input => {
+        if (input.value) {
+            filterState.skills.push(input.value);
+        }
+    });
+
+    // Capture spark filters
+    document.querySelectorAll('#spark-filters-container .spark-filters').forEach(row => {
+        const sparkFilter = {
+            repOnly: row.querySelector('.rep-only-checkbox').checked,
+            disabled: row.classList.contains('disabled'),
+            blue: row.querySelector('[id^="filter-blue-spark"]').value,
+            minBlue: row.querySelector('[id^="min-blue"]').value,
+            pink: row.querySelector('[id^="filter-pink-spark"]').value,
+            minPink: row.querySelector('[id^="min-pink"]').value,
+            green: row.querySelector('[id^="filter-green-spark"]').value,
+            minGreen: row.querySelector('[id^="min-green"]').value,
+            white: row.querySelector('[id^="filter-white-spark"]').value,
+            minWhite: row.querySelector('[id^="min-white"]').value,
+            minTotalWhite: row.querySelector('[id^="min-total-white"]').value
+        };
+        filterState.sparks.push(sparkFilter);
+    });
+
+    return filterState;
+}
+
+// Apply saved filter state
+function applyFilterState(filterState) {
+    // Apply basic filters
+    state.elements.filterElements.runner.value = filterState.runner || '';
+    state.elements.filterElements.sort.value = filterState.sort || 'score';
+    state.elements.filterElements.sortDir.value = filterState.sortDir || 'desc';
+
+    // Apply stats
+    ['speed', 'stamina', 'power', 'guts', 'wit'].forEach(stat => {
+        const value = filterState.stats?.[stat] || 0;
+        state.elements.filterElements[stat].value = value;
+        document.getElementById(`val-${stat}`).value = value;
+    });
+
+    // Apply aptitudes
+    const aptMap = {
+        turf: 'aptMinTurf', dirt: 'aptMinDirt', sprint: 'aptMinSprint',
+        mile: 'aptMinMile', medium: 'aptMinMedium', long: 'aptMinLong',
+        front: 'aptMinFront', pace: 'aptMinPace', late: 'aptMinLate', end: 'aptMinEnd'
+    };
+    Object.keys(aptMap).forEach(key => {
+        state.elements.filterElements[aptMap[key]].value = filterState.aptitudes?.[key] || '';
+    });
+
+    // Apply toggles
+    state.showParentSparksOnly = filterState.showParentSparksOnly || false;
+    state.skillCategoryFilter = filterState.skillCategoryFilter || 'all';
+
+    // Update toggle buttons
+    const whiteSparksToggle = document.getElementById('white-sparks-parent-only-toggle');
+    const overviewToggle = document.getElementById('overview-sparks-parent-only-toggle');
+    const skillsFilter = document.getElementById('skills-category-filter');
+    
+    if (whiteSparksToggle) {
+        whiteSparksToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+        whiteSparksToggle.classList.toggle('active', state.showParentSparksOnly);
+    }
+    if (overviewToggle) {
+        overviewToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+        overviewToggle.classList.toggle('active', state.showParentSparksOnly);
+    }
+    if (skillsFilter) {
+        const categoryLabels = {
+            'all': 'All', 'recovery': 'Recovery', 'passive': 'Passive',
+            'speed': 'Speed+',
+            'debuff': 'Debuff', 'detrimental': 'Detrimental'
+        };
+        skillsFilter.textContent = `[${categoryLabels[state.skillCategoryFilter]}]`;
+        skillsFilter.classList.toggle('active', state.skillCategoryFilter !== 'all');
+        
+        skillsFilter.classList.remove('skill-recovery', 'skill-passive', 'skill-speed', 'skill-debuff', 'skill-detrimental');
+        if (state.skillCategoryFilter !== 'all') {
+            skillsFilter.classList.add(`skill-${state.skillCategoryFilter}`);
+        }
+    }
+
+    // Apply global search
+    const globalSearchInput = document.getElementById('global-search-input');
+    if (globalSearchInput) {
+        globalSearchInput.value = filterState.globalSearch || '';
+    }
+
+    // Apply Skills
+    const skillContainer = state.elements.skillFiltersContainer;
+    const skillRows = skillContainer.querySelectorAll('.skill-filters');
+    skillRows.forEach((row, index) => {
+        if (index > 0) row.remove();
+        else row.querySelector('.skill-name-input').value = '';
+    });
+    updateRemoveSkillButtonVisibility();
+
+    if (filterState.skills && filterState.skills.length > 0) {
+        filterState.skills.forEach((skillName, index) => {
+            if (index === 0) {
+                const firstInput = skillContainer.querySelector('.skill-name-input');
+                if (firstInput) firstInput.value = skillName;
+            } else {
+                addSkillFilterRow();
+                const newRows = skillContainer.querySelectorAll('.skill-filters');
+                const lastRow = newRows[newRows.length - 1];
+                const input = lastRow.querySelector('.skill-name-input');
+                if (input) input.value = skillName;
+            }
+        });
+    }
+
+    // Apply Sparks
+    const sparkContainer = state.elements.sparkFiltersContainer;
+    const sparkRows = sparkContainer.querySelectorAll('.spark-filters');
+    sparkRows.forEach((row, index) => {
+        if (index > 0) row.remove();
+        else {
+            // Reset first row
+            row.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+            row.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            row.querySelector('.rep-only-checkbox').checked = false;
+            row.classList.remove('disabled');
+            const disableBtn = row.querySelector('.disable-spark-filter-button');
+            if(disableBtn) {
+                disableBtn.textContent = '✓';
+                disableBtn.title = 'Disable this filter row';
+            }
+            updateSparkCountDropdown(row.querySelector('[id^="min-blue"]'), 9);
+            updateSparkCountDropdown(row.querySelector('[id^="min-green"]'), 3);
+            updateSparkCountDropdown(row.querySelector('[id^="min-pink"]'), 9);
+            updateSparkCountDropdown(row.querySelector('[id^="min-white"]'), 9);
+            updateTotalWhiteDropdown(row, false);
+        }
+    });
+    updateRemoveButtonVisibility();
+
+    if (filterState.sparks && filterState.sparks.length > 0) {
+        filterState.sparks.forEach((sparkFilter, index) => {
+            let targetRow;
+            if (index === 0) {
+                targetRow = sparkContainer.querySelector('.spark-filters');
+            } else {
+                addSparkFilterRow();
+                const newRows = sparkContainer.querySelectorAll('.spark-filters');
+                targetRow = newRows[newRows.length - 1];
+            }
+
+            if (targetRow) {
+                targetRow.querySelector('.rep-only-checkbox').checked = sparkFilter.repOnly;
+                if (sparkFilter.disabled) {
+                    targetRow.classList.add('disabled');
+                    const disableBtn = targetRow.querySelector('.disable-spark-filter-button');
+                    if (disableBtn) {
+                        disableBtn.textContent = '✕';
+                        disableBtn.title = 'Enable this filter row';
+                    }
+                }
+                
+                targetRow.querySelector('[id^="filter-blue-spark"]').value = sparkFilter.blue;
+                targetRow.querySelector('[id^="min-blue"]').value = sparkFilter.minBlue;
+                targetRow.querySelector('[id^="filter-pink-spark"]').value = sparkFilter.pink;
+                targetRow.querySelector('[id^="min-pink"]').value = sparkFilter.minPink;
+                targetRow.querySelector('[id^="filter-green-spark"]').value = sparkFilter.green;
+                targetRow.querySelector('[id^="min-green"]').value = sparkFilter.minGreen;
+                targetRow.querySelector('[id^="filter-white-spark"]').value = sparkFilter.white;
+                targetRow.querySelector('[id^="min-white"]').value = sparkFilter.minWhite;
+                targetRow.querySelector('[id^="min-total-white"]').value = sparkFilter.minTotalWhite;
+            }
+        });
+    }
+    
+    filterAndRender();
+}
+
 // Sets up all global event listeners for UI interactions.
 export function setupEventListeners() {
     loadSavedSetups(); // Initialize saved setups on load
+    loadFilterPresets(); // Initialize filter presets on load
 
     // --- Career Planner Save/Load Logic ---
 
@@ -297,6 +542,18 @@ export function setupEventListeners() {
         }
     }, { passive: false });
 
+    state.elements.sparkFiltersContainer.addEventListener('wheel', (event) => {
+        if (event.target.classList.contains('min-spark-select') || event.target.classList.contains('spark-count-select')) {
+            handleSelectWheelScroll(event);
+        }
+    }, { passive: false });
+
+    // Global Search Input
+    const globalSearchInput = document.getElementById('global-search-input');
+    if (globalSearchInput) {
+        globalSearchInput.addEventListener('input', debouncedFilterAndRender);
+    }
+
     state.elements.skillFiltersContainer.addEventListener('click', (event) => {
         if (event.target.classList.contains('remove-skill-filter-button')) {
             event.target.closest('.skill-filters').remove();
@@ -409,72 +666,161 @@ export function setupEventListeners() {
 
     state.elements.saveDataButton.addEventListener('click', saveDataToFile); 
 
-    // White sparks parent-only toggle
-    const whiteSparksToggle = document.getElementById('white-sparks-parent-only-toggle');
-    if (whiteSparksToggle) {
-        whiteSparksToggle.addEventListener('click', () => {
+
+
+    // Header Toggle Buttons (Event Delegation)
+    document.addEventListener('click', (e) => {
+        // Overview sparks parent-only toggle
+        const overviewToggle = e.target.closest('#overview-sparks-parent-only-toggle');
+        if (overviewToggle) {
             state.showParentSparksOnly = !state.showParentSparksOnly;
-            whiteSparksToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
-            whiteSparksToggle.classList.toggle('active', state.showParentSparksOnly);
-            whiteSparksToggle.title = state.showParentSparksOnly 
-                ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
-                : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
             
-            // Sync overview toggle if it exists
-            const overviewToggle = document.getElementById('overview-sparks-parent-only-toggle');
-            if (overviewToggle) {
-                overviewToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
-                overviewToggle.classList.toggle('active', state.showParentSparksOnly);
-            }
+            // Update UI for both toggles
+            const toggles = [
+                document.getElementById('overview-sparks-parent-only-toggle'),
+                document.getElementById('white-sparks-parent-only-toggle')
+            ];
+            
+            toggles.forEach(btn => {
+                if (btn) {
+                    btn.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+                    btn.classList.toggle('active', state.showParentSparksOnly);
+                    btn.title = state.showParentSparksOnly 
+                        ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
+                        : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
+                }
+            });
             
             filterAndRender();
-        });
-    }
+            return;
+        }
 
-    // Overview sparks parent-only toggle
-    const overviewSparksToggle = document.getElementById('overview-sparks-parent-only-toggle');
-    if (overviewSparksToggle) {
-        overviewSparksToggle.addEventListener('click', () => {
+        // White sparks parent-only toggle
+        const whiteToggle = e.target.closest('#white-sparks-parent-only-toggle');
+        if (whiteToggle) {
             state.showParentSparksOnly = !state.showParentSparksOnly;
-            overviewSparksToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
-            overviewSparksToggle.classList.toggle('active', state.showParentSparksOnly);
-            overviewSparksToggle.title = state.showParentSparksOnly 
-                ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
-                : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
             
-            // Sync white sparks toggle if it exists
-            const whiteToggle = document.getElementById('white-sparks-parent-only-toggle');
-            if (whiteToggle) {
-                whiteToggle.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
-                whiteToggle.classList.toggle('active', state.showParentSparksOnly);
-            }
+            // Update UI for both toggles
+            const toggles = [
+                document.getElementById('overview-sparks-parent-only-toggle'),
+                document.getElementById('white-sparks-parent-only-toggle')
+            ];
+            
+            toggles.forEach(btn => {
+                if (btn) {
+                    btn.textContent = state.showParentSparksOnly ? '[Parent Only]' : '[All Sparks]';
+                    btn.classList.toggle('active', state.showParentSparksOnly);
+                    btn.title = state.showParentSparksOnly 
+                        ? 'Toggle: Show all sparks / Parent sparks only (Currently: Parent only)'
+                        : 'Toggle: Show all sparks / Parent sparks only (Currently: All sparks)';
+                }
+            });
             
             filterAndRender();
-        });
-    }
+            return;
+        }
 
-    // Skills category filter cycling button
-    const skillsCategoryFilter = document.getElementById('skills-category-filter');
-    if (skillsCategoryFilter) {
-        const categories = ['all', 'recovery', 'passive', 'speed', 'debuff', 'detrimental'];
-        const categoryLabels = {
-            'all': 'All',
-            'recovery': 'Recovery',
-            'passive': 'Passive',
-            'speed': 'Speed/Acceleration/Observation/StartingGate/LaneChange',
-            'debuff': 'Debuff',
-            'detrimental': 'Detrimental'
-        };
-        
-        skillsCategoryFilter.addEventListener('click', () => {
+        // Skills category filter cycling button
+        const skillsFilter = e.target.closest('#skills-category-filter');
+        if (skillsFilter) {
+            const categories = ['all', 'recovery', 'passive', 'speed', 'debuff', 'detrimental'];
+            const categoryLabels = {
+                'all': 'All',
+                'recovery': 'Recovery',
+                'passive': 'Passive',
+                'speed': 'Speed+', // Shortened from long list
+                'debuff': 'Debuff',
+                'detrimental': 'Detrimental'
+            };
+            
             const currentIndex = categories.indexOf(state.skillCategoryFilter);
             const nextIndex = (currentIndex + 1) % categories.length;
             state.skillCategoryFilter = categories[nextIndex];
             
-            skillsCategoryFilter.textContent = `[${categoryLabels[state.skillCategoryFilter]}]`;
-            skillsCategoryFilter.classList.toggle('active', state.skillCategoryFilter !== 'all');
+            skillsFilter.textContent = `[${categoryLabels[state.skillCategoryFilter]}]`;
+            skillsFilter.classList.toggle('active', state.skillCategoryFilter !== 'all');
+
+            skillsFilter.classList.remove('skill-recovery', 'skill-passive', 'skill-speed', 'skill-debuff', 'skill-detrimental');
+            if (state.skillCategoryFilter !== 'all') {
+                skillsFilter.classList.add(`skill-${state.skillCategoryFilter}`);
+            }
             
             filterAndRender();
+            return;
+        }
+    });
+
+    // Filter presets - Load preset
+    const filterPresetsSelect = document.getElementById('filter-presets-select');
+    const presetNameInput = document.getElementById('filter-preset-name-input');
+    
+    if (filterPresetsSelect) {
+        filterPresetsSelect.addEventListener('change', () => {
+            const index = filterPresetsSelect.value;
+            if (index !== "" && state.filterPresets[index]) {
+                applyFilterState(state.filterPresets[index].filterState);
+                if (presetNameInput) {
+                    presetNameInput.value = state.filterPresets[index].name;
+                }
+                showTimedMessage(`Loaded preset: ${state.filterPresets[index].name}`);
+            }
+        });
+    }
+
+    // Filter presets - Save new preset
+    const savePresetBtn = document.getElementById('save-filter-preset-button');
+    if (savePresetBtn && presetNameInput) {
+        savePresetBtn.addEventListener('click', () => {
+            const name = presetNameInput.value.trim();
+            if (!name) {
+                showTimedMessage('Please enter a preset name');
+                return;
+            }
+            const preset = {
+                name: name,
+                filterState: captureFilterState(),
+                created: new Date().toISOString()
+            };
+            state.filterPresets.push(preset);
+            localStorage.setItem('filterPresets', JSON.stringify(state.filterPresets));
+            updateFilterPresetsDropdown();
+            presetNameInput.value = '';
+            showTimedMessage(`Saved preset: ${name}`);
+        });
+    }
+
+    // Filter presets - Overwrite existing preset
+    const overwritePresetBtn = document.getElementById('overwrite-filter-preset-button');
+    if (overwritePresetBtn && filterPresetsSelect) {
+        overwritePresetBtn.addEventListener('click', () => {
+            const index = filterPresetsSelect.value;
+            if (index === "" || !state.filterPresets[index]) {
+                showTimedMessage('Please select a preset to overwrite');
+                return;
+            }
+            const preset = state.filterPresets[index];
+            preset.filterState = captureFilterState();
+            preset.modified = new Date().toISOString();
+            localStorage.setItem('filterPresets', JSON.stringify(state.filterPresets));
+            showTimedMessage(`Overwrote preset: ${preset.name}`);
+        });
+    }
+
+    // Filter presets - Delete preset
+    const deletePresetBtn = document.getElementById('delete-filter-preset-button');
+    if (deletePresetBtn && filterPresetsSelect) {
+        deletePresetBtn.addEventListener('click', () => {
+            const index = filterPresetsSelect.value;
+            if (index !== "" && state.filterPresets[index]) {
+                const presetName = state.filterPresets[index].name;
+                state.filterPresets.splice(index, 1);
+                localStorage.setItem('filterPresets', JSON.stringify(state.filterPresets));
+                updateFilterPresetsDropdown();
+                if (presetNameInput) {
+                    presetNameInput.value = '';
+                }
+                showTimedMessage(`Deleted preset: ${presetName}`);
+            }
         });
     }
 
@@ -487,6 +833,58 @@ export function setupEventListeners() {
     if (sparkTracerContent) {
         sparkTracerContent.addEventListener('click', handleSparkTracerNodeClick);
     }
+
+    // Global keyboard shortcuts
+    const helpMenuBtn = document.getElementById('help-menu-button');
+    if (helpMenuBtn) {
+        helpMenuBtn.addEventListener('click', showKeyboardShortcutsHelp);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        // Don't trigger shortcuts when typing in input fields
+        const isTyping = e.target.tagName === 'INPUT' || 
+                         e.target.tagName === 'TEXTAREA' || 
+                         e.target.tagName === 'SELECT' ||
+                         e.target.isContentEditable;
+        
+        if (isTyping && e.key !== 'Escape') return;
+
+        // Tab navigation (1-7)
+        if (e.key >= '1' && e.key <= '7' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+            const tabs = ['runner-overview', 'runner-white-sparks', 'skills-overview', 
+                         'career-planner', 'legacy-analysis', 'spark-tracer', 'useful-links'];
+            const tabIndex = parseInt(e.key) - 1;
+            if (tabs[tabIndex]) {
+                handleTabChange(tabs[tabIndex]);
+                e.preventDefault();
+            }
+        }
+        
+        // Reset filters (Esc)
+        else if (e.key === 'Escape') {
+            if (isTyping) {
+                e.target.blur(); // Unfocus input fields
+            } else {
+                resetFilters();
+                e.preventDefault();
+            }
+        }
+        
+        // Toggle dark mode (D)
+        else if (e.key === 'd' || e.key === 'D') {
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            if (darkModeToggle) {
+                darkModeToggle.click();
+                e.preventDefault();
+            }
+        }
+        
+        // Show keyboard shortcuts help (?)
+        else if (e.key === '?' || e.key === '/') {
+            showKeyboardShortcutsHelp();
+            e.preventDefault();
+        }
+    });
 
     document.querySelectorAll('#affinity-selection, #spark-select, .runner-select, .min-spark-select, .spark-count-select').forEach(sel => {
         sel.addEventListener('wheel', handleSelectWheelScroll, { passive: false });
@@ -793,6 +1191,82 @@ export function handleDeleteRunner(event) {
             showTimedMessage("Error: Could not find runner to delete.");
         }
     }
+}
+
+// Shows a modal with keyboard shortcuts help
+function showKeyboardShortcutsHelp() {
+    const existingModal = document.getElementById('shortcuts-help-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+
+    const modal = document.createElement('div');
+    modal.id = 'shortcuts-help-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--uma-light-bg);
+        border: 2px solid var(--uma-border-color);
+        border-radius: 8px;
+        padding: 20px;
+        z-index: 10000;
+        max-width: 500px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    `;
+
+    modal.innerHTML = `
+        <h2 style="margin-top: 0; color: var(--uma-text-dark);">Keyboard Shortcuts</h2>
+        <div style="color: var(--uma-text-dark); line-height: 1.8;">
+            <p><kbd>1-7</kbd> Switch between tabs</p>
+            <p><kbd>Esc</kbd> Reset filters / Unfocus inputs</p>
+            <p><kbd>D</kbd> Toggle dark mode</p>
+            <p><kbd>?</kbd> Show this help</p>
+        </div>
+        <button id="close-shortcuts-help" style="
+            margin-top: 15px;
+            padding: 8px 16px;
+            background-color: var(--uma-accent-pink);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        ">Close</button>
+    `;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'shortcuts-help-overlay';
+    overlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    `;
+
+    document.body.appendChild(overlay);
+    document.body.appendChild(modal);
+
+    const closeModal = () => {
+        modal.remove();
+        overlay.remove();
+    };
+
+    document.getElementById('close-shortcuts-help').addEventListener('click', closeModal);
+    overlay.addEventListener('click', closeModal);
+    
+    // Close on Escape
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
 }
 
 // Adds a new row of spark filter inputs to the UI.
