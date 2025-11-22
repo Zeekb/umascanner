@@ -27,6 +27,16 @@ export function filterAndRender() {
 
     if (baseFilters.runner) filteredData = filteredData.filter(r => r.name === baseFilters.runner);
 
+    // Collection Filter
+    if (state.elements.filterElements.collection && state.elements.filterElements.collection.value) {
+        const collectionName = state.elements.filterElements.collection.value;
+        const collection = state.collections.find(c => c.name === collectionName);
+        if (collection) {
+            const collectionIds = new Set(collection.runnerIds.map(String));
+            filteredData = filteredData.filter(r => collectionIds.has(String(r.entry_id)));
+        }
+    }
+
     filteredData = filteredData.filter(r =>
         (parseInt(r.speed || 0)) >= parseInt(baseFilters.speed) &&
         (parseInt(r.stamina || 0)) >= parseInt(baseFilters.stamina) &&
@@ -34,6 +44,14 @@ export function filterAndRender() {
         (parseInt(r.guts || 0)) >= parseInt(baseFilters.guts) &&
         (parseInt(r.wit || 0)) >= parseInt(baseFilters.wit)
     );
+
+    // Tag Filter
+    if (state.elements.filterElements.tags && state.elements.filterElements.tags.value.trim()) {
+        const tagQuery = state.elements.filterElements.tags.value.toLowerCase().trim();
+        filteredData = filteredData.filter(r => 
+            r.tags && r.tags.some(tag => tag.toLowerCase().includes(tagQuery))
+        );
+    }
 
     // Global Search Filter
     const globalSearchInput = document.getElementById('global-search-input');

@@ -1,7 +1,9 @@
 ﻿// ui-interactions.js - Manages all user interactions with the UI, including setting up event listeners, handling dynamic UI updates, and managing dark mode.
 
 import { state } from './state.js';
-import { debounce, findRunnerByDetails, showTimedMessage, cleanName, createSearchableSelect } from './utils.js';
+import { debounce, findRunnerByDetails, showTimedMessage, cleanName, createSearchableSelect, loadCollections } from './utils.js';
+import { showChangeLogModal } from './change-log.js';
+import { setupBulkActions } from './bulk-actions.js';
 import { filterAndRender, sortAndRender } from './filter.js';
 import { showDetailModal, resetTabSpecificFilters, resetCareerPlannerParents } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
@@ -79,6 +81,7 @@ function updateFilterPresetsDropdown() {
 function captureFilterState() {
     const filterState = {
         runner: state.elements.filterElements.runner.value,
+        tags: state.elements.filterElements.tags ? state.elements.filterElements.tags.value : '',
         sort: state.elements.filterElements.sort.value,
         sortDir: state.elements.filterElements.sortDir.value,
         stats: {
@@ -140,6 +143,7 @@ function captureFilterState() {
 function applyFilterState(filterState) {
     // Apply basic filters
     state.elements.filterElements.runner.value = filterState.runner || '';
+    if (state.elements.filterElements.tags) state.elements.filterElements.tags.value = filterState.tags || '';
     state.elements.filterElements.sort.value = filterState.sort || 'score';
     state.elements.filterElements.sortDir.value = filterState.sortDir || 'desc';
 
@@ -285,10 +289,19 @@ function applyFilterState(filterState) {
     filterAndRender();
 }
 
+
+
 // Sets up all global event listeners for UI interactions.
 export function setupEventListeners() {
     loadSavedSetups(); // Initialize saved setups on load
     loadFilterPresets(); // Initialize filter presets on load
+    loadCollections(); // Initialize collections on load
+    setupBulkActions(); // Initialize bulk actions
+
+    const changeLogBtn = document.getElementById('change-log-button');
+    if (changeLogBtn) {
+        changeLogBtn.addEventListener('click', showChangeLogModal);
+    }
 
     // --- Career Planner Save/Load Logic ---
 
@@ -549,9 +562,35 @@ export function setupEventListeners() {
     }, { passive: false });
 
     // Global Search Input
+    // Global Search Input
     const globalSearchInput = document.getElementById('global-search-input');
     if (globalSearchInput) {
         globalSearchInput.addEventListener('input', debouncedFilterAndRender);
+    }
+
+    if (state.elements.filterElements.runner) {
+        state.elements.filterElements.runner.addEventListener('change', filterAndRender);
+    }
+
+    if (state.elements.filterElements.collection) {
+        state.elements.filterElements.collection.addEventListener('change', filterAndRender);
+    }
+
+    // Tags Filter Input
+    if (state.elements.filterElements.tags) {
+        state.elements.filterElements.tags.addEventListener('input', debouncedFilterAndRender);
+        // Initialize autocomplete for filter
+        createSearchableSelect(state.elements.filterElements.tags, Array.from(state.allTags).sort(), () => {
+            filterAndRender();
+        });
+        
+        // Update autocomplete options when tags change (using a custom event or just re-init when needed)
+        // For now, we can re-init on focus to get latest tags
+        state.elements.filterElements.tags.addEventListener('focus', () => {
+            createSearchableSelect(state.elements.filterElements.tags, Array.from(state.allTags).sort(), () => {
+                filterAndRender();
+            });
+        });
     }
 
     state.elements.skillFiltersContainer.addEventListener('click', (event) => {
@@ -1071,6 +1110,7 @@ export function handleDetailView(event) {
     if (clickedCell.classList.contains('spark-cell') || 
         clickedCell.classList.contains('whites-cell') || 
         clickedCell.classList.contains('skill-cell') ||
+        clickedCell.classList.contains('checkbox-cell') ||
         event.target.closest('.add-filter-click')) {
         return;
     }

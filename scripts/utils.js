@@ -315,3 +315,194 @@ export function createSearchableSelect(inputElement, optionsArray, onSelectCallb
         }
     }, { passive: false });
 }
+
+// Saves the current runner data to local storage.
+export function saveStateToLocalStorage() {
+    try {
+        const jsonData = JSON.stringify(state.allRunners);
+        localStorage.setItem('savedRunnerData', jsonData);
+    } catch (e) {
+        console.error("Could not save to localStorage:", e);
+    }
+}
+
+// Helper to load collections from localStorage
+export function loadCollections() {
+    const stored = localStorage.getItem('collections');
+    if (stored) {
+        try {
+            state.collections = JSON.parse(stored);
+        } catch (e) {
+            console.error("Failed to parse collections", e);
+            state.collections = [];
+        }
+    }
+    updateCollectionsDropdown();
+}
+
+// Helper to save collections to localStorage
+export function saveCollections() {
+    localStorage.setItem('collections', JSON.stringify(state.collections));
+    updateCollectionsDropdown();
+}
+
+// Helper to update collections dropdown
+export function updateCollectionsDropdown() {
+    const select = document.getElementById('filter-collection');
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">All Collections</option>';
+
+    state.collections.forEach((collection) => {
+        const option = document.createElement('option');
+        option.value = collection.name;
+        option.textContent = `${collection.name} (${collection.runnerIds.length})`;
+        select.appendChild(option);
+    });
+
+    if (currentValue !== "" && state.collections.some(c => c.name === currentValue)) {
+        select.value = currentValue;
+    }
+}
+
+// Displays a generic input modal (replacing prompt/confirm).
+export function showInputModal({ title, message, inputType = 'text', options = [], placeholder = '', confirmText = 'Confirm', cancelText = 'Cancel', onConfirm }) {
+    const existingOverlay = document.getElementById('input-modal-overlay');
+    if (existingOverlay) existingOverlay.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'input-modal-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.right = '0';
+    overlay.style.bottom = '0';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    overlay.style.zIndex = '2000';
+    overlay.style.display = 'flex';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+
+    const modal = document.createElement('div');
+    modal.id = 'input-modal';
+    modal.className = 'input-modal';
+    modal.style.backgroundColor = 'var(--uma-medium-bg, #fff)';
+    modal.style.padding = '20px';
+    modal.style.borderRadius = '8px';
+    modal.style.minWidth = '300px';
+    modal.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+    modal.style.display = 'flex';
+    modal.style.flexDirection = 'column';
+    modal.style.gap = '15px';
+    modal.style.border = '1px solid var(--uma-border-color, #ccc)';
+
+    const header = document.createElement('div');
+    header.className = 'input-modal-header';
+    header.style.fontSize = '1.2em';
+    header.style.fontWeight = 'bold';
+    header.style.color = 'var(--uma-text-dark, #333)';
+    header.textContent = title;
+
+    const body = document.createElement('div');
+    body.className = 'input-modal-body';
+    body.style.display = 'flex';
+    body.style.flexDirection = 'column';
+    body.style.gap = '10px';
+    
+    if (message) {
+        const msgP = document.createElement('p');
+        msgP.textContent = message;
+        msgP.style.margin = '0';
+        msgP.style.color = 'var(--uma-text-dark, #333)';
+        body.appendChild(msgP);
+    }
+
+    let inputElement;
+    if (inputType === 'select') {
+        inputElement = document.createElement('select');
+        inputElement.className = 'input-modal-select';
+        inputElement.style.padding = '8px';
+        inputElement.style.borderRadius = '4px';
+        inputElement.style.border = '1px solid #ccc';
+        inputElement.style.backgroundColor = 'var(--uma-light-bg, #fff)';
+        inputElement.style.color = 'var(--uma-text-dark, #000)';
+        options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt.value;
+            option.textContent = opt.label;
+            inputElement.appendChild(option);
+        });
+    } else {
+        inputElement = document.createElement('input');
+        inputElement.type = 'text';
+        inputElement.className = 'input-modal-text';
+        inputElement.placeholder = placeholder;
+        inputElement.style.padding = '8px';
+        inputElement.style.borderRadius = '4px';
+        inputElement.style.border = '1px solid #ccc';
+        inputElement.style.width = '100%';
+        inputElement.style.boxSizing = 'border-box';
+        inputElement.style.backgroundColor = 'var(--uma-light-bg, #fff)';
+        inputElement.style.color = 'var(--uma-text-dark, #000)';
+    }
+    body.appendChild(inputElement);
+
+    const footer = document.createElement('div');
+    footer.className = 'input-modal-footer';
+    footer.style.display = 'flex';
+    footer.style.justifyContent = 'flex-end';
+    footer.style.gap = '10px';
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'input-modal-cancel';
+    cancelBtn.textContent = cancelText;
+    cancelBtn.style.padding = '6px 12px';
+    cancelBtn.style.cursor = 'pointer';
+    cancelBtn.style.borderRadius = '4px';
+    cancelBtn.style.border = '1px solid #ccc';
+    cancelBtn.onclick = () => overlay.remove();
+
+    const confirmBtn = document.createElement('button');
+    confirmBtn.className = 'input-modal-confirm';
+    confirmBtn.textContent = confirmText;
+    confirmBtn.style.padding = '6px 12px';
+    confirmBtn.style.cursor = 'pointer';
+    confirmBtn.style.backgroundColor = 'var(--uma-accent-blue, #2196F3)';
+    confirmBtn.style.color = 'white';
+    confirmBtn.style.border = 'none';
+    confirmBtn.style.borderRadius = '4px';
+    
+    confirmBtn.onclick = () => {
+        const value = inputElement.value;
+        if (value) {
+            onConfirm(value);
+            overlay.remove();
+        }
+    };
+
+    footer.appendChild(cancelBtn);
+    footer.appendChild(confirmBtn);
+
+    modal.appendChild(header);
+    modal.appendChild(body);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    inputElement.focus();
+    
+    // Allow Enter key to confirm
+    inputElement.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            confirmBtn.click();
+        }
+    });
+    
+    // Close on overlay click
+    overlay.onclick = (e) => {
+        if (e.target === overlay) {
+            overlay.remove();
+        }
+    };
+}

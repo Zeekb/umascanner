@@ -47,6 +47,8 @@ export function initializeApp() {
     
     state.elements.filterElements = {
         runner: document.getElementById('filter-runner'),
+        collection: document.getElementById('filter-collection'),
+        tags: document.getElementById('filter-tags'),
         sort: document.getElementById('filter-sort'),
         sortDir: document.getElementById('filter-sort-direction'),
         speed: document.getElementById('filter-speed'),
@@ -94,7 +96,20 @@ export function initializeApp() {
         if (runner.name) state.allRunnerNamesSet.add(runner.name);
         runner.sparks = (typeof runner.sparks === 'string') ? JSON.parse(runner.sparks) : runner.sparks || {};
         runner.skills = (typeof runner.skills === 'string') ? runner.skills.split('|').map(s => s.trim()).filter(s => s) : runner.skills || [];
+        if (runner.tags && Array.isArray(runner.tags)) {
+            runner.tags.forEach(tag => state.allTags.add(tag));
+        }
     });
+
+    // Helper to update allTags set
+    window.updateAllTags = () => {
+        state.allTags.clear();
+        state.allRunners.forEach(runner => {
+            if (runner.tags && Array.isArray(runner.tags)) {
+                runner.tags.forEach(tag => state.allTags.add(tag));
+            }
+        });
+    };
     
     
     state.allRunners.forEach(runner => {

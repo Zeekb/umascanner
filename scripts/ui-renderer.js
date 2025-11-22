@@ -3,8 +3,10 @@
 import { state, CONSTANTS } from './state.js';
 import { 
     cleanName, findRunnerByDetails, getStatGrade, calculateRank, getAptitudeColor, 
-    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage, createSearchableSelect
+    adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage, createSearchableSelect,
+    saveStateToLocalStorage, saveCollections, updateCollectionsDropdown
 } from './utils.js';
+import { updateSelectAllCheckboxState } from './bulk-actions.js';
 
 // Renders the content for the currently active tab.
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
@@ -65,9 +67,12 @@ function renderRunnerOverview(runners, allSparkCriteria) {
         
         const gp1Class = gp1Exists ? 'gp-link' : 'gp-borrowed';
         const gp2Class = gp2Exists ? 'gp-link' : 'gp-borrowed';
+        const isSelected = state.selectedRunners.has(String(r.entry_id));
 
         return `
-            <tr data-entry-id="${r.entry_id || ''}" title="Click to view details">  <td>${r.entry_id || 'N/A'}</td>
+            <tr data-entry-id="${r.entry_id || ''}" title="Click to view details">
+            <td class="checkbox-cell"><input type="checkbox" class="runner-select-checkbox" data-entry-id="${r.entry_id}" ${isSelected ? 'checked' : ''}></td>
+            <td>${r.entry_id || 'N/A'}</td>
             <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
             <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
             <td class="stat-cell aptitude-${getStatGrade(r.speed)}">${r.speed || 0}</td>
@@ -84,6 +89,7 @@ function renderRunnerOverview(runners, allSparkCriteria) {
     `}).join('');
     state.elements.runnerOverviewBody.innerHTML = html;
     hideEntryIdColumn('runner-overview');
+    updateSelectAllCheckboxState();
 }
 
 // Renders the summary table for white sparks.
@@ -215,133 +221,11 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
           });
 
         const whiteDisplay = `${totalWhiteEntries}(${parentWhiteEntries})`;
-        const gp1Exists = !!findRunnerByDetails(r.gp1, r.sparks?.gp1);
-        const gp2Exists = !!findRunnerByDetails(r.gp2, r.sparks?.gp2);
-        const gp1NameClass = gp1Exists ? 'gp-link' : 'gp-borrowed';
-        const gp2NameClass = gp2Exists ? 'gp-link' : 'gp-borrowed';
-
-       return `
-           <tr data-entry-id="${r.entry_id || ''}" title="Click to view details"> <td>${r.entry_id || 'N/A'}</td>
-           <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
-           <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
-           <td class="whites-cell">${whiteDisplay}</td>
-           <td class="spark-cell">
-           <div class="spark-cell-container">${whiteSparksHtml || ''}</div>
-           </td>
-           <td class="${gp1NameClass}">${cleanName(r.gp1 || 'N/A')}</td>
-           <td class="${gp2NameClass}">${cleanName(r.gp2 || 'N/A')}</td>
-       </tr>
-   `}).join('');
-   state.elements.runnerWhiteSparksBody.innerHTML = html;
-   hideEntryIdColumn('runner-white-sparks');
-}
-
-// Helper to determine CSS class for white sparks based on skill type
-function getWhiteSparkColorClass(sparkName) {
-    const skillType = state.skillData[sparkName]; // Lookup in loaded skill data
-
-    if (!skillType) {
-        return 'skill-unknown'; // Not found = Brown
-    }
-
-    // Logic matches renderSkillsOverview categories
-    if (skillType.includes('detrimental')) return 'skill-detrimental';
-    if (skillType.includes('debuff')) return 'skill-debuff';
-    if (skillType.startsWith('recovery') || skillType.startsWith('unique_recovery')) return 'skill-recovery';
-    if (skillType.includes('passive')) return 'skill-passive';
-    
-    // Speed, acceleration, and others fall under "speed" color usually
-    const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
-    if (speedCats.some(cat => skillType.startsWith(cat))) return 'skill-speed';
-
-    return 'skill-unknown'; // Fallback
-}
-
-// Renders the skills overview table.
-function renderSkillsOverview(runners) {
-    if (!runners.length) {
-        state.elements.skillsOverviewBody.innerHTML = '<tr><td colspan="4">No runners match filters.</td></tr>';
-        return;
-    }
-
-    const formatSkillBubbles = (runner) => {
-        if (!runner.skills || runner.skills.length === 0) {
-            return '';
-        }
-
-        const categorizedSkills = [];
-        const speedCats = ['speed', 'acceleration', 'observation', 'startingGate', 'laneChange', 'unique', 'allRounder'];
-        const categorySortOrder = {
-            'recovery': 1,
-            'passive': 2,
-            'speed': 3,
-            'debuff': 4,
-            'detrimental': 5,
-            'unknown': 6
-        };
-        runner.skills.forEach(skillName => {
-            const skillType = state.skillData[skillName];
-            let category = 'unknown';
-            let tier = 'normal';
-
-            if (skillType) {
-                if (skillType.includes('detrimental')) category = 'detrimental';
-                else if (skillType.includes('debuff')) category = 'debuff';
-                else if (skillType.startsWith('recovery') || skillType.startsWith('unique_recovery')) category = 'recovery';
-                else if (skillType.includes('passive')) category = 'passive';
-                else if (speedCats.some(cat => skillType.startsWith(cat))) category = 'speed';
-                
-                if (skillType.endsWith('_gold')) tier = 'gold';
-                else if (skillType.startsWith('unique_')) tier = 'unique';
-            }
-            
-            categorizedSkills.push({
-                name: skillName,
-                category: category,
-                tier: tier,
-                sortOrder: categorySortOrder[category]
-            });
-        });
-
-        categorizedSkills.sort((a, b) => {
-            if (a.sortOrder !== b.sortOrder) {
-                return a.sortOrder - b.sortOrder; 
-            }
-            const aTierSort = (a.tier === 'unique' || a.tier === 'gold') ? 0 : 1;
-            const bTierSort = (b.tier === 'unique' || b.tier === 'gold') ? 0 : 1;
-            if (aTierSort !== bTierSort) {
-                return aTierSort - bTierSort;
-            }
-            return a.name.localeCompare(b.name); 
-        });
-
-        // Filter skills based on selected category
-        let filteredSkills = categorizedSkills;
-        if (state.skillCategoryFilter && state.skillCategoryFilter !== 'all') {
-            filteredSkills = categorizedSkills.filter(skill => skill.category === state.skillCategoryFilter);
-        }
-
-        return filteredSkills.map(skill => {
-            const bubbleClasses = `skill-bubble ${skill.category} ${skill.tier} add-filter-click`;
-            const formattedName = formatSkillName(skill.name); 
-            return `<div class="${bubbleClasses}" title="Click to filter by ${skill.name}" data-filter-type="skill" data-filter-value="${skill.name}">${formattedName}</div>`;
-        }).join('');
-    };
-
-    const html = runners.map(r => {
-        const skillsHtml = formatSkillBubbles(r);
-
-        return `
-                <tr data-entry-id="${r.entry_id || ''}" title="Click to view details"> <td>${r.entry_id || 'N/A'}</td>
-                <td><span class="outline-label">${r.name || 'N/A'}</span></td>
-                <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
-                <td class="left-align skill-cell">${skillsHtml}</td>
-            </tr>
-        `;
     }).join('');
 
     state.elements.skillsOverviewBody.innerHTML = html;
     hideEntryIdColumn('skills-overview');
+    updateSelectAllCheckboxState();
 }
 
 // Retrieves the base activation chance for a spark based on its color and stars.
@@ -981,8 +865,9 @@ function renderSparkTraceGraph(sources, container) {
 function hideEntryIdColumn(tabId) {
     const table = document.querySelector(`#${tabId} table`);
     if (!table) return;
-    const headerCell = table.querySelector('thead th:first-child');
-    const bodyCells = table.querySelectorAll('tbody td:first-child');
+    // Entry ID is now the 2nd column (1st is checkbox)
+    const headerCell = table.querySelector('thead th:nth-child(2)');
+    const bodyCells = table.querySelectorAll('tbody td:nth-child(2)');
     if (headerCell) headerCell.style.display = 'none';
     bodyCells.forEach(cell => cell.style.display = 'none');
 } 
@@ -1751,6 +1636,8 @@ export function showDetailModal(runner, displayName) {
     modalTabs.innerHTML = `
         <button class="modal-tab-button active" data-tab="skills">Skills</button>
         <button class="modal-tab-button" data-tab="inspiration">Inspiration</button>
+        <button class="modal-tab-button" data-tab="tags">Tags</button>
+        <button class="modal-tab-button" data-tab="collections">Collections</button>
     `;
     content.appendChild(modalTabs);
 
@@ -1800,6 +1687,199 @@ export function showDetailModal(runner, displayName) {
     sparksPanel.className = 'modal-tab-panel';
     sparksPanel.innerHTML = generateSparksHtml(runner);
     tabContentContainer.appendChild(sparksPanel);
+
+    const tagsPanel = document.createElement('div');
+    tagsPanel.id = 'modal-tags-panel';
+    tagsPanel.className = 'modal-tab-panel';
+    
+    const tagsContainer = document.createElement('div');
+    tagsContainer.className = 'modal-tags-container';
+    
+    const renderTags = () => {
+        tagsContainer.innerHTML = '';
+        const tags = runner.tags || [];
+        if (tags.length === 0) {
+            tagsContainer.innerHTML = '<p style="color: #888; font-style: italic;">No tags added.</p>';
+        } else {
+            tags.forEach((tag, index) => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'runner-tag';
+                tagEl.textContent = tag;
+                const deleteBtn = document.createElement('span');
+                deleteBtn.className = 'tag-delete-btn';
+                deleteBtn.textContent = '×';
+                deleteBtn.title = 'Remove Tag';
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    runner.tags.splice(index, 1);
+                    saveStateToLocalStorage();
+                    renderTags();
+                };
+                tagEl.appendChild(deleteBtn);
+                tagsContainer.appendChild(tagEl);
+            });
+        }
+    };
+    renderTags();
+    
+    const inputContainer = document.createElement('div');
+    inputContainer.className = 'tag-input-container searchable-select-container'; // Add container class
+    
+    const tagInput = document.createElement('input');
+    tagInput.type = 'text';
+    tagInput.placeholder = 'Add a tag...';
+    tagInput.className = 'tag-input';
+    
+    // Options container for autocomplete
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'options-container';
+    
+    const addTagBtn = document.createElement('button');
+    addTagBtn.textContent = 'Add';
+    addTagBtn.className = 'add-tag-btn';
+    
+    const addTag = () => {
+        const val = tagInput.value.trim();
+        if (val) {
+            if (!runner.tags) runner.tags = [];
+            if (!runner.tags.includes(val)) {
+                runner.tags.push(val);
+                if (window.updateAllTags) window.updateAllTags(); // Update global tag list
+                saveStateToLocalStorage();
+                renderTags();
+                // Re-init searchable select to update options with new tag
+                createSearchableSelect(tagInput, Array.from(state.allTags).sort());
+            }
+            tagInput.value = '';
+        }
+    };
+    
+    addTagBtn.onclick = addTag;
+    tagInput.onkeydown = (e) => { if(e.key === 'Enter') addTag(); };
+    
+    inputContainer.appendChild(tagInput);
+    inputContainer.appendChild(optionsContainer); // Add options container
+    inputContainer.appendChild(addTagBtn);
+    
+    tagsPanel.appendChild(tagsContainer);
+    tagsPanel.appendChild(inputContainer);
+
+    // Initialize autocomplete
+    createSearchableSelect(tagInput, Array.from(state.allTags).sort(), () => {
+        // On select from dropdown, just set value, don't add yet (user clicks Add)
+    });
+    tabContentContainer.appendChild(tagsPanel);
+
+    // --- Collections Panel ---
+    const collectionsPanel = document.createElement('div');
+    collectionsPanel.id = 'modal-collections-panel';
+    collectionsPanel.className = 'modal-tab-panel';
+
+    const collectionsContainer = document.createElement('div');
+    collectionsContainer.className = 'modal-collections-container';
+
+    const renderCollections = () => {
+        collectionsContainer.innerHTML = '';
+        
+        // List collections this runner is in
+        const inCollections = state.collections.filter(c => c.runnerIds.includes(String(runner.entry_id)));
+        
+        if (inCollections.length > 0) {
+            const list = document.createElement('div');
+            list.className = 'runner-collections-list';
+            inCollections.forEach(col => {
+                const item = document.createElement('div');
+                item.className = 'collection-item';
+                item.innerHTML = `<span>${col.name}</span>`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.textContent = 'Remove';
+                removeBtn.className = 'remove-collection-btn';
+                removeBtn.onclick = () => {
+                    const index = col.runnerIds.indexOf(String(runner.entry_id));
+                    if (index > -1) {
+                        col.runnerIds.splice(index, 1);
+                        saveCollections();
+                        renderCollections();
+                    }
+                };
+                item.appendChild(removeBtn);
+                list.appendChild(item);
+            });
+            collectionsContainer.appendChild(list);
+        } else {
+            collectionsContainer.innerHTML = '<p style="color: #888; font-style: italic;">Not in any collections.</p>';
+        }
+
+        // Add to existing collection
+        const addToContainer = document.createElement('div');
+        addToContainer.className = 'add-to-collection-container';
+        
+        const availableCollections = state.collections.filter(c => !c.runnerIds.includes(String(runner.entry_id)));
+        
+        if (availableCollections.length > 0) {
+            const select = document.createElement('select');
+            select.className = 'collection-select';
+            select.innerHTML = '<option value="">Select Collection...</option>';
+            availableCollections.forEach(c => {
+                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
+            });
+            
+            const addBtn = document.createElement('button');
+            addBtn.textContent = 'Add';
+            addBtn.className = 'add-collection-btn';
+            addBtn.onclick = () => {
+                const colName = select.value;
+                if (colName) {
+                    const col = state.collections.find(c => c.name === colName);
+                    if (col) {
+                        col.runnerIds.push(String(runner.entry_id));
+                        saveCollections();
+                        renderCollections();
+                    }
+                }
+            };
+            
+            addToContainer.appendChild(select);
+            addToContainer.appendChild(addBtn);
+            collectionsContainer.appendChild(addToContainer);
+        }
+
+        // Create new collection
+        const createContainer = document.createElement('div');
+        createContainer.className = 'create-collection-container';
+        
+        const newNameInput = document.createElement('input');
+        newNameInput.placeholder = 'New Collection Name';
+        newNameInput.className = 'new-collection-input';
+        
+        const createBtn = document.createElement('button');
+        createBtn.textContent = 'Create & Add';
+        createBtn.className = 'create-collection-btn';
+        createBtn.onclick = () => {
+            const name = newNameInput.value.trim();
+            if (name) {
+                if (state.collections.some(c => c.name === name)) {
+                    alert('Collection already exists!');
+                    return;
+                }
+                state.collections.push({
+                    name: name,
+                    runnerIds: [String(runner.entry_id)]
+                });
+                saveCollections();
+                renderCollections();
+            }
+        };
+        
+        createContainer.appendChild(newNameInput);
+        createContainer.appendChild(createBtn);
+        collectionsContainer.appendChild(createContainer);
+    };
+
+    renderCollections();
+    collectionsPanel.appendChild(collectionsContainer);
+    tabContentContainer.appendChild(collectionsPanel);
     content.appendChild(tabContentContainer);
 
     const footer = document.createElement('div');

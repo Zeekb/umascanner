@@ -768,3 +768,268 @@
     width: 100%;
     gap: 20px 290px;
 }
+
+/* Styles for the Tags panel */
+.modal-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    min-height: 40px;
+    padding: 5px;
+}
+
+.runner-tag {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, var(--uma-accent-blue), #5c9aff);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.runner-tag:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+}
+
+.tag-delete-btn {
+    margin-left: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    opacity: 0.7;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+
+.tag-delete-btn:hover {
+    opacity: 1;
+    background-color: rgba(255,255,255,0.3);
+    color: #ffebee;
+}
+
+.tag-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tag-input {
+    flex-grow: 1;
+    padding: 8px 12px;
+    border: 1px solid var(--uma-border-color);
+    border-radius: 20px;
+    background-color: var(--uma-light-bg);
+    color: var(--uma-text-dark);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tag-input:focus {
+    outline: none;
+    border-color: var(--uma-accent-blue);
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.add-tag-btn {
+    padding: 8px 20px;
+    background: linear-gradient(to bottom, var(--uma-dark-accent), #5a8f3d);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+.add-tag-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+}
+
+.add-tag-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Styles for the Collections panel */
+.modal-collections-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 5px;
+}
+
+.runner-collections-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.collection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--uma-light-bg);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    color: var(--uma-text-dark);
+}
+
+.dark-mode .collection-item {
+    border-color: var(--uma-border-color);
+}
+
+.remove-collection-btn {
+    background-color: #ff5252;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.8em;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.remove-collection-btn:hover {
+    background-color: #ff1744;
+}
+
+.add-to-collection-container,
+.create-collection-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.collection-select,
+.new-collection-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--uma-light-bg);
+    color: var(--uma-text-dark);
+}
+
+.dark-mode .collection-select,
+.dark-mode .new-collection-input {
+    border-color: var(--uma-border-color);
+}
+
+.add-collection-btn,
+.create-collection-btn {
+    padding: 8px 15px;
+    background-color: var(--uma-accent-blue);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.add-collection-btn:hover,
+.create-collection-btn:hover {
+    background-color: #1976D2;
+}
+
+/* Styles for Change Log Modal */
+#change-log-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#change-log-modal {
+    background-color: var(--modal-content-bg);
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    border-radius: 8px;
+    border: 2px solid var(--uma-border-color);
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.change-log-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--uma-border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--uma-dark-accent);
+    color: var(--uma-header-text);
+    border-radius: 6px 6px 0 0;
+}
+
+.dark-mode .change-log-header {
+    background-color: #71d71c;
+}
+
+.change-log-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.close-modal {
+    font-size: 2em;
+    cursor: pointer;
+    line-height: 0.5;
+}
+
+.change-log-content {
+    padding: 20px;
+    overflow-y: auto;
+    color: var(--uma-text-dark);
+}
+
+.change-log-meta {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+.dark-mode .change-log-meta {
+    color: #aaa;
+}
+
+.change-log-content h3 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+}
+
+.change-log-content ul {
+    list-style-type: disc;
+    padding-left: 25px;
+    margin: 0;
+}
+
+.change-log-content li {
+    margin-bottom: 4px;
+    line-height: 1.4;
+}

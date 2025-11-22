@@ -65,7 +65,7 @@ tbody tr.selected {
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
 }
-tbody td:nth-child(2) {
+tbody td:nth-child(3) {
     cursor: pointer;
 }
 
@@ -230,18 +230,18 @@ td.skill-cell {
   width: 100%;
 }
 
-#skills-overview th:nth-child(2),
-#skills-overview td:nth-child(2) {
-  width: 150px; /* Name - minimal but readable */
-}
-
 #skills-overview th:nth-child(3),
 #skills-overview td:nth-child(3) {
-  width: 80px; /* Score - minimal */
+  width: 150px; /* Name - minimal but readable */
 }
 
 #skills-overview th:nth-child(4),
 #skills-overview td:nth-child(4) {
+  width: 80px; /* Score - minimal */
+}
+
+#skills-overview th:nth-child(5),
+#skills-overview td:nth-child(5) {
   width: auto; /* Skills - takes remaining space */
 }
 

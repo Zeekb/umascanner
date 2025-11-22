@@ -1,0 +1,107 @@
+/* styles/bulk-actions.css - Styles for the floating bulk actions toolbar */
+
+.bulk-actions-toolbar {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--uma-medium-bg);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 8px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.bulk-actions-toolbar.hidden {
+    transform: translate(-50%, 100px);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.bulk-selection-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    color: var(--uma-text-dark);
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+}
+
+.dark-mode .bulk-selection-info {
+    border-right-color: #555;
+}
+
+.bulk-text-btn {
+    background: none;
+    border: none;
+    color: var(--uma-accent-blue);
+    cursor: pointer;
+    font-size: 0.9em;
+    text-decoration: underline;
+    padding: 0;
+}
+
+.bulk-text-btn:hover {
+    color: #1976D2;
+}
+
+.bulk-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bulk-action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--uma-light-bg);
+    color: var(--uma-text-dark);
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.dark-mode .bulk-action-btn {
+    border-color: #555;
+}
+
+.bulk-action-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.dark-mode .bulk-action-btn.delete:hover {
+    background-color: #5c2b2b;
+}
+
+.bulk-separator {
+    width: 1px;
+    height: 24px;
+    background-color: #ccc;
+    margin: 0 5px;
+}
+
+.dark-mode .bulk-separator {
+    background-color: #555;
+}
+
+#bulk-action-transfer {
+    background-color: #71d71c;
+    color: white;
+    border: 1px solid #539e16;
+    text-shadow: 1px 1px 0 rgba(0, 120, 0, 0.5), -1px -1px 0 rgba(0, 120, 0, 0.5), 1px -1px 0 rgba(0, 120, 0, 0.5), -1px 1px 0 rgba(0, 120, 0, 0.5);
+}
+
+#bulk-action-transfer:hover {
+    background-color: #539e16;
+    transform: translateY(-1px);
+}

@@ -55,6 +55,9 @@
             <button id="help-menu-button" title="Keyboard Shortcuts (?)" class="icon-button" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
                 <span style="font-weight: bold; font-size: 1em;">?</span>
             </button>
+            <button id="change-log-button" title="View Change Log" class="icon-button" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
+                <span style="font-weight: bold; font-size: 1em;">Δ</span>
+            </button>
 
             <div class="global-search-wrapper">
                 <input type="text" id="global-search-input" placeholder="Search (Name, Skills, Sparks)..." title="Search by Runner Name, Skills, or Sparks">
@@ -91,6 +94,19 @@
                     <div class="filter-group">
                         <label for="filter-runner">Runner</label>
                         <select id="filter-runner"></select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-collection">Collection</label>
+                        <select id="filter-collection">
+                            <option value="">All Collections</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-tags">Tags</label>
+                        <div class="searchable-select-container">
+                            <input type="text" id="filter-tags" placeholder="Filter by tag..." style="width: 120px;">
+                            <div class="options-container"></div>
+                        </div>
                     </div>
                     <div class="filter-group">
                         <label for="filter-sort">Sort By</label>
@@ -253,6 +269,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th class="checkbox-column"><input type="checkbox" class="select-all-checkbox" title="Select All"></th>
                             <th>Entry Id</th>
                             <th>Name</th>
                             <th>Score</th>
@@ -279,6 +296,7 @@
                 <table>
                     <thead>
                         <tr>
+                           <th class="checkbox-column"><input type="checkbox" class="select-all-checkbox" title="Select All"></th>
                            <th>Entry Id</th>
                            <th>Name</th>
                            <th>Score</th>
@@ -300,6 +318,7 @@
                 <table>
                     <thead>
                         <tr>
+                           <th class="checkbox-column"><input type="checkbox" class="select-all-checkbox" title="Select All"></th>
                            <th>Entry Id</th>
                            <th>Name</th>
                            <th>Score</th>
@@ -457,6 +476,26 @@
             </div>
         </div>
     </div>
+
+    <div id="bulk-actions-toolbar" class="bulk-actions-toolbar hidden">
+        <div class="bulk-selection-info">
+            <span id="bulk-count">0</span> selected
+            <button id="bulk-clear-selection" class="bulk-text-btn">Clear</button>
+        </div>
+        <div class="bulk-actions-group">
+            <button id="bulk-action-tag" class="bulk-action-btn" title="Add Tags">
+                <span class="icon">🏷️</span> Tags
+            </button>
+            <button id="bulk-action-collection" class="bulk-action-btn" title="Add to Collection">
+                <span class="icon">📂</span> Collection
+            </button>
+            <div class="bulk-separator"></div>
+            <button id="bulk-action-transfer" class="bulk-action-btn delete" title="Transfer (Delete)">
+                Transfer
+            </button>
+        </div>
+    </div>
+
     <script type="module" src="./scripts/main.js"></script>
 </body>
 </html>

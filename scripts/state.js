@@ -14,6 +14,7 @@ export const state = {
     whiteSparkNames: [],
     orderedSkills: [],
     allRunnerNamesSet: new Set(),
+    allTags: new Set(),
 
     savedParentSetups: [],
     
@@ -25,6 +26,9 @@ export const state = {
     showParentSparksOnly: false,
     skillCategoryFilter: 'all',
     filterPresets: [],
+    collections: [],
+    changeLog: null,
+    selectedRunners: new Set(),
 
     elements: {},
 };

@@ -2,6 +2,7 @@
 
 import { state } from './state.js';
 import { initializeApp, showError } from './main.js';
+import { generateChangeLog, showChangeLogModal } from './change-log.js';
 
 // Handles loading runner data from a user-selected file.
 export async function handleFileLoad() {
@@ -18,7 +19,16 @@ export async function handleFileLoad() {
     let fileContent;
     try {
         fileContent = await file.text();
+        
+        const previousRunners = state.allRunners ? [...state.allRunners] : [];
         state.allRunners = JSON.parse(fileContent);
+
+        if (previousRunners.length > 0) {
+            state.changeLog = generateChangeLog(previousRunners, state.allRunners);
+            if (state.changeLog.added.length > 0 || state.changeLog.modified.length > 0 || state.changeLog.removed.length > 0) {
+                setTimeout(() => showChangeLogModal(), 1000);
+            }
+        }
     } catch (err) {
         showError(`Error reading file: ${err.message}`);
         return;
