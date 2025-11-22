@@ -127,6 +127,13 @@
   gap: 20px;
 }
 
+.modal-identity-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+}
+
 .modal-rank-container {
   display: flex;
   flex-direction: column;
@@ -332,12 +339,19 @@
 
 /* Styles for the runner's aptitudes display */
 .modal-aptitudes {
-  display: grid;
-  grid-template-columns: 70px repeat(4, 1fr);
-  gap: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   padding: 0 10px;
   flex-shrink: 0;
   margin-top: 15px;
+}
+
+.modal-apt-row {
+  display: grid;
+  grid-template-columns: 70px repeat(4, 1fr);
+  gap: 10px;
+  align-items: center;
 }
 
 .modal-apt-label {
@@ -797,6 +811,118 @@
     transform: translateY(-1px);
     box-shadow: 0 4px 6px rgba(0,0,0,0.25);
 }
+
+/* Styles for Modal Header Buttons (Tags, Collections) */
+.modal-header-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.modal-header-btn {
+    background-color: var(--uma-accent-blue);
+    color: white;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 0.9em;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.2s, transform 0.1s;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.modal-header-btn:hover {
+    background-color: #1976D2; /* Darker shade of blue */
+    transform: translateY(-1px);
+}
+
+.dark-mode .modal-header-btn {
+    border-color: rgba(255,255,255,0.2);
+}
+
+/* Styles for Management Modals (Tags, Collections) */
+.management-modal {
+    background-color: var(--uma-medium-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid var(--uma-border-color);
+    width: 400px;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.management-modal-header {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--uma-text-dark);
+    border-bottom: 1px solid var(--uma-border-color);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.management-modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.management-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: var(--uma-light-bg);
+    border: 1px solid var(--uma-border-color);
+    border-radius: 4px;
+}
+
+.management-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.management-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.management-btn {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
+.management-btn.add {
+    background-color: var(--uma-accent-blue);
+}
+
+.management-btn.remove {
+    background-color: #ff4d4d;
+    padding: 4px 8px;
+    font-size: 0.8em;
+}
+
+.management-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid var(--uma-border-color);
+}
+
 
 .tag-delete-btn {
     margin-left: 8px;

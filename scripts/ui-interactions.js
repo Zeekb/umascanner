@@ -7,6 +7,7 @@ import { setupBulkActions } from './bulk-actions.js';
 import { filterAndRender, sortAndRender } from './filter.js';
 import { showDetailModal, resetTabSpecificFilters, resetCareerPlannerParents } from './ui-renderer.js';
 import { returnToFileUploader, saveDataToFile, updateEntriesCount } from './main.js';
+import { UI_MODES, setMode, toggleSetting, applySettings } from './ui-settings.js';
 
 // Helper to load saved setups from local storage
 function loadSavedSetups() {
@@ -1264,16 +1265,28 @@ function showKeyboardShortcutsHelp() {
             <p><kbd>D</kbd> Toggle dark mode</p>
             <p><kbd>?</kbd> Show this help</p>
         </div>
-        <button id="close-shortcuts-help" style="
-            margin-top: 15px;
-            padding: 8px 16px;
-            background-color: var(--uma-accent-pink);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        ">Close</button>
+        <div style="margin-top: 15px; display: flex; gap: 10px;">
+            <button id="open-settings-button" style="
+                padding: 8px 16px;
+                background-color: var(--uma-accent-blue);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                flex: 1;
+            ">⚙️ Settings</button>
+            <button id="close-shortcuts-help" style="
+                padding: 8px 16px;
+                background-color: var(--uma-accent-pink);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-weight: bold;
+                flex: 1;
+            ">Close</button>
+        </div>
     `;
 
     const overlay = document.createElement('div');
@@ -1297,8 +1310,153 @@ function showKeyboardShortcutsHelp() {
     };
 
     document.getElementById('close-shortcuts-help').addEventListener('click', closeModal);
+    document.getElementById('open-settings-button').addEventListener('click', () => {
+        closeModal();
+        showSettingsModal();
+    });
     overlay.addEventListener('click', closeModal);
     
+    // Close on Escape
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeModal();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+// Shows the UI settings modal
+function showSettingsModal() {
+    const existingModal = document.getElementById('settings-modal-overlay');
+    if (existingModal) existingModal.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'settings-modal-overlay';
+
+    const modal = document.createElement('div');
+    modal.id = 'settings-modal';
+
+    // Header
+    const header = document.createElement('div');
+    header.className = 'settings-header';
+    header.innerHTML = '<h2>UI Settings</h2><span class="close-modal">&times;</span>';
+
+    // Content
+    const content = document.createElement('div');
+    content.className = 'settings-content';
+
+    // Mode Selection Section
+    const modeSection = document.createElement('div');
+    modeSection.className = 'settings-section';
+    modeSection.innerHTML = '<h3>Display Mode</h3>';
+
+    const modeSelector = document.createElement('div');
+    modeSelector.className = 'mode-selector';
+
+    Object.keys(UI_MODES).forEach(modeKey => {
+        const mode = UI_MODES[modeKey];
+        const button = document.createElement('div');
+        button.className = 'mode-button';
+        if (state.uiSettings.mode === modeKey) {
+            button.classList.add('active');
+        }
+        button.innerHTML = `
+            <div class="mode-name">${mode.name}</div>
+            <div class="mode-desc">${mode.description}</div>
+        `;
+        button.onclick = () => {
+            setMode(modeKey);
+            showSettingsModal(); // Refresh modal to show updated settings
+        };
+        modeSelector.appendChild(button);
+    });
+
+    modeSection.appendChild(modeSelector);
+    content.appendChild(modeSection);
+
+    // Individual Toggles Section
+    const togglesSection = document.createElement('div');
+    togglesSection.className = 'settings-section';
+    togglesSection.innerHTML = '<h3>Individual Settings</h3>';
+
+    const toggles = [
+        { key: 'showTabHelp', label: 'Show Tab Help Buttons', tooltip: 'Display the "?" help buttons next to tab names' },
+        { key: 'showSparkTooltips', label: 'Show Spark Tooltips', tooltip: 'Display helpful information when hovering over spark bubbles' },
+        { key: 'showStatTooltips', label: 'Show Stat Grade Tooltips', tooltip: 'Show grade information when hovering over stat values' },
+        { key: 'showColumnHelp', label: 'Show Column Header Help', tooltip: 'Display tooltips on table column headers explaining what they contain' },
+        { key: 'showFilterHelp', label: 'Show Filter Help Text', tooltip: 'Show helper text and tooltips in the filter section' },
+        { key: 'showGrandparentColumns', label: 'Show Grandparent Columns (GP1/GP2)', tooltip: 'Display GP1 and GP2 columns in the main table' },
+        { key: 'showEntryIdColumn', label: 'Show Entry ID Column', tooltip: 'Display the Entry ID column in tables' },
+        { key: 'showAdvancedSparkFilters', label: 'Show Advanced Spark Filters', tooltip: 'Display the detailed spark filtering section' },
+        { key: 'showAdvancedSkillFilters', label: 'Show Advanced Skill Filters', tooltip: 'Display the detailed skill filtering section' }
+    ];
+
+    toggles.forEach(toggle => {
+        const toggleDiv = document.createElement('div');
+        toggleDiv.className = 'settings-toggle';
+
+        const labelContainer = document.createElement('div');
+        labelContainer.style.display = 'flex';
+        labelContainer.style.alignItems = 'center';
+        labelContainer.style.gap = '8px';
+
+        const label = document.createElement('span');
+        label.className = 'toggle-label';
+        label.textContent = toggle.label;
+
+        const helpIcon = document.createElement('span');
+        helpIcon.className = 'tab-help';
+        helpIcon.textContent = '?';
+        helpIcon.title = toggle.tooltip;
+        helpIcon.style.fontSize = '0.85em';
+        helpIcon.style.marginLeft = '5px';
+
+        labelContainer.appendChild(label);
+        labelContainer.appendChild(helpIcon);
+
+        const switchLabel = document.createElement('label');
+        switchLabel.className = 'toggle-switch';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = state.uiSettings[toggle.key];
+        checkbox.onchange = () => {
+            toggleSetting(toggle.key);
+        };
+
+        const slider = document.createElement('span');
+        slider.className = 'toggle-slider';
+
+        switchLabel.appendChild(checkbox);
+        switchLabel.appendChild(slider);
+
+        toggleDiv.appendChild(labelContainer);
+        toggleDiv.appendChild(switchLabel);
+        togglesSection.appendChild(toggleDiv);
+    });
+
+    content.appendChild(togglesSection);
+
+    // Footer
+    const footer = document.createElement('div');
+    footer.className = 'settings-footer';
+    footer.innerHTML = '<button class="btn-primary">Done</button>';
+
+    modal.appendChild(header);
+    modal.appendChild(content);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    // Event listeners
+    const closeModal = () => overlay.remove();
+    header.querySelector('.close-modal').addEventListener('click', closeModal);
+    footer.querySelector('.btn-primary').addEventListener('click', closeModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) closeModal();
+    });
+
     // Close on Escape
     const escapeHandler = (e) => {
         if (e.key === 'Escape') {

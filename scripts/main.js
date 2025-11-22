@@ -8,6 +8,7 @@ import {
     setupEventListeners, setupDarkMode, updateSparkCountDropdown, 
     updateTotalWhiteDropdown, updateSelectPlaceholder, handleTabChange
 } from './ui-interactions.js';
+import { initializeSettings } from './ui-settings.js';
 
 
 // Initializes the application when the DOM is fully loaded.
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadTestDataButton = document.getElementById('load-test-data-button');
 
     setupDarkMode(); 
+    initializeSettings(); // Initialize UI settings 
 
     state.elements.loadDataButton.addEventListener('click', handleFileLoad);
     loadTestDataButton.addEventListener('click', handleTestFileLoad);

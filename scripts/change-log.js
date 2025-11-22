@@ -81,13 +81,40 @@ function compareRunners(oldR, newR) {
     return changes;
 }
 
-// Displays the change log in a modal.
-export function showChangeLogModal() {
-    if (!state.changeLog) {
-        alert("No change log available.");
-        return;
+// Gets runners that were updated on the most recent date
+function getRecentUpdates() {
+    if (!state.allRunners || state.allRunners.length === 0) {
+        return [];
     }
 
+    // Find the most recent last_updated timestamp
+    let latestDate = null;
+    state.allRunners.forEach(runner => {
+        if (runner.last_updated) {
+            const currentDate = new Date(runner.last_updated);
+            if (!latestDate || currentDate > latestDate) {
+                latestDate = currentDate;
+            }
+        }
+    });
+
+    if (!latestDate) {
+        return [];
+    }
+
+    // Get all runners with that timestamp
+    const recentRunners = state.allRunners.filter(runner => {
+        if (!runner.last_updated) return false;
+        const runnerDate = new Date(runner.last_updated);
+        return runnerDate.getTime() === latestDate.getTime();
+    });
+
+    // Sort by score descending
+    return recentRunners.sort((a, b) => (b.score || 0) - (a.score || 0));
+}
+
+// Displays the change log in a modal.
+export function showChangeLogModal() {
     const existingModal = document.getElementById('change-log-modal-overlay');
     if (existingModal) existingModal.remove();
 
@@ -107,14 +134,13 @@ export function showChangeLogModal() {
     const content = document.createElement('div');
     content.className = 'change-log-content';
 
-    const { added, removed, modified, timestamp } = state.changeLog;
-    const dateStr = new Date(timestamp).toLocaleString();
+    // If there's a change log from file import, show it
+    if (state.changeLog && (state.changeLog.added.length > 0 || state.changeLog.removed.length > 0 || state.changeLog.modified.length > 0)) {
+        const { added, removed, modified, timestamp } = state.changeLog;
+        const dateStr = new Date(timestamp).toLocaleString();
 
-    content.innerHTML = `<p class="change-log-meta">Comparison generated at: ${dateStr}</p>`;
+        content.innerHTML = `<p class="change-log-meta">Comparison generated at: ${dateStr}</p>`;
 
-    if (added.length === 0 && removed.length === 0 && modified.length === 0) {
-        content.innerHTML += '<p>No changes detected.</p>';
-    } else {
         if (added.length > 0) {
             content.innerHTML += `<h3>New Runners (${added.length})</h3>`;
             const list = document.createElement('ul');
@@ -151,6 +177,30 @@ export function showChangeLogModal() {
             removed.forEach(r => {
                 const li = document.createElement('li');
                 li.textContent = r.name;
+                list.appendChild(li);
+            });
+            content.appendChild(list);
+        }
+    } else {
+        // Show recent updates based on last_updated timestamp
+        const recentUpdates = getRecentUpdates();
+        
+        if (recentUpdates.length === 0) {
+            content.innerHTML = '<p>No recent updates found.</p>';
+        } else {
+            const latest = recentUpdates[0];
+            const latestDate = new Date(latest.last_updated);
+            const dateStr = latestDate.toLocaleString();
+            
+            content.innerHTML = `<p class="change-log-meta">Most recent update: ${dateStr}</p>`;
+            content.innerHTML += `<h3>Recently Updated Runners (${recentUpdates.length})</h3>`;
+            
+            const list = document.createElement('ul');
+            recentUpdates.forEach(r => {
+                const li = document.createElement('li');
+                const updateDate = new Date(r.last_updated).toLocaleString();
+                const score = (r.score || 0).toLocaleString();
+                li.innerHTML = `<strong>${r.name}</strong> (${score}) - ${updateDate}`;
                 list.appendChild(li);
             });
             content.appendChild(list);

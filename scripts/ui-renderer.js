@@ -1566,7 +1566,13 @@ export function showDetailModal(runner, displayName) {
                         <div class="modal-rank-text">RANK</div>
                     </div>
                 </div>
-                <div class="modal-runner-name">${runnerName.replace(' ', ' ')}</div>
+                <div class="modal-identity-details">
+                    <div class="modal-runner-name">${runnerName.replace(' ', ' ')}</div>
+                    <div class="modal-header-actions">
+                        <button class="modal-header-btn" id="manage-tags-btn">🏷️ Tags</button>
+                        <button class="modal-header-btn" id="manage-collections-btn">📂 Collections</button>
+                    </div>
+                </div>
             </div>
         </div>
     `;
@@ -1611,6 +1617,7 @@ export function showDetailModal(runner, displayName) {
 
 
     Object.entries(aptTypes).forEach(([typeLabel, aptKeys]) => {
+        aptsHtml += `<div class="modal-apt-row">`;
         aptsHtml += `<div class="modal-apt-label">${typeLabel}</div>`;
         aptKeys.forEach(key => {
             const grade = runner[`${key}`]?.toUpperCase() || 'G';
@@ -1624,262 +1631,65 @@ export function showDetailModal(runner, displayName) {
                 </div>
             `;
         });
-        if (aptKeys.length < 4) {
-            aptsHtml += `<div style="grid-column: span ${4 - aptKeys.length};"></div>`;
-        }
+        aptsHtml += `</div>`;
     });
     aptitudes.innerHTML = aptsHtml;
     content.appendChild(aptitudes);
-    
+
+    const tabContentContainer = document.createElement('div');
+    tabContentContainer.className = 'modal-tab-content-container';
+
     const modalTabs = document.createElement('div');
     modalTabs.className = 'modal-tabs';
     modalTabs.innerHTML = `
         <button class="modal-tab-button active" data-tab="skills">Skills</button>
-        <button class="modal-tab-button" data-tab="inspiration">Inspiration</button>
-        <button class="modal-tab-button" data-tab="tags">Tags</button>
-        <button class="modal-tab-button" data-tab="collections">Collections</button>
+        <button class="modal-tab-button" data-tab="sparks">Sparks</button>
     `;
     content.appendChild(modalTabs);
-
-    const tabContentContainer = document.createElement('div');
-    tabContentContainer.className = 'modal-tab-content-container';
 
     const skillsPanel = document.createElement('div');
     skillsPanel.id = 'modal-skills-panel';
     skillsPanel.className = 'modal-tab-panel active';
     
+    const skillsSection = document.createElement('div');
+    skillsSection.className = 'modal-skills-section';
+    
     const skillsList = document.createElement('div');
     skillsList.className = 'modal-skills-list';
-    let skillsHtml = '';
-    const runnerSkills = runner.skills || [];
-    if (runnerSkills.length > 0) {
-        let unique_set = false;
-        runnerSkills.forEach(skillName => {
-            const skillType = state.skillData[skillName] || null;
-            let itemClass = 'modal-skill-item';
-            if (skillType) {
-                if (skillType.startsWith('unique') && !unique_set) {
-                    unique_set = true
-                    itemClass += ' unique';
-                } else if (skillType.endsWith('_gold')) { 
-                    itemClass += ' gold';
-                }
-            }
-            const iconPath = skillType ? `./assets/skill_icons/${skillType}.png` : '';
-            const iconStyle = iconPath ? `background-image: url('${iconPath}')` : '';
+    
+    if (runner.skills && runner.skills.length > 0) {
+        runner.skills.forEach(skillName => {
+            const skillData = state.skillData[skillName];
+            const skillType = skillData ? skillData.type : 'unknown';
+            const skillIcon = CONSTANTS.SKILL_ICONS[skillType] || 'icon_skill_unknown.png';
             
-            skillsHtml += `
-                <div class="${itemClass}">
-                    <div class="modal-skill-icon" style="${iconStyle}"></div>
+            let itemClass = 'modal-skill-item';
+            if (state.runnerUniqueSkills[runner.name] === skillName) itemClass += ' unique';
+            if (skillName.startsWith('Gold')) itemClass += ' gold'; 
+
+            skillsList.innerHTML += `
+                <div class="${itemClass} ${skillType}">
+                    <div class="modal-skill-icon" style="background-image: url('./assets/skill_icons/${skillIcon}')"></div>
                     <div class="modal-skill-name">${formatSkillName(skillName)}</div>
                 </div>
             `;
         });
     } else {
-        skillsHtml = '<div style="grid-column: span 2; text-align: center; color: #888;">No skills listed.</div>';
+        skillsList.innerHTML = '<div style="padding:10px; text-align:center; color:#666;">No skills recorded.</div>';
     }
-    skillsList.innerHTML = skillsHtml;
-    skillsPanel.appendChild(skillsList);
+    
+    skillsSection.appendChild(skillsList);
+    skillsPanel.appendChild(skillsSection);
     tabContentContainer.appendChild(skillsPanel);
 
     const sparksPanel = document.createElement('div');
-    sparksPanel.id = 'modal-inspiration-panel';
+    sparksPanel.id = 'modal-sparks-panel';
     sparksPanel.className = 'modal-tab-panel';
-    sparksPanel.innerHTML = generateSparksHtml(runner);
+    
+    const sparksHtml = generateSparksHtml(runner);
+    sparksPanel.innerHTML = sparksHtml;
     tabContentContainer.appendChild(sparksPanel);
 
-    const tagsPanel = document.createElement('div');
-    tagsPanel.id = 'modal-tags-panel';
-    tagsPanel.className = 'modal-tab-panel';
-    
-    const tagsContainer = document.createElement('div');
-    tagsContainer.className = 'modal-tags-container';
-    
-    const renderTags = () => {
-        tagsContainer.innerHTML = '';
-        const tags = runner.tags || [];
-        if (tags.length === 0) {
-            tagsContainer.innerHTML = '<p style="color: #888; font-style: italic;">No tags added.</p>';
-        } else {
-            tags.forEach((tag, index) => {
-                const tagEl = document.createElement('span');
-                tagEl.className = 'runner-tag';
-                tagEl.textContent = tag;
-                const deleteBtn = document.createElement('span');
-                deleteBtn.className = 'tag-delete-btn';
-                deleteBtn.textContent = '×';
-                deleteBtn.title = 'Remove Tag';
-                deleteBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    runner.tags.splice(index, 1);
-                    saveStateToLocalStorage();
-                    renderTags();
-                };
-                tagEl.appendChild(deleteBtn);
-                tagsContainer.appendChild(tagEl);
-            });
-        }
-    };
-    renderTags();
-    
-    const inputContainer = document.createElement('div');
-    inputContainer.className = 'tag-input-container searchable-select-container'; // Add container class
-    
-    const tagInput = document.createElement('input');
-    tagInput.type = 'text';
-    tagInput.placeholder = 'Add a tag...';
-    tagInput.className = 'tag-input';
-    
-    // Options container for autocomplete
-    const optionsContainer = document.createElement('div');
-    optionsContainer.className = 'options-container';
-    
-    const addTagBtn = document.createElement('button');
-    addTagBtn.textContent = 'Add';
-    addTagBtn.className = 'add-tag-btn';
-    
-    const addTag = () => {
-        const val = tagInput.value.trim();
-        if (val) {
-            if (!runner.tags) runner.tags = [];
-            if (!runner.tags.includes(val)) {
-                runner.tags.push(val);
-                if (window.updateAllTags) window.updateAllTags(); // Update global tag list
-                saveStateToLocalStorage();
-                renderTags();
-                // Re-init searchable select to update options with new tag
-                createSearchableSelect(tagInput, Array.from(state.allTags).sort());
-            }
-            tagInput.value = '';
-        }
-    };
-    
-    addTagBtn.onclick = addTag;
-    tagInput.onkeydown = (e) => { if(e.key === 'Enter') addTag(); };
-    
-    inputContainer.appendChild(tagInput);
-    inputContainer.appendChild(optionsContainer); // Add options container
-    inputContainer.appendChild(addTagBtn);
-    
-    tagsPanel.appendChild(tagsContainer);
-    tagsPanel.appendChild(inputContainer);
-
-    // Initialize autocomplete
-    createSearchableSelect(tagInput, Array.from(state.allTags).sort(), () => {
-        // On select from dropdown, just set value, don't add yet (user clicks Add)
-    });
-    tabContentContainer.appendChild(tagsPanel);
-
-    // --- Collections Panel ---
-    const collectionsPanel = document.createElement('div');
-    collectionsPanel.id = 'modal-collections-panel';
-    collectionsPanel.className = 'modal-tab-panel';
-
-    const collectionsContainer = document.createElement('div');
-    collectionsContainer.className = 'modal-collections-container';
-
-    const renderCollections = () => {
-        collectionsContainer.innerHTML = '';
-        
-        // List collections this runner is in
-        const inCollections = state.collections.filter(c => c.runnerIds.includes(String(runner.entry_id)));
-        
-        if (inCollections.length > 0) {
-            const list = document.createElement('div');
-            list.className = 'runner-collections-list';
-            inCollections.forEach(col => {
-                const item = document.createElement('div');
-                item.className = 'collection-item';
-                item.innerHTML = `<span>${col.name}</span>`;
-                
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'Remove';
-                removeBtn.className = 'remove-collection-btn';
-                removeBtn.onclick = () => {
-                    const index = col.runnerIds.indexOf(String(runner.entry_id));
-                    if (index > -1) {
-                        col.runnerIds.splice(index, 1);
-                        saveCollections();
-                        renderCollections();
-                    }
-                };
-                item.appendChild(removeBtn);
-                list.appendChild(item);
-            });
-            collectionsContainer.appendChild(list);
-        } else {
-            collectionsContainer.innerHTML = '<p style="color: #888; font-style: italic;">Not in any collections.</p>';
-        }
-
-        // Add to existing collection
-        const addToContainer = document.createElement('div');
-        addToContainer.className = 'add-to-collection-container';
-        
-        const availableCollections = state.collections.filter(c => !c.runnerIds.includes(String(runner.entry_id)));
-        
-        if (availableCollections.length > 0) {
-            const select = document.createElement('select');
-            select.className = 'collection-select';
-            select.innerHTML = '<option value="">Select Collection...</option>';
-            availableCollections.forEach(c => {
-                select.innerHTML += `<option value="${c.name}">${c.name}</option>`;
-            });
-            
-            const addBtn = document.createElement('button');
-            addBtn.textContent = 'Add';
-            addBtn.className = 'add-collection-btn';
-            addBtn.onclick = () => {
-                const colName = select.value;
-                if (colName) {
-                    const col = state.collections.find(c => c.name === colName);
-                    if (col) {
-                        col.runnerIds.push(String(runner.entry_id));
-                        saveCollections();
-                        renderCollections();
-                    }
-                }
-            };
-            
-            addToContainer.appendChild(select);
-            addToContainer.appendChild(addBtn);
-            collectionsContainer.appendChild(addToContainer);
-        }
-
-        // Create new collection
-        const createContainer = document.createElement('div');
-        createContainer.className = 'create-collection-container';
-        
-        const newNameInput = document.createElement('input');
-        newNameInput.placeholder = 'New Collection Name';
-        newNameInput.className = 'new-collection-input';
-        
-        const createBtn = document.createElement('button');
-        createBtn.textContent = 'Create & Add';
-        createBtn.className = 'create-collection-btn';
-        createBtn.onclick = () => {
-            const name = newNameInput.value.trim();
-            if (name) {
-                if (state.collections.some(c => c.name === name)) {
-                    alert('Collection already exists!');
-                    return;
-                }
-                state.collections.push({
-                    name: name,
-                    runnerIds: [String(runner.entry_id)]
-                });
-                saveCollections();
-                renderCollections();
-            }
-        };
-        
-        createContainer.appendChild(newNameInput);
-        createContainer.appendChild(createBtn);
-        collectionsContainer.appendChild(createContainer);
-    };
-
-    renderCollections();
-    collectionsPanel.appendChild(collectionsContainer);
-    tabContentContainer.appendChild(collectionsPanel);
     content.appendChild(tabContentContainer);
 
     const footer = document.createElement('div');
@@ -1893,6 +1703,10 @@ export function showDetailModal(runner, displayName) {
     overlay.appendChild(modal);
     document.body.appendChild(overlay);
 
+    // Event Listeners for Header Buttons
+    document.getElementById('manage-tags-btn').addEventListener('click', () => showTagsModal(runner));
+    document.getElementById('manage-collections-btn').addEventListener('click', () => showCollectionsModal(runner));
+
     modal.querySelectorAll('.modal-tab-button').forEach(button => {
         button.addEventListener('click', () => {
             const tabName = button.dataset.tab;
@@ -1904,6 +1718,216 @@ export function showDetailModal(runner, displayName) {
             });
         });
     });
+}
+
+function showTagsModal(runner) {
+    const overlay = document.createElement('div');
+    overlay.id = 'management-modal-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(0,0,0,0.5); z-index: 1100;
+        display: flex; align-items: center; justify-content: center;
+    `;
+    overlay.onclick = (e) => {
+        if (e.target === overlay) overlay.remove();
+    };
+
+    const modal = document.createElement('div');
+    modal.className = 'management-modal';
+
+    const header = document.createElement('div');
+    header.className = 'management-modal-header';
+    header.textContent = `Manage Tags: ${runner.name}`;
+
+    const body = document.createElement('div');
+    body.className = 'management-modal-body';
+
+    const renderTags = () => {
+        body.innerHTML = '';
+        const tags = runner.tags || [];
+        if (tags.length === 0) {
+            body.innerHTML = '<div style="color: #666; font-style: italic;">No tags added.</div>';
+        } else {
+            tags.forEach(tag => {
+                const item = document.createElement('div');
+                item.className = 'management-list-item';
+                item.innerHTML = `<span>${tag}</span>`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'management-btn remove';
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = () => {
+                    runner.tags = runner.tags.filter(t => t !== tag);
+                    if (runner.tags.length === 0) delete runner.tags;
+                    saveStateToLocalStorage();
+                    renderTags();
+                    filterAndRender(); // Update main view if needed
+                };
+                
+                item.appendChild(removeBtn);
+                body.appendChild(item);
+            });
+        }
+    };
+
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'management-input-group';
+    
+    const input = document.createElement('input');
+    input.className = 'management-input';
+    input.placeholder = 'Add new tag...';
+    
+    // Simple autocomplete logic
+    createSearchableSelect(input, Array.from(state.allTags));
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'management-btn add';
+    addBtn.textContent = 'Add';
+    addBtn.onclick = () => {
+        const newTag = input.value.trim();
+        if (newTag) {
+            if (!runner.tags) runner.tags = [];
+            if (!runner.tags.includes(newTag)) {
+                runner.tags.push(newTag);
+                state.allTags.add(newTag);
+                saveStateToLocalStorage();
+                renderTags();
+                filterAndRender();
+                input.value = '';
+            } else {
+                alert('Tag already exists!');
+            }
+        }
+    };
+
+    inputGroup.appendChild(input);
+    inputGroup.appendChild(addBtn);
+
+    const footer = document.createElement('div');
+    footer.className = 'management-modal-footer';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'management-btn';
+    closeBtn.style.backgroundColor = '#ccc';
+    closeBtn.style.color = '#333';
+    closeBtn.textContent = 'Close';
+    closeBtn.onclick = () => overlay.remove();
+    footer.appendChild(closeBtn);
+
+    modal.appendChild(header);
+    modal.appendChild(inputGroup); // Input at top for easier access
+    modal.appendChild(body);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    renderTags();
+}
+
+function showCollectionsModal(runner) {
+    const overlay = document.createElement('div');
+    overlay.id = 'management-modal-overlay';
+    overlay.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background-color: rgba(0,0,0,0.5); z-index: 1100;
+        display: flex; align-items: center; justify-content: center;
+    `;
+    overlay.onclick = (e) => {
+        if (e.target === overlay) overlay.remove();
+    };
+
+    const modal = document.createElement('div');
+    modal.className = 'management-modal';
+
+    const header = document.createElement('div');
+    header.className = 'management-modal-header';
+    header.textContent = `Manage Collections: ${runner.name}`;
+
+    const body = document.createElement('div');
+    body.className = 'management-modal-body';
+
+    const renderCollectionsList = () => {
+        body.innerHTML = '';
+        if (state.collections.length === 0) {
+            body.innerHTML = '<div style="color: #666; font-style: italic;">No collections created.</div>';
+        } else {
+            state.collections.forEach(collection => {
+                const item = document.createElement('div');
+                item.className = 'management-list-item';
+                
+                const label = document.createElement('label');
+                label.style.display = 'flex';
+                label.style.alignItems = 'center';
+                label.style.gap = '10px';
+                label.style.cursor = 'pointer';
+                label.style.flexGrow = '1';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = collection.runnerIds.includes(String(runner.entry_id));
+                checkbox.onchange = (e) => {
+                    if (e.target.checked) {
+                        if (!collection.runnerIds.includes(String(runner.entry_id))) {
+                            collection.runnerIds.push(String(runner.entry_id));
+                        }
+                    } else {
+                        collection.runnerIds = collection.runnerIds.filter(id => id !== String(runner.entry_id));
+                    }
+                    saveCollections();
+                };
+
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(collection.name));
+                item.appendChild(label);
+                body.appendChild(item);
+            });
+        }
+    };
+
+    const inputGroup = document.createElement('div');
+    inputGroup.className = 'management-input-group';
+    
+    const input = document.createElement('input');
+    input.className = 'management-input';
+    input.placeholder = 'New Collection Name...';
+
+    const createBtn = document.createElement('button');
+    createBtn.className = 'management-btn add';
+    createBtn.textContent = 'Create';
+    createBtn.onclick = () => {
+        const name = input.value.trim();
+        if (name) {
+            if (state.collections.some(c => c.name === name)) {
+                alert('Collection already exists!');
+                return;
+            }
+            state.collections.push({ name: name, runnerIds: [] });
+            saveCollections();
+            renderCollectionsList();
+            input.value = '';
+        }
+    };
+
+    inputGroup.appendChild(input);
+    inputGroup.appendChild(createBtn);
+
+    const footer = document.createElement('div');
+    footer.className = 'management-modal-footer';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'management-btn';
+    closeBtn.style.backgroundColor = '#ccc';
+    closeBtn.style.color = '#333';
+    closeBtn.textContent = 'Close';
+    closeBtn.onclick = () => overlay.remove();
+    footer.appendChild(closeBtn);
+
+    modal.appendChild(header);
+    modal.appendChild(inputGroup);
+    modal.appendChild(body);
+    modal.appendChild(footer);
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    renderCollectionsList();
 }
 
 // Generates the HTML content for displaying sparks within the detail modal.
