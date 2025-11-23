@@ -889,10 +889,10 @@ export function setupEventListeners() {
         
         if (isTyping && e.key !== 'Escape') return;
 
-        // Tab navigation (1-7)
-        if (e.key >= '1' && e.key <= '7' && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        // Tab navigation (1-8)
+        if (e.key >= '1' && e.key <= '8' && !e.ctrlKey && !e.altKey && !e.metaKey) {
             const tabs = ['runner-overview', 'runner-white-sparks', 'skills-overview', 
-                         'career-planner', 'legacy-analysis', 'spark-tracer', 'useful-links'];
+                         'career-planner', 'legacy-analysis', 'spark-tracer', 'runner-comparison', 'useful-links'];
             const tabIndex = parseInt(e.key) - 1;
             if (tabs[tabIndex]) {
                 handleTabChange(tabs[tabIndex]);
@@ -1260,7 +1260,7 @@ function showKeyboardShortcutsHelp() {
     modal.innerHTML = `
         <h2 style="margin-top: 0; color: var(--uma-text-dark);">Keyboard Shortcuts</h2>
         <div style="color: var(--uma-text-dark); line-height: 1.8;">
-            <p><kbd>1-7</kbd> Switch between tabs</p>
+            <p><kbd>1-8</kbd> Switch between tabs</p>
             <p><kbd>Esc</kbd> Reset filters / Unfocus inputs</p>
             <p><kbd>D</kbd> Toggle dark mode</p>
             <p><kbd>?</kbd> Show this help</p>

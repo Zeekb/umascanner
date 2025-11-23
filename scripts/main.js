@@ -1,4 +1,4 @@
-﻿
+
 // scripts/main.js - Main entry point for the renderer process. Initializes the application, sets up event listeners, and manages the overall UI flow.
 
 import { state } from './state.js';
@@ -9,6 +9,7 @@ import {
     updateTotalWhiteDropdown, updateSelectPlaceholder, handleTabChange
 } from './ui-interactions.js';
 import { initializeSettings } from './ui-settings.js';
+import { populateComparisonDropdowns, renderComparisonTable } from './comparison.js';
 
 
 // Initializes the application when the DOM is fully loaded.
@@ -147,9 +148,23 @@ export function initializeApp() {
 
     state.elements.loadNewFileButton.addEventListener('click', returnToFileUploader);
 
+
     updateLastUpdated();
     updateEntriesCount();
     preloadRunnerImages(); 
+    
+    // Initialize comparison tab dropdowns
+    populateComparisonDropdowns();
+    // Add sort dropdown listener to re-populate when sorting changes
+    const sortSelect = document.getElementById('comparison-sort-by');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', populateComparisonDropdowns);
+    }
+    // Add runner dropdown change listeners to render table on selection
+    [1, 2, 3, 4].forEach(num => {
+        const sel = document.getElementById(`comparison-runner-${num}`);
+        if (sel) sel.addEventListener('change', renderComparisonTable);
+    });
 }
 
 // Populates the filter dropdowns and elements with data.
