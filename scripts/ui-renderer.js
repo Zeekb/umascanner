@@ -1,12 +1,11 @@
-﻿// ui-renderer.js - Responsible for rendering various views and components of the application's user interface, including tables, modals, and dynamic content based on filtered data.
-
-import { state, CONSTANTS } from './state.js';
+﻿import { state, CONSTANTS } from './state.js';
 import { 
     cleanName, findRunnerByDetails, getStatGrade, calculateRank, getAptitudeColor, 
     adjustColor, getGradeColors, formatGradeForDisplay, formatSkillName, showTimedMessage, createSearchableSelect,
     saveStateToLocalStorage, saveCollections, updateCollectionsDropdown
 } from './utils.js';
 import { updateSelectAllCheckboxState } from './bulk-actions.js';
+import { renderSparkCoverageMap } from './visualization.js';
 
 // Renders the content for the currently active tab.
 export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
@@ -27,6 +26,9 @@ export function renderActiveTab(activeTabId, filteredData, allSparkCriteria) {
     }
     else if (activeTabId === 'spark-tracer') {
         renderSparkTracer();
+    }
+    else if (activeTabId === 'spark-coverage-map') {
+        renderSparkCoverageMap(filteredData);
     }
     else if (activeTabId === 'useful-links') {
         renderUsefulLinks();
@@ -95,7 +97,7 @@ function renderRunnerOverview(runners, allSparkCriteria) {
 // Renders the summary table for white sparks.
 function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
     if (!runners.length) {
-       state.elements.runnerWhiteSparksBody.innerHTML = '<tr><td colspan="7">No runners match filters.</td></tr>';
+       state.elements.runnerWhiteSparksBody.innerHTML = '<tr><td colspan="9">No runners match filters.</td></tr>';
        return;
     }
 
@@ -207,11 +209,9 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
                }
 
                const tooltipText = `${titleText}\nClick to filter by ${spark.name}`;
-               
-               const colorTypeClass = ' ' + getWhiteSparkColorClass(spark.name);
 
                whiteSparksHtml += `
-               <div class="spark-button white${highlightClass}${colorTypeClass} add-filter-click" title="${titleText}" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="white">
+               <div class="spark-button white${highlightClass} add-filter-click" title="${titleText}" data-filter-type="spark" data-filter-value="${spark.name}" data-filter-color="white">
                    <span>${spark.count}</span>
                    <span class="star${parentClass}">★</span>
                    <span class="spark-name">${spark.name}</span>
@@ -221,6 +221,65 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
           });
 
         const whiteDisplay = `${totalWhiteEntries}(${parentWhiteEntries})`;
+        const isSelected = state.selectedRunners.has(String(r.entry_id));
+        const gp1Class = r.gp1 ? '' : 'grayed-text';
+        const gp2Class = r.gp2 ? '' : 'grayed-text';
+
+        return `
+            <tr data-entry-id="${r.entry_id || ''}" title="Click to view details">
+            <td class="checkbox-cell"><input type="checkbox" class="runner-select-checkbox" data-entry-id="${r.entry_id}" ${isSelected ? 'checked' : ''}></td>
+            <td>${r.entry_id || 'N/A'}</td>
+            <td><span class="outline-label">${r.name || 'N/A'}</span></td>
+            <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
+            <td class="whites-cell">${whiteDisplay}</td>
+            <td class="spark-cell">${whiteSparksHtml}</td>
+            <td class="${gp1Class}">${cleanName(r.gp1) || 'N/A'}</td>
+            <td class="${gp2Class}">${cleanName(r.gp2) || 'N/A'}</td>
+            </tr>
+    `}).join('');
+
+    state.elements.runnerWhiteSparksBody.innerHTML = html;
+    hideEntryIdColumn('runner-white-sparks');
+    updateSelectAllCheckboxState();
+}
+
+// Renders the skills overview table.
+function renderSkillsOverview(runners) {
+    if (!runners.length) {
+       state.elements.skillsOverviewBody.innerHTML = '<tr><td colspan="5">No runners match filters.</td></tr>';
+       return;
+    }
+
+    const html = runners.map(r => {
+        const skills = r.skills || [];
+        const skillsHtml = skills.map(skillName => {
+            const skillType = state.skillData[skillName] || 'unknown';
+            const skillIcon = CONSTANTS.SKILL_ICONS[skillType] || 'star.png';
+            let itemClass = 'skill-button';
+           if (state.runnerUniqueSkills[r.name] === skillName) itemClass += ' unique';
+            if (skillName.startsWith('Gold')) itemClass += ' gold';
+            
+            const typeClass = skillType.replace(/_/g, '-');
+            
+            return `
+                <div class="${itemClass} ${typeClass}">
+                    <div class="skill-icon" style="background-image: url('./assets/skill_icons/${skillIcon}')"></div>
+                    <span class="skill-name">${formatSkillName(skillName)}</span>
+                </div>
+            `;
+        }).join('');
+
+        const isSelected = state.selectedRunners.has(String(r.entry_id));
+
+        return `
+            <tr data-entry-id="${r.entry_id || ''}" title="Click to view details">
+            <td class="checkbox-cell"><input type="checkbox" class="runner-select-checkbox" data-entry-id="${r.entry_id}" ${isSelected ? 'checked' : ''}></td>
+            <td>${r.entry_id || 'N/A'}</td>
+            <td><span class="outline-label">${r.name || 'N/A'}</span></td>
+            <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
+            <td class="skill-cell">${skillsHtml || '<span style="color:#888">No skills</span>'}</td>
+            </tr>
+        `;
     }).join('');
 
     state.elements.skillsOverviewBody.innerHTML = html;
@@ -1058,13 +1117,8 @@ function formatSparks(runner, allSparkCriteria) {
         
         const displayName = nameMap[spark.name] || spark.name;
 
-        let colorTypeClass = '';
-        if (spark.color === 'white') {
-            colorTypeClass = ' ' + getWhiteSparkColorClass(spark.name);
-        }
-
         return `
-            <div class="spark-button ${spark.color}${highlightClass}${colorTypeClass} add-filter-click" 
+            <div class="spark-button ${spark.color}${highlightClass} add-filter-click" 
                 title="Click to filter by ${displayName}" 
                 data-filter-type="spark" 
                 data-filter-value="${spark.name}" 

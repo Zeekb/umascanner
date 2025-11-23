@@ -44,6 +44,14 @@
     margin-bottom: 5px;
 }
 
+.spark-coverage-stars {
+    font-size: 0.9em;
+    color: var(--uma-text-dark);
+    font-weight: 600;
+    text-align: center;
+    margin-top: 5px;
+}
+
 /* --- Aptitude Heatmap --- */
 #aptitude-heatmap-content {
     padding: 20px;
