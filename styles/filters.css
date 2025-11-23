@@ -293,8 +293,8 @@ input[type="range"]::-moz-range-track {
 }
 
 #skill-filters-container {
-    display: flex !important;
-    flex-direction: row !important;
+    display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     gap: 15px;
@@ -388,7 +388,7 @@ input[type="range"]::-moz-range-track {
     bottom: 0;
     left: 50%;
     transform: translate(-50%, 50%);
-    z-index: 16;
+    z-index: 26;
     background-color: var(--uma-accent-blue);
     color: var(--uma-text-light);
     border: 1px solid var(--uma-border-color);
@@ -597,7 +597,7 @@ input[type="range"]::-moz-range-track {
     background-color: #fff;
     color: #333;
     font-size: 14px;
-    width: 250px;
+    width: 270px;
     transition: all 0.2s ease;
 }
 

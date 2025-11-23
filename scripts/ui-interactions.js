@@ -698,13 +698,19 @@ export function setupEventListeners() {
         }
     });
 
-    state.elements.runnerOverviewBody.addEventListener('click', handleDeleteRunner);
+    if (state.elements.runnerOverviewBody) {
+        state.elements.runnerOverviewBody.addEventListener('click', handleDeleteRunner);
+    }
 
     [state.elements.runnerOverviewBody, state.elements.runnerWhiteSparksBody, state.elements.skillsOverviewBody].forEach(body => {
-        body.addEventListener('click', handleDetailView);
+        if (body) {
+            body.addEventListener('click', handleDetailView);
+        }
     });
 
-    state.elements.saveDataButton.addEventListener('click', saveDataToFile); 
+    if (state.elements.saveDataButton) {
+        state.elements.saveDataButton.addEventListener('click', saveDataToFile);
+    } 
 
 
 
@@ -1406,9 +1412,15 @@ function showSettingsModal() {
         label.textContent = toggle.label;
 
         const helpIcon = document.createElement('span');
-        helpIcon.className = 'tab-help';
+        helpIcon.className = 'settings-help'; // Changed from tab-help to avoid toggle conflict
+        
+        // Check if this is the last item to apply upward tooltip
+        if (toggle.key === toggles[toggles.length - 1].key) {
+            helpIcon.classList.add('tooltip-up');
+        }
+
         helpIcon.textContent = '?';
-        helpIcon.title = toggle.tooltip;
+        helpIcon.setAttribute('data-tooltip', toggle.tooltip);
         helpIcon.style.fontSize = '0.85em';
         helpIcon.style.marginLeft = '5px';
 

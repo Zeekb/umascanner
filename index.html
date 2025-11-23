@@ -68,7 +68,7 @@
             </button>
 
             <div class="global-search-wrapper">
-                <input type="text" id="global-search-input" placeholder="Search (Name, Skills, Sparks)..." title="Search by Runner Name, Skills, or Sparks">
+                <input type="text" id="global-search-input" placeholder="Global Search (Name, Skills, Sparks)..." title="Search by Runner Name, Skills, or Sparks">
             </div>
 
             <span id="entries-display"></span>
@@ -281,11 +281,11 @@
                             <th>Entry Id</th>
                             <th>Name</th>
                             <th>Score</th>
-                            <th>Speed</th>
-                            <th>Stamina</th>
-                            <th>Power</th>
-                            <th>Guts</th>
-                            <th>Wit</th>
+                            <th title="Speed Stat">Speed</th>
+                            <th title="Stamina Stat">Stamina</th>
+                            <th title="Power Stat">Power</th>
+                            <th title="Guts Stat">Guts</th>
+                            <th title="Wit Stat">Wit</th>
                             <th>Sparks 
                                 <button id="overview-sparks-parent-only-toggle" class="header-toggle-button" title="Toggle: Show all sparks / Parent sparks only">
                                     [All Sparks]
@@ -294,8 +294,7 @@
                             <th>Whites</th>
                             <th>GP1</th>
                             <th>GP2</th>
-                            <th><span class="tab-help help-top-right transfer-help" data-tooltip="Clicking 'Transfer' will permanently delete this runner from the loaded data. &#10;&#10;This action can't be undone unless you reload the original file. Use the 'Save' (îžæ²ˆ) button to download your edited data.">?</span></th>
-                        </tr>
+                         </tr>
                     </thead>
                     <tbody id="runner-overview-body"></tbody>
                 </table>
@@ -305,7 +304,7 @@
                     <thead>
                         <tr>
                            <th class="checkbox-column"><input type="checkbox" class="select-all-checkbox" title="Select All"></th>
-                           <th>Entry Id</th>
+
                            <th>Name</th>
                            <th>Score</th>
                            <th>Whites</th>
@@ -327,7 +326,7 @@
                     <thead>
                         <tr>
                            <th class="checkbox-column"><input type="checkbox" class="select-all-checkbox" title="Select All"></th>
-                           <th>Entry Id</th>
+
                            <th>Name</th>
                            <th>Score</th>
                            <th>Skills 

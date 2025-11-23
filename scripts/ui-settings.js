@@ -93,6 +93,9 @@ export function applySettings() {
     
     // Apply filter section visibility
     applyFilterVisibility(settings);
+
+    // Apply filter help visibility
+    applyFilterHelpVisibility(settings);
 }
 
 // Toggle tooltips based on settings
@@ -182,18 +185,23 @@ function applyColumnVisibility(settings) {
     
     // Entry ID column (typically the 2nd column after checkbox)
     // Find it by checking for numeric content or specific class
-    const entryIdIndex = Array.from(headers).findIndex(h => 
-        h.textContent.trim() === 'Entry ID' || h.textContent.trim() === 'ID'
-    );
-    
-    if (entryIdIndex !== -1) {
-        headers[entryIdIndex].style.display = settings.showEntryIdColumn ? '' : 'none';
-        document.querySelectorAll('tbody tr').forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells[entryIdIndex]) {
-                cells[entryIdIndex].style.display = settings.showEntryIdColumn ? '' : 'none';
-            }
-        });
+    // Scope to Runner Overview only
+    const overviewTable = document.querySelector('#runner-overview table');
+    if (overviewTable) {
+        const overviewHeaders = overviewTable.querySelectorAll('thead th');
+        const entryIdIndex = Array.from(overviewHeaders).findIndex(h => 
+            h.textContent.trim() === 'Entry Id' || h.textContent.trim() === 'Entry ID' || h.textContent.trim() === 'ID'
+        );
+        
+        if (entryIdIndex !== -1) {
+            overviewHeaders[entryIdIndex].style.display = settings.showEntryIdColumn ? '' : 'none';
+            overviewTable.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells[entryIdIndex]) {
+                    cells[entryIdIndex].style.display = settings.showEntryIdColumn ? '' : 'none';
+                }
+            });
+        }
     }
 }
 
@@ -201,14 +209,27 @@ function applyColumnVisibility(settings) {
 function applyFilterVisibility(settings) {
     const sparkFilters = document.getElementById('spark-filters-container');
     const skillFilters = document.getElementById('skill-filters-container');
+    const addFilters = document.getElementById('add-filters-container');
     
     if (sparkFilters) {
         sparkFilters.style.display = settings.showAdvancedSparkFilters ? '' : 'none';
+    }
+
+    if (addFilters) {
+        addFilters.style.display = settings.showAdvancedSparkFilters ? '' : 'none';
     }
     
     if (skillFilters) {
         skillFilters.style.display = settings.showAdvancedSkillFilters ? '' : 'none';
     }
+}
+
+// Toggle filter help visibility
+function applyFilterHelpVisibility(settings) {
+    const filterHelpElements = document.querySelectorAll('.filter-help');
+    filterHelpElements.forEach(el => {
+        el.style.display = settings.showFilterHelp ? '' : 'none';
+    });
 }
 
 // Set mode and apply its preset settings

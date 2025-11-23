@@ -90,7 +90,11 @@ export function initializeApp() {
 
     if (!state.allRunners || state.allRunners.length === 0) {
         const noDataMsg = '<tr><td colspan="18">No runner data found.</td></tr>';
-        [state.elements.runnerOverviewBody, state.elements.runnerWhiteSparksBody, state.elements.skillsOverviewBody].forEach(body => body.innerHTML = noDataMsg);
+        [state.elements.runnerOverviewBody, state.elements.runnerWhiteSparksBody, state.elements.skillsOverviewBody].forEach(body => {
+            if (body) {
+                body.innerHTML = noDataMsg;
+            }
+        });
         return;
     }
 
@@ -170,48 +174,72 @@ export function initializeApp() {
 // Populates the filter dropdowns and elements with data.
 function populateFilters() {
     const runnerNames = [...state.allRunnerNamesSet].sort();
-    state.elements.filterElements.runner.innerHTML = '<option value="">All Runners</option>' + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
+    if (state.elements.filterElements.runner) {
+        state.elements.filterElements.runner.innerHTML = '<option value="">All Runners</option>' + runnerNames.map(n => `<option value="${n}">${n}</option>`).join('');
+    }
 
-    const currentSort = state.elements.filterElements.sort.value || 'score';
+    const currentSort = state.elements.filterElements.sort?.value || 'score';
     const allSortOptions = [
         'score', 'name', 'speed', 'stamina', 'power', 'guts', 'wit', 
         'whites (parent)', 'whites (total)'
     ];
 
-    state.elements.filterElements.sort.innerHTML = allSortOptions.map(o => {
-        const label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        return `<option value="${o}">${label}</option>`;
-    }).join('');
-    
-    state.elements.filterElements.sort.value = allSortOptions.includes(currentSort) ? currentSort : 'score';
+    if (state.elements.filterElements.sort) {
+        state.elements.filterElements.sort.innerHTML = allSortOptions.map(o => {
+            const label = o.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return `<option value="${o}">${label}</option>`;
+        }).join('');
+        
+        state.elements.filterElements.sort.value = allSortOptions.includes(currentSort) ? currentSort : 'score';
+    }
 
     const firstSparkRow = document.querySelector('.spark-filters');
-    createSearchableSelect(firstSparkRow.querySelector('#filter-blue-spark'), state.blueSparkNames);
-    createSearchableSelect(firstSparkRow.querySelector('#filter-green-spark'), state.greenSparkNames);
-    createSearchableSelect(firstSparkRow.querySelector('#filter-pink-spark'), state.pinkSparkNames);
-    createSearchableSelect(firstSparkRow.querySelector('#filter-white-spark'), state.whiteSparkNames);
+    if (firstSparkRow) {
+        const blueSparkEl = firstSparkRow.querySelector('#filter-blue-spark');
+        const greenSparkEl = firstSparkRow.querySelector('#filter-green-spark');
+        const pinkSparkEl = firstSparkRow.querySelector('#filter-pink-spark');
+        const whiteSparkEl = firstSparkRow.querySelector('#filter-white-spark');
+        
+        if (blueSparkEl) createSearchableSelect(blueSparkEl, state.blueSparkNames);
+        if (greenSparkEl) createSearchableSelect(greenSparkEl, state.greenSparkNames);
+        if (pinkSparkEl) createSearchableSelect(pinkSparkEl, state.pinkSparkNames);
+        if (whiteSparkEl) createSearchableSelect(whiteSparkEl, state.whiteSparkNames);
 
-    updateSparkCountDropdown(firstSparkRow.querySelector('#min-blue'), 9);
-    updateSparkCountDropdown(firstSparkRow.querySelector('#min-green'), 3);
-    updateSparkCountDropdown(firstSparkRow.querySelector('#min-pink'), 9);
-    updateSparkCountDropdown(firstSparkRow.querySelector('#min-white'), 9);
-    updateTotalWhiteDropdown(firstSparkRow, false);
-    
-    let totalWhiteSparkOptions = '';
-    for (let i = 1; i <= state.maxTotalWhiteSparks; i++) { totalWhiteSparkOptions += `<option value="${i}">${i}</option>`; }
-    firstSparkRow.querySelector('#min-total-white').innerHTML = '<option value="0"></option>' + totalWhiteSparkOptions;
+        const minBlueEl = firstSparkRow.querySelector('#min-blue');
+        const minGreenEl = firstSparkRow.querySelector('#min-green');
+        const minPinkEl = firstSparkRow.querySelector('#min-pink');
+        const minWhiteEl = firstSparkRow.querySelector('#min-white');
+        
+        if (minBlueEl) updateSparkCountDropdown(minBlueEl, 9);
+        if (minGreenEl) updateSparkCountDropdown(minGreenEl, 3);
+        if (minPinkEl) updateSparkCountDropdown(minPinkEl, 9);
+        if (minWhiteEl) updateSparkCountDropdown(minWhiteEl, 9);
+        
+        updateTotalWhiteDropdown(firstSparkRow, false);
+        
+        let totalWhiteSparkOptions = '';
+        for (let i = 1; i <= state.maxTotalWhiteSparks; i++) { totalWhiteSparkOptions += `<option value="${i}">${i}</option>`; }
+        
+        const minTotalWhiteEl = firstSparkRow.querySelector('#min-total-white');
+        if (minTotalWhiteEl) {
+            minTotalWhiteEl.innerHTML = '<option value="0"></option>' + totalWhiteSparkOptions;
+        }
+    }
 
     const aptGrades = ['S', 'A', 'B', 'C', 'D', 'E', 'F', 'G'];
     const aptGradeOptions = aptGrades.map(g => `<option value="${g}">${g}</option>`).join('');
     
     Object.values(state.elements.filterElements)
-    .filter(el => el.id.startsWith('apt-min-'))
+    .filter(el => el && el.id && el.id.startsWith('apt-min-'))
     .forEach(sel => {
         sel.innerHTML += aptGradeOptions;
     });
 
     document.querySelectorAll('.aptitude-select').forEach(updateSelectPlaceholder);
-    state.elements.filterElements.sortDir.value = 'desc';
+    
+    if (state.elements.filterElements.sortDir) {
+        state.elements.filterElements.sortDir.value = 'desc';
+    }
 }
 
 // Preloads runner profile images to improve UI responsiveness.

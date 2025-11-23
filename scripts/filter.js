@@ -2,6 +2,7 @@
 
 import { state, CONSTANTS } from './state.js';
 import { renderActiveTab } from './ui-renderer.js';
+import { applySettings } from './ui-settings.js';
 
 // Sorts the current filtered data and re-renders the active tab.
 export function sortAndRender() {
@@ -11,6 +12,7 @@ export function sortAndRender() {
     const allSparkCriteria = getAllSparkFilterCriteria();
     const activeTabId = document.querySelector('.tab-content.active')?.id;
     renderActiveTab(activeTabId, state.lastFilteredData, allSparkCriteria);
+    applySettings();
 }
 
 // Applies all active filters to the runner data and then triggers sorting and rendering.

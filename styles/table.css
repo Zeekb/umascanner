@@ -235,18 +235,18 @@ td.skill-cell {
     width: 24px;
 }
 
+#skills-overview th:nth-child(2),
+#skills-overview td:nth-child(2) {
+  width: 150px; /* Name - minimal but readable */
+}
+
 #skills-overview th:nth-child(3),
 #skills-overview td:nth-child(3) {
-  width: 150px; /* Name - minimal but readable */
+  width: 80px; /* Score - minimal */
 }
 
 #skills-overview th:nth-child(4),
 #skills-overview td:nth-child(4) {
-  width: 80px; /* Score - minimal */
-}
-
-#skills-overview th:nth-child(5),
-#skills-overview td:nth-child(5) {
   width: auto; /* Skills - takes remaining space */
 }
 
@@ -409,4 +409,15 @@ td.skill-cell {
 
 .dark-mode .header-filter-dropdown:focus {
     border-color: var(--uma-accent-blue);
+}
+
+/* Styles for grandparent links in table */
+td.gp-link {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.dark-mode td.gp-link {
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
 }

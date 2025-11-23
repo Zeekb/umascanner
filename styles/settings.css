@@ -53,6 +53,7 @@
 .settings-content {
     padding: 20px;
     overflow-y: auto;
+    overflow-x: hidden;
     flex-grow: 1;
 }
 
@@ -215,4 +216,70 @@
 
 .settings-footer .btn-secondary:hover {
     background-color: var(--uma-medium-bg);
+}
+
+/* Styles for settings help tooltips */
+.settings-help {
+    position: relative;
+    white-space: pre-line;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #bbbbbb;
+    color: white;
+    border-radius: 50%;
+    cursor: help;
+    z-index: 50;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.7), -1px -1px 0 rgba(0, 0, 0, 0.7), 1px -1px 0 rgba(0, 0, 0, 0.7), -1px 1px 0 rgba(0, 0, 0, 0.7);
+}
+
+.dark-mode .settings-help {
+    background-color: #777777;
+}
+
+.settings-help:hover {
+    z-index: 2000 !important;
+}
+
+.settings-help::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 8px;
+    width: 250px;
+    background-color: var(--uma-medium-bg);
+    color: var(--uma-text-dark);
+    border: 1px solid var(--uma-border-color);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    text-align: left;
+    font-weight: normal;
+    font-size: 0.9em;
+    line-height: 1.4;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1001;
+    pointer-events: none;
+}
+
+.settings-help:hover::before {
+    visibility: visible;
+    opacity: 1;
+    z-index: 1001;
+}
+
+/* Upward tooltip for items near the bottom */
+.settings-help.tooltip-up::before {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 8px;
 }

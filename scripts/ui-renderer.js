@@ -77,16 +77,16 @@ function renderRunnerOverview(runners, allSparkCriteria) {
             <td>${r.entry_id || 'N/A'}</td>
             <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
             <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
-            <td class="stat-cell aptitude-${getStatGrade(r.speed)}">${r.speed || 0}</td>
-            <td class="stat-cell aptitude-${getStatGrade(r.stamina)}">${r.stamina || 0}</td>
-            <td class="stat-cell aptitude-${getStatGrade(r.power)}">${r.power || 0}</td>
-            <td class="stat-cell aptitude-${getStatGrade(r.guts)}">${r.guts || 0}</td>
-            <td class="stat-cell aptitude-${getStatGrade(r.wit)}">${r.wit || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.speed)}" title="Grade: ${getStatGrade(r.speed)}">${r.speed || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.stamina)}" title="Grade: ${getStatGrade(r.stamina)}">${r.stamina || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.power)}" title="Grade: ${getStatGrade(r.power)}">${r.power || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.guts)}" title="Grade: ${getStatGrade(r.guts)}">${r.guts || 0}</td>
+            <td class="stat-cell aptitude-${getStatGrade(r.wit)}" title="Grade: ${getStatGrade(r.wit)}">${r.wit || 0}</td>
             <td class="spark-cell">${formatSparks(r, allSparkCriteria)}</td>
             <td class="whites-cell">${whiteDisplay}</td>
             <td class="${gp1Class}">${cleanName(r.gp1 || 'N/A')}</td>
             <td class="${gp2Class}">${cleanName(r.gp2 || 'N/A')}</td>
-            <td><button class="delete-button" data-entry-id="${r.entry_id || ''}">Transfer</button></td>
+
             </tr>
     `}).join('');
     state.elements.runnerOverviewBody.innerHTML = html;
@@ -253,7 +253,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
        return `
             <tr data-entry-id="${r.entry_id || ''}" title="Click to view details"> 
                 <td class="checkbox-cell"><input type="checkbox" class="runner-select-checkbox" data-entry-id="${r.entry_id}" ${isSelected ? 'checked' : ''}></td>
-                <td>${r.entry_id || 'N/A'}</td>
+
                 <td ><span class="outline-label">${r.name || 'N/A'}</span></td>
                 <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
                 <td class="whites-cell">${whiteDisplay}</td>
@@ -263,7 +263,7 @@ function renderRunnerWhiteSparksSummary(runners, allSparkCriteria) {
             </tr>
         `}).join('');
    state.elements.runnerWhiteSparksBody.innerHTML = html;
-   hideEntryIdColumn('runner-white-sparks');
+
    updateSelectAllCheckboxState();
 }
 
@@ -346,7 +346,7 @@ function renderSkillsOverview(runners) {
         return `
             <tr data-entry-id="${r.entry_id || ''}" title="Click to view details">        
                 <td class="checkbox-cell"><input type="checkbox" class="runner-select-checkbox" data-entry-id="${r.entry_id}" ${isSelected ? 'checked' : ''}></td>
-                <td>${r.entry_id || 'N/A'}</td>
+
                 <td><span class="outline-label">${r.name || 'N/A'}</span></td>
                 <td class="score-cell">${(r.score || 0).toLocaleString()}</td>
                 <td class="left-align skill-cell">${skillsHtml}</td>
@@ -355,7 +355,7 @@ function renderSkillsOverview(runners) {
     }).join('');
 
     state.elements.skillsOverviewBody.innerHTML = html;
-    hideEntryIdColumn('skills-overview');
+
     updateSelectAllCheckboxState();
 }
 
