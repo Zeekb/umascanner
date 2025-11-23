@@ -1659,8 +1659,7 @@ export function showDetailModal(runner, displayName) {
     
     if (runner.skills && runner.skills.length > 0) {
         runner.skills.forEach(skillName => {
-            const skillData = state.skillData[skillName];
-            const skillType = skillData ? skillData.type : 'unknown';
+            const skillType = state.skillData[skillName] || 'unknown';
             const skillIcon = CONSTANTS.SKILL_ICONS[skillType] || 'icon_skill_unknown.png';
             
             let itemClass = 'modal-skill-item';
