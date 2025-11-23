@@ -24,6 +24,7 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
+    position: relative;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -41,7 +42,7 @@
 .spark-coverage-name {
     font-weight: bold;
     text-align: center;
-    margin-bottom: 5px;
+    margin-bottom: 15px;
 }
 
 .spark-coverage-stars {
@@ -50,6 +51,15 @@
     font-weight: 600;
     text-align: center;
     margin-top: 5px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+
+.spark-star-span {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 33.3%;
 }
 
 /* --- Aptitude Heatmap --- */

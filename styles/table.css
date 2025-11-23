@@ -230,6 +230,11 @@ td.skill-cell {
   width: 100%;
 }
 
+#skills-overview th:nth-child(1),
+#skills-overview td:nth-child(1) {
+    width: 24px;
+}
+
 #skills-overview th:nth-child(3),
 #skills-overview td:nth-child(3) {
   width: 150px; /* Name - minimal but readable */
@@ -405,5 +410,3 @@ td.skill-cell {
 .dark-mode .header-filter-dropdown:focus {
     border-color: var(--uma-accent-blue);
 }
-
-

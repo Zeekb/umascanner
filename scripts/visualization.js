@@ -33,7 +33,8 @@ export function renderSparkCoverageMap(filteredRunners = null) {
                         sparkCounts[color][name] = { 
                             total: 0, 
                             parent: 0,
-                            stars: { 1: 0, 2: 0, 3: 0 }
+                            stars: { 1: 0, 2: 0, 3: 0 },
+                            parentStars: { 1: 0, 2: 0, 3: 0 }
                         };
                     }
                     sparkCounts[color][name].total++;
@@ -43,6 +44,9 @@ export function renderSparkCoverageMap(filteredRunners = null) {
                     // Track star counts
                     if (stars >= 1 && stars <= 3) {
                         sparkCounts[color][name].stars[stars]++;
+                        if (source === 'parent') {
+                            sparkCounts[color][name].parentStars[stars]++;
+                        }
                     }
                 }
             });
@@ -73,7 +77,8 @@ export function renderSparkCoverageMap(filteredRunners = null) {
             name,
             total: colorSparks[name].total,
             parent: colorSparks[name].parent,
-            stars: colorSparks[name].stars
+            stars: colorSparks[name].stars,
+            parentStars: colorSparks[name].parentStars
         }));
         
         if (sparkList.length === 0) return;
@@ -103,12 +108,12 @@ export function renderSparkCoverageMap(filteredRunners = null) {
             sparkList.sort((a, b) => b.parent - a.parent || a.name.localeCompare(b.name));
         }
 
-        html += `<h3 style="text-transform: capitalize; color: var(--spark-${color}-bg); margin-top: 30px;">${color} Sparks (${sparkList.length} unique)</h3>`;
+        html += `<h3 style="text-transform: capitalize; color: var(--spark-${color}-bg); margin-top: 30px;">${color} Sparks ${(color !== 'blue' && color !== 'pink') ? `(${sparkList.length} unique)` : ''}</h3>`;
         html += '<div class="spark-coverage-grid">';
 
         sparkList.forEach(spark => {
             const colorClass = `spark-${color}`;
-            const starBreakdown = `1★:${spark.stars[1]} 2★:${spark.stars[2]} 3★:${spark.stars[3]}`;
+            const starBreakdown = `<span class="spark-star-span">1★:${spark.stars[1]}(${spark.parentStars[1]})</span><span class="spark-star-span">2★:${spark.stars[2]}(${spark.parentStars[2]})</span><span class="spark-star-span">3★:${spark.stars[3]}(${spark.parentStars[3]})</span>`;
             
             html += `
                 <div class="spark-coverage-card ${colorClass} add-filter-click" 
